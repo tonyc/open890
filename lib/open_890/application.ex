@@ -9,6 +9,8 @@ defmodule Open890.Application do
     children = [
       # Start the Ecto repository
       # Open890.Repo,
+      # radio client
+      Open890.Client,
       # Start the Telemetry supervisor
       Open890Web.Telemetry,
       # Start the PubSub system
