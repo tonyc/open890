@@ -9,12 +9,11 @@ To start your Phoenix server:
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+## Config
 
-## Learn more
+This app needs the following ENV variables set:
 
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+  * RADIO_IP_ADDRESS - IP address of the TS-890
+  * RADIO_USERNAME - The KNS username
+  * RADIO_PASSWORD - The KNS password
+  * RADIO_USER_IS_ADMIN (true/false) - Whether the KNS user is an admin
