@@ -11,17 +11,17 @@ defmodule Open890.RTP do
             payload: nil
 
   @type t :: %__MODULE__{
-    version: 0 | 1 | 2 | 3,
-    padding: 0 | 1,
-    extension: 0 | 1,
-    csrc_count: non_neg_integer,
-    marker: 0 | 1,
-    payload_type: non_neg_integer,
-    sequence_number: non_neg_integer,
-    timestamp: non_neg_integer,
-    ssrc: non_neg_integer,
-    payload: String.t
-  }
+          version: 0 | 1 | 2 | 3,
+          padding: 0 | 1,
+          extension: 0 | 1,
+          csrc_count: non_neg_integer,
+          marker: 0 | 1,
+          payload_type: non_neg_integer,
+          sequence_number: non_neg_integer,
+          timestamp: non_neg_integer,
+          ssrc: non_neg_integer,
+          payload: String.t()
+        }
 
   def parse_packet(data) do
     with {:ok, struct} <- new(data) do
@@ -34,17 +34,17 @@ defmodule Open890.RTP do
 
   def new(data) do
     with <<
-      version :: size(2),
-      padding :: size(1),
-      extension :: size(1),
-      csrc_count :: size(4),
-      marker :: size(1),
-      payload_type :: size(7),
-      sequence_number :: size(16),
-      timestamp :: size(32),
-      ssrc :: size(32),
-      payload :: binary
-    >> <- data do
+           version::size(2),
+           padding::size(1),
+           extension::size(1),
+           csrc_count::size(4),
+           marker::size(1),
+           payload_type::size(7),
+           sequence_number::size(16),
+           timestamp::size(32),
+           ssrc::size(32),
+           payload::binary
+         >> <- data do
       udp = %__MODULE__{
         version: version,
         padding: padding,

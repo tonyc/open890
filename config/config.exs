@@ -9,6 +9,7 @@ use Mix.Config
 
 config :open_890,
   ecto_repos: []
+
 # config :open_890,
 #   ecto_repos: [Open890.Repo]
 

@@ -32,7 +32,6 @@ defmodule Open890.UDPAudioServer do
           Logger.info(inspect(rtp.payload, pretty: true))
         end
 
-
       {:error, reason} ->
         Logger.warn("Error parsing packet: #{inspect(reason)}")
     end
