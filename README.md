@@ -22,4 +22,9 @@ This app needs the following ENV variables set:
 
 Download sudppipe.exe from http://www.softsea.com/review/Simple-UDP-Proxy-Pipe.html, then:
 
+
+  * Figure out the IPV4 address inside WSL:
+    ifconfig -a | grep inet
+
+  * Run sudppipe:
     sudppipe.exe -x -b 0.0.0.0 172.18.241.58 60001 60001
