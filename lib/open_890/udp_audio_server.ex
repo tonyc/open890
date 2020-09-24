@@ -14,6 +14,8 @@ defmodule Open890.UDPAudioServer do
   def init(_args) do
     {:ok, socket} = :gen_udp.open(@port, @socket_opts)
 
+    Logger.info("UDP Audio server listening on port #{@port}")
+
     {:ok, %{socket: socket}}
   end
 
