@@ -34,3 +34,36 @@
   display: block;
   margin: -1rem 0 2rem;
 }
+
+#audioscope {
+  height: 100%;
+  // background-color: black;
+}
+
+#audioscope .c3-event-rects {
+}
+
+#audioscope .c3-ygrid {
+  stroke-dasharray: 0;
+  stroke: #666;
+}
+
+#audioscope .c3-lines-data {
+  // stroke: green;
+}
+
+#audioscope .c3-grid line {
+  // stroke: none;
+}
+
+#audioscope .c3-axis-y .tick, #audioscope .c3-axis-x .tick {
+   display: none;
+}
+
+#audioscope .c3-axis-y .domain, #audioscope .c3-axis-x .domain {
+  stroke: none;
+}
+
+#audioscope .c3-chart {
+  background-color: black;
+}

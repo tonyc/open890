@@ -9,7 +9,113 @@ import "../css/app.scss"
 //
 // Import deps with the dep name or local files with a relative path, for example:
 //
-//     import {Socket} from "phoenix"
-//     import socket from "./socket"
-//
+import { Socket } from "phoenix"
+import socket from "./socket"
 import "phoenix_html"
+
+
+let audioScopeChannel = socket.channel("radio:audio_scope", {})
+audioScopeChannel.join()
+  .receive("ok", resp => { console.log("Joined audio SCOPE successfully", resp) })
+  .receive("error", resp => { console.log("Unable to join", resp) })
+
+let chart = null;
+let count = 0;
+
+// var data = new Array(50)
+// for (var i = 0; i < data.length; i++) {
+//   data[i] = 0;
+// }
+
+if (!document.querySelector('#audioscope')) {
+  console.log("No audio scope")
+} else {
+  console.log("Found audio scope")
+  chart = c3.generate({
+    bindto: '#audioscope',
+    data: {
+      columns: [],
+      type: 'area-spline'
+    },
+    color: {
+      pattern: ['#0f0']
+    },
+    size: {
+    },
+    point: { show: false },
+    spline: {
+      interpolation: {
+        // type: 'bundle'
+      }
+    },
+    grid: {
+      x: {
+        show: false
+      },
+      y: {
+        show: true
+      }
+    },
+    tooltip: { show: false },
+    legend: { show: false },
+    axis: {
+      x: {
+        show: true,
+        min: 0,
+        max: 212,
+        label: false,
+        tick: { count: 1 }
+      },
+      y: {
+        padding: { bottom: 0 },
+        show: true,
+        min: 0,
+        max: 50,
+        tick: { count: 1 }
+
+      }
+    }
+  })
+  audioScopeChannel.on("scope_data", (data) => {
+    count += 1;
+
+    chart.load({
+      columns: [
+        ["data"].concat(data.payload)
+      ],
+      transition: { duration: 0 }
+    })
+  })
+
+}
+
+
+let audioStreamChannel = socket.channel("radio:audio_stream", {})
+audioStreamChannel.join()
+  .receive("ok", resp => { console.log("Joined audio STREAM successfully", resp) })
+  .receive("error", resp => { console.log("Unable to join", resp) })
+
+let audioCount = 0
+
+
+audioStreamChannel.on("audio_data", (data) => {
+  let buffer = []
+  let decoded = atob(data.payload)
+
+  for (var i = 0; i < decoded.length; i++) {
+    buffer.push(decoded.charCodeAt(i))
+  }
+
+
+  audioCount += 1
+
+  if (audioCount % 500 == 0) {
+    console.log("Received", audioCount, "audio packets")
+    console.log("buffer", buffer);
+  }
+  // let decoded = atoi(data.payload)
+  // console.log(data)
+  // console.log("received", decoded.length, "length payload")
+
+  // console.log("decoded data:", decoded)
+})

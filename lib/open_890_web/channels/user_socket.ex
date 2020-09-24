@@ -2,7 +2,8 @@ defmodule Open890Web.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "room:*", Open890Web.RoomChannel
+  channel "radio:audio_scope", Open890Web.AudioScopeChannel
+  channel "radio:audio_stream", Open890Web.AudioStreamChannel
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After

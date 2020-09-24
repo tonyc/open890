@@ -17,3 +17,9 @@ This app needs the following ENV variables set:
   * RADIO_USERNAME - The KNS username
   * RADIO_PASSWORD - The KNS password
   * RADIO_USER_IS_ADMIN (true/false) - Whether the KNS user is an admin
+
+## Forwarding UDP packets from Windows 10 to WSL2:
+
+Download sudppipe.exe, then:
+
+    sudppipe.exe -x -b 0.0.0.0 172.18.241.58 60001 60001
