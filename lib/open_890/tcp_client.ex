@@ -23,7 +23,7 @@ defmodule Open890.TCPClient do
       |> User.password(radio_password)
       |> User.is_admin(radio_user_is_admin)
 
-    send(self(), :connect_socket)
+    self() |> send(:connect_socket)
 
     {:ok,
      %{
@@ -59,7 +59,6 @@ defmodule Open890.TCPClient do
     {:noreply, new_state}
   end
 
-
   def handle_info({:tcp_closed, _socket}, state) do
     Logger.warn("TCP socket closed. State: #{inspect(state)}")
 
@@ -71,11 +70,10 @@ defmodule Open890.TCPClient do
 
     Logger.info("Established TCP socket with radio on port #{@port}")
 
-    send(self(), :login_radio)
+    self() |> send(:login_radio)
 
     {:noreply, state |> Map.put(:socket, socket)}
   end
-
 
   # radio commands
   def handle_info(:enable_audioscope, %{socket: socket} = state) do
