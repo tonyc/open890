@@ -23,8 +23,8 @@ defmodule Open890.KNS.User do
 
   defp make_login(%User{} = user) do
     [user_length, pass_length] =
-    [user.username, user.password]
-      |> Enum.map(fn (str) ->
+      [user.username, user.password]
+      |> Enum.map(fn str ->
         str
         |> String.length()
         |> to_string()
