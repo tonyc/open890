@@ -20,6 +20,6 @@ This app needs the following ENV variables set:
 
 ## Forwarding UDP packets from Windows 10 to WSL2:
 
-Download sudppipe.exe, then:
+Download sudppipe.exe from http://www.softsea.com/review/Simple-UDP-Proxy-Pipe.html, then:
 
     sudppipe.exe -x -b 0.0.0.0 172.18.241.58 60001 60001
