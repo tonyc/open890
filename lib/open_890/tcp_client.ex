@@ -1,11 +1,11 @@
-defmodule Open890.Client do
+defmodule Open890.TCPClient do
   use GenServer
   require Logger
 
   @socket_opts [:binary, active: true]
-  @tcp_port 60000
+  @port 60000
 
-  alias Open890.KNS
+  alias Open890.KNS.User
 
   def start_link() do
     GenServer.start_link(__MODULE__, name: __MODULE__)
@@ -17,21 +17,18 @@ defmodule Open890.Client do
     radio_password = System.fetch_env!("RADIO_PASSWORD")
     radio_user_is_admin = System.fetch_env("RADIO_USER_IS_ADMIN") == "true"
 
-    {:ok, socket} = :gen_tcp.connect(radio_ip_address, @tcp_port, @socket_opts)
-
     kns_user =
-      KNS.User.build()
-      |> KNS.User.username(radio_username)
-      |> KNS.User.password(radio_password)
-      |> KNS.User.is_admin(radio_user_is_admin)
+      User.build()
+      |> User.username(radio_username)
+      |> User.password(radio_password)
+      |> User.is_admin(radio_user_is_admin)
 
-    send(self(), :radio_login)
+    send(self(), :connect_socket)
 
     {:ok,
      %{
-       socket: socket,
+       radio_ip_address: radio_ip_address,
        kns_user: kns_user
-       # audio_scope_data: List.duplicate(0, 50)
      }}
   end
 
@@ -62,11 +59,23 @@ defmodule Open890.Client do
     {:noreply, new_state}
   end
 
-  def handle_info({:tcp_closed, socket}, state) do
-    Logger.error("TCP socket closed: #{inspect(socket)}")
+
+  def handle_info({:tcp_closed, _socket}, state) do
+    Logger.warn("TCP socket closed. State: #{inspect(state)}")
 
     {:noreply, state}
   end
+
+  def handle_info(:connect_socket, state) do
+    {:ok, socket} = :gen_tcp.connect(state.radio_ip_address, @port, @socket_opts)
+
+    Logger.info("Established TCP socket with radio on port #{@port}")
+
+    send(self(), :login_radio)
+
+    {:noreply, state |> Map.put(:socket, socket)}
+  end
+
 
   # radio commands
   def handle_info(:enable_audioscope, %{socket: socket} = state) do
@@ -83,7 +92,7 @@ defmodule Open890.Client do
     {:noreply, state}
   end
 
-  def handle_info(:radio_login, %{socket: socket} = state) do
+  def handle_info(:login_radio, %{socket: socket} = state) do
     socket |> send_command("##CN")
     {:noreply, state}
   end
