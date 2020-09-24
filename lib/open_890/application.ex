@@ -3,14 +3,17 @@ defmodule Open890.Application do
   # for more information on OTP Applications
   @moduledoc false
 
+  import Supervisor.Spec
   use Application
+
 
   def start(_type, _args) do
     children = [
       # Start the Ecto repository
       # Open890.Repo,
       # radio client
-      Open890.Client,
+      supervisor(Open890.Client, []),
+      supervisor(Open890.UDPAudioServer, []),
       # Start the Telemetry supervisor
       Open890Web.Telemetry,
       # Start the PubSub system
