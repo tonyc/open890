@@ -25,7 +25,7 @@ Download sudppipe.exe from http://www.softsea.com/review/Simple-UDP-Proxy-Pipe.h
 
   * Figure out the IPV4 address inside WSL:
 
-      `ifconfig -a | grep inet`
+      `ifconfig -a | grep inet | grep -v inet6 | grep -v 127 | awk '{print $2}'`
 
   * Run sudppipe:
 

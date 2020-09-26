@@ -14,11 +14,11 @@ defmodule Open890.Application do
         start: {Open890.TCPClient, :start_link, []},
         type: :supervisor
       },
-      %{
-        id: Open890.UDPAudioServer,
-        start: {Open890.UDPAudioServer, :start_link, []},
-        type: :supervisor
-      },
+      # %{
+      #   id: Open890.UDPAudioServer,
+      #   start: {Open890.UDPAudioServer, :start_link, []},
+      #   type: :supervisor
+      # },
       # Start the Telemetry supervisor
       Open890Web.Telemetry,
       # Start the PubSub system

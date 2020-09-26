@@ -20,6 +20,7 @@ defmodule Open890.UDPAudioServer do
   end
 
   def handle_info({:udp, _udp_socket, _src_address, _dst_port, packet}, state) do
+
     packet
     |> RTP.parse_packet()
     |> case do
@@ -28,8 +29,25 @@ defmodule Open890.UDPAudioServer do
         Open890Web.Endpoint.broadcast("radio:audio_stream", "audio_data", %{payload: payload})
 
         if rem(rtp.sequence_number, 500) == 0 do
-          Logger.info("UDP Sequence: #{rtp.sequence_number}")
-          Logger.info(inspect(rtp.payload, pretty: true))
+          packet_chunked = rtp.payload
+          |> :binary.bin_to_list()
+          |> Enum.chunk_every(2)
+          |> Enum.map(fn bytes -> :binary.list_to_bin(bytes) end)
+          |> Enum.map(fn word ->
+            <<sample::signed-16>> = word
+            sample / 32767
+          end)
+
+          chunked_length = packet_chunked |> Enum.count()
+          Logger.info("Packet chunked to samples length: #{chunked_length} (#{inspect(packet_chunked)})")
+
+          # packet |> IO.inspect(label: "PACKET", limit: :infinity)
+          raw_packet_length = packet |> String.length()
+          packet_binary_length = packet |> :binary.bin_to_list() |> Enum.count()
+          payload_length = rtp.payload |> :binary.bin_to_list() |> Enum.count()
+
+          Logger.info("UDP Sequence: #{rtp.sequence_number}, received #{payload_length} bytes, UDP binary length: #{packet_binary_length}, packet string len: #{raw_packet_length} ")
+          # Logger.info(inspect(rtp.payload, pretty: true))
         end
 
       {:error, reason} ->
