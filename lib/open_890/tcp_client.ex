@@ -75,6 +75,11 @@ defmodule Open890.TCPClient do
     {:noreply, state |> Map.put(:socket, socket)}
   end
 
+  def handle_info(:login_radio, %{socket: socket} = state) do
+    socket |> send_command("##CN")
+    {:noreply, state}
+  end
+
   # radio commands
   def handle_info(:enable_audioscope, %{socket: socket} = state) do
     Logger.info("Enabling audio scope via LAN")
@@ -84,14 +89,16 @@ defmodule Open890.TCPClient do
   end
 
   def handle_info(:enable_voip, %{socket: socket} = state) do
-    Logger.info("Enabling VOIP")
-    socket |> send_command("##VP2")
+    # Logger.info("Enabling HQ VOIP stream")
+    # socket |> send_command("##VP1") # high quality
+    # socket |> send_command("##VP2") # low quality
+
 
     {:noreply, state}
   end
 
-  def handle_info(:login_radio, %{socket: socket} = state) do
-    socket |> send_command("##CN")
+  def handle_info(:enable_auto_info, state) do
+    state.socket |> send_command("AI2")
     {:noreply, state}
   end
 
@@ -105,7 +112,7 @@ defmodule Open890.TCPClient do
 
   # radio responses
   def handle_msg("##CN1", %{socket: socket, kns_user: kns_user} = state) do
-    login = KNS.User.to_login(kns_user)
+    login = User.to_login(kns_user)
 
     socket |> send_command("##ID" <> login)
     state
@@ -125,6 +132,7 @@ defmodule Open890.TCPClient do
     send(self(), :enable_voip)
 
     send(self(), :enable_audioscope)
+    send(self(), :enable_auto_info)
 
     state
   end
@@ -136,6 +144,7 @@ defmodule Open890.TCPClient do
     cond do
       msg |> String.starts_with?("##DD3") ->
         audio_scope_data = msg |> parse_audioscope_data()
+
 
         Open890Web.Endpoint.broadcast("radio:audio_scope", "scope_data", %{
           payload: audio_scope_data
@@ -157,7 +166,7 @@ defmodule Open890.TCPClient do
   defp send_command(socket, msg) when is_binary(msg) do
     cmd = msg <> ";"
 
-    Logger.info("-> #{inspect(cmd)}")
+    if cmd != "PS;", do: Logger.debug("-> #{inspect(cmd)}")
 
     socket |> :gen_tcp.send(cmd)
 

@@ -22,20 +22,20 @@ audioScopeChannel.join()
 let chart = null;
 let count = 0;
 
-// var data = new Array(50)
-// for (var i = 0; i < data.length; i++) {
-//   data[i] = 0;
-// }
-
 if (!document.querySelector('#audioscope')) {
   console.log("No audio scope")
 } else {
   console.log("Found audio scope")
   chart = c3.generate({
     bindto: '#audioscope',
+    oninit: () => {
+      // removes the white background
+      document.querySelector('g.c3-chart > g.c3-event-rects').removeAttribute('style')
+      // document.querySelector('g.c3-chart > g.c3-event-rects').setAttribute('style', 'fill: darkblue;')
+    },
     data: {
       columns: [],
-      type: 'area-spline'
+      type: 'line'
     },
     color: {
       pattern: ['#0f0']
@@ -43,11 +43,6 @@ if (!document.querySelector('#audioscope')) {
     size: {
     },
     point: { show: false },
-    spline: {
-      interpolation: {
-        // type: 'bundle'
-      }
-    },
     grid: {
       x: {
         show: false
@@ -76,6 +71,7 @@ if (!document.querySelector('#audioscope')) {
       }
     }
   })
+
   audioScopeChannel.on("scope_data", (data) => {
     count += 1;
 
@@ -86,9 +82,7 @@ if (!document.querySelector('#audioscope')) {
       transition: { duration: 0 }
     })
   })
-
 }
-
 
 let audioStreamChannel = socket.channel("radio:audio_stream", {})
 audioStreamChannel.join()
@@ -97,7 +91,6 @@ audioStreamChannel.join()
 
 let audioCount = 0
 
-
 audioStreamChannel.on("audio_data", (data) => {
   let buffer = []
   let decoded = atob(data.payload)
@@ -105,17 +98,12 @@ audioStreamChannel.on("audio_data", (data) => {
   for (var i = 0; i < decoded.length; i++) {
     buffer.push(decoded.charCodeAt(i))
   }
-
-
+  
   audioCount += 1
 
   if (audioCount % 500 == 0) {
     console.log("Received", audioCount, "audio packets")
     console.log("buffer", buffer);
   }
-  // let decoded = atoi(data.payload)
-  // console.log(data)
-  // console.log("received", decoded.length, "length payload")
 
-  // console.log("decoded data:", decoded)
 })

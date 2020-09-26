@@ -36,11 +36,15 @@
 }
 
 #audioscope {
-  height: 100%;
+  height: 200px;
+  width: 400px;
+  float: right;
+  position: relative;
   // background-color: black;
 }
 
-#audioscope .c3-event-rects {
+#audioscope g.c3-chart > g.c3-event-rects{
+  // background-color: red;
 }
 
 #audioscope .c3-ygrid {
@@ -49,11 +53,12 @@
 }
 
 #audioscope .c3-lines-data {
-  // stroke: green;
+  stroke: green;
+  stroke-width: 0.5px
 }
 
 #audioscope .c3-grid line {
-  // stroke: none;
+  stroke: none;
 }
 
 #audioscope .c3-axis-y .tick, #audioscope .c3-axis-x .tick {
@@ -64,6 +69,8 @@
   stroke: none;
 }
 
-#audioscope .c3-chart {
-  background-color: black;
+.c3-shapes.c3-shapes-data.c3-lines.c3-lines-data > path {
+  // stroke: rgba(255, 0, 0, 0) !important;
+  // opacity: 0 !important;
+  // fill: rgba(0, 255, 0, 1.0) !important;
 }
