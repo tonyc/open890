@@ -88,10 +88,10 @@ defmodule Open890.TCPClient do
     {:noreply, state}
   end
 
-  def handle_info(:enable_voip, %{socket: socket} = state) do
+  def handle_info(:enable_voip, state) do
     # Logger.info("Enabling HQ VOIP stream")
-    # socket |> send_command("##VP1") # high quality
-    # socket |> send_command("##VP2") # low quality
+    # state.socket |> send_command("##VP1") # high quality
+    # state.socket |> send_command("##VP2") # low quality
 
 
     {:noreply, state}
