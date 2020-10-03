@@ -153,6 +153,14 @@ defmodule Open890.TCPClient do
         # %{state | audio_scope_data: audio_scope_data}
         state
 
+      msg |> String.starts_with?("SM") ->
+        Open890Web.Endpoint.broadcast("radio:state", "radio_state_data", %{msg: msg})
+        state
+
+      msg |> String.starts_with?("FA") ->
+        Open890Web.Endpoint.broadcast("radio:state", "radio_state_data", %{msg: msg})
+        state
+
       true ->
         Logger.warn("Unhandled message: #{inspect(msg)}")
         state
