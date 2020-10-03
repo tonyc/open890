@@ -48,6 +48,7 @@ defmodule Open890Web do
 
       import Plug.Conn
       import Phoenix.Controller
+      import Phoenix.LiveView.Router
     end
   end
 
@@ -69,6 +70,8 @@ defmodule Open890Web do
       import Open890Web.ErrorHelpers
       import Open890Web.Gettext
       alias Open890Web.Router.Helpers, as: Routes
+
+      import Phoenix.LiveView
     end
   end
 
