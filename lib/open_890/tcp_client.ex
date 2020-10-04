@@ -35,6 +35,27 @@ defmodule Open890.TCPClient do
   end
 
   # Client API
+  def ch_up, do: "CH0" |> cmd()
+  def ch_down, do: "CH1" |> cmd()
+
+  def radio_up(args \\ "03") when is_binary(args), do: "UP#{args}" |> cmd()
+  def radio_down(args \\ "03") when is_binary(args), do: "DN#{args}" |> cmd()
+
+  def freq_change(:up) do
+    ("FC0" <> freq_change_step()) |> cmd()
+  end
+
+  def freq_change(:down) do
+    ("FC1" <> freq_change_step()) |> cmd()
+  end
+
+  def vfo_a_b_swap, do: "EC" |> cmd()
+  def get_vfo_a_freq, do: "FA" |> cmd()
+  def get_vfo_b_freq, do: "FB" |> cmd()
+
+  # TODO: Make this configurable
+  defp freq_change_step, do: "3"
+
   def cmd(cmd) do
     Logger.info("#{__MODULE__}.send_command(#{inspect(cmd)})")
     GenServer.cast(:radio, {:send_command, cmd})
@@ -155,7 +176,6 @@ defmodule Open890.TCPClient do
           payload: audio_scope_data
         })
 
-        # %{state | audio_scope_data: audio_scope_data}
         state
 
       msg |> String.starts_with?("SM") ->
