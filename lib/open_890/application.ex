@@ -12,7 +12,7 @@ defmodule Open890.Application do
       %{
         id: Open890.TCPClient,
         start: {Open890.TCPClient, :start_link, []},
-        type: :supervisor
+        type: :supervisor,
       },
       # %{
       #   id: Open890.UDPAudioServer,
