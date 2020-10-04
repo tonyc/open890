@@ -20,7 +20,6 @@ defmodule Open890Web.RadioLive do
     }
   end
 
-
   @impl true
   def render(assigns) do
     PageView.render("radio.html", assigns)
@@ -29,6 +28,7 @@ defmodule Open890Web.RadioLive do
   @impl true
   def handle_event("mic_up", _meta, socket) do
     Logger.info("Event: mic_up")
+    Open890.ch_up()
 
     # This should look something like:
     # Radio.mic_up()
@@ -39,6 +39,7 @@ defmodule Open890Web.RadioLive do
   @impl true
   def handle_event("mic_dn", _meta, socket) do
     Logger.info("Event: mic_dn")
+    Open890.ch_down()
 
     {:noreply, socket}
   end

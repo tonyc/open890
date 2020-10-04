@@ -8,9 +8,11 @@ defmodule Open890.TCPClient do
   alias Open890.KNS.User
 
   def start_link() do
-    GenServer.start_link(__MODULE__, name: __MODULE__)
+    Logger.info("************** START_LINK")
+    GenServer.start_link(__MODULE__, [], name: :radio)
   end
 
+  @impl true
   def init(_args) do
     radio_ip_address = System.fetch_env!("RADIO_IP_ADDRESS") |> String.to_charlist()
     radio_username = System.fetch_env!("RADIO_USERNAME")
@@ -33,18 +35,21 @@ defmodule Open890.TCPClient do
   end
 
   # Client API
-  def send_command(cmd) do
-    GenServer.cast(__MODULE__, {:send_cmd, cmd})
+  def cmd(cmd) do
+    Logger.info("#{__MODULE__}.send_command(#{inspect(cmd)})")
+    GenServer.cast(:radio, {:send_command, cmd})
   end
 
   # Server API
-  def handle_cast({:send_cmd, cmd}, %{socket: socket} = state) do
-    socket |> send_command(cmd)
+  @impl true
+  def handle_cast({:send_command, cmd}, state) do
+    Logger.info("handle_cast: send_command: #{cmd}")
+    state.socket |> send_command(cmd)
     {:noreply, state}
   end
 
   # networking
-
+  @impl true
   def handle_info({:tcp, socket, msg}, %{socket: socket} = state) do
     # Logger.info("<- #{inspect msg}")
 
