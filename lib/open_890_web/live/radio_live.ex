@@ -1,8 +1,8 @@
 defmodule Open890Web.RadioLive do
-  use Phoenix.LiveView
+  use Open890Web, :live_view
 
   require Logger
-  alias Open890Web.PageView
+
   alias Phoenix.Socket.Broadcast
 
   @impl true
@@ -18,11 +18,6 @@ defmodule Open890Web.RadioLive do
         |> assign(:s_meter, "0")
         |> assign(:vfo_a_frequency, "FA00000000000")
     }
-  end
-
-  @impl true
-  def render(assigns) do
-    PageView.render("radio.html", assigns)
   end
 
   @impl true
