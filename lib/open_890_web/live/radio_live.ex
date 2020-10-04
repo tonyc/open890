@@ -1,9 +1,8 @@
 defmodule Open890Web.RadioLive do
   use Open890Web, :live_view
-
   require Logger
-
   alias Phoenix.Socket.Broadcast
+  alias Open890.TCPClient, as: Radio
 
   @impl true
   def mount(_params, _session, socket) do
@@ -13,9 +12,8 @@ defmodule Open890Web.RadioLive do
       Phoenix.PubSub.subscribe(Open890.PubSub, "radio:state")
     end
 
-    Open890.get_vfo_a_freq()
-    Open890.get_vfo_b_freq()
-
+    Radio.get_vfo_a_freq()
+    Radio.get_vfo_b_freq()
 
     {:ok,
       socket
@@ -27,31 +25,29 @@ defmodule Open890Web.RadioLive do
 
   @impl true
   def handle_event("mic_up", _params, socket) do
-    Logger.info("Event: mic_up")
-    Open890.ch_up()
-
+    Radio.ch_up()
     {:noreply, socket}
   end
 
   @impl true
   def handle_event("mic_dn", _params, socket) do
-    Logger.info("Event: mic_dn")
-    Open890.ch_down()
-
+    Radio.ch_down()
     {:noreply, socket}
   end
 
   @impl true
-  def handle_event("multi_ch", %{"is_up" => is_up} = params, socket) do
-    Logger.info("Event: multi/ch, meta: #{inspect(params)}")
+  def handle_event("multi_ch", %{"is_up" => true} = params, socket) do
+    Logger.debug("multi_ch: params: #{inspect(params)}")
+    Radio.freq_change(:up)
 
-    direction = if is_up do
-      :up
-    else
-      :down
-    end
+    {:noreply, socket}
+  end
 
-    Open890.freq_change(direction)
+
+  @impl true
+  def handle_event("multi_ch", %{"is_up" => false} = params, socket) do
+    Logger.debug("multi_ch: params: #{inspect(params)})")
+    Radio.freq_change(:down)
 
     {:noreply, socket}
   end
