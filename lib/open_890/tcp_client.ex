@@ -162,7 +162,7 @@ defmodule Open890.TCPClient do
         Open890Web.Endpoint.broadcast("radio:state", "radio_state_data", %{msg: msg})
         state
 
-      msg |> String.starts_with?("FA") ->
+      msg |> String.starts_with?("FA") || msg |> String.starts_with?("FB") ->
         Open890Web.Endpoint.broadcast("radio:state", "radio_state_data", %{msg: msg})
         state
 

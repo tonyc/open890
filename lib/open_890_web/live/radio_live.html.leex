@@ -13,9 +13,17 @@
       <%= @vfo_a_frequency %>
     </div>
 
+    <div class="vfoB">
+      VFO B:
+      <%= @vfo_b_frequency %>
+    </div>
+
   <div class="controlButtons">
     <button type="button" class="btn btn-lg btn-primary" phx-click="mic_dn">&#x25BC;</button>
     <button type="button" class="btn btn-lg btn-primary" phx-click="mic_up">&#x25B2;</button>
+
+    <button type="button" class="btn btn-lg radio-control multi-ch" phx-hook="MultiCH" id="multi-ch">Multi/CH</button>
+
   </div>
 
 </div>

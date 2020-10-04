@@ -14,17 +14,20 @@ import socket from "./socket"
 import "phoenix_html"
 import LiveSocket from "phoenix_live_view"
 
+import ControlHooks from "./control_hooks"
+
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 
-let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}})
+let liveSocket = new LiveSocket("/live", Socket, {hooks: ControlHooks, params: {_csrf_token: csrfToken}})
 liveSocket.connect()
-
 
 let audioScopeChannel = socket.channel("radio:audio_scope", {})
 audioScopeChannel.join()
   .receive("ok", resp => { console.log("Joined audio SCOPE successfully", resp) })
   .receive("error", resp => { console.log("Unable to join", resp) })
 
+
+// build audio scope
 let chart = null;
 let count = 0;
 
@@ -111,5 +114,6 @@ audioStreamChannel.on("audio_data", (data) => {
     console.log("Received", audioCount, "audio packets")
     console.log("buffer", buffer);
   }
-
 })
+
+
