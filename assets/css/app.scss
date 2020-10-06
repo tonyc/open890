@@ -35,42 +35,45 @@
   margin: -1rem 0 2rem;
 }
 
-#audioscope {
+#audioScope {
   height: 200px;
   width: 400px;
   float: right;
   position: relative;
-  // background-color: black;
+  // border-radius: 7px;
+  // background-color: green;
 }
 
-#audioscope g.c3-chart > g.c3-event-rects{
+#audioScope g.c3-chart > g.c3-event-rects{
   // background-color: red;
 }
 
-#audioscope .c3-ygrid {
-  stroke-dasharray: 0;
+#audioScope .c3-ygrid {
   stroke: #666;
 }
 
-#audioscope .c3-lines-data {
-  stroke: green;
-  stroke-width: 0.5px
+#audioScope .c3-lines-data {
+  // stroke: green;
+  // stroke-width: .5px
 }
 
-#audioscope .c3-grid line {
+#audioScope .c3-grid line {
   stroke: none;
 }
 
-#audioscope .c3-axis-y .tick, #audioscope .c3-axis-x .tick {
-   display: none;
-}
-
-#audioscope .c3-axis-y .domain, #audioscope .c3-axis-x .domain {
-  stroke: none;
+#audioScope .c3-axis-y .tick,
+#audioScope .c3-axis-x .tick,
+#audioScope .c3-axis-y .domain,
+#audioScope .c3-axis-x .domain {
+  display: none;
 }
 
 .c3-shapes.c3-shapes-data.c3-lines.c3-lines-data > path {
   // stroke: rgba(255, 0, 0, 0) !important;
   // opacity: 0 !important;
   // fill: rgba(0, 255, 0, 1.0) !important;
+}
+
+.debug {
+  border: 1px dashed red;
 }

@@ -5,6 +5,8 @@ defmodule Open890.TCPClient do
   @socket_opts [:binary, active: true]
   @port 60000
 
+  @enable_audio_scope true
+
   alias Open890.KNS.User
 
   def start_link() do
@@ -157,7 +159,7 @@ defmodule Open890.TCPClient do
     Logger.info("received TI1, enabling voip")
     send(self(), :enable_voip)
 
-    send(self(), :enable_audioscope)
+    if @enable_audio_scope, do: send(self(), :enable_audioscope)
     send(self(), :enable_auto_info)
 
     state
@@ -170,7 +172,6 @@ defmodule Open890.TCPClient do
     cond do
       msg |> String.starts_with?("##DD3") ->
         audio_scope_data = msg |> parse_audioscope_data()
-
 
         Open890Web.Endpoint.broadcast("radio:audio_scope", "scope_data", %{
           payload: audio_scope_data
