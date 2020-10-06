@@ -10,6 +10,7 @@ defmodule Open890Web.RadioLive do
 
     if connected?(socket) do
       Phoenix.PubSub.subscribe(Open890.PubSub, "radio:state")
+      Phoenix.PubSub.subscribe(Open890.PubSub, "radio:audio_scope")
     end
 
     Radio.get_vfo_a_freq()
@@ -50,6 +51,14 @@ defmodule Open890Web.RadioLive do
     Radio.freq_change(:down)
 
     {:noreply, socket}
+  end
+
+  @impl true
+  def handle_info(%Broadcast{event: "scope_data", payload: payload}, socket) do
+    {:noreply,
+      socket
+      |> push_event(:audio_scope_data, payload)
+    }
   end
 
   @impl true
