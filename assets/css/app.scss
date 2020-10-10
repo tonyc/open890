@@ -35,12 +35,6 @@
   margin: -1rem 0 2rem;
 }
 
-#bandScope {
-  height: 400px;
-  width: 100%;
-  float: left;
-  position: relative;
-}
 
 #audioScope {
   height: 200px;
@@ -87,12 +81,102 @@
   // fill: rgba(0, 255, 0, 1.0) !important;
 }
 
+#vfos {
+  // position: relative;
+  // width: 10rem;
+  // font-size: 56pt;
+  // width: 500px;
+  // border: 2px dashed green;
+  // text-align: right;
+}
+
 .vfo {
-  font-size: 56pt;
+  // text-align: right;
+}
+
+.vfo .freq {
+  // border: 1px solid blue;
   font-family: monospace;
   font-weight: bold;
+  width: 450px;
+  font-size: 56pt;
+  text-align: right;
 }
+
 
 .debug {
   border: 1px dashed red;
+}
+
+_body {
+  background-color: black;
+  color: white;
+}
+
+#bandScope {
+  border-radius: 10px;
+  background-color: black;
+  // width: 1280px;
+  width: 100%;
+  // float: left;
+  // position: relative;
+}
+
+
+#bandScope #carrier {
+  stroke: rgba(255, 255, 255, 1.0);
+  stroke-dasharray: 3 5;
+  stroke-width: 0.5pt;
+}
+
+#bandScope.themed {
+  .spectrum {
+    stroke-width: 0.75px;
+  }
+
+  &.phosphor-red {
+    #spectrum {
+      fill: rgba(51, 0, 0, 1.0);
+      stroke: rgba(255, 0, 0, 0.5);
+    }
+
+    #spectrumBlur {
+      fill: rgba(51, 0, 0, 1.0);
+      stroke: rgba(255, 0, 0, 0.5);
+      stroke-width: 2px;
+    }
+
+  }
+
+  &.phosphor-green {
+    #spectrum {
+      fill: rgba(0, 51, 0, 1.0);
+      stroke: rgba(0, 255, 0, 0.5);
+    }
+
+    #spectrumBlur {
+      fill: rgba(0, 51, 0, 1.0);
+      stroke: rgba(0, 255, 0, 0.5);
+      stroke-width: 2px;
+    }
+  }
+
+  &.elecraft {
+    background-color: rgba(0, 0, 64, 1.0);
+
+    #carrier {
+      stroke: rgba(0, 252, 0, 1.0);
+      stroke-width: 0.5pt;
+      stroke-dasharray: 0;
+    }
+
+    #spectrum {
+      fill: none;
+      stroke: rgba(251, 251, 0, 1.0);
+    }
+
+    #spectrumBlur {
+      display: none;
+    }
+  }
 }

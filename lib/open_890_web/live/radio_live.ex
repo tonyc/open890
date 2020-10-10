@@ -22,6 +22,8 @@ defmodule Open890Web.RadioLive do
         |> assign(:s_meter, "")
         |> assign(:vfo_a_frequency, "")
         |> assign(:vfo_b_frequency, "")
+        |> assign(:band_scope_data, [])
+        |> assign(:theme, "elecraft")
     }
   end
 
@@ -45,13 +47,18 @@ defmodule Open890Web.RadioLive do
     {:noreply, socket}
   end
 
-
   @impl true
   def handle_event("multi_ch", %{"is_up" => false} = params, socket) do
     Logger.debug("multi_ch: params: #{inspect(params)})")
     Radio.freq_change(:down)
 
     {:noreply, socket}
+  end
+
+  def handle_event("set_theme", %{"theme" => theme_name} = _params, socket) do
+    {:noreply,
+      socket |> assign(:theme, theme_name)
+    }
   end
 
   @impl true
@@ -62,9 +69,17 @@ defmodule Open890Web.RadioLive do
   end
 
   @impl true
-  def handle_info(%Broadcast{event: "band_scope_data", payload: payload}, socket) do
+  def handle_info(%Broadcast{event: "band_scope_data", payload: %{payload: band_data}}, socket) do
+    zipped_data = (0..640)
+    |> Enum.zip(band_data)
+    |> Enum.map(fn ({index, data}) ->
+      "#{index},#{data}"
+    end)
+    |> Enum.join(" ")
+
     {:noreply,
-      socket |> push_event(:band_scope_data, payload)
+      # socket |> push_event(:band_scope_data, payload)
+      socket |> assign(:band_scope_data, zipped_data)
     }
   end
 

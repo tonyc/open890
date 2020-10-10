@@ -1,24 +1,32 @@
 <div id="radio">
+  <form id="themeForm" phx-change="set_theme">
+    <label for="theme">Theme:
+      <select name="theme">
+        <option <%= selected_theme?(@theme, "phosphor-green") %> value="phosphor-green">Phosphor Green</option>
+        <option <%= selected_theme?(@theme, "phosphor-red") %> value="phosphor-red">Phosphor Red</option>
+        <option <%= selected_theme?(@theme, "elecraft") %> value="elecraft">Elecraft</option>
+      </select>
+    </label>
+  </form>
+
   <div id="audioScope" class="scope" phx-hook="AudioScope" phx-update="ignore"></div>
 
-  <div id="vfoA">
-    <div class="vfoStatus">
-    </div>
+  <div class="sMeter">
+    S-Meter:
+    <span><%= @s_meter %></span>
+  </div>
 
-    <div class="sMeter">
-      S-Meter:
-      <%= @s_meter %>
-    </div>
-
-    <div id="vfoA">
+  <div id="vfos" class="">
       A:
-      <span class="vfo"><%= @vfo_a_frequency %></span>
+    <div id="vfoA" class="vfo">
+      <div class="freq"><%= @vfo_a_frequency %></div>
     </div>
 
-    <div id="vfoB">
       B:
-      <span class="vfo"><%= @vfo_b_frequency %></span>
+    <div id="vfoB" class="vfo">
+      <div class="freq"><%= @vfo_b_frequency %></div>
     </div>
+  </div>
 
   <div class="controlButtons">
     <button type="button" class="btn btn-lg btn-primary" phx-click="mic_dn">&#x25BC;</button>
@@ -28,6 +36,25 @@
 
   </div>
 
-  <div id="bandScope" class="scope" phx-hook="BandScope" phx-update="ignore"></div>
+  <svg id="bandScope" class="themed <%= @theme %>" viewbox="0 0 640 140">
+
+    <defs>
+      <filter id="blur" filterUnits="userSpaceOnUse" x="0" y="0" width="640" height="150">
+        <feGaussianBlur in="sourceAlpha" stdDeviation="1" />
+      </filter>
+    </defs>
+
+    <polygon id="spectrumBlur" filter="url(#blur)"
+      points="<%= @band_scope_data %> 645,150 0,150"
+    />
+
+    <polygon id="spectrum" class="spectrum"
+      points="<%= @band_scope_data %> 645,150 0,150"
+    />
+
+    <line id="carrier"
+      x1="320" y1="0" x2="320" y2="150" />
+
+  </svg>
 
 </div>

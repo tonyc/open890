@@ -120,11 +120,14 @@ defmodule Open890.TCPClient do
   def handle_info(:enable_bandscope, %{socket: socket} = state) do
     Logger.info("Enabling LAN bandscope")
 
-    # high-cycle
-    # socket |> send_command("DD01")
+    # low cycle
+    # socket |> send_command("DD03")
 
     # medium-cycle
-    socket |> send_command("DD02")
+    # socket |> send_command("DD02")
+
+    # high-cycle
+    socket |> send_command("DD01")
 
     {:noreply, state}
   end
@@ -258,7 +261,8 @@ defmodule Open890.TCPClient do
     |> Enum.map(&Enum.join/1)
     |> Enum.map(fn value ->
       val = Integer.parse(value, 16) |> elem(0)
-      -val + 140
+      val
+      # -val + 140
     end)
   end
 end

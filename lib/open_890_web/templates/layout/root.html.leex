@@ -6,23 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <%= csrf_meta_tag() %>
-    <%= live_title_tag assigns[:page_title] || "LiveTest", suffix: " · Phoenix Framework" %>
+    <%= live_title_tag "open890 #{assigns[:page_title]}" %>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.20/c3.min.css" integrity="sha512-cznfNokevSG7QPA5dZepud8taylLdvgr0lDqw/FEZIhluFsSwyvS81CMnRdrNSKwbsmc43LtRd2/WMQV+Z85AQ==" crossorigin="anonymous" />
     <link phx-track-static rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
     <script defer phx-track-static type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </head>
   <body>
     <header>
-      <section class="container">
-        <nav role="navigation">
-          <ul>
-            <li><a href="https://hexdocs.pm/phoenix/overview.html">Get Started</a></li>
-            <%= if function_exported?(Routes, :live_dashboard_path, 2) do %>
-              <li><%= link "LiveDashboard", to: Routes.live_dashboard_path(@conn, :home) %></li>
-            <% end %>
-          </ul>
-        </nav>
-      </section>
+      <nav role="navigation">
+        <h1>open890</h1>
+
+        <%= if function_exported?(Routes, :live_dashboard_path, 2) do %>
+          <%= link "LiveDashboard", to: Routes.live_dashboard_path(@conn, :home) %>
+        <% end %>
+      </nav>
     </header>
       <%= @inner_content %>
   </body>
