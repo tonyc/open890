@@ -6,6 +6,7 @@ defmodule Open890.TCPClient do
   @port 60000
 
   @enable_audio_scope true
+  @enable_band_scope true
 
   alias Open890.KNS.User
 
@@ -56,7 +57,7 @@ defmodule Open890.TCPClient do
   def get_vfo_b_freq, do: "FB" |> cmd()
 
   # TODO: Make this configurable
-  defp freq_change_step, do: "3"
+  defp freq_change_step, do: "5"
 
   def cmd(cmd) do
     Logger.info("#{__MODULE__}.send_command(#{inspect(cmd)})")
@@ -116,6 +117,18 @@ defmodule Open890.TCPClient do
     {:noreply, state}
   end
 
+  def handle_info(:enable_bandscope, %{socket: socket} = state) do
+    Logger.info("Enabling LAN bandscope")
+
+    # high-cycle
+    # socket |> send_command("DD01")
+
+    # medium-cycle
+    socket |> send_command("DD02")
+
+    {:noreply, state}
+  end
+
   def handle_info(:enable_voip, state) do
     # Logger.info("Enabling HQ VOIP stream")
     # state.socket |> send_command("##VP1") # high quality
@@ -156,10 +169,11 @@ defmodule Open890.TCPClient do
   # Sent at the very end of the login sequence,
   # Finally OK to enable VOIP
   def handle_msg("##TI1", %{socket: _socket} = state) do
-    Logger.info("received TI1, enabling voip")
-    send(self(), :enable_voip)
+    Logger.info("received TI1")
+    # send(self(), :enable_voip)
 
     if @enable_audio_scope, do: send(self(), :enable_audioscope)
+    if @enable_band_scope, do: send(self(), :enable_bandscope)
     send(self(), :enable_auto_info)
 
     state
@@ -167,14 +181,31 @@ defmodule Open890.TCPClient do
 
   def handle_msg("PS1", state), do: state
   def handle_msg("##UE1", state), do: state
+  def handle_msg("DD01", state), do: state
+  def handle_msg("DD11", state), do: state
 
   def handle_msg(msg, %{socket: _socket} = state) when is_binary(msg) do
     cond do
       msg |> String.starts_with?("##DD3") ->
         audio_scope_data = msg |> parse_audioscope_data()
 
+        # len = audio_scope_data |> Enum.count()
+        # Logger.info("Audio scope data length: #{len}")
+
         Open890Web.Endpoint.broadcast("radio:audio_scope", "scope_data", %{
           payload: audio_scope_data
+        })
+
+        state
+
+      msg |> String.starts_with?("##DD2") ->
+        band_scope_data = msg |> parse_bandscope_data()
+
+        # len = band_scope_data |> Enum.count()
+        # Logger.info("Band scope data length: #{len}")
+
+        Open890Web.Endpoint.broadcast("radio:band_scope", "band_scope_data", %{
+          payload: band_scope_data
         })
 
         state
@@ -216,6 +247,18 @@ defmodule Open890.TCPClient do
     |> Enum.map(fn value ->
       val = Integer.parse(value, 16) |> elem(0)
       -val + 50
+    end)
+  end
+
+  defp parse_bandscope_data(msg) do
+    msg
+    |> String.trim_leading("##DD2")
+    |> String.codepoints()
+    |> Enum.chunk_every(2)
+    |> Enum.map(&Enum.join/1)
+    |> Enum.map(fn value ->
+      val = Integer.parse(value, 16) |> elem(0)
+      -val + 140
     end)
   end
 end

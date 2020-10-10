@@ -35,6 +35,13 @@
   margin: -1rem 0 2rem;
 }
 
+#bandScope {
+  height: 400px;
+  width: 100%;
+  float: left;
+  position: relative;
+}
+
 #audioScope {
   height: 200px;
   width: 400px;
@@ -44,34 +51,46 @@
   // background-color: green;
 }
 
-#audioScope g.c3-chart > g.c3-event-rects{
+.scope g.c3-chart > g.c3-event-rects{
   // background-color: red;
+  // fill: red;
 }
 
-#audioScope .c3-ygrid {
+.scope .c3-ygrid {
   stroke: #666;
 }
 
-#audioScope .c3-lines-data {
+.scope .c3-lines-data {
   // stroke: green;
   // stroke-width: .5px
 }
 
-#audioScope .c3-grid line {
+.scope .c3-grid line {
   stroke: none;
 }
 
-#audioScope .c3-axis-y .tick,
-#audioScope .c3-axis-x .tick,
-#audioScope .c3-axis-y .domain,
-#audioScope .c3-axis-x .domain {
+.scope .c3-axis-y .tick,
+.scope .c3-axis-x .tick,
+.scope .c3-axis-y .domain,
+.scope .c3-axis-x .domain {
   display: none;
+}
+
+.scope svg {
+  // background-color: none;
+  // fill: none;
 }
 
 .c3-shapes.c3-shapes-data.c3-lines.c3-lines-data > path {
   // stroke: rgba(255, 0, 0, 0) !important;
   // opacity: 0 !important;
   // fill: rgba(0, 255, 0, 1.0) !important;
+}
+
+.vfo {
+  font-size: 56pt;
+  font-family: monospace;
+  font-weight: bold;
 }
 
 .debug {

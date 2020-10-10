@@ -1,7 +1,5 @@
 <div id="radio">
-  <div id="audioScope" class="" phx-hook="AudioScope"
-  phx-update="ignore">
-  </div>
+  <div id="audioScope" class="scope" phx-hook="AudioScope" phx-update="ignore"></div>
 
   <div id="vfoA">
     <div class="vfoStatus">
@@ -12,14 +10,14 @@
       <%= @s_meter %>
     </div>
 
-    <div class="vfoA">
-      VFO A:
-      <%= @vfo_a_frequency %>
+    <div id="vfoA">
+      A:
+      <span class="vfo"><%= @vfo_a_frequency %></span>
     </div>
 
-    <div class="vfoB">
-      VFO B:
-      <%= @vfo_b_frequency %>
+    <div id="vfoB">
+      B:
+      <span class="vfo"><%= @vfo_b_frequency %></span>
     </div>
 
   <div class="controlButtons">
@@ -29,5 +27,7 @@
     <button type="button" class="btn btn-lg radio-control multi-ch" phx-hook="MultiCH" id="multi-ch">Multi/CH</button>
 
   </div>
+
+  <div id="bandScope" class="scope" phx-hook="BandScope" phx-update="ignore"></div>
 
 </div>
