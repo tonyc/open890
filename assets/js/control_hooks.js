@@ -18,6 +18,7 @@ let ControlHooks = {
           document.querySelector('#bandScope g.c3-chart > g.c3-event-rects').removeAttribute('style')
           console.log("bandscope chart init()")
         },
+        transition: { duration: null },
         data: {
           columns: [],
           type: 'area',
@@ -80,6 +81,7 @@ let ControlHooks = {
           // removes the white background
           document.querySelector('#audioScope g.c3-chart > g.c3-event-rects').removeAttribute('style')
         },
+        transition: { duration: null },
         data: {
           columns: [],
           type: 'area',
