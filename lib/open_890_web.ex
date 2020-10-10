@@ -90,6 +90,8 @@ defmodule Open890Web do
       import Open890Web.Gettext
       alias Open890Web.Router.Helpers, as: Routes
 
+      import Open890Web.RadioViewHelpers
+
       import Phoenix.LiveView
     end
   end
