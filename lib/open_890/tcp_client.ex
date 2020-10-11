@@ -55,6 +55,7 @@ defmodule Open890.TCPClient do
   def vfo_a_b_swap, do: "EC" |> cmd()
   def get_vfo_a_freq, do: "FA" |> cmd()
   def get_vfo_b_freq, do: "FB" |> cmd()
+  def get_active_receiver, do: "FR" |> cmd()
 
   # TODO: Make this configurable
   defp freq_change_step, do: "5"
@@ -141,6 +142,11 @@ defmodule Open890.TCPClient do
     {:noreply, state}
   end
 
+  def handle_info(:query_active_receiver, state) do
+    state.socket |> send_command("FR")
+    {:noreply, state}
+  end
+
   def handle_info(:enable_auto_info, state) do
     state.socket |> send_command("AI2")
     {:noreply, state}
@@ -178,6 +184,7 @@ defmodule Open890.TCPClient do
     if @enable_audio_scope, do: send(self(), :enable_audioscope)
     if @enable_band_scope, do: send(self(), :enable_bandscope)
     send(self(), :enable_auto_info)
+    send(self(), :query_active_receiver)
 
     state
   end
@@ -186,6 +193,16 @@ defmodule Open890.TCPClient do
   def handle_msg("##UE1", state), do: state
   def handle_msg("DD01", state), do: state
   def handle_msg("DD11", state), do: state
+
+  def handle_msg("FR0" = msg, state) do
+    msg |> broadcast()
+    state
+  end
+
+  def handle_msg("FR1" = msg, state) do
+    msg |> broadcast()
+    state
+  end
 
   def handle_msg(msg, %{socket: _socket} = state) when is_binary(msg) do
     cond do
@@ -214,17 +231,21 @@ defmodule Open890.TCPClient do
         state
 
       msg |> String.starts_with?("SM") ->
-        Open890Web.Endpoint.broadcast("radio:state", "radio_state_data", %{msg: msg})
+        msg |> broadcast()
         state
 
       msg |> String.starts_with?("FA") || msg |> String.starts_with?("FB") ->
-        Open890Web.Endpoint.broadcast("radio:state", "radio_state_data", %{msg: msg})
+        msg |> broadcast()
         state
 
       true ->
         Logger.warn("Unhandled message: #{inspect(msg)}")
         state
     end
+  end
+
+  defp broadcast(msg) do
+    Open890Web.Endpoint.broadcast("radio:state", "radio_state_data", %{msg: msg})
   end
 
   defp schedule_ping do

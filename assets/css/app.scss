@@ -90,16 +90,43 @@
   // text-align: right;
 }
 
+.bandIndicator {
+  display: inline-block;
+  width: 72px;
+
+  .bandPointer {
+    width: 15px;
+    display: inline-block;
+  }
+}
+
+.receiverIndicator {
+  background-color: black;
+  color: gray;
+  text-align: center;
+  padding: 5px 5px;
+  width: 42px;
+  height: 36px;
+
+  &.receiver {
+    margin-bottom: 15px;
+  }
+
+  &.active {
+    color: white;
+  }
+}
+
 .vfo {
   // text-align: right;
 }
 
-.vfo .freq {
+.freq {
   // border: 1px solid blue;
   font-family: monospace;
   font-weight: bold;
   width: 450px;
-  font-size: 56pt;
+  font-size: 36pt;
   text-align: right;
 }
 

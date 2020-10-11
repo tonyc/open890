@@ -16,12 +16,15 @@ defmodule Open890Web.RadioLive do
 
     Radio.get_vfo_a_freq()
     Radio.get_vfo_b_freq()
+    Radio.get_active_receiver()
 
     {:ok,
       socket
         |> assign(:s_meter, "")
         |> assign(:vfo_a_frequency, "")
         |> assign(:vfo_b_frequency, "")
+        |> assign(:active_receiver, :a)
+        |> assign(:active_transmitter, :a)
         |> assign(:band_scope_data, [])
         |> assign(:theme, "elecraft")
     }
@@ -96,6 +99,12 @@ defmodule Open890Web.RadioLive do
 
       msg |> String.starts_with?("FB") ->
         {:noreply, socket |> assign(:vfo_b_frequency, msg |> format_vfo_freq())}
+
+      msg == "FR0" ->
+        {:noreply, socket |> assign(:active_receiver, :a) }
+
+      msg == "FR1" ->
+        {:noreply, socket |> assign(:active_receiver, :b) }
 
       true ->
         Logger.debug("RadioLive: unknown message: #{inspect(msg)}")
