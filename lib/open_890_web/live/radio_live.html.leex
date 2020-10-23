@@ -18,7 +18,7 @@
 
   <div id="vfos" class="">
     <%= if @active_receiver == :a do %>
-      <span class="freq"><%= @vfo_a_frequency %></span>
+      <div class="freq active"><%= @vfo_a_frequency %></div>
       <div class="bandIndicator">
         <div class="receiver">
           <span class="bandPointer">◀</span>
@@ -31,9 +31,9 @@
           <span class="bandPointer">▶</span>
         </div>
       </div>
-      <span class="freq"><%= @vfo_b_frequency %></span>
+      <div class="freq"><%= @vfo_b_frequency %></div>
     <% else %>
-      <span class="freq"><%= @vfo_b_frequency %></span>
+      <div class="freq active"><%= @vfo_b_frequency %></div>
       <div class="bandIndicator">
         <div class="receiver">
           <span class="bandPointer"></span>
@@ -46,7 +46,7 @@
           <span class="bandPointer"> </span>
         </div>
       </div>
-      <span class="freq"><%= @vfo_a_frequency %></span>
+      <div class="freq"><%= @vfo_a_frequency %></div>
     <% end %>
   </div>
 
@@ -85,7 +85,11 @@
       <polygon id="spectrumBlur" filter="url(#blur)" points="<%= @band_scope_data %> 645,150 0,150" />
       <polygon id="spectrum" class="spectrum" points="<%= @band_scope_data %> 645,150 0,150" />
 
-      <line id="carrier" x1="320" y1="0" x2="320" y2="150" />
+      <%= if @band_scope_mode == :center do %>
+        <line id="carrier" x1="320" y1="0" x2="320" y2="150" />
+      <% else %>
+        <%# project carrier based on the span and the reciever frequency %>
+      <% end %>
     </svg>
   </div>
 
@@ -94,7 +98,7 @@
       S.Mode
       <%= cmd_button "Center", "BS30" %>
       <%= cmd_button "Fixed", "BS31" %>
-      <%= cmd_button "Auto-Scroll", "BS32" %>
+      <%= cmd_button "Auto Scroll", "BS32" %>
     </div>
 
     <div>

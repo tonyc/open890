@@ -123,8 +123,16 @@
 
 .freq {
   font-weight: bold;
-  // width: 450px;
+  display: inline-block;
+  width: 350px;
   font-size: 36pt;
+  color: #555;
+
+  &.active {
+    font-size: 46pt;
+    text-align: right;
+    color: black;
+  }
 }
 
 
@@ -220,6 +228,7 @@ _body {
   top: -36pt;
   position: relative;
 }
+
 #bandScopeLimits {
   width: 100%;
   clear: both;
@@ -243,4 +252,9 @@ _body {
     // position: relative;
     float: right;
   }
+}
+
+#bandSelectors div button {
+  width: 11rem;
+  font-size: 16pt;
 }
