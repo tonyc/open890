@@ -16,66 +16,143 @@
     <span><%= @s_meter %></span>
   </div>
 
-  <div id="vfos" class="debug">
-    <span class="freq">
-      <%= if @active_receiver == :a do %>
-        <%= @vfo_a_frequency %>
-      <% else %>
-        <%= @vfo_b_frequency %>
-      <% end %>
-    </span>
-
-    <div class="bandIndicator">
-      <div class="receiver">
-        <span class="bandPointer"><%= if @active_receiver == :a do %>◀<% end %> </span>
-        <span class="receiverIndicator a <%= if @active_receiver == :a, do: "active" %>">A</span>
-        <span class="bandPointer"><%= if @active_receiver == :b do %>▶ <% end %></span>
+  <div id="vfos" class="">
+    <%= if @active_receiver == :a do %>
+      <span class="freq"><%= @vfo_a_frequency %></span>
+      <div class="bandIndicator">
+        <div class="receiver">
+          <span class="bandPointer">◀</span>
+          <span class="receiverIndicator active">A</span>
+          <span class="bandPointer"> </span>
+        </div>
+        <div>
+          <span class="bandPointer"></span>
+          <span class="receiverIndicator">B</span>
+          <span class="bandPointer">▶</span>
+        </div>
       </div>
-
-      <div>
-        <span class="bandPointer"><%= if @active_receiver == :b do %>◀<% end %> </span>
-        <span class="receiverIndicator b <%= if @active_receiver == :b, do: "active" %>">B</span>
-        <span class="bandPointer"><%= if @active_receiver == :a do %>▶<% end %> </span>
+      <span class="freq"><%= @vfo_b_frequency %></span>
+    <% else %>
+      <span class="freq"><%= @vfo_b_frequency %></span>
+      <div class="bandIndicator">
+        <div class="receiver">
+          <span class="bandPointer"></span>
+          <span class="receiverIndicator">A</span>
+          <span class="bandPointer">▶</span>
+        </div>
+        <div>
+          <span class="bandPointer">◀</span>
+          <span class="receiverIndicator active">B</span>
+          <span class="bandPointer"> </span>
+        </div>
       </div>
-    </div>
-
-    <span class="freq">
-      <%= if @active_receiver == :a do %>
-        <%= @vfo_b_frequency %>
-      <% else %>
-        <%= @vfo_a_frequency %>
-      <% end %>
-    </span>
-
+      <span class="freq"><%= @vfo_a_frequency %></span>
+    <% end %>
   </div>
 
   <div class="controlButtons">
     <button type="button" class="btn btn-lg btn-primary" phx-click="mic_dn">&#x25BC;</button>
     <button type="button" class="btn btn-lg btn-primary" phx-click="mic_up">&#x25B2;</button>
-
     <button type="button" class="btn btn-lg radio-control multi-ch" phx-hook="MultiCH" id="multi-ch">Multi/CH</button>
-
+    <%= if @active_receiver == :b do %>
+      <%= cmd_button "A/B", "FR0" %>
+    <% else  %>
+      <%= cmd_button "A/B", "FR1" %>
+    <% end %>
+    <%= cmd_button "A=B", "VV" %>
   </div>
 
-  <svg id="bandScope" class="themed <%= @theme %>" viewbox="0 0 640 140">
+  <%= if @band_scope_mode do %>
+    <div id="bandScopeMode"><%= format_band_scope_mode(@band_scope_mode) %> Mode</div>
+  <% end %>
 
-    <defs>
-      <filter id="blur" filterUnits="userSpaceOnUse" x="0" y="0" width="640" height="150">
-        <feGaussianBlur in="sourceAlpha" stdDeviation="1" />
-      </filter>
-    </defs>
+  <%= if @band_scope_low != "" do %>
+    <div id="bandScopeLimits">
+      <span class="scopeLimit" id="bandScopeLow"><%= @band_scope_low %></span>
+      <span class="scopeLimit" id="bandScopeHigh"><%= @band_scope_high %></span>
+    </div>
+  <% end %>
 
-    <polygon id="spectrumBlur" filter="url(#blur)"
-      points="<%= @band_scope_data %> 645,150 0,150"
-    />
 
-    <polygon id="spectrum" class="spectrum"
-      points="<%= @band_scope_data %> 645,150 0,150"
-    />
+  <div id="bandScopeWrapper">
+    <svg id="bandScope" class="themed <%= @theme %>" viewbox="0 0 640 140">
+      <defs>
+        <filter id="blur" filterUnits="userSpaceOnUse" x="0" y="0" width="640" height="150">
+          <feGaussianBlur in="sourceAlpha" stdDeviation="1" />
+        </filter>
+      </defs>
 
-    <line id="carrier"
-      x1="320" y1="0" x2="320" y2="150" />
+      <polygon id="spectrumBlur" filter="url(#blur)" points="<%= @band_scope_data %> 645,150 0,150" />
+      <polygon id="spectrum" class="spectrum" points="<%= @band_scope_data %> 645,150 0,150" />
 
-  </svg>
+      <line id="carrier" x1="320" y1="0" x2="320" y2="150" />
+    </svg>
+  </div>
+
+  <div id="scopeControls">
+    <div>
+      S.Mode
+      <%= cmd_button "Center", "BS30" %>
+      <%= cmd_button "Fixed", "BS31" %>
+      <%= cmd_button "Auto-Scroll", "BS32" %>
+    </div>
+
+    <div>
+    Speed
+      <%= cmd_button "1", "BSB1" %>
+      <%= cmd_button "2", "BSB2" %>
+      <%= cmd_button "3", "BSB3" %>
+      <%= cmd_button "4", "BSB4" %>
+    </div>
+
+    <div>
+      Scope Avg
+      <%= cmd_button "0", "BSA0" %>
+      <%= cmd_button "1", "BSA1" %>
+      <%= cmd_button "2", "BSA2" %>
+      <%= cmd_button "3", "BSA3" %>
+    </div>
+
+    <div>
+      <form phx-change="cmd">
+        Scope Avg:
+        <select name="cmd">
+          <option value="BSA0">0</option>
+          <option value="BSA1">1</option>
+          <option value="BSA2">2</option>
+          <option value="BSA3">3</option>
+        </select>
+      </form>
+      <%# <button phx-click="cmd" phx-value-cmd="BSA0">0</button>
+      <button phx-click="cmd" phx-value-cmd="BSA1">1</button>
+      <button phx-click="cmd" phx-value-cmd="BSA2">2</button>
+      <button phx-click="cmd" phx-value-cmd="BSA3">3</button> %>
+    </div>
+
+    <div>
+      Data speed
+      <%= cmd_button "High", "DD01" %>
+      <%= cmd_button "Mid", "DD02" %>
+      <%= cmd_button "Low", "DD03" %>
+    </div>
+  </div>
+
+  <div id="bandSelectors">
+    <div>
+      <%= cmd_button "1.8", "BU000" %>
+      <%= cmd_button "3.5", "BU001" %>
+      <%= cmd_button "7", "BU002" %>
+    </div>
+    <div>
+      <%= cmd_button "10", "BU003" %>
+      <%= cmd_button "14", "BU004" %>
+      <%= cmd_button "18", "BU005" %>
+    </div>
+    <div>
+      <%= cmd_button "21", "BU006" %>
+      <%= cmd_button "24", "BU007" %>
+      <%= cmd_button "28", "BU008" %>
+    </div>
+  </div>
 
 </div>

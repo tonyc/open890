@@ -56,6 +56,8 @@ defmodule Open890.TCPClient do
   def get_vfo_a_freq, do: "FA" |> cmd()
   def get_vfo_b_freq, do: "FB" |> cmd()
   def get_active_receiver, do: "FR" |> cmd()
+  def get_band_scope_limits, do: "BSM0" |> cmd()
+  def get_band_scope_mode, do: "BS3" |> cmd()
 
   # TODO: Make this configurable
   defp freq_change_step, do: "5"
@@ -228,6 +230,14 @@ defmodule Open890.TCPClient do
           payload: band_scope_data
         })
 
+        state
+
+      msg |> String.starts_with?("BS3") ->
+        msg |> broadcast()
+        state
+
+      msg |> String.starts_with?("BSM0") ->
+        msg |> broadcast()
         state
 
       msg |> String.starts_with?("SM") ->

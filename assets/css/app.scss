@@ -122,12 +122,9 @@
 }
 
 .freq {
-  // border: 1px solid blue;
-  font-family: monospace;
   font-weight: bold;
-  width: 450px;
+  // width: 450px;
   font-size: 36pt;
-  text-align: right;
 }
 
 
@@ -149,6 +146,11 @@ _body {
   // position: relative;
 }
 
+#bandScopeMode {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 14pt;
+}
 
 #bandScope #carrier {
   stroke: rgba(255, 255, 255, 1.0);
@@ -205,5 +207,40 @@ _body {
     #spectrumBlur {
       display: none;
     }
+  }
+}
+
+#scopeControls {
+  float: left;
+  margin-right: 50px;
+}
+
+#bandScopeWrapper {
+  z-index: -100;
+  top: -36pt;
+  position: relative;
+}
+#bandScopeLimits {
+  width: 100%;
+  clear: both;
+  color: white;
+
+  .scopeLimit {
+    display: inline;
+    position: relative;
+    font-size: 24pt;
+  }
+
+  #bandScopeLow {
+    padding-left: 1rem;
+    // display: inline;
+    // position: relative;
+  }
+
+  #bandScopeHigh {
+    padding-right: 1rem;
+    // display: inline;
+    // position: relative;
+    float: right;
   }
 }
