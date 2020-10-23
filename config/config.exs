@@ -21,6 +21,8 @@ config :open_890, Open890Web.Endpoint,
   pubsub_server: Open890.PubSub,
   live_view: [signing_salt: "vROdgs4r"]
 
+
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
@@ -28,6 +30,7 @@ config :logger, :console,
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
+config :phoenix, :trim_on_html_eex_engine, false
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

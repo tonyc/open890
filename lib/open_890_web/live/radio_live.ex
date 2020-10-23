@@ -17,12 +17,17 @@ defmodule Open890Web.RadioLive do
     Radio.get_vfo_a_freq()
     Radio.get_vfo_b_freq()
     Radio.get_active_receiver()
+    Radio.get_band_scope_limits()
+    Radio.get_band_scope_mode()
 
     {:ok,
       socket
         |> assign(:s_meter, "")
         |> assign(:vfo_a_frequency, "")
         |> assign(:vfo_b_frequency, "")
+        |> assign(:band_scope_mode, nil)
+        |> assign(:band_scope_low, "")
+        |> assign(:band_scope_high, "")
         |> assign(:active_receiver, :a)
         |> assign(:active_transmitter, :a)
         |> assign(:band_scope_data, [])
@@ -55,6 +60,12 @@ defmodule Open890Web.RadioLive do
     Logger.debug("multi_ch: params: #{inspect(params)})")
     Radio.freq_change(:down)
 
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("cmd", %{"cmd" => cmd} = _params, socket) do
+    cmd |> Radio.cmd()
     {:noreply, socket}
   end
 
@@ -91,6 +102,17 @@ defmodule Open890Web.RadioLive do
     %{msg: msg} = payload
 
     cond do
+      msg |> String.starts_with?("BSM0") ->
+        low_high = msg |> String.trim_leading("BSM0")
+
+        <<bs_low::binary-size(8), bs_high::binary-size(8)>> = low_high
+
+        {:noreply,
+          socket
+          |> assign(:band_scope_low, bs_low |> format_vfo_freq())
+          |> assign(:band_scope_high, bs_high |> format_vfo_freq())
+        }
+
       msg |> String.starts_with?("SM") ->
         {:noreply, socket |> assign(:s_meter, msg |> format_s_meter())}
 
@@ -99,6 +121,17 @@ defmodule Open890Web.RadioLive do
 
       msg |> String.starts_with?("FB") ->
         {:noreply, socket |> assign(:vfo_b_frequency, msg |> format_vfo_freq())}
+
+      msg |> String.starts_with?("BS3") ->
+        band_scope_mode = msg
+        |> String.trim_leading("BS3")
+        |> case do
+          "0" -> :center
+          "1" -> :fixed
+          "2" -> :auto_scroll
+        end
+
+        {:noreply, socket |> assign(:band_scope_mode, band_scope_mode)}
 
       msg == "FR0" ->
         {:noreply, socket |> assign(:active_receiver, :a) }
