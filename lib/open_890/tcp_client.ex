@@ -223,9 +223,6 @@ defmodule Open890.TCPClient do
       msg |> String.starts_with?("##DD2") ->
         band_scope_data = msg |> parse_bandscope_data()
 
-        # len = band_scope_data |> Enum.count()
-        # Logger.info("Band scope data length: #{len}")
-
         Open890Web.Endpoint.broadcast("radio:band_scope", "band_scope_data", %{
           payload: band_scope_data
         })
@@ -279,8 +276,7 @@ defmodule Open890.TCPClient do
     |> Enum.chunk_every(2)
     |> Enum.map(&Enum.join/1)
     |> Enum.map(fn value ->
-      val = Integer.parse(value, 16) |> elem(0)
-      -val + 50
+      Integer.parse(value, 16) |> elem(0)
     end)
   end
 
@@ -291,9 +287,7 @@ defmodule Open890.TCPClient do
     |> Enum.chunk_every(2)
     |> Enum.map(&Enum.join/1)
     |> Enum.map(fn value ->
-      val = Integer.parse(value, 16) |> elem(0)
-      val
-      # -val + 140
+      Integer.parse(value, 16) |> elem(0)
     end)
   end
 end

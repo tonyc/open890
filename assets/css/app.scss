@@ -44,7 +44,7 @@ header {
 
 
 #audioScope {
-  height: 200px;
+  // height: 200px;
   width: 400px;
   float: right;
   position: relative;
@@ -52,40 +52,9 @@ header {
   // background-color: green;
 }
 
-.scope g.c3-chart > g.c3-event-rects{
-  // background-color: red;
-  // fill: red;
-}
-
-.scope .c3-ygrid {
-  stroke: #666;
-}
-
-.scope .c3-lines-data {
-  // stroke: green;
-  // stroke-width: .5px
-}
-
-.scope .c3-grid line {
-  stroke: none;
-}
-
-.scope .c3-axis-y .tick,
-.scope .c3-axis-x .tick,
-.scope .c3-axis-y .domain,
-.scope .c3-axis-x .domain {
-  display: none;
-}
-
 .scope svg {
   // background-color: none;
   // fill: none;
-}
-
-.c3-shapes.c3-shapes-data.c3-lines.c3-lines-data > path {
-  // stroke: rgba(255, 0, 0, 0) !important;
-  // opacity: 0 !important;
-  // fill: rgba(0, 255, 0, 1.0) !important;
 }
 
 #vfos {
