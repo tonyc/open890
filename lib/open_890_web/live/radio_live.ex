@@ -4,6 +4,8 @@ defmodule Open890Web.RadioLive do
   alias Phoenix.Socket.Broadcast
   alias Open890.TCPClient, as: Radio
 
+  alias Open890Web.RadioViewHelpers
+
   @impl true
   def mount(_params, _session, socket) do
     Logger.info("LiveView mount()")
@@ -133,12 +135,30 @@ defmodule Open890Web.RadioLive do
         {:noreply, socket |> assign(:s_meter, msg |> format_s_meter())}
 
       msg |> String.starts_with?("FA") ->
-        {:noreply,
-          socket |> assign(:vfo_a_frequency, msg |> extract_frequency())
-        }
+          frequency = msg |> extract_frequency()
+
+          socket = socket |> assign(:vfo_a_frequency, frequency)
+
+          socket = if socket.assigns[:active_receiver] == :a do
+            socket |> assign(:page_title, frequency |> RadioViewHelpers.format_raw_frequency())
+          else
+            socket
+          end
+
+        {:noreply, socket }
 
       msg |> String.starts_with?("FB") ->
-        {:noreply, socket |> assign(:vfo_b_frequency, msg |> extract_frequency())}
+        frequency = msg |> extract_frequency()
+
+        socket = socket |> assign(:vfo_b_frequency, frequency)
+
+        socket = if socket.assigns[:active_receiver] == :b do
+          socket |> assign(:page_title, frequency |> RadioViewHelpers.format_raw_frequency())
+        else
+          socket
+        end
+
+        {:noreply, socket }
 
       msg |> String.starts_with?("BS3") ->
         band_scope_mode = msg

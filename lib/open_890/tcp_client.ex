@@ -44,6 +44,9 @@ defmodule Open890.TCPClient do
   def radio_up(args \\ "03") when is_binary(args), do: "UP#{args}" |> cmd()
   def radio_down(args \\ "03") when is_binary(args), do: "DN#{args}" |> cmd()
 
+  def cw_decode_on, do: "CD01" |> cmd()
+  def cw_decode_off, do: "CD00" |> cmd()
+
   def freq_change(:up) do
     ("FC0" <> freq_change_step()) |> cmd()
   end
