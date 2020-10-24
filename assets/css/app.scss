@@ -104,13 +104,11 @@ _body {
   border-radius: 3px;
   height: 100px;
   background-color: black;
-  fill: white;
+  fill: #999;
+  // stroke: white;
+  // stroke-width: 0.5pt
   float: right;
   position: relative;
-
-  #audioSpectrum {
-    // fill: url(#kenwood);
-  }
 
   #audioScopeTuneIndicator {
     stroke: white;
