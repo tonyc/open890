@@ -18,7 +18,7 @@
 
   <div id="vfos" class="">
     <%= if @active_receiver == :a do %>
-      <div class="freq active"><%= @vfo_a_frequency %></div>
+      <div class="freq active"><%= @vfo_a_frequency |> format_raw_frequency() %></div>
       <div class="bandIndicator">
         <div class="receiver">
           <span class="bandPointer">◀</span>
@@ -31,9 +31,9 @@
           <span class="bandPointer">▶</span>
         </div>
       </div>
-      <div class="freq"><%= @vfo_b_frequency %></div>
+      <div class="freq"><%= @vfo_b_frequency |> format_raw_frequency() %></div>
     <% else %>
-      <div class="freq active"><%= @vfo_b_frequency %></div>
+      <div class="freq active"><%= @vfo_b_frequency |> format_raw_frequency() %></div>
       <div class="bandIndicator">
         <div class="receiver">
           <span class="bandPointer"></span>
@@ -46,7 +46,7 @@
           <span class="bandPointer"> </span>
         </div>
       </div>
-      <div class="freq"><%= @vfo_a_frequency %></div>
+      <div class="freq"><%= @vfo_a_frequency |> format_raw_frequency() %></div>
     <% end %>
   </div>
 
@@ -66,16 +66,17 @@
     <div id="bandScopeMode"><%= format_band_scope_mode(@band_scope_mode) %> Mode</div>
   <% end %>
 
+  <div class="bandScopeSpan">Span: <%= @band_scope_span %> kHz</div>
+
   <%= if @band_scope_low != "" do %>
     <div id="bandScopeLimits">
-      <span class="scopeLimit" id="bandScopeLow"><%= @band_scope_low %></span>
-      <span class="scopeLimit" id="bandScopeHigh"><%= @band_scope_high %></span>
+      <span class="scopeLimit" id="bandScopeLow"><%= @band_scope_low |> format_raw_frequency() %></span>
+      <span class="scopeLimit" id="bandScopeHigh"><%= @band_scope_high |> format_raw_frequency() %></span>
     </div>
   <% end %>
 
-
-  <div id="bandScopeWrapper">
-    <svg id="bandScope" class="themed <%= @theme %>" viewbox="0 0 640 140">
+  <div id="bandScopeWrapper" >
+    <svg id="bandScope" phx-hook="BandScope" class="themed <%= @theme %>" viewbox="0 0 640 140">
       <defs>
         <filter id="blur" filterUnits="userSpaceOnUse" x="0" y="0" width="640" height="150">
           <feGaussianBlur in="sourceAlpha" stdDeviation="1" />
@@ -86,9 +87,19 @@
       <polygon id="spectrum" class="spectrum" points="<%= @band_scope_data %> 645,150 0,150" />
 
       <%= if @band_scope_mode == :center do %>
-        <line id="carrier" x1="320" y1="0" x2="320" y2="150" />
+        <line id="active_receiver_line" x1="320" y1="0" x2="320" y2="150" />
       <% else %>
-        <%# project carrier based on the span and the reciever frequency %>
+        <%= if @band_scope_high && @band_scope_low do %>
+          <% loc = if @active_receiver == :a  && @vfo_a_frequency != "" do %>
+            <%= project_to_limits(@vfo_a_frequency, @band_scope_low, @band_scope_high) %>
+          <% else %>
+            <%= if @vfo_b_frequency != "" do %>
+              <%= project_to_limits(@vfo_b_frequency, @band_scope_low, @band_scope_high) %>
+            <% end %>
+          <% end %>
+
+          <line id="active_receiver_line" x1="<%= loc %>" y1="0" x2="<%= loc %>" y2="150" />
+        <% end %>
       <% end %>
     </svg>
   </div>
@@ -127,10 +138,6 @@
           <option value="BSA3">3</option>
         </select>
       </form>
-      <%# <button phx-click="cmd" phx-value-cmd="BSA0">0</button>
-      <button phx-click="cmd" phx-value-cmd="BSA1">1</button>
-      <button phx-click="cmd" phx-value-cmd="BSA2">2</button>
-      <button phx-click="cmd" phx-value-cmd="BSA3">3</button> %>
     </div>
 
     <div>
@@ -141,7 +148,17 @@
     </div>
   </div>
 
+  <div id="modeKeys">
+    <%= cmd_button "LSB/USB", "MK0" %>
+    <%= cmd_button "CW/CW-R", "MK1" %>
+    <%= cmd_button "FSK/PSK", "MK2" %>
+    <%= cmd_button "FM/AM", "MK3" %>
+    <%= cmd_button "FSK/FSK-R", "MK4" %>
+    <%= cmd_button "PSK/PSK-R", "MK5" %>
+  </div>
+
   <div id="bandSelectors">
+    <div class="bandTitle">Band</div>
     <div>
       <%= cmd_button "1.8", "BU000" %>
       <%= cmd_button "3.5", "BU001" %>

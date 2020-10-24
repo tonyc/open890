@@ -131,9 +131,21 @@ let ControlHooks = {
   MultiCH: {
     mounted() {
       this.el.addEventListener("wheel", event => {
-        var isScrollUp = (event.deltaY < 0)
+        event.preventDefault();
 
+        var isScrollUp = (event.deltaY < 0)
         this.pushEvent("multi_ch", {is_up: isScrollUp})
+      })
+    }
+  },
+  BandScope: {
+    mounted() {
+      this.el.addEventListener("click", event => {
+        event.preventDefault();
+        console.log("scope click", event)
+
+        // var isScrollUp = (event.deltaY < 0)
+        // this.pushEvent("multi_ch", {is_up: isScrollUp})
       })
     }
   }
