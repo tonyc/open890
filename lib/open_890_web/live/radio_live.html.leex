@@ -9,6 +9,12 @@
     </label>
   </form>
 
+  <div id="audioScopeWrapper">
+    <svg id="audioScope" phx-hook="AudioScope" class="themed <%= @theme %>" viewbox="0 0 212 140">
+      <polygon id="audioSpectrum" class="spectrum" points="<%= @audio_scope_data %> 215,150 0,150" />
+    </svg>
+  </div>
+
   <div id="audioScope" class="scope" phx-hook="AudioScope" phx-update="ignore"></div>
 
   <div class="sMeter">
@@ -76,7 +82,7 @@
   <% end %>
 
   <div id="bandScopeWrapper" >
-    <svg id="bandScope" phx-hook="BandScope" class="themed <%= @theme %>" viewbox="0 0 640 140">
+    <svg id="bandScope" class="themed <%= @theme %>" viewbox="0 0 640 140">
       <defs>
         <filter id="blur" filterUnits="userSpaceOnUse" x="0" y="0" width="640" height="150">
           <feGaussianBlur in="sourceAlpha" stdDeviation="1" />
@@ -113,7 +119,7 @@
     </div>
 
     <div>
-    Speed
+      WF Speed
       <%= cmd_button "1", "BSB1" %>
       <%= cmd_button "2", "BSB2" %>
       <%= cmd_button "3", "BSB3" %>
@@ -122,22 +128,10 @@
 
     <div>
       Scope Avg
-      <%= cmd_button "0", "BSA0" %>
+      <%= cmd_button "Off", "BSA0" %>
       <%= cmd_button "1", "BSA1" %>
       <%= cmd_button "2", "BSA2" %>
       <%= cmd_button "3", "BSA3" %>
-    </div>
-
-    <div>
-      <form phx-change="cmd">
-        Scope Avg:
-        <select name="cmd">
-          <option value="BSA0">0</option>
-          <option value="BSA1">1</option>
-          <option value="BSA2">2</option>
-          <option value="BSA3">3</option>
-        </select>
-      </form>
     </div>
 
     <div>

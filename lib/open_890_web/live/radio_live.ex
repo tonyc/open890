@@ -33,6 +33,7 @@ defmodule Open890Web.RadioLive do
         |> assign(:active_receiver, :a)
         |> assign(:active_transmitter, :a)
         |> assign(:band_scope_data, [])
+        |> assign(:audio_scope_data, [])
         |> assign(:theme, "elecraft")
     }
   end
@@ -78,9 +79,17 @@ defmodule Open890Web.RadioLive do
   end
 
   @impl true
-  def handle_info(%Broadcast{event: "scope_data", payload: payload}, socket) do
+  def handle_info(%Broadcast{event: "scope_data", payload: %{payload: audio_scope_data}}, socket) do
+    zipped_data = (0..212)
+    |> Enum.zip(audio_scope_data)
+    |> Enum.map(fn {index, data} ->
+      "#{index},#{data}"
+     end)
+     |> Enum.join(" ")
+
+
     {:noreply,
-      socket |> push_event(:audio_scope_data, payload)
+      socket |> assign(:audio_scope_data, zipped_data)
     }
   end
 
