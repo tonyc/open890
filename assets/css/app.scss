@@ -43,28 +43,7 @@ header {
 }
 
 
-#audioScope {
-  // height: 200px;
-  width: 400px;
-  float: right;
-  position: relative;
-  // border-radius: 7px;
-  // background-color: green;
-}
 
-.scope svg {
-  // background-color: none;
-  // fill: none;
-}
-
-#vfos {
-  // position: relative;
-  // width: 10rem;
-  // font-size: 56pt;
-  // width: 500px;
-  // border: 2px dashed green;
-  // text-align: right;
-}
 
 .bandIndicator {
   display: inline-block;
@@ -121,6 +100,23 @@ _body {
   color: white;
 }
 
+#audioScope {
+  border-radius: 3px;
+  height: 100px;
+  background-color: black;
+  fill: white;
+  float: right;
+  position: relative;
+
+  #audioSpectrum {
+    fill: url(#kenwood);
+  }
+
+  #audioScopeTuneIndicator {
+    stroke: white;
+    stroke-width: 1pt;
+  }
+}
 #bandScope {
   border-radius: 10px;
   background-color: black;
@@ -128,6 +124,7 @@ _body {
   width: 100%;
   // float: left;
   // position: relative;
+
 }
 
 #bandScopeMode {
