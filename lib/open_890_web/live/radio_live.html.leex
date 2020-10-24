@@ -115,12 +115,32 @@
     </svg>
   </div>
 
-  <div id="scopeControls">
+
+ <div id="scopeControls">
     <div>
       S.Mode
       <%= cmd_button "Center", "BS30" %>
       <%= cmd_button "Fixed", "BS31" %>
       <%= cmd_button "Auto Scroll", "BS32" %>
+    </div>
+
+    <div>
+      <%= if @band_scope_mode in [:center, :auto_scroll] do %>
+        Span
+        <%= cmd_button "5", "BS40" %>
+        <%= cmd_button "10", "BS41" %>
+        <%= cmd_button "20", "BS42" %>
+        <%= cmd_button "30", "BS43" %>
+        <%= cmd_button "50", "BS44" %>
+        <%= cmd_button "100", "BS45" %>
+        <%= cmd_button "200", "BS46" %>
+        <%= cmd_button "500", "BS47" %>
+      <% else %>
+        Range
+        <%= cmd_button "1", "BS51" %>
+        <%= cmd_button "2", "BS52" %>
+        <%= cmd_button "3", "BS53" %>
+      <% end %>
     </div>
 
     <div>
