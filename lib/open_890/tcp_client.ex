@@ -209,10 +209,9 @@ defmodule Open890.TCPClient do
   def handle_msg(msg, %{socket: _socket} = state) when is_binary(msg) do
     cond do
       msg |> String.starts_with?("##DD3") ->
-        audio_scope_data = msg |> parse_audioscope_data()
-
-        # len = audio_scope_data |> Enum.count()
-        # Logger.info("Audio scope data length: #{len}")
+        audio_scope_data = msg
+        |> String.trim_leading("##DD3")
+        |> parse_scope_data()
 
         Open890Web.Endpoint.broadcast("radio:audio_scope", "scope_data", %{
           payload: audio_scope_data
@@ -221,7 +220,9 @@ defmodule Open890.TCPClient do
         state
 
       msg |> String.starts_with?("##DD2") ->
-        band_scope_data = msg |> parse_bandscope_data()
+        band_scope_data = msg
+        |> String.trim_leading("##DD2")
+        |> parse_scope_data()
 
         Open890Web.Endpoint.broadcast("radio:band_scope", "band_scope_data", %{
           payload: band_scope_data
@@ -269,9 +270,8 @@ defmodule Open890.TCPClient do
     socket
   end
 
-  defp parse_audioscope_data(msg) do
+  defp parse_scope_data(msg) do
     msg
-    |> String.trim_leading("##DD3")
     |> String.codepoints()
     |> Enum.chunk_every(2)
     |> Enum.map(&Enum.join/1)
@@ -280,14 +280,4 @@ defmodule Open890.TCPClient do
     end)
   end
 
-  defp parse_bandscope_data(msg) do
-    msg
-    |> String.trim_leading("##DD2")
-    |> String.codepoints()
-    |> Enum.chunk_every(2)
-    |> Enum.map(&Enum.join/1)
-    |> Enum.map(fn value ->
-      Integer.parse(value, 16) |> elem(0)
-    end)
-  end
 end
