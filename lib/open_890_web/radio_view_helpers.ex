@@ -19,4 +19,29 @@ defmodule Open890Web.RadioViewHelpers do
     end
   end
 
+  def project_to_limits(frequency, low, high) do
+    low = low |> String.to_integer()
+    high = high |> String.to_integer()
+    frequency = frequency |> String.to_integer()
+
+    delta = high - low
+
+    freq_delta = frequency - low
+
+    percentage = freq_delta / delta
+
+    percentage * 640
+  end
+
+  def format_raw_frequency(str) do
+    str
+    |> to_string()
+    |> String.trim_leading("0")
+    |> String.to_charlist()
+    |> Enum.reverse
+    |> Enum.chunk_every(3, 3, [])
+    |> Enum.join(".")
+    |> String.reverse
+  end
+
 end

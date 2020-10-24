@@ -14,20 +14,22 @@ defmodule Open890Web.RadioLive do
       Phoenix.PubSub.subscribe(Open890.PubSub, "radio:band_scope")
     end
 
-    Radio.get_vfo_a_freq()
-    Radio.get_vfo_b_freq()
     Radio.get_active_receiver()
     Radio.get_band_scope_limits()
     Radio.get_band_scope_mode()
+    Radio.get_vfo_a_freq()
+    Radio.get_vfo_b_freq()
 
     {:ok,
       socket
-        |> assign(:s_meter, "")
+        |> assign(:s_meter, "0")
         |> assign(:vfo_a_frequency, "")
         |> assign(:vfo_b_frequency, "")
         |> assign(:band_scope_mode, nil)
-        |> assign(:band_scope_low, "")
-        |> assign(:band_scope_high, "")
+        |> assign(:band_scope_low, nil)
+        |> assign(:band_scope_high, nil)
+        |> assign(:band_scope_span, "")
+        |> assign(:projected_active_receiver_location, "")
         |> assign(:active_receiver, :a)
         |> assign(:active_transmitter, :a)
         |> assign(:band_scope_data, [])
@@ -103,24 +105,31 @@ defmodule Open890Web.RadioLive do
 
     cond do
       msg |> String.starts_with?("BSM0") ->
-        low_high = msg |> String.trim_leading("BSM0")
+        [bs_low, bs_high] = msg |> extract_band_edges()
 
-        <<bs_low::binary-size(8), bs_high::binary-size(8)>> = low_high
+        [low_int, high_int] = [bs_low, bs_high]
+        |> Enum.map(&String.to_integer/1)
+        |> Enum.map(&Kernel.div(&1, 1000))
+
+        span = (high_int - low_int) |> to_string() |> extract_frequency()
 
         {:noreply,
           socket
-          |> assign(:band_scope_low, bs_low |> format_vfo_freq())
-          |> assign(:band_scope_high, bs_high |> format_vfo_freq())
+          |> assign(:band_scope_low, bs_low)
+          |> assign(:band_scope_high, bs_high)
+          |> assign(:band_scope_span, span)
         }
 
       msg |> String.starts_with?("SM") ->
         {:noreply, socket |> assign(:s_meter, msg |> format_s_meter())}
 
       msg |> String.starts_with?("FA") ->
-        {:noreply, socket |> assign(:vfo_a_frequency, msg |> format_vfo_freq())}
+        {:noreply,
+          socket |> assign(:vfo_a_frequency, msg |> extract_frequency())
+        }
 
       msg |> String.starts_with?("FB") ->
-        {:noreply, socket |> assign(:vfo_b_frequency, msg |> format_vfo_freq())}
+        {:noreply, socket |> assign(:vfo_b_frequency, msg |> extract_frequency())}
 
       msg |> String.starts_with?("BS3") ->
         band_scope_mode = msg
@@ -145,21 +154,22 @@ defmodule Open890Web.RadioLive do
     end
   end
 
-  defp format_vfo_freq(str) when is_binary(str) do
+  defp extract_frequency(str) when is_binary(str) do
     str
     |> String.trim_leading("FA")
     |> String.trim_leading("FB")
     |> String.trim_leading("0")
-    |> String.to_charlist()
-    |> Enum.reverse
-    |> Enum.chunk_every(3, 3, [])
-    |> Enum.join(".")
-    |> String.reverse
   end
 
   defp format_s_meter(str) when is_binary(str) do
     str
     |> String.trim_leading("SM")
     |> String.trim_leading("0")
+  end
+
+  defp extract_band_edges("BSM0" <> low_high) do
+    low_high
+        |> String.split_at(8)
+        |> Tuple.to_list()
   end
 end

@@ -35,6 +35,13 @@
   margin: -1rem 0 2rem;
 }
 
+header {
+  border-bottom: 1px solid black;
+  // clear: both;
+  // border: 1px solid red;
+  // position: relative;
+}
+
 
 #audioScope {
   height: 200px;
@@ -170,6 +177,11 @@ _body {
   .spectrum {
     stroke-width: 0.75px;
   }
+  #active_receiver_line {
+    stroke: white;
+    stroke-width: 0.5pt;
+    stroke-dasharray: 0;
+  }
 
   &.phosphor-red {
     #spectrum {
@@ -196,12 +208,13 @@ _body {
       stroke: rgba(0, 255, 0, 0.5);
       stroke-width: 2px;
     }
+
   }
 
   &.elecraft {
     background-color: rgba(0, 0, 64, 1.0);
 
-    #carrier {
+    #active_receiver_line {
       stroke: rgba(0, 252, 0, 1.0);
       stroke-width: 0.5pt;
       stroke-dasharray: 0;
