@@ -1,198 +1,225 @@
-<div id="radio">
-  <form id="themeForm" phx-change="set_theme">
-    <label for="theme">Theme:
-      <select name="theme">
-        <option <%= selected_theme?(@theme, "phosphor-green") %> value="phosphor-green">Phosphor Green</option>
-        <option <%= selected_theme?(@theme, "phosphor-red") %> value="phosphor-red">Phosphor Red</option>
-        <option <%= selected_theme?(@theme, "elecraft") %> value="elecraft">Elecraft</option>
-      </select>
-    </label>
-  </form>
-
-  <div id="audioScopeWrapper">
-    <svg id="audioScope" class="themed <%= @theme %>" viewbox="0 0 212 50">
-      <defs>
-        <linearGradient id="kenwood" gradientTransform="rotate(90)">
-          <stop offset="0" stop-color="white" />
-          <stop offset="50" stop-color="#0c0c5c" />
-        </linearGradient>
-      </defs>
-      <polygon id="audioSpectrum" class="spectrum" points="<%= @audio_scope_data %> 215,60 0,60" />
-      <line id="audioScopeTuneIndicator" x1="106" y1="0" x2="106" y2="50" />
-    </svg>
+<div id="radio" class="">
+  <div id="topRow" class="row debug">
+    <span id="themeSelector" class="">
+      <span>
+        Theme:
+        <a href="#" phx-click="set_theme" phx-value-theme="elecraft">Elecraft</a> |
+        <a href="#" phx-click="set_theme" phx-value-theme="phosphor-green">Phosphor Green</a> |
+        <a href="#" phx-click="set_theme" phx-value-theme="phosphor-red">Phosphor Red</a>
+      </span>
+    </span>
   </div>
 
-  <div class="sMeter">
-    S-Meter:
-    <span><%= @s_meter %></span>
-  </div>
-
-  <div id="vfos" class="">
-    <%= if @active_receiver == :a do %>
-      <div class="freq active"><%= @vfo_a_frequency |> format_raw_frequency() %></div>
-      <div class="bandIndicator">
-        <div class="receiver">
-          <span class="bandPointer">◀</span>
-          <span class="receiverIndicator active">A</span>
-          <span class="bandPointer"> </span>
-        </div>
-        <div>
-          <span class="bandPointer"></span>
-          <span class="receiverIndicator">B</span>
-          <span class="bandPointer">▶</span>
-        </div>
-      </div>
-      <div class="freq"><%= @vfo_b_frequency |> format_raw_frequency() %></div>
-    <% else %>
-      <div class="freq active"><%= @vfo_b_frequency |> format_raw_frequency() %></div>
-      <div class="bandIndicator">
-        <div class="receiver">
-          <span class="bandPointer"></span>
-          <span class="receiverIndicator">A</span>
-          <span class="bandPointer">▶</span>
-        </div>
-        <div>
-          <span class="bandPointer">◀</span>
-          <span class="receiverIndicator active">B</span>
-          <span class="bandPointer"> </span>
-        </div>
-      </div>
-      <div class="freq"><%= @vfo_a_frequency |> format_raw_frequency() %></div>
-    <% end %>
-  </div>
-
-  <div class="controlButtons">
-    <button type="button" class="btn btn-lg btn-primary" phx-click="mic_dn">&#x25BC;</button>
-    <button type="button" class="btn btn-lg btn-primary" phx-click="mic_up">&#x25B2;</button>
-    <button type="button" class="btn btn-lg radio-control multi-ch" phx-hook="MultiCH" id="multi-ch">Multi/CH</button>
-    <%= if @active_receiver == :b do %>
-      <%= cmd_button "A/B", "FR0" %>
-    <% else  %>
-      <%= cmd_button "A/B", "FR1" %>
-    <% end %>
-    <%= cmd_button "A=B", "VV" %>
-  </div>
-
-  <%= if @band_scope_mode do %>
-    <div id="bandScopeMode"><%= format_band_scope_mode(@band_scope_mode) %> Mode</div>
-  <% end %>
-
-  <div class="bandScopeSpan">Span: <%= @band_scope_span %> kHz</div>
-
-  <%= if @band_scope_low != "" do %>
-    <div id="bandScopeLimits">
-      <span class="scopeLimit" id="bandScopeLow"><%= @band_scope_low |> format_raw_frequency() %></span>
-      <span class="scopeLimit" id="bandScopeHigh"><%= @band_scope_high |> format_raw_frequency() %></span>
-    </div>
-  <% end %>
-
-  <div id="bandScopeWrapper" >
-    <svg id="bandScope" class="themed <%= @theme %>" viewbox="0 0 640 140">
-      <defs>
-        <filter id="blur" filterUnits="userSpaceOnUse" x="0" y="0" width="640" height="150">
-          <feGaussianBlur in="sourceAlpha" stdDeviation="1" />
-        </filter>
-      </defs>
-
-      <polygon id="spectrumBlur" filter="url(#blur)" points="<%= @band_scope_data %> 645,150 0,150" />
-      <polygon id="spectrum" class="spectrum" points="<%= @band_scope_data %> 645,150 0,150" />
-
-      <%= if @band_scope_mode == :center do %>
-        <line id="active_receiver_line" x1="320" y1="0" x2="320" y2="150" />
-      <% else %>
-        <%= if @band_scope_high && @band_scope_low do %>
-          <% loc = if @active_receiver == :a  && @vfo_a_frequency != "" do %>
-            <%= project_to_limits(@vfo_a_frequency, @band_scope_low, @band_scope_high) %>
-          <% else %>
-            <%= if @vfo_b_frequency != "" do %>
-              <%= project_to_limits(@vfo_b_frequency, @band_scope_low, @band_scope_high) %>
-            <% end %>
+  <div class="row">
+    <div id="sMeterWrapper" class="">
+      <div class="row">
+        <div id="sMeterText"><%= s_meter_value_to_s_units(@s_meter) %></div>
+        <svg id="sMeter" class="" viewbox="0 0 70 5">
+          <rect id="sMeterBG" width="70" height="5" />
+          <rect id="sMeterVal" width="<%= @s_meter %>" height="5" />
+          <%= if @s_meter > 35 do %>
+            <rect class="sMeterHigh" x="36" width="<%= @s_meter - 36 %>" height="5" />
           <% end %>
+        </svg>
+      </div>
 
-          <line id="active_receiver_line" x1="<%= loc %>" y1="0" x2="<%= loc %>" y2="150" />
-        <% end %>
-      <% end %>
-    </svg>
-  </div>
-
-
- <div id="scopeControls">
-    <div>
-      S.Mode
-      <%= cmd_button "Center", "BS30" %>
-      <%= cmd_button "Fixed", "BS31" %>
-      <%= cmd_button "Auto Scroll", "BS32" %>
     </div>
 
-    <div>
-      <%= if @band_scope_mode in [:center, :auto_scroll] do %>
-        Span
-        <%= cmd_button "5", "BS40" %>
-        <%= cmd_button "10", "BS41" %>
-        <%= cmd_button "20", "BS42" %>
-        <%= cmd_button "30", "BS43" %>
-        <%= cmd_button "50", "BS44" %>
-        <%= cmd_button "100", "BS45" %>
-        <%= cmd_button "200", "BS46" %>
-        <%= cmd_button "500", "BS47" %>
+    <div id="audioScopeWrapper" class="">
+      <svg id="audioScope" class="themed <%= @theme %>" viewbox="0 0 212 50">
+        <defs>
+          <linearGradient id="kenwood" gradientTransform="rotate(90)">
+            <stop offset="0" stop-color="white" />
+            <stop offset="50" stop-color="#0c0c5c" />
+          </linearGradient>
+        </defs>
+        <polygon id="audioSpectrum" class="spectrum" points="<%= @audio_scope_data %> 215,60 0,60" />
+        <line id="audioScopeTuneIndicator" x1="106" y1="0" x2="106" y2="50" />
+      </svg>
+    </div>
+  </div>
+
+  <div class="row">
+    <div id="vfos" class="">
+      <%= if @active_receiver == :a do %>
+        <div class="freq active"><%= @vfo_a_frequency |> format_raw_frequency() %></div>
+        <div class="bandIndicator">
+          <div class="receiver">
+            <span class="bandPointer">◀</span>
+            <span class="receiverIndicator active">A</span>
+            <span class="bandPointer"> </span>
+          </div>
+          <div>
+            <span class="bandPointer"></span>
+            <span class="receiverIndicator">B</span>
+            <span class="bandPointer">▶</span>
+          </div>
+        </div>
+        <div class="freq"><%= @vfo_b_frequency |> format_raw_frequency() %></div>
       <% else %>
-        Range
-        <%= cmd_button "1", "BS51" %>
-        <%= cmd_button "2", "BS52" %>
-        <%= cmd_button "3", "BS53" %>
+        <div class="freq active"><%= @vfo_b_frequency |> format_raw_frequency() %></div>
+        <div class="bandIndicator">
+          <div class="receiver">
+            <span class="bandPointer"></span>
+            <span class="receiverIndicator">A</span>
+            <span class="bandPointer">▶</span>
+          </div>
+          <div>
+            <span class="bandPointer">◀</span>
+            <span class="receiverIndicator active">B</span>
+            <span class="bandPointer"> </span>
+          </div>
+        </div>
+        <div class="freq"><%= @vfo_a_frequency |> format_raw_frequency() %></div>
       <% end %>
     </div>
+  </div>
 
-    <div>
-      WF Speed
-      <%= cmd_button "1", "BSB1" %>
-      <%= cmd_button "2", "BSB2" %>
-      <%= cmd_button "3", "BSB3" %>
-      <%= cmd_button "4", "BSB4" %>
-    </div>
-
-    <div>
-      Scope Avg
-      <%= cmd_button "Off", "BSA0" %>
-      <%= cmd_button "1", "BSA1" %>
-      <%= cmd_button "2", "BSA2" %>
-      <%= cmd_button "3", "BSA3" %>
-    </div>
-
-    <div>
-      Data speed
-      <%= cmd_button "High", "DD01" %>
-      <%= cmd_button "Mid", "DD02" %>
-      <%= cmd_button "Low", "DD03" %>
+  <div class="row">
+    <div class="controlButtons">
+      <button type="button" class="btn btn-lg radio-control multi-ch" phx-hook="MultiCH" id="multi-ch">Multi/CH</button>
+      <%= if @active_receiver == :b do %>
+        <%= cmd_button "A/B", "FR0" %>
+      <% else  %>
+        <%= cmd_button "A/B", "FR1" %>
+      <% end %>
+      <%= cmd_button "A=B", "VV" %>
     </div>
   </div>
 
-  <div id="modeKeys">
-    <%= cmd_button "LSB/USB", "MK0" %>
-    <%= cmd_button "CW/CW-R", "MK1" %>
-    <%= cmd_button "FSK/PSK", "MK2" %>
-    <%= cmd_button "FM/AM", "MK3" %>
-    <%= cmd_button "FSK/FSK-R", "MK4" %>
-    <%= cmd_button "PSK/PSK-R", "MK5" %>
+  <div class="row">
+    <div id="scopeDetails">
+      <%= if @band_scope_mode do %>
+        <span id="bandScopeMode"><%= format_band_scope_mode(@band_scope_mode) %> Mode</span>
+      <% end %>
+
+      <%= if @band_scope_span do %>
+        <span id="bandScopeSpan">Span: <%= @band_scope_span %> kHz</span>
+      <% end %>
+    </div>
   </div>
 
-  <div id="bandSelectors">
-    <div class="bandTitle">Band</div>
-    <div>
-      <%= cmd_button "1.8", "BU000" %>
-      <%= cmd_button "3.5", "BU001" %>
-      <%= cmd_button "7", "BU002" %>
-    </div>
-    <div>
-      <%= cmd_button "10", "BU003" %>
-      <%= cmd_button "14", "BU004" %>
-      <%= cmd_button "18", "BU005" %>
-    </div>
-    <div>
-      <%= cmd_button "21", "BU006" %>
-      <%= cmd_button "24", "BU007" %>
-      <%= cmd_button "28", "BU008" %>
+  <div class="row">
+    <div id="bandScopeWrapper">
+      <%= if @band_scope_low != "" do %>
+        <div id="bandScopeLimits">
+          <span class="scopeLimit" id="bandScopeLow"><%= @band_scope_low |> format_raw_frequency() %></span>
+          <span class="scopeLimit" id="bandScopeHigh"><%= @band_scope_high |> format_raw_frequency() %></span>
+        </div>
+      <% end %>
+
+      <svg id="bandScope" class="themed <%= @theme %>" viewbox="0 0 640 140">
+        <defs>
+          <filter id="blur" filterUnits="userSpaceOnUse" x="0" y="0" width="640" height="150">
+            <feGaussianBlur in="sourceAlpha" stdDeviation="1" />
+          </filter>
+        </defs>
+
+        <polygon id="spectrumBlur" filter="url(#blur)" points="<%= @band_scope_data %> 645,150 0,150" />
+        <polygon id="spectrum" class="spectrum" points="<%= @band_scope_data %> 645,150 0,150" />
+
+        <%= if @band_scope_mode == :center do %>
+          <line id="active_receiver_line" x1="320" y1="0" x2="320" y2="150" />
+        <% else %>
+          <%= if @band_scope_high && @band_scope_low do %>
+            <% loc = if @active_receiver == :a  && @vfo_a_frequency != "" do %>
+              <%= project_to_limits(@vfo_a_frequency, @band_scope_low, @band_scope_high) %>
+            <% else %>
+              <%= if @vfo_b_frequency != "" do %>
+                <%= project_to_limits(@vfo_b_frequency, @band_scope_low, @band_scope_high) %>
+              <% end %>
+            <% end %>
+
+            <line id="active_receiver_line" x1="<%= loc %>" y1="0" x2="<%= loc %>" y2="150" />
+          <% end %>
+        <% end %>
+      </svg>
     </div>
   </div>
+
+  <div class="row">
+    <div id="scopeControls">
+      <div>
+        S.Mode
+        <%= cmd_button "Center", "BS30" %>
+        <%= cmd_button "Fixed", "BS31" %>
+        <%= cmd_button "Auto Scroll", "BS32" %>
+      </div>
+
+      <div>
+        <%= if @band_scope_mode in [:center, :auto_scroll] do %>
+          Span
+          <%= cmd_button "5", "BS40" %>
+          <%= cmd_button "10", "BS41" %>
+          <%= cmd_button "20", "BS42" %>
+          <%= cmd_button "30", "BS43" %>
+          <%= cmd_button "50", "BS44" %>
+          <%= cmd_button "100", "BS45" %>
+          <%= cmd_button "200", "BS46" %>
+          <%= cmd_button "500", "BS47" %>
+        <% else %>
+          Range
+          <%= cmd_button "1", "BS51" %>
+          <%= cmd_button "2", "BS52" %>
+          <%= cmd_button "3", "BS53" %>
+        <% end %>
+      </div>
+
+      <div>
+        WF Speed
+        <%= cmd_button "1", "BSB1" %>
+        <%= cmd_button "2", "BSB2" %>
+        <%= cmd_button "3", "BSB3" %>
+        <%= cmd_button "4", "BSB4" %>
+      </div>
+
+      <div>
+        Scope Avg
+        <%= cmd_button "Off", "BSA0" %>
+        <%= cmd_button "1", "BSA1" %>
+        <%= cmd_button "2", "BSA2" %>
+        <%= cmd_button "3", "BSA3" %>
+      </div>
+
+      <div>
+        Data speed
+        <%= cmd_button "High", "DD01" %>
+        <%= cmd_button "Mid", "DD02" %>
+        <%= cmd_button "Low", "DD03" %>
+      </div>
+    </div>
+
+    <div id="modeKeys">
+      <%= cmd_button "LSB/USB", "MK0" %>
+      <%= cmd_button "CW/CW-R", "MK1" %>
+      <%= cmd_button "FSK/PSK", "MK2" %>
+      <%= cmd_button "FM/AM", "MK3" %>
+      <%= cmd_button "FSK/FSK-R", "MK4" %>
+      <%= cmd_button "PSK/PSK-R", "MK5" %>
+    </div>
+
+    <div id="bandSelectors">
+      <div class="bandTitle">Band</div>
+      <div>
+        <%= cmd_button "1.8", "BU000" %>
+        <%= cmd_button "3.5", "BU001" %>
+        <%= cmd_button "7", "BU002" %>
+      </div>
+      <div>
+        <%= cmd_button "10", "BU003" %>
+        <%= cmd_button "14", "BU004" %>
+        <%= cmd_button "18", "BU005" %>
+      </div>
+      <div>
+        <%= cmd_button "21", "BU006" %>
+        <%= cmd_button "24", "BU007" %>
+        <%= cmd_button "28", "BU008" %>
+      </div>
+    </div>
+  </div>
+
+
+
+
 
 </div>
