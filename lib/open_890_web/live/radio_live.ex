@@ -21,10 +21,11 @@ defmodule Open890Web.RadioLive do
     Radio.get_band_scope_mode()
     Radio.get_vfo_a_freq()
     Radio.get_vfo_b_freq()
+    Radio.get_s_meter()
 
     {:ok,
       socket
-        |> assign(:s_meter, "0")
+        |> assign(:s_meter, 0)
         |> assign(:vfo_a_frequency, "")
         |> assign(:vfo_b_frequency, "")
         |> assign(:band_scope_mode, nil)
@@ -190,10 +191,16 @@ defmodule Open890Web.RadioLive do
     |> String.trim_leading("0")
   end
 
+  defp format_s_meter(""), do: 0
   defp format_s_meter(str) when is_binary(str) do
     str
     |> String.trim_leading("SM")
     |> String.trim_leading("0")
+    |> case do
+      "" -> "0"
+      val -> val
+    end
+    |> String.to_integer()
   end
 
   defp extract_band_edges("BSM0" <> low_high) do

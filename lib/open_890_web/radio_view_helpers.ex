@@ -44,4 +44,16 @@ defmodule Open890Web.RadioViewHelpers do
     |> String.reverse
   end
 
+  def s_meter_value_to_s_units(val) when is_integer(val) do
+    cond do
+      val < 3 -> "S0"
+      val < 11 -> "S1"
+      val < 19 -> "S3"
+      val < 27 -> "S5"
+      val < 36 -> "S9"
+      true -> "S9++"
+    end
+
+  end
+
 end
