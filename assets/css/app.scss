@@ -4,6 +4,7 @@
 body {
   margin: 0;
   padding: 0;
+  font-family: sans-serif;
 }
 
 .themed {
@@ -139,25 +140,36 @@ $border-radius-small: 3px;
 
 #sMeterWrapper {
   padding: 0.25rem;
-  width: 300px;
+  width: 35%;
+  float: left;
   background-color: black;
   color: white;
   border-radius: $border-radius-small;
 
   #sMeterText {
     float: left;
-    width: 3rem;
-  }
-
-  #sMeterBG {
-    fill: $kenwood-grey;
+    width: 4rem;
   }
 
   #sMeter {
+    // background-color: $elecraft-yellow;
     float: right;
+  }
+
+  .sMeterBG, .sMeter {
+    shape-rendering: geometricPrecision;
+  }
+
+  .sMeterBG {
+    fill: $kenwood-grey;
+  }
+
+  rect.sMeter {
     fill: $kenwood-cyan;
-    .sMeterHigh {
-      fill: $kenwood-red;
+    margin-right: 1px;
+
+    &.high {
+      fill: $kenwood-red
     }
   }
 }
@@ -173,11 +185,6 @@ $border-radius-small: 3px;
     background-color: black;
     fill: #999;
     float: right;
-
-    #audioScopeTuneIndicator {
-      stroke: white;
-      stroke-width: 1pt;
-    }
   }
 }
 
@@ -230,18 +237,19 @@ $border-radius-small: 3px;
   stroke-width: 0.5pt;
 }
 
-#bandScope.themed {
+.scope.themed {
   .spectrum {
     stroke-width: 0.75px;
   }
-  #active_receiver_line {
+
+  .primaryCarrier {
     stroke: white;
     stroke-width: 0.5pt;
     stroke-dasharray: 0;
   }
 
   &.phosphor-red {
-    #spectrum {
+    .spectrum {
       fill: rgba(51, 0, 0, 1.0);
       stroke: rgba(255, 0, 0, 0.5);
     }
@@ -255,12 +263,12 @@ $border-radius-small: 3px;
   }
 
   &.phosphor-green {
-    #spectrum {
+    .spectrum {
       fill: rgba(0, 51, 0, 1.0);
       stroke: rgba(0, 255, 0, 0.5);
     }
 
-    #spectrumBlur {
+    .spectrumBlur {
       fill: rgba(0, 51, 0, 1.0);
       stroke: rgba(0, 255, 0, 0.5);
       stroke-width: 2px;
@@ -271,18 +279,18 @@ $border-radius-small: 3px;
   &.elecraft {
     background-color: $elecraft-dark-blue;
 
-    #active_receiver_line {
+    .primaryCarrier {
       stroke: $elecraft-green;
       stroke-width: 0.5pt;
       stroke-dasharray: 0;
     }
 
-    #spectrum {
+    .spectrum {
       fill: none;
       stroke: $elecraft-yellow;
     }
 
-    #spectrumBlur {
+    .spectrumBlur {
       display: none;
     }
   }
@@ -293,38 +301,42 @@ $border-radius-small: 3px;
   margin-right: 50px;
 }
 
-#bandScopeWrapper {
-  z-index: -100;
-  top: -36pt;
-  position: relative;
+#bandScopeLimits {
+  .scopeLimit {
+    z-index: 101;
+    font-size: 18pt;
+    // font-family: monospace;
+    font-weight: bold;
+  }
+}
 
-  #bandScopeLimits {
+#bandScopeDetails {
+  align-content: start;
+  justify-content: flex-start;
 
-    z-index: 100;
-    width: 100%;
-    clear: both;
+  .scopeDetailItem {
+    background-color: black;
     color: white;
+    border-radius: $border-radius-small;
+    padding: 0.25rem 0.5rem;
+    margin-right: 1rem;
+  }
+}
 
-    .scopeLimit {
-      color: black;
-      display: inline;
-      position: relative;
-      z-index: 101;
-      font-size: 26pt;
-    }
 
-    #bandScopeLow {
-      padding-left: 1rem;
-      // display: inline;
-      // position: relative;
-    }
+#bandScopeWrapper {
 
-    #bandScopeHigh {
-      padding-right: 1rem;
-      // display: inline;
-      // position: relative;
-      float: right;
-    }
+  #bandScopeLow {
+    padding-left: 1rem;
+    // display: inline;
+    // position: relative;
+  }
+
+  #bandScopeHigh {
+    padding-right: 1rem;
+    // display: inline;
+    // position: relative;
+    float: right;
   }
 }
 
