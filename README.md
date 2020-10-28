@@ -30,3 +30,12 @@ Download sudppipe.exe from http://www.softsea.com/review/Simple-UDP-Proxy-Pipe.h
   * Run sudppipe:
 
       `sudppipe.exe -x -b 0.0.0.0 172.18.241.58 60001 60001`
+
+## Misc
+
+### Undocumented commands
+  * MD (MD1, MD2 etc)
+  * IF - (IF frequency?) - when changing from VFO 7mhz to memory 29 mhz 
+    * [warn] Unhandled message: "IF00026975000      000000051052000000"
+  * MC - when changing memory channels - coordinates with adjusting the multi/ch up and down
+    * [warn] Unhandled message: "MC 51"
