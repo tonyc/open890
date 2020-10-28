@@ -22,6 +22,7 @@ defmodule Open890Web.RadioLive do
     Radio.get_vfo_a_freq()
     Radio.get_vfo_b_freq()
     Radio.get_s_meter()
+    Radio.get_modes()
 
     {:ok,
       socket
@@ -38,6 +39,8 @@ defmodule Open890Web.RadioLive do
         |> assign(:band_scope_data, [])
         |> assign(:audio_scope_data, [])
         |> assign(:theme, "elecraft")
+        |> assign(:active_mode, :unknown)
+        |> assign(:inactive_mode, :unknown)
     }
   end
 
@@ -132,6 +135,25 @@ defmodule Open890Web.RadioLive do
           |> assign(:band_scope_span, span)
         }
 
+      msg |> String.starts_with?("OM0") ->
+        mode = msg
+        |> String.trim_leading("OM0")
+        |> parse_operating_mode()
+
+        socket = socket |> assign(:active_mode, mode)
+
+        {:noreply, socket}
+
+      msg |> String.starts_with?("OM1") ->
+        mode = msg
+        |> String.trim_leading("OM1")
+        |> parse_operating_mode()
+
+        socket = socket |> assign(:inactive_mode, mode)
+
+        {:noreply, socket}
+
+
       msg |> String.starts_with?("SM") ->
         {:noreply, socket |> assign(:s_meter, msg |> format_s_meter())}
 
@@ -197,15 +219,37 @@ defmodule Open890Web.RadioLive do
     |> String.trim_leading("SM")
     |> String.trim_leading("0")
     |> case do
-      "" -> "0"
-      val -> val
+      "" -> 0
+      val -> val |> String.to_integer()
     end
-    |> String.to_integer()
   end
 
   defp extract_band_edges("BSM0" <> low_high) do
     low_high
-        |> String.split_at(8)
-        |> Tuple.to_list()
+    |> String.split_at(8)
+    |> Tuple.to_list()
+  end
+
+  defp parse_operating_mode(mode_str) when is_binary(mode_str) do
+    modes = %{
+      "0" => :unused,
+      "1" => :lsb,
+      "2" => :usb,
+      "3" => :cw,
+      "4" => :fm,
+      "5" => :am,
+      "6" => :fsk,
+      "7" => :cw_r,
+      "8" => :unused,
+      "9" => :fsk_r,
+      "A" => :psk,
+      "B" => :psk_r,
+      "C" => :lsb_d,
+      "D" => :usb_d,
+      "E" => :fm_d,
+      "F" => :am_d
+    }
+
+    modes[mode_str] || :unknown
   end
 end

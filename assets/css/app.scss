@@ -1,26 +1,5 @@
 /* This file is for your main application css. */
 // @import "./phoenix.css";
-
-body {
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
-}
-
-.themed {
-  // background-color: rgba(0, 0, 64, 1.0);
-  // color: white;
-
-  &.elecraft {
-    // background-color: rgba(0, 0, 64, 1.0);
-    // color: white;
-  }
-
-  &.phoshpor-green {
-    // background-color: black;
-  }
-}
-
 /* Alerts and form errors */
 .alert {
   padding: 15px;
@@ -55,7 +34,20 @@ body {
   margin: -1rem 0 2rem;
 }
 
-// global, grid etc
+
+// globals, probably will change
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+button { 
+  cursor: pointer;
+}
+
+// grid etc
 .row {
   display: flex;
   justify-content: space-between;
@@ -93,6 +85,27 @@ $border-radius-small: 3px;
   &.cyan { border-color: cyan; }
 }
 
+nav { 
+  // float: left;
+  // align-content: start;
+  // justify-content: space-between;
+
+  align-items: center;
+  justify-content: space-between;
+
+  h1 {
+    display: inline;
+    float: left;
+    margin: 0;
+  }
+
+  .dashboardNavLink {
+    display: inline;
+    float: right;
+  }
+
+}
+
 // radio specific stuff
 
 #radio {
@@ -112,7 +125,6 @@ $border-radius-small: 3px;
     display: inline-block;
   }
 }
-
 
 #themeSelector {
   float: right;
@@ -140,7 +152,7 @@ $border-radius-small: 3px;
 
 #sMeterWrapper {
   padding: 0.25rem;
-  width: 35%;
+  width: 475px;
   float: left;
   background-color: black;
   color: white;
@@ -152,12 +164,11 @@ $border-radius-small: 3px;
   }
 
   #sMeter {
-    // background-color: $elecraft-yellow;
     float: right;
   }
 
   .sMeterBG, .sMeter {
-    shape-rendering: geometricPrecision;
+    // shape-rendering: geometricPrecision;
   }
 
   .sMeterBG {
@@ -268,7 +279,7 @@ $border-radius-small: 3px;
       stroke: rgba(0, 255, 0, 0.5);
     }
 
-    .spectrumBlur {
+    #spectrumBlur {
       fill: rgba(0, 51, 0, 1.0);
       stroke: rgba(0, 255, 0, 0.5);
       stroke-width: 2px;
@@ -340,8 +351,20 @@ $border-radius-small: 3px;
   }
 }
 
-
 #bandSelectors div button {
   width: 11rem;
   font-size: 16pt;
+}
+
+#modeKeys {
+  // border: 1px dotted red;
+  width: 120px;
+  flex-direction: column;
+
+  button {
+    text-align: center;
+    width: 100%;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem 0;
+  }
 }

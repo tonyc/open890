@@ -1,5 +1,5 @@
 <div id="radio" class="">
-  <div id="topRow" class="row debug">
+  <div id="topRow" class="row">
     <span id="themeSelector" class="">
       <span>
         Theme:
@@ -73,6 +73,11 @@
         <div class="freq"><%= @vfo_a_frequency |> format_raw_frequency() %></div>
       <% end %>
     </div>
+  </div>
+
+  <div class="row">
+    <span>Left: <%= @active_mode %></span>
+    <span>Right: <%= @inactive_mode %></span>
   </div>
 
   <div class="row">
@@ -215,8 +220,6 @@
       </div>
     </div>
   </div>
-
-
 
 
 
