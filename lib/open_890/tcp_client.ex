@@ -88,7 +88,6 @@ defmodule Open890.TCPClient do
   # networking
   @impl true
   def handle_info({:tcp, socket, msg}, %{socket: socket} = state) do
-    # Logger.info("<- #{inspect msg}")
 
     new_state =
       msg
@@ -172,7 +171,7 @@ defmodule Open890.TCPClient do
     {:noreply, state}
   end
 
-  # radio responses
+  # connection allowed response
   def handle_msg("##CN1", %{socket: socket, kns_user: kns_user} = state) do
     login = User.to_login(kns_user)
 
@@ -180,7 +179,7 @@ defmodule Open890.TCPClient do
     state
   end
 
-  # Logged in
+  # login successful response
   def handle_msg("##ID1", state) do
     Logger.info("signed in, scheduling first ping")
     schedule_ping()
@@ -201,23 +200,27 @@ defmodule Open890.TCPClient do
     state
   end
 
-  def handle_msg("PS1", state), do: state
+  # power status respnose
+  def handle_msg("PS1", state) do
+    # TODO: Cancel the connection timer here
+    state
+  end
+
+  # login enabled response
   def handle_msg("##UE1", state), do: state
+
+  # everything under here
+
+  # bandscope data speed high response
   def handle_msg("DD01", state), do: state
+
+  # filter scope LAN/high cycle respnose
   def handle_msg("DD11", state), do: state
-
-  def handle_msg("FR0" = msg, state) do
-    msg |> broadcast()
-    state
-  end
-
-  def handle_msg("FR1" = msg, state) do
-    msg |> broadcast()
-    state
-  end
 
   def handle_msg(msg, %{socket: _socket} = state) when is_binary(msg) do
     cond do
+
+      # high speed filter/audio scope respnse
       msg |> String.starts_with?("##DD3") ->
         audio_scope_data = msg
         |> String.trim_leading("##DD3")
@@ -229,6 +232,7 @@ defmodule Open890.TCPClient do
 
         state
 
+      # high speed band scope data response
       msg |> String.starts_with?("##DD2") ->
         band_scope_data = msg
         |> String.trim_leading("##DD2")
@@ -240,36 +244,10 @@ defmodule Open890.TCPClient do
 
         state
 
-      msg |> String.starts_with?("BS3") ->
-        msg
-        |> broadcast()
-
-        state
-
-      msg |> String.starts_with?("BSM0") ->
-        msg
-        |> broadcast()
-
-        state
-
-      msg |> String.starts_with?("SM") ->
-        msg
-        |> broadcast()
-
-        state
-
-      msg |> String.starts_with?("OM") ->
-        msg |> broadcast()
-        state
-
-      msg |> String.starts_with?("FA") || msg |> String.starts_with?("FB") ->
-        msg
-        |> broadcast()
-
-        state
-
       true ->
-        Logger.warn("Unhandled message: #{inspect(msg)}")
+        # Logger.info("<- #{inspect msg}")
+        # otherwise, we just braodcast everything to the liveview to let it deal with it
+        msg |> broadcast()
         state
     end
   end

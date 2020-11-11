@@ -3,6 +3,7 @@ defmodule Open890Web.RadioLive do
   require Logger
   alias Phoenix.Socket.Broadcast
   alias Open890.TCPClient, as: Radio
+  alias Open890.Extract
 
   alias Open890Web.RadioViewHelpers
 
@@ -120,13 +121,15 @@ defmodule Open890Web.RadioLive do
 
     cond do
       msg |> String.starts_with?("BSM0") ->
-        [bs_low, bs_high] = msg |> extract_band_edges()
+        [bs_low, bs_high] = msg |> Extract.band_edges()
 
         [low_int, high_int] = [bs_low, bs_high]
         |> Enum.map(&String.to_integer/1)
         |> Enum.map(&Kernel.div(&1, 1000))
 
-        span = (high_int - low_int) |> to_string() |> extract_frequency()
+        span = (high_int - low_int)
+        |> to_string()
+        |> String.trim_leading("0")
 
         {:noreply,
           socket
@@ -136,30 +139,28 @@ defmodule Open890Web.RadioLive do
         }
 
       msg |> String.starts_with?("OM0") ->
-        mode = msg
-        |> String.trim_leading("OM0")
-        |> parse_operating_mode()
+        mode = msg |> Extract.operating_mode()
 
         socket = socket |> assign(:active_mode, mode)
 
         {:noreply, socket}
 
       msg |> String.starts_with?("OM1") ->
-        mode = msg
-        |> String.trim_leading("OM1")
-        |> parse_operating_mode()
+        mode = msg |> Extract.operating_mode()
 
         socket = socket |> assign(:inactive_mode, mode)
 
         {:noreply, socket}
 
-
       msg |> String.starts_with?("SM") ->
-        {:noreply, socket |> assign(:s_meter, msg |> format_s_meter())}
+        s_meter_value = msg |> Extract.s_meter()
+
+        socket = socket |> assign(:s_meter, s_meter_value)
+
+        {:noreply, socket }
 
       msg |> String.starts_with?("FA") ->
-          frequency = msg |> extract_frequency()
-
+          frequency = msg |> Extract.frequency()
           socket = socket |> assign(:vfo_a_frequency, frequency)
 
           socket = if socket.assigns[:active_receiver] == :a do
@@ -171,8 +172,7 @@ defmodule Open890Web.RadioLive do
         {:noreply, socket }
 
       msg |> String.starts_with?("FB") ->
-        frequency = msg |> extract_frequency()
-
+        frequency = msg |> Extract.frequency()
         socket = socket |> assign(:vfo_b_frequency, frequency)
 
         socket = if socket.assigns[:active_receiver] == :b do
@@ -184,13 +184,7 @@ defmodule Open890Web.RadioLive do
         {:noreply, socket }
 
       msg |> String.starts_with?("BS3") ->
-        band_scope_mode = msg
-        |> String.trim_leading("BS3")
-        |> case do
-          "0" -> :center
-          "1" -> :fixed
-          "2" -> :auto_scroll
-        end
+        band_scope_mode = msg |> Extract.scope_mode()
 
         {:noreply, socket |> assign(:band_scope_mode, band_scope_mode)}
 
@@ -206,50 +200,4 @@ defmodule Open890Web.RadioLive do
     end
   end
 
-  defp extract_frequency(str) when is_binary(str) do
-    str
-    |> String.trim_leading("FA")
-    |> String.trim_leading("FB")
-    |> String.trim_leading("0")
-  end
-
-  defp format_s_meter(""), do: 0
-  defp format_s_meter(str) when is_binary(str) do
-    str
-    |> String.trim_leading("SM")
-    |> String.trim_leading("0")
-    |> case do
-      "" -> 0
-      val -> val |> String.to_integer()
-    end
-  end
-
-  defp extract_band_edges("BSM0" <> low_high) do
-    low_high
-    |> String.split_at(8)
-    |> Tuple.to_list()
-  end
-
-  defp parse_operating_mode(mode_str) when is_binary(mode_str) do
-    modes = %{
-      "0" => :unused,
-      "1" => :lsb,
-      "2" => :usb,
-      "3" => :cw,
-      "4" => :fm,
-      "5" => :am,
-      "6" => :fsk,
-      "7" => :cw_r,
-      "8" => :unused,
-      "9" => :fsk_r,
-      "A" => :psk,
-      "B" => :psk_r,
-      "C" => :lsb_d,
-      "D" => :usb_d,
-      "E" => :fm_d,
-      "F" => :am_d
-    }
-
-    modes[mode_str] || :unknown
-  end
 end

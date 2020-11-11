@@ -15,7 +15,6 @@ defmodule Open890Web.RadioViewHelpers do
       :auto_scroll -> "Auto Scroll"
       :fixed -> "Fixed"
       :center -> "Center"
-      _ -> ""
     end
   end
 
@@ -33,6 +32,8 @@ defmodule Open890Web.RadioViewHelpers do
     percentage * 640
   end
 
+  # formats a raw frequency in Hz to e.g.
+  # 7.055.123
   def format_raw_frequency(str) do
     str
     |> to_string()
@@ -56,7 +57,13 @@ defmodule Open890Web.RadioViewHelpers do
       val >= 3 -> "S1"
       true -> "S0"
     end
+  end
 
+  def format_mode(mode) when is_atom(mode) or is_binary(mode) do
+    mode
+    |> to_string()
+    |> String.replace("_", "-")
+    |> String.upcase()
   end
 
 end
