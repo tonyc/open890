@@ -10,7 +10,15 @@ defmodule Open890.MixProject do
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test,
+        "coveralls.json": :test
+      ]
     ]
   end
 
@@ -34,6 +42,7 @@ defmodule Open890.MixProject do
   defp deps do
     [
       {:credo, "~> 1.5", only: [:dev, :test]},
+      {:excoveralls, "~> 0.13.3", only: [:dev, :test]},
       {:ecto_sql, "~> 3.4"},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},

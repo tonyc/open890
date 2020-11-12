@@ -37,6 +37,8 @@ jobs:
           mix deps.get
       - name: Compile
         run: mix clean && MIX_ENV=test mix compile --warnings-as-errors
+      - name: Run Tests
+        run: MIX_ENV=test mix coveralls
       - name: Ensure code is linted
         run: MIX_ENV=test mix credo --strict
       - name: Run Sobelow
