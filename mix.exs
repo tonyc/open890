@@ -5,7 +5,7 @@ defmodule Open890.MixProject do
     [
       app: :open_890,
       version: "0.1.0",
-      elixir: "~> 1.7",
+      elixir: "~> 1.10",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
@@ -33,19 +33,21 @@ defmodule Open890.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:credo, "~> 1.5", only: :dev},
+      {:ecto_sql, "~> 3.4"},
+      {:gettext, "~> 0.11"},
+      {:jason, "~> 1.0"},
+      {:postgrex, ">= 0.0.0"},
       {:phoenix, "~> 1.5.4"},
       {:phoenix_ecto, "~> 4.1"},
-      {:ecto_sql, "~> 3.4"},
-      {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 2.11"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_live_dashboard, "~> 0.2"},
       {:telemetry_metrics, "~> 0.4"},
       {:telemetry_poller, "~> 0.4"},
-      {:gettext, "~> 0.11"},
-      {:jason, "~> 1.0"},
+      {:observer_cli, "~> 1.5"},
       {:plug_cowboy, "~> 2.0"},
-      {:observer_cli, "~> 1.5"}
+      {:sobelow, "~> 0.10.5", only: [:dev, :test]}
     ]
   end
 
