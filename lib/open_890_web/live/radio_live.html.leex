@@ -79,6 +79,8 @@
   <div class="row">
     <span>Left mode: <%= format_mode(@active_mode) %></span>
     <span>Right mode: <%= format_mode(@inactive_mode) %></span>
+    <span>SSB filter mode: <%= @ssb_filter_mode %></span>
+    <span>SSB/Data filter mode: <%= @ssb_data_filter_mode %></span>
   </div>
 
   <div class="row">
@@ -225,4 +227,12 @@
 
 
 
+</div>
+
+<div class="socket debug">
+<%= assigns
+  |> Map.drop([:__changed__, :socket])
+  |> Map.drop([:band_scope_data, :audio_scope_data])
+  |> inspect(pretty: true)
+%>
 </div>

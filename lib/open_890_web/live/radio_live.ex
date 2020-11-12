@@ -24,25 +24,28 @@ defmodule Open890Web.RadioLive do
     Radio.get_vfo_b_freq()
     Radio.get_s_meter()
     Radio.get_modes()
+    Radio.get_filter_modes()
+    # Radio.get_filter_settings()
 
     {:ok,
-      socket
-        |> assign(:s_meter, 0)
-        |> assign(:vfo_a_frequency, "")
-        |> assign(:vfo_b_frequency, "")
-        |> assign(:band_scope_mode, nil)
-        |> assign(:band_scope_low, nil)
-        |> assign(:band_scope_high, nil)
-        |> assign(:band_scope_span, "")
-        |> assign(:projected_active_receiver_location, "")
-        |> assign(:active_receiver, :a)
-        |> assign(:active_transmitter, :a)
-        |> assign(:band_scope_data, [])
-        |> assign(:audio_scope_data, [])
-        |> assign(:theme, "elecraft")
-        |> assign(:active_mode, :unknown)
-        |> assign(:inactive_mode, :unknown)
-    }
+     socket
+     |> assign(:s_meter, 0)
+     |> assign(:vfo_a_frequency, "")
+     |> assign(:vfo_b_frequency, "")
+     |> assign(:band_scope_mode, nil)
+     |> assign(:band_scope_low, nil)
+     |> assign(:band_scope_high, nil)
+     |> assign(:band_scope_span, "")
+     |> assign(:projected_active_receiver_location, "")
+     |> assign(:active_receiver, :a)
+     |> assign(:active_transmitter, :a)
+     |> assign(:band_scope_data, [])
+     |> assign(:audio_scope_data, [])
+     |> assign(:theme, "elecraft")
+     |> assign(:active_mode, :unknown)
+     |> assign(:inactive_mode, :unknown)
+     |> assign(:ssb_filter_mode, nil)
+     |> assign(:ssb_data_filter_mode, nil)}
   end
 
   @impl true
@@ -80,36 +83,34 @@ defmodule Open890Web.RadioLive do
   end
 
   def handle_event("set_theme", %{"theme" => theme_name} = _params, socket) do
-    {:noreply,
-      socket |> assign(:theme, theme_name)
-    }
+    {:noreply, socket |> assign(:theme, theme_name)}
   end
 
   @impl true
   def handle_info(%Broadcast{event: "scope_data", payload: %{payload: audio_scope_data}}, socket) do
-    zipped_data = (0..212)
-    |> Enum.zip(audio_scope_data)
-    |> Enum.map(fn {index, data} ->
-      "#{index},#{data}"
-     end)
-     |> Enum.join(" ")
+    zipped_data =
+      0..212
+      |> Enum.zip(audio_scope_data)
+      |> Enum.map(fn {index, data} ->
+        "#{index},#{data}"
+      end)
+      |> Enum.join(" ")
 
-
-    {:noreply,
-      socket |> assign(:audio_scope_data, zipped_data)
-    }
+    {:noreply, socket |> assign(:audio_scope_data, zipped_data)}
   end
 
   @impl true
   def handle_info(%Broadcast{event: "band_scope_data", payload: %{payload: band_data}}, socket) do
-    zipped_data = (0..640)
-    |> Enum.zip(band_data)
-    |> Enum.map(fn ({index, data}) ->
-      "#{index},#{data}"
-    end)
-    |> Enum.join(" ")
+    zipped_data =
+      0..640
+      |> Enum.zip(band_data)
+      |> Enum.map(fn {index, data} ->
+        "#{index},#{data}"
+      end)
+      |> Enum.join(" ")
 
-    {:noreply,
+    {
+      :noreply,
       # socket |> push_event(:band_scope_data, payload)
       socket |> assign(:band_scope_data, zipped_data)
     }
@@ -123,20 +124,21 @@ defmodule Open890Web.RadioLive do
       msg |> String.starts_with?("BSM0") ->
         [bs_low, bs_high] = msg |> Extract.band_edges()
 
-        [low_int, high_int] = [bs_low, bs_high]
-        |> Enum.map(&String.to_integer/1)
-        |> Enum.map(&Kernel.div(&1, 1000))
+        [low_int, high_int] =
+          [bs_low, bs_high]
+          |> Enum.map(&String.to_integer/1)
+          |> Enum.map(&Kernel.div(&1, 1000))
 
-        span = (high_int - low_int)
-        |> to_string()
-        |> String.trim_leading("0")
+        span =
+          (high_int - low_int)
+          |> to_string()
+          |> String.trim_leading("0")
 
         {:noreply,
-          socket
-          |> assign(:band_scope_low, bs_low)
-          |> assign(:band_scope_high, bs_high)
-          |> assign(:band_scope_span, span)
-        }
+         socket
+         |> assign(:band_scope_low, bs_low)
+         |> assign(:band_scope_high, bs_high)
+         |> assign(:band_scope_span, span)}
 
       msg |> String.starts_with?("OM0") ->
         mode = msg |> Extract.operating_mode()
@@ -157,42 +159,69 @@ defmodule Open890Web.RadioLive do
 
         socket = socket |> assign(:s_meter, s_meter_value)
 
-        {:noreply, socket }
+        {:noreply, socket}
 
       msg |> String.starts_with?("FA") ->
-          frequency = msg |> Extract.frequency()
-          socket = socket |> assign(:vfo_a_frequency, frequency)
+        frequency = msg |> Extract.frequency()
+        socket = socket |> assign(:vfo_a_frequency, frequency)
 
-          socket = if socket.assigns[:active_receiver] == :a do
+        socket =
+          if socket.assigns[:active_receiver] == :a do
             socket |> assign(:page_title, frequency |> RadioViewHelpers.format_raw_frequency())
           else
             socket
           end
 
-        {:noreply, socket }
+        {:noreply, socket}
 
       msg |> String.starts_with?("FB") ->
         frequency = msg |> Extract.frequency()
         socket = socket |> assign(:vfo_b_frequency, frequency)
 
-        socket = if socket.assigns[:active_receiver] == :b do
-          socket |> assign(:page_title, frequency |> RadioViewHelpers.format_raw_frequency())
-        else
-          socket
-        end
+        socket =
+          if socket.assigns[:active_receiver] == :b do
+            socket |> assign(:page_title, frequency |> RadioViewHelpers.format_raw_frequency())
+          else
+            socket
+          end
 
-        {:noreply, socket }
+        {:noreply, socket}
 
       msg |> String.starts_with?("BS3") ->
         band_scope_mode = msg |> Extract.scope_mode()
 
         {:noreply, socket |> assign(:band_scope_mode, band_scope_mode)}
 
+      # high/shift
+      msg |> String.starts_with?("SH") ->
+        passband_id = msg |> Extract.passband_id()
+
+        filter_hi_shift = passband_id |> determine_filter_high()
+
+        {:noreply, socket |> assign(:filter_hi_shift, filter_hi_shift)}
+
+      # lo/width
+      msg |> String.starts_with?("SL") ->
+        passband_id = msg |> Extract.passband_id()
+
+        filter_lo_width = passband_id |> determine_filter_low()
+
+        {:noreply, socket |> assign(:filter_lo_width, filter_lo_width)}
+
+      # ssb/ssb+data filter modes
+      msg |> String.starts_with?("EX00611") ->
+        ssb_filter_mode = msg |> Extract.filter_mode()
+        {:noreply, socket |> assign(:ssb_filter_mode, ssb_filter_mode)}
+
+      msg |> String.starts_with?("EX00612") ->
+        ssb_data_filter_mode = msg |> Extract.filter_mode()
+        {:noreply, socket |> assign(:ssb_data_filter_mode, ssb_data_filter_mode)}
+
       msg == "FR0" ->
-        {:noreply, socket |> assign(:active_receiver, :a) }
+        {:noreply, socket |> assign(:active_receiver, :a)}
 
       msg == "FR1" ->
-        {:noreply, socket |> assign(:active_receiver, :b) }
+        {:noreply, socket |> assign(:active_receiver, :b)}
 
       true ->
         Logger.debug("RadioLive: unknown message: #{inspect(msg)}")
@@ -200,4 +229,15 @@ defmodule Open890Web.RadioLive do
     end
   end
 
+  defp determine_filter_high(passband_id) when is_integer(passband_id) do
+    # SSB hi/low or shift/width behavior determined by reading menu EX00611:
+
+    # "EX00611 000" (hi/low)
+    # "EX00611 001" (shift/width)
+
+    ## SSB data behavior determined by EX 0 06 12 (same as above)
+  end
+
+  defp determine_filter_low(passband_id) when is_integer(passband_id) do
+  end
 end

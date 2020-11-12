@@ -69,6 +69,20 @@ defmodule Open890.TCPClient do
   def get_active_mode, do: "OM0" |> cmd()
   def get_inactive_mode, do: "OM1" |> cmd()
 
+  def get_filter_modes do
+    get_ssb_filter_mode()
+    get_ssb_data_filter_mode()
+  end
+
+  def get_ssb_filter_mode do
+    "EX00611" |> cmd()
+  end
+
+  def get_ssb_data_filter_mode do
+    "EX00612" |> cmd()
+  end
+
+
   # TODO: Make this configurable
   defp freq_change_step, do: "5"
 
@@ -245,7 +259,7 @@ defmodule Open890.TCPClient do
         state
 
       true ->
-        # Logger.info("<- #{inspect msg}")
+        Logger.info("<- #{inspect msg}")
         # otherwise, we just braodcast everything to the liveview to let it deal with it
         msg |> broadcast()
         state

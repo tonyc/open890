@@ -66,4 +66,27 @@ defmodule Open890.Extract do
     |> Tuple.to_list()
   end
 
+  # returns an integer number representing the
+  # passband shift/width/hi/lo cut id
+  def passband_id(str) when is_binary(str) do
+    str
+    |> String.trim_leading("SH")
+    |> String.trim_leading("SL")
+    |> String.trim_leading("0")
+    |> String.to_integer()
+  end
+
+  # returns hi_lo_cut or :shift_width based on the filter mode for menu EX 0 06 11/12
+  def filter_mode(str) when is_binary(str) do
+    str
+    |> String.trim_leading("EX006")
+    |> String.trim_leading("11")
+    |> String.trim_leading("12")
+    |> String.trim_leading(" 00")
+    |> case do
+      "0" -> :hi_lo_cut
+      "1" -> :shift_width
+    end
+  end
+
 end
