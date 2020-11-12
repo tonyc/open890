@@ -9,8 +9,6 @@ jobs:
       - uses: actions/checkout@v2
         with:
           ref: ${{ github.head_ref }}
-      - name: Create Config
-        run: mv config/dev.secret.example.exs config/dev.secret.exs
       - name: Install OTP and Elixir
         uses: actions/setup-elixir@v1
         with:
