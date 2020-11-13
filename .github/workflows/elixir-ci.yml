@@ -12,8 +12,8 @@ jobs:
       - name: Install OTP and Elixir
         uses: actions/setup-elixir@v1
         with:
-          otp-version: 23.1.2
-          elixir-version: 1.11.2
+          otp-version: 22.3.4.6
+          elixir-version: 1.10.4
       - name: Retrieve Mix Dependencies Cache (uncompiled)
         uses: actions/cache@v2
         id: mix-cache # used to check if we can skip `mix deps.get`
