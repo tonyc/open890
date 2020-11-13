@@ -40,6 +40,6 @@ jobs:
       # - name: Run Tests
       #   run: MIX_ENV=test mix coveralls
       - name: Ensure code is linted
-        run: MIX_ENV=test mix credo
+        run: MIX_ENV=test mix credo suggest --mute-exit-status
       - name: Run Sobelow
         run: MIX_ENV=test mix sobelow --ignore Config.CSP,Config.HTTPS
