@@ -84,7 +84,6 @@ defmodule Open890.TCPClient do
     "EX00612" |> cmd()
   end
 
-
   # TODO: Make this configurable
   defp freq_change_step, do: "5"
 
@@ -260,7 +259,7 @@ defmodule Open890.TCPClient do
         state
 
       true ->
-        Logger.info("<- #{inspect msg}")
+        Logger.info("<- #{inspect(msg)}")
         # otherwise, we just braodcast everything to the liveview to let it deal with it
         msg |> broadcast()
         state
