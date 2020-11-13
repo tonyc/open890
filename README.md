@@ -15,10 +15,10 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
 This app needs the following ENV variables set:
 
-  * RADIO_IP_ADDRESS - IP address of the TS-890
-  * RADIO_USERNAME - The KNS username
-  * RADIO_PASSWORD - The KNS password
-  * RADIO_USER_IS_ADMIN (true/false) - Whether the KNS user is an admin
+  * `RADIO_IP_ADDRESS` - IP address of the TS-890
+  * `RADIO_USERNAME` - The KNS username
+  * `RADIO_PASSWORD` - The KNS password
+  * `RADIO_USER_IS_ADMIN` (true/false) - Whether the KNS user is an admin
 
 ## Forwarding UDP packets from Windows 10 to WSL2:
 
