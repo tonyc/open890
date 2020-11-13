@@ -1,5 +1,7 @@
 # Open890
 
+![Elixir CI status](https://github.com/tonyc/open890/workflows/.github/workflows/elixir-ci.yml/badge.svg)
+
 To start your Phoenix server:
 
   * Install dependencies with `mix deps.get`
