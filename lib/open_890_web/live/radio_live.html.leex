@@ -26,16 +26,22 @@
     </div>
 
     <div id="audioScopeWrapper" class="">
-      <svg id="audioScope" class="scope themed <%= @theme %>" viewbox="0 0 212 50">
-        <defs>
-          <linearGradient id="kenwood" gradientTransform="rotate(90)">
-            <stop offset="0" stop-color="white" />
-            <stop offset="50" stop-color="#0c0c5c" />
-          </linearGradient>
-        </defs>
-        <polygon id="audioSpectrum" class="spectrum" points="<%= @audio_scope_data %> 215,60 0,60" />
-        <line id="audioScopeTuneIndicator" class="primaryCarrier" x1="106" y1="0" x2="106" y2="50" />
-      </svg>
+      <div class="row">
+        <span>lo/width: <%= @filter_lo_width %></span>
+        <span>hi/shift: <%= @filter_hi_shift %></span>
+      </div>
+      <div class="row">
+        <svg id="audioScope" class="scope themed <%= @theme %>" viewbox="0 0 212 50">
+          <defs>
+            <linearGradient id="kenwood" gradientTransform="rotate(90)">
+              <stop offset="0" stop-color="white" />
+              <stop offset="50" stop-color="#0c0c5c" />
+            </linearGradient>
+          </defs>
+          <polygon id="audioSpectrum" class="spectrum" points="<%= @audio_scope_data %> 215,60 0,60" />
+          <line id="audioScopeTuneIndicator" class="primaryCarrier" x1="106" y1="0" x2="106" y2="50" />
+        </svg>
+      </div>
     </div>
   </div>
 
@@ -79,8 +85,6 @@
   <div class="row">
     <span>Left mode: <%= format_mode(@active_mode) %></span>
     <span>Right mode: <%= format_mode(@inactive_mode) %></span>
-    <span>SSB filter mode: <%= @ssb_filter_mode %></span>
-    <span>SSB/Data filter mode: <%= @ssb_data_filter_mode %></span>
   </div>
 
   <div class="row">

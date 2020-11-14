@@ -25,6 +25,7 @@ defmodule Open890Web.RadioLive do
     Radio.get_s_meter()
     Radio.get_modes()
     Radio.get_filter_modes()
+    Radio.get_filter_state()
     # Radio.get_filter_settings()
 
     {:ok,
@@ -45,7 +46,10 @@ defmodule Open890Web.RadioLive do
      |> assign(:active_mode, :unknown)
      |> assign(:inactive_mode, :unknown)
      |> assign(:ssb_filter_mode, nil)
-     |> assign(:ssb_data_filter_mode, nil)}
+     |> assign(:ssb_data_filter_mode, nil)
+     |> assign(:filter_hi_shift, nil)
+     |> assign(:filter_lo_width, nil)
+    }
   end
 
   @impl true
@@ -196,7 +200,10 @@ defmodule Open890Web.RadioLive do
       msg |> String.starts_with?("SH") ->
         passband_id = msg |> Extract.passband_id()
 
-        filter_hi_shift = passband_id |> determine_filter_high()
+        current_mode = socket.assigns.active_mode
+        filter_mode = socket.assigns.ssb_filter_mode
+
+        filter_hi_shift = passband_id |> Extract.filter_hi_shift(filter_mode, current_mode)
 
         {:noreply, socket |> assign(:filter_hi_shift, filter_hi_shift)}
 
@@ -227,15 +234,6 @@ defmodule Open890Web.RadioLive do
         Logger.debug("RadioLive: unknown message: #{inspect(msg)}")
         {:noreply, socket}
     end
-  end
-
-  defp determine_filter_high(passband_id) when is_integer(passband_id) do
-    # SSB hi/low or shift/width behavior determined by reading menu EX00611:
-
-    # "EX00611 000" (hi/low)
-    # "EX00611 001" (shift/width)
-
-    ## SSB data behavior determined by EX 0 06 12 (same as above)
   end
 
   defp determine_filter_low(passband_id) when is_integer(passband_id) do

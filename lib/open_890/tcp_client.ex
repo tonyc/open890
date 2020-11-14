@@ -71,6 +71,11 @@ defmodule Open890.TCPClient do
   def get_active_mode, do: "OM0" |> cmd()
   def get_inactive_mode, do: "OM1" |> cmd()
 
+  def get_filter_state do
+    "SH0" |> cmd()
+    "SL0" |> cmd()
+  end
+
   def get_filter_modes do
     get_ssb_filter_mode()
     get_ssb_data_filter_mode()
