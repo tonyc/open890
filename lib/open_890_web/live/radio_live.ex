@@ -197,7 +197,7 @@ defmodule Open890Web.RadioLive do
         {:noreply, socket |> assign(:band_scope_mode, band_scope_mode)}
 
       # high/shift
-      msg |> String.starts_with?("SH") ->
+      msg |> String.starts_with?("SH0") ->
         passband_id = msg |> Extract.passband_id()
 
         current_mode = socket.assigns.active_mode
@@ -208,10 +208,13 @@ defmodule Open890Web.RadioLive do
         {:noreply, socket |> assign(:filter_hi_shift, filter_hi_shift)}
 
       # lo/width
-      msg |> String.starts_with?("SL") ->
+      msg |> String.starts_with?("SL0") ->
         passband_id = msg |> Extract.passband_id()
 
-        filter_lo_width = passband_id |> determine_filter_low()
+        current_mode = socket.assigns.active_mode
+        filter_mode = socket.assigns.ssb_filter_mode
+
+        filter_lo_width = passband_id |> Extract.filter_lo_width(filter_mode, current_mode)
 
         {:noreply, socket |> assign(:filter_lo_width, filter_lo_width)}
 

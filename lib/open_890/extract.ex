@@ -15,14 +15,6 @@ defmodule Open890.Extract do
     1900, 2000
   }
 
-  @am_lo_cut_lookup { 0, 100, 200, 300 }
-
-  @fm_lo_cut_lookup {
-    0, 50, 100, 200, 300,
-    400, 500, 600, 700, 800,
-    900, 1000
-  }
-
   @ssb_width_lookup {
     50, 80, 100, 150, 200,
     250, 300, 350, 400, 450,
@@ -31,6 +23,14 @@ defmodule Open890.Extract do
     1600, 1700, 1800, 1900, 2000,
     2100, 2200, 2300, 2400, 2500,
     2600, 2700, 2800, 2900, 3000
+  }
+
+  @am_lo_cut_lookup { 0, 100, 200, 300 }
+
+  @fm_lo_cut_lookup {
+    0, 50, 100, 200, 300,
+    400, 500, 600, 700, 800,
+    900, 1000
   }
 
   @cw_width_lookup {
@@ -160,26 +160,38 @@ defmodule Open890.Extract do
     end
   end
 
-  def filter_lo_width(passband_id, :hi_lo_cut, current_mode) do
-    cond do
-      current_mode in [:usb, :usb_d, :lsb, :lsb_d] ->
-        @ssb_lo_cut_lookup |> elem(passband_id)
-
-      current_mode in [:am, :am_d] ->
-        @am_lo_cut_lookup |> elem(passband_id)
-
-      current_mode in [:fm, :fm_d] ->
-        @fm_lo_cut_lookup |> elem(passband_id)
-
-      true ->
-        Logger.warn("Unknown mode for lo/width: #{inspect(current_mode)}")
-        -1
-    end
-
+  def filter_lo_width(passband_id,  _ssb_filter_mode, mode) when mode in [:cw, :cw_r] do
+    @cw_width_lookup |> elem(passband_id)
   end
 
-  def filter_lo_width(passband_id, :shift_width, current_mode) do
+  def filter_lo_width(passband_id,  _ssb_filter_mode, mode) when mode in [:fsk, :fsk_r] do
+    @fsk_width_lookup |> elem(passband_id)
+  end
 
+  def filter_lo_width(passband_id,  _ssb_filter_mode, mode) when mode in [:psk, :psk_r] do
+    @psk_width_lookup |> elem(passband_id)
+  end
+
+  def filter_lo_width(passband_id,  _ssb_filter_mode, mode) when mode in [:am, :am_d] do
+    @am_lo_cut_lookup |> elem(passband_id)
+  end
+
+  def filter_lo_width(passband_id,  _ssb_filter_mode, mode) when mode in [:fm, :fm_d] do
+    @fm_lo_cut_lookup |> elem(passband_id)
+  end
+
+  def filter_lo_width(passband_id, filter_mode, mode) when mode in [:usb, :usb_d, :lsb, :lsb_d] do
+    case filter_mode do
+      :hi_lo_cut ->
+        @ssb_lo_cut_lookup |> elem(passband_id)
+
+      :shift_width ->
+        @ssb_width_lookup |> elem(passband_id)
+    end
+  end
+
+  def filter_lo_width(passband_id, filter_mode, mode) do
+    Logger.warn("Unknown passband_id, filter_mode, mode: #{inspect({passband_id, filter_mode, mode})}")
   end
 
   def filter_hi_shift(passband_id, _filter_mode, :cw) do
@@ -192,7 +204,6 @@ defmodule Open890.Extract do
 
   def filter_hi_shift(passband_id, filter_mode, current_mode) do
     case filter_mode do
-
       :hi_lo_cut ->
         cond do
           current_mode in [:usb, :usb_d, :lsb, :lsb_d] ->
@@ -219,16 +230,13 @@ defmodule Open890.Extract do
             -1
         end
     end
-
   end
 
-  defp calculate_cw_shift(passband_id)
-       when is_integer(passband_id) and passband_id >= 0 and passband_id <= 160 do
+  defp calculate_cw_shift(passband_id) when is_integer(passband_id) and passband_id >= 0 and passband_id <= 160 do
     10 * passband_id - 800
   end
 
-  defp calculate_ssb_shift(passband_id)
-       when is_integer(passband_id) and passband_id >= 0 and passband_id <= 49 do
+  defp calculate_ssb_shift(passband_id) when is_integer(passband_id) and passband_id >= 0 and passband_id <= 49 do
     50 * passband_id + 50
   end
 end
