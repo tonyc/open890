@@ -1,0 +1,24 @@
+repos:
+  - repo: local
+    hooks:
+      - id: mix-compile-warnings-as-errors
+        name: Compile Elixir, reporting warnings as errors
+        entry: bash -c "MIX_ENV=pre_commit mix compile --warnings-as-errors"
+        language: system
+      - id: compile-assets
+        name: Compile Assets
+        entry: bash -c "cd assets && node_modules/.bin/webpack"
+        language: system
+      - id: mix-format-check-formatted
+        name: Verify Elixir code is formattted
+        entry: bash -c "mix format --check-formatted"
+        language: system
+      - id: mix-credo
+        name: Lint Elixir code
+        entry: bash -c "mix credo"
+        language: script
+        pass_filenames: true
+      - id: prettier
+        name: Verify assets are formatted
+        entry: bash -c "cd assets && node_modules/.bin/prettier . --check"
+        language: system
