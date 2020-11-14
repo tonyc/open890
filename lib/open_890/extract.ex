@@ -7,79 +7,71 @@ defmodule Open890.Extract do
     "2" => :auto_scroll
   }
 
-  @ssb_hi_cut_lookup %{
-    0 => 600,
-    1 => 700,
-    2 => 800,
-    3 => 900,
-    4 => 1000,
-    5 => 1100,
-    6 => 1200,
-    7 => 1300,
-    8 => 1400,
-    9 => 1500,
-    10 => 1600,
-    11 => 1700,
-    12 => 1800,
-    13 => 1900,
-    14 => 2000,
-    15 => 2100,
-    16 => 2200,
-    17 => 2300,
-    18 => 2400,
-    19 => 2500,
-    20 => 2600,
-    21 => 2700,
-    22 => 2800,
-    23 => 2900,
-    24 => 3000,
-    25 => 3400,
-    26 => 4000,
-    27 => 5000
+  @ssb_lo_cut_lookup {
+    0, 50, 100, 200, 300,
+    400, 500, 600, 700, 800,
+    900, 1000, 1100, 1200, 1300,
+    1400, 1500, 1600, 1700, 1800,
+    1900, 2000
   }
 
-  @am_hi_cut_lookup %{
-    0 => 2000,
-    1 => 2100,
-    2 => 2200,
-    3 => 2300,
-    4 => 2400,
-    5 => 2500,
-    6 => 2600,
-    7 => 2700,
-    8 => 2800,
-    9 => 2900,
-    10 => 3000,
-    11 => 3500,
-    12 => 4000,
-    13 => 5000
+  @am_lo_cut_lookup { 0, 100, 200, 300 }
+
+  @fm_lo_cut_lookup {
+    0, 50, 100, 200, 300,
+    400, 500, 600, 700, 800,
+    900, 1000
   }
 
-  @fm_hi_cut_lookup %{
-    0 => 1000,
-    1 => 1100,
-    2 => 1200,
-    3 => 1300,
-    4 => 1400,
-    5 => 1500,
-    6 => 1600,
-    7 => 1700,
-    8 => 1800,
-    9 => 1900,
-    10 => 2000,
-    11 => 2100,
-    12 => 2200,
-    13 => 2300,
-    14 => 2400,
-    15 => 2500,
-    16 => 2600,
-    17 => 2700,
-    18 => 2800,
-    19 => 2900,
-    20 => 3000,
-    21 => 3400,
-    22 => 4000,
-    23 => 5000
+  @ssb_width_lookup {
+    50, 80, 100, 150, 200,
+    250, 300, 350, 400, 450,
+    500, 600, 700, 900, 1000,
+    1100, 1200, 1300, 1400, 1500,
+    1600, 1700, 1800, 1900, 2000,
+    2100, 2200, 2300, 2400, 2500,
+    2600, 2700, 2800, 2900, 3000
+  }
+
+  @cw_width_lookup {
+    50, 80, 100, 150, 200,
+    250, 300, 350, 400, 450,
+    500, 600, 700, 800, 900,
+    1000, 1500, 2000, 2500
+  }
+
+  @fsk_width_lookup { 250, 300, 350, 400, 450, 500, 1000, 1500 }
+
+  @psk_width_lookup {
+    50, 80, 100, 150, 200,
+    250, 300, 350, 450, 500,
+    600, 700, 800, 900, 1000,
+    1200, 1400, 1500, 1600, 1800,
+    2000, 2200, 2400, 2600, 2800,
+    3000
+  }
+
+  @ssb_hi_cut_lookup {
+    600, 700, 800, 900, 1000,
+    1100, 1200, 1300, 1400, 1500,
+    1600, 1700, 1800, 1900, 2000,
+    2100, 2200, 2300, 2400, 2500,
+    2600, 2700, 2800, 2900, 3000,
+    3400, 4000, 5000
+  }
+
+  @am_hi_cut_lookup {
+    2000, 2100, 2200, 2300, 2400,
+    2500, 2600, 2700, 2800, 2900,
+    3000, 3500, 4000, 5000
+  }
+
+  @fm_hi_cut_lookup {
+    1000, 1100, 1200, 1300, 1400,
+    1500, 1600, 1700, 1800, 1900,
+    2000, 2100, 2200, 2300, 2400,
+    2500, 2600, 2700, 2800, 2900,
+    3000, 3400, 4000, 5000
   }
 
   @operating_modes %{
@@ -168,22 +160,49 @@ defmodule Open890.Extract do
     end
   end
 
+  def filter_lo_width(passband_id, :hi_lo_cut, current_mode) do
+    cond do
+      current_mode in [:usb, :usb_d, :lsb, :lsb_d] ->
+        @ssb_lo_cut_lookup |> elem(passband_id)
+
+      current_mode in [:am, :am_d] ->
+        @am_lo_cut_lookup |> elem(passband_id)
+
+      current_mode in [:fm, :fm_d] ->
+        @fm_lo_cut_lookup |> elem(passband_id)
+
+      true ->
+        Logger.warn("Unknown mode for lo/width: #{inspect(current_mode)}")
+        -1
+    end
+
+  end
+
+  def filter_lo_width(passband_id, :shift_width, current_mode) do
+
+  end
+
+  def filter_hi_shift(passband_id, _filter_mode, :cw) do
+    passband_id |> calculate_cw_shift()
+  end
+
+  def filter_hi_shift(passband_id, _filter_mode, :cw_r) do
+    passband_id |> calculate_cw_shift()
+  end
+
   def filter_hi_shift(passband_id, filter_mode, current_mode) do
     case filter_mode do
+
       :hi_lo_cut ->
         cond do
-          [:usb, :usb_d, :lsb, :lsb_d] |> Enum.member?(current_mode) ->
-            @ssb_hi_cut_lookup |> Map.fetch!(passband_id)
+          current_mode in [:usb, :usb_d, :lsb, :lsb_d] ->
+            @ssb_hi_cut_lookup |> elem(passband_id)
 
-          # this doesn't belong here
-          [:cw, :cw_r] |> Enum.member?(current_mode) ->
-            passband_id |> calculate_cw_shift()
+          current_mode in [:am, :am_d] ->
+            @am_hi_cut_lookup |> elem(passband_id)
 
-          [:am, :am_d] |> Enum.member?(current_mode) ->
-            @am_hi_cut_lookup |> Map.fetch!(passband_id)
-
-          [:fm, :fm_d] |> Enum.member?(current_mode) ->
-            @fm_hi_cut_lookup |> Map.fetch!(passband_id)
+          current_mode in [:fm, :fm_d] ->
+            @fm_hi_cut_lookup |> elem(passband_id)
 
           true ->
             Logger.warn("Unknown mode for high/shift: #{inspect(current_mode)}")
@@ -192,17 +211,15 @@ defmodule Open890.Extract do
 
       :shift_width ->
         cond do
-          [:usb, :usb_d, :lsb, :lsb_d] |> Enum.member?(current_mode) ->
+          current_mode in [:usb, :usb_d, :lsb, :lsb_d] ->
             passband_id |> calculate_ssb_shift()
-
-          [:cw, :cw_r] |> Enum.member?(current_mode) ->
-            passband_id |> calculate_cw_shift()
 
           true ->
             Logger.warn("Unknown mode for hi_shift: :shift_width: #{inspect(current_mode)}")
             -1
         end
     end
+
   end
 
   defp calculate_cw_shift(passband_id)
