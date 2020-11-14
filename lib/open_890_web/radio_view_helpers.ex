@@ -39,10 +39,10 @@ defmodule Open890Web.RadioViewHelpers do
     |> to_string()
     |> String.trim_leading("0")
     |> String.to_charlist()
-    |> Enum.reverse()
+    |> Enum.reverse
     |> Enum.chunk_every(3, 3, [])
     |> Enum.join(".")
-    |> String.reverse()
+    |> String.reverse
   end
 
   def s_meter_value_to_s_units(val) when is_integer(val) do
@@ -65,4 +65,5 @@ defmodule Open890Web.RadioViewHelpers do
     |> String.replace("_", "-")
     |> String.upcase()
   end
+
 end

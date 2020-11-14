@@ -62,12 +62,10 @@ defmodule Open890.TCPClient do
   def get_band_scope_limits, do: "BSM0" |> cmd()
   def get_band_scope_mode, do: "BS3" |> cmd()
   def get_s_meter, do: "SM" |> cmd()
-
   def get_modes do
     get_active_mode()
     get_inactive_mode()
   end
-
   def get_active_mode, do: "OM0" |> cmd()
   def get_inactive_mode, do: "OM1" |> cmd()
 
@@ -90,6 +88,7 @@ defmodule Open890.TCPClient do
   # networking
   @impl true
   def handle_info({:tcp, socket, msg}, %{socket: socket} = state) do
+
     new_state =
       msg
       |> String.split(";")
@@ -149,6 +148,7 @@ defmodule Open890.TCPClient do
     # Logger.info("Enabling HQ VOIP stream")
     # state.socket |> send_command("##VP1") # high quality
     # state.socket |> send_command("##VP2") # low quality
+
 
     {:noreply, state}
   end
@@ -219,12 +219,12 @@ defmodule Open890.TCPClient do
 
   def handle_msg(msg, %{socket: _socket} = state) when is_binary(msg) do
     cond do
+
       # high speed filter/audio scope respnse
       msg |> String.starts_with?("##DD3") ->
-        audio_scope_data =
-          msg
-          |> String.trim_leading("##DD3")
-          |> parse_scope_data()
+        audio_scope_data = msg
+        |> String.trim_leading("##DD3")
+        |> parse_scope_data()
 
         Open890Web.Endpoint.broadcast("radio:audio_scope", "scope_data", %{
           payload: audio_scope_data
@@ -234,10 +234,9 @@ defmodule Open890.TCPClient do
 
       # high speed band scope data response
       msg |> String.starts_with?("##DD2") ->
-        band_scope_data =
-          msg
-          |> String.trim_leading("##DD2")
-          |> parse_scope_data()
+        band_scope_data = msg
+        |> String.trim_leading("##DD2")
+        |> parse_scope_data()
 
         Open890Web.Endpoint.broadcast("radio:band_scope", "band_scope_data", %{
           payload: band_scope_data
@@ -280,4 +279,5 @@ defmodule Open890.TCPClient do
       Integer.parse(value, 16) |> elem(0)
     end)
   end
+
 end

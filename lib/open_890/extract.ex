@@ -50,7 +50,6 @@ defmodule Open890.Extract do
   end
 
   def s_meter(""), do: 0
-
   def s_meter(str) when is_binary(str) do
     str
     |> String.trim_leading("SM")
@@ -66,4 +65,5 @@ defmodule Open890.Extract do
     |> String.split_at(8)
     |> Tuple.to_list()
   end
+
 end
