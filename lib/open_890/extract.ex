@@ -8,70 +8,211 @@ defmodule Open890.Extract do
   }
 
   @ssb_lo_cut_lookup {
-    0, 50, 100, 200, 300,
-    400, 500, 600, 700, 800,
-    900, 1000, 1100, 1200, 1300,
-    1400, 1500, 1600, 1700, 1800,
-    1900, 2000
+    0,
+    50,
+    100,
+    200,
+    300,
+    400,
+    500,
+    600,
+    700,
+    800,
+    900,
+    1000,
+    1100,
+    1200,
+    1300,
+    1400,
+    1500,
+    1600,
+    1700,
+    1800,
+    1900,
+    2000
   }
 
   @ssb_width_lookup {
-    50, 80, 100, 150, 200,
-    250, 300, 350, 400, 450,
-    500, 600, 700, 900, 1000,
-    1100, 1200, 1300, 1400, 1500,
-    1600, 1700, 1800, 1900, 2000,
-    2100, 2200, 2300, 2400, 2500,
-    2600, 2700, 2800, 2900, 3000
+    50,
+    80,
+    100,
+    150,
+    200,
+    250,
+    300,
+    350,
+    400,
+    450,
+    500,
+    600,
+    700,
+    900,
+    1000,
+    1100,
+    1200,
+    1300,
+    1400,
+    1500,
+    1600,
+    1700,
+    1800,
+    1900,
+    2000,
+    2100,
+    2200,
+    2300,
+    2400,
+    2500,
+    2600,
+    2700,
+    2800,
+    2900,
+    3000
   }
 
-  @am_lo_cut_lookup { 0, 100, 200, 300 }
+  @am_lo_cut_lookup {0, 100, 200, 300}
 
   @fm_lo_cut_lookup {
-    0, 50, 100, 200, 300,
-    400, 500, 600, 700, 800,
-    900, 1000
+    0,
+    50,
+    100,
+    200,
+    300,
+    400,
+    500,
+    600,
+    700,
+    800,
+    900,
+    1000
   }
 
   @cw_width_lookup {
-    50, 80, 100, 150, 200,
-    250, 300, 350, 400, 450,
-    500, 600, 700, 800, 900,
-    1000, 1500, 2000, 2500
+    50,
+    80,
+    100,
+    150,
+    200,
+    250,
+    300,
+    350,
+    400,
+    450,
+    500,
+    600,
+    700,
+    800,
+    900,
+    1000,
+    1500,
+    2000,
+    2500
   }
 
-  @fsk_width_lookup { 250, 300, 350, 400, 450, 500, 1000, 1500 }
+  @fsk_width_lookup {250, 300, 350, 400, 450, 500, 1000, 1500}
 
   @psk_width_lookup {
-    50, 80, 100, 150, 200,
-    250, 300, 350, 450, 500,
-    600, 700, 800, 900, 1000,
-    1200, 1400, 1500, 1600, 1800,
-    2000, 2200, 2400, 2600, 2800,
+    50,
+    80,
+    100,
+    150,
+    200,
+    250,
+    300,
+    350,
+    450,
+    500,
+    600,
+    700,
+    800,
+    900,
+    1000,
+    1200,
+    1400,
+    1500,
+    1600,
+    1800,
+    2000,
+    2200,
+    2400,
+    2600,
+    2800,
     3000
   }
 
   @ssb_hi_cut_lookup {
-    600, 700, 800, 900, 1000,
-    1100, 1200, 1300, 1400, 1500,
-    1600, 1700, 1800, 1900, 2000,
-    2100, 2200, 2300, 2400, 2500,
-    2600, 2700, 2800, 2900, 3000,
-    3400, 4000, 5000
+    600,
+    700,
+    800,
+    900,
+    1000,
+    1100,
+    1200,
+    1300,
+    1400,
+    1500,
+    1600,
+    1700,
+    1800,
+    1900,
+    2000,
+    2100,
+    2200,
+    2300,
+    2400,
+    2500,
+    2600,
+    2700,
+    2800,
+    2900,
+    3000,
+    3400,
+    4000,
+    5000
   }
 
   @am_hi_cut_lookup {
-    2000, 2100, 2200, 2300, 2400,
-    2500, 2600, 2700, 2800, 2900,
-    3000, 3500, 4000, 5000
+    2000,
+    2100,
+    2200,
+    2300,
+    2400,
+    2500,
+    2600,
+    2700,
+    2800,
+    2900,
+    3000,
+    3500,
+    4000,
+    5000
   }
 
   @fm_hi_cut_lookup {
-    1000, 1100, 1200, 1300, 1400,
-    1500, 1600, 1700, 1800, 1900,
-    2000, 2100, 2200, 2300, 2400,
-    2500, 2600, 2700, 2800, 2900,
-    3000, 3400, 4000, 5000
+    1000,
+    1100,
+    1200,
+    1300,
+    1400,
+    1500,
+    1600,
+    1700,
+    1800,
+    1900,
+    2000,
+    2100,
+    2200,
+    2300,
+    2400,
+    2500,
+    2600,
+    2700,
+    2800,
+    2900,
+    3000,
+    3400,
+    4000,
+    5000
   }
 
   @operating_modes %{
@@ -160,23 +301,23 @@ defmodule Open890.Extract do
     end
   end
 
-  def filter_lo_width(passband_id,  _ssb_filter_mode, mode) when mode in [:cw, :cw_r] do
+  def filter_lo_width(passband_id, _ssb_filter_mode, mode) when mode in [:cw, :cw_r] do
     @cw_width_lookup |> elem(passband_id)
   end
 
-  def filter_lo_width(passband_id,  _ssb_filter_mode, mode) when mode in [:fsk, :fsk_r] do
+  def filter_lo_width(passband_id, _ssb_filter_mode, mode) when mode in [:fsk, :fsk_r] do
     @fsk_width_lookup |> elem(passband_id)
   end
 
-  def filter_lo_width(passband_id,  _ssb_filter_mode, mode) when mode in [:psk, :psk_r] do
+  def filter_lo_width(passband_id, _ssb_filter_mode, mode) when mode in [:psk, :psk_r] do
     @psk_width_lookup |> elem(passband_id)
   end
 
-  def filter_lo_width(passband_id,  _ssb_filter_mode, mode) when mode in [:am, :am_d] do
+  def filter_lo_width(passband_id, _ssb_filter_mode, mode) when mode in [:am, :am_d] do
     @am_lo_cut_lookup |> elem(passband_id)
   end
 
-  def filter_lo_width(passband_id,  _ssb_filter_mode, mode) when mode in [:fm, :fm_d] do
+  def filter_lo_width(passband_id, _ssb_filter_mode, mode) when mode in [:fm, :fm_d] do
     @fm_lo_cut_lookup |> elem(passband_id)
   end
 
@@ -191,7 +332,9 @@ defmodule Open890.Extract do
   end
 
   def filter_lo_width(passband_id, filter_mode, mode) do
-    Logger.warn("Unknown passband_id, filter_mode, mode: #{inspect({passband_id, filter_mode, mode})}")
+    Logger.warn(
+      "Unknown passband_id, filter_mode, mode: #{inspect({passband_id, filter_mode, mode})}"
+    )
   end
 
   def filter_hi_shift(passband_id, _filter_mode, :cw) do
@@ -232,11 +375,13 @@ defmodule Open890.Extract do
     end
   end
 
-  defp calculate_cw_shift(passband_id) when is_integer(passband_id) and passband_id >= 0 and passband_id <= 160 do
+  defp calculate_cw_shift(passband_id)
+       when is_integer(passband_id) and passband_id >= 0 and passband_id <= 160 do
     10 * passband_id - 800
   end
 
-  defp calculate_ssb_shift(passband_id) when is_integer(passband_id) and passband_id >= 0 and passband_id <= 49 do
+  defp calculate_ssb_shift(passband_id)
+       when is_integer(passband_id) and passband_id >= 0 and passband_id <= 49 do
     50 * passband_id + 50
   end
 end

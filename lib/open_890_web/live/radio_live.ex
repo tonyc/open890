@@ -48,8 +48,7 @@ defmodule Open890Web.RadioLive do
      |> assign(:ssb_filter_mode, nil)
      |> assign(:ssb_data_filter_mode, nil)
      |> assign(:filter_hi_shift, nil)
-     |> assign(:filter_lo_width, nil)
-    }
+     |> assign(:filter_lo_width, nil)}
   end
 
   @impl true
