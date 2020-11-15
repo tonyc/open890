@@ -19,8 +19,7 @@ defmodule Open890Web.RadioViewHelpers do
   end
 
   def project_to_limits(frequency, low, high)
-    when is_integer(frequency) and is_integer(low) and is_integer(high) do
-
+      when is_integer(frequency) and is_integer(low) and is_integer(high) do
     delta = high - low
     freq_delta = frequency - low
     percentage = freq_delta / delta
