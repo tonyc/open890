@@ -48,7 +48,9 @@ defmodule Open890Web.RadioLive do
      |> assign(:ssb_filter_mode, nil)
      |> assign(:ssb_data_filter_mode, nil)
      |> assign(:filter_hi_shift, nil)
-     |> assign(:filter_lo_width, nil)}
+     |> assign(:filter_lo_width, nil)
+     |> assign(:filter_low_freq, nil)
+     |> assign(:filter_high_freq, nil)}
   end
 
   @impl true
@@ -174,6 +176,8 @@ defmodule Open890Web.RadioLive do
             socket
           end
 
+        socket = socket |> vfo_a_updated()
+
         {:noreply, socket}
 
       msg |> String.starts_with?("FB") ->
@@ -205,7 +209,12 @@ defmodule Open890Web.RadioLive do
 
         filter_hi_shift = passband_id |> Extract.filter_hi_shift(filter_mode, current_mode)
 
-        {:noreply, socket |> assign(:filter_hi_shift, filter_hi_shift)}
+        socket =
+          socket
+          |> assign(:filter_hi_shift, filter_hi_shift)
+          |> update_filter_hi_edge()
+
+        {:noreply, socket}
 
       # lo/width
       msg |> String.starts_with?("SL0") ->
@@ -218,7 +227,12 @@ defmodule Open890Web.RadioLive do
 
         filter_lo_width = passband_id |> Extract.filter_lo_width(filter_mode, current_mode)
 
-        {:noreply, socket |> assign(:filter_lo_width, filter_lo_width)}
+        socket =
+          socket
+          |> assign(:filter_lo_width, filter_lo_width)
+          |> update_filter_lo_edge()
+
+        {:noreply, socket}
 
       # ssb/ssb+data filter modes
       msg |> String.starts_with?("EX00611") ->
@@ -241,6 +255,71 @@ defmodule Open890Web.RadioLive do
     end
   end
 
-  defp determine_filter_low(passband_id) when is_integer(passband_id) do
+  defp vfo_a_updated(socket) do
+    socket
+    |> update_filter_hi_edge()
+    |> update_filter_lo_edge()
+  end
+
+  defp update_filter_edges(socket) do
+    socket
+    |> update_filter_hi_edge()
+    |> update_filter_lo_edge()
+  end
+
+  defp update_filter_hi_edge(socket) do
+    %{
+      active_mode: active_mode,
+      ssb_filter_mode: _ssb_filter_mode,
+      ssb_data_filter_mode: _ssb_data_filter_mode,
+      filter_hi_shift: filter_hi_shift
+    } = socket.assigns
+
+    active_frequency = socket |> get_active_receiver_frequency()
+
+    case active_mode do
+      :lsb ->
+        socket
+        |> assign(:filter_high_freq, active_frequency - filter_hi_shift)
+
+      :usb ->
+        socket
+        |> assign(:filter_high_freq, active_frequency + filter_hi_shift)
+
+      _ ->
+        socket
+    end
+  end
+
+  defp update_filter_lo_edge(socket) do
+    %{
+      active_mode: active_mode,
+      ssb_filter_mode: _ssb_filter_mode,
+      ssb_data_filter_mode: _ssb_data_filter_mode,
+      filter_lo_width: filter_lo_width
+    } = socket.assigns
+
+    active_frequency = socket |> get_active_receiver_frequency()
+
+    case active_mode do
+      :lsb ->
+        socket
+        |> assign(:filter_low_freq, active_frequency - filter_lo_width)
+
+      :usb ->
+        socket
+        |> assign(:filter_low_freq, active_frequency + filter_lo_width)
+
+      _ ->
+        socket
+    end
+  end
+
+  defp get_active_receiver_frequency(socket) do
+    socket.assigns.active_receiver
+    |> case do
+      :a -> socket.assigns.vfo_a_frequency
+      :b -> socket.assigns.vfo_b_frequency
+    end
   end
 end
