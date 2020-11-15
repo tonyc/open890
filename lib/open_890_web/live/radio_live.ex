@@ -129,7 +129,6 @@ defmodule Open890Web.RadioLive do
 
         [low_int, high_int] =
           [bs_low, bs_high]
-          |> Enum.map(&String.to_integer/1)
           |> Enum.map(&Kernel.div(&1, 1000))
 
         span =
@@ -199,8 +198,10 @@ defmodule Open890Web.RadioLive do
       msg |> String.starts_with?("SH0") ->
         passband_id = msg |> Extract.passband_id()
 
-        current_mode = socket.assigns.active_mode
-        filter_mode = socket.assigns.ssb_filter_mode
+        %{
+          active_mode: current_mode,
+          ssb_filter_mode: filter_mode
+        } = socket.assigns
 
         filter_hi_shift = passband_id |> Extract.filter_hi_shift(filter_mode, current_mode)
 
@@ -210,8 +211,10 @@ defmodule Open890Web.RadioLive do
       msg |> String.starts_with?("SL0") ->
         passband_id = msg |> Extract.passband_id()
 
-        current_mode = socket.assigns.active_mode
-        filter_mode = socket.assigns.ssb_filter_mode
+        %{
+          active_mode: current_mode,
+          ssb_filter_mode: filter_mode
+        } = socket.assigns
 
         filter_lo_width = passband_id |> Extract.filter_lo_width(filter_mode, current_mode)
 

@@ -257,6 +257,7 @@ defmodule Open890.Extract do
     |> String.trim_leading("FA")
     |> String.trim_leading("FB")
     |> String.trim_leading("0")
+    |> String.to_integer()
   end
 
   def s_meter(""), do: 0
@@ -275,6 +276,7 @@ defmodule Open890.Extract do
     low_high
     |> String.split_at(8)
     |> Tuple.to_list()
+    |> Enum.map(&String.to_integer/1)
   end
 
   # returns an integer number representing the
