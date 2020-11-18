@@ -17,6 +17,15 @@ defmodule Open890Web.RadioLive do
       Phoenix.PubSub.subscribe(Open890.PubSub, "radio:band_scope")
     end
 
+    get_initial_radio_state()
+
+    socket = init_socket(socket)
+
+    {:ok, socket }
+  end
+
+  defp get_initial_radio_state do
+
     Radio.get_active_receiver()
     Radio.get_band_scope_limits()
     Radio.get_band_scope_mode()
@@ -27,9 +36,10 @@ defmodule Open890Web.RadioLive do
     Radio.get_filter_modes()
     Radio.get_filter_state()
     # Radio.get_filter_settings()
+  end
 
-    {:ok,
-     socket
+  defp init_socket(socket) do
+    socket
      |> assign(:s_meter, 0)
      |> assign(:vfo_a_frequency, "")
      |> assign(:vfo_b_frequency, "")
@@ -50,7 +60,7 @@ defmodule Open890Web.RadioLive do
      |> assign(:filter_hi_shift, nil)
      |> assign(:filter_lo_width, nil)
      |> assign(:filter_low_freq, nil)
-     |> assign(:filter_high_freq, nil)}
+     |> assign(:filter_high_freq, nil)
   end
 
   @impl true
