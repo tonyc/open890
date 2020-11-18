@@ -134,16 +134,17 @@
         <% else %>
           <%= if @band_scope_high && @band_scope_low do %>
             <% loc = if @active_receiver == :a  && @vfo_a_frequency != "" do %>
-              <%= project_to_limits(@vfo_a_frequency, @band_scope_low, @band_scope_high) %>
+              <%= project_to_bandscope_limits(@vfo_a_frequency, @band_scope_low, @band_scope_high) %>
             <% else %>
               <%= if @vfo_b_frequency != "" do %>
-                <%= project_to_limits(@vfo_b_frequency, @band_scope_low, @band_scope_high) %>
+                <%= project_to_bandscope_limits(@vfo_b_frequency, @band_scope_low, @band_scope_high) %>
               <% end %>
             <% end %>
-
             <line id="active_receiver_line" class="primaryCarrier" x1="<%= loc %>" y1="0" x2="<%= loc %>" y2="150" />
           <% end %>
         <% end %>
+
+        <f>
       </svg>
     </div>
   </div>
