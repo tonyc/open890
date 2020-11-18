@@ -1,4 +1,4 @@
-defmodule Open890Web.RadioLive do
+defmodule Open890Web.Live.RadioLive do
   use Open890Web, :live_view
   require Logger
   alias Phoenix.Socket.Broadcast
@@ -6,6 +6,7 @@ defmodule Open890Web.RadioLive do
   alias Open890.Extract
 
   alias Open890Web.RadioViewHelpers
+  alias Open890Web.Live.BandscopeComponent
 
   @impl true
   def mount(_params, _session, socket) do
