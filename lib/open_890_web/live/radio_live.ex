@@ -8,6 +8,30 @@ defmodule Open890Web.Live.RadioLive do
   alias Open890Web.RadioViewHelpers
   alias Open890Web.Live.BandscopeComponent
 
+  @init_socket [
+     {:s_meter, 0},
+     {:vfo_a_frequency, ""},
+     {:vfo_b_frequency, ""},
+     {:band_scope_mode, nil},
+     {:band_scope_low, nil},
+     {:band_scope_high, nil},
+     {:band_scope_span, ""},
+     {:projected_active_receiver_location, ""},
+     {:active_receiver, :a},
+     {:active_transmitter, :a},
+     {:band_scope_data, []},
+     {:audio_scope_data, []},
+     {:theme, "elecraft"},
+     {:active_mode, :unknown},
+     {:inactive_mode, :unknown},
+     {:ssb_filter_mode, nil},
+     {:ssb_data_filter_mode, nil},
+     {:filter_hi_shift, nil},
+     {:filter_lo_width, nil},
+     {:filter_low_freq, nil},
+     {:filter_high_freq, nil}
+  ]
+
   @impl true
   def mount(_params, _session, socket) do
     Logger.info("LiveView mount()")
@@ -24,9 +48,7 @@ defmodule Open890Web.Live.RadioLive do
 
     {:ok, socket }
   end
-
   defp get_initial_radio_state do
-
     Radio.get_active_receiver()
     Radio.get_band_scope_limits()
     Radio.get_band_scope_mode()
@@ -40,28 +62,10 @@ defmodule Open890Web.Live.RadioLive do
   end
 
   defp init_socket(socket) do
-    socket
-     |> assign(:s_meter, 0)
-     |> assign(:vfo_a_frequency, "")
-     |> assign(:vfo_b_frequency, "")
-     |> assign(:band_scope_mode, nil)
-     |> assign(:band_scope_low, nil)
-     |> assign(:band_scope_high, nil)
-     |> assign(:band_scope_span, "")
-     |> assign(:projected_active_receiver_location, "")
-     |> assign(:active_receiver, :a)
-     |> assign(:active_transmitter, :a)
-     |> assign(:band_scope_data, [])
-     |> assign(:audio_scope_data, [])
-     |> assign(:theme, "elecraft")
-     |> assign(:active_mode, :unknown)
-     |> assign(:inactive_mode, :unknown)
-     |> assign(:ssb_filter_mode, nil)
-     |> assign(:ssb_data_filter_mode, nil)
-     |> assign(:filter_hi_shift, nil)
-     |> assign(:filter_lo_width, nil)
-     |> assign(:filter_low_freq, nil)
-     |> assign(:filter_high_freq, nil)
+    @init_socket
+    |> Enum.reduce(socket, fn({key, val}, socket) ->
+      socket |> assign(key, val)
+    end)
   end
 
   @impl true
