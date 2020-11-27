@@ -119,32 +119,7 @@
   <!-- main bandscope -->
   <div class="row">
     <div id="bandScopeWrapper">
-      <svg id="bandScope" class="scope themed <%= @theme %>" viewbox="0 0 640 140">
-        <defs>
-          <filter id="blur" filterUnits="userSpaceOnUse" x="0" y="0" width="640" height="150">
-            <feGaussianBlur in="sourceAlpha" stdDeviation="1" />
-          </filter>
-        </defs>
-
-        <polygon id="spectrumBlur" filter="url(#blur)" points="<%= @band_scope_data %> 645,150 0,150" />
-        <polygon id="bandSpectrum" class="spectrum" points="<%= @band_scope_data %> 645,150 0,150" />
-
-        <%= if @band_scope_mode == :center do %>
-          <line id="active_receiver_line" class="primaryCarrier" x1="320" y1="0" x2="320" y2="150" />
-        <% else %>
-          <%= if @band_scope_high && @band_scope_low do %>
-            <% loc = if @active_receiver == :a  && @vfo_a_frequency != "" do %>
-              <%= project_to_limits(@vfo_a_frequency, @band_scope_low, @band_scope_high) %>
-            <% else %>
-              <%= if @vfo_b_frequency != "" do %>
-                <%= project_to_limits(@vfo_b_frequency, @band_scope_low, @band_scope_high) %>
-              <% end %>
-            <% end %>
-
-            <line id="active_receiver_line" class="primaryCarrier" x1="<%= loc %>" y1="0" x2="<%= loc %>" y2="150" />
-          <% end %>
-        <% end %>
-      </svg>
+      <%= live_component @socket, BandscopeComponent, id: :bandscope, theme: @theme, band_scope_data: @band_scope_data, band_scope_low: @band_scope_low, band_scope_high: @band_scope_high, band_scope_mode: @band_scope_mode, active_receiver: @active_receiver, vfo_a_frequency: @vfo_a_frequency, vfo_b_frequency: @vfo_b_frequency %>
     </div>
   </div>
 
