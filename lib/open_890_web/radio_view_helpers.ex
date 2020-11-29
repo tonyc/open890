@@ -26,6 +26,10 @@ defmodule Open890Web.RadioViewHelpers do
     percentage * 640
   end
 
+  def project_to_bandscope_limits(_, _, _) do
+    0
+  end
+
   # formats a raw frequency in Hz to e.g.
   # 7.055.123
   def format_raw_frequency(str) do

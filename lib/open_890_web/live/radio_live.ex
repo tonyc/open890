@@ -12,6 +12,8 @@ defmodule Open890Web.Live.RadioLive do
      {:s_meter, 0},
      {:vfo_a_frequency, ""},
      {:vfo_b_frequency, ""},
+     {:active_frequency, ""},
+     {:inactive_frequency, ""},
      {:band_scope_mode, nil},
      {:band_scope_low, nil},
      {:band_scope_high, nil},
@@ -48,6 +50,7 @@ defmodule Open890Web.Live.RadioLive do
 
     {:ok, socket }
   end
+
   defp get_initial_radio_state do
     Radio.get_active_receiver()
     Radio.get_band_scope_limits()
@@ -186,9 +189,12 @@ defmodule Open890Web.Live.RadioLive do
 
         socket =
           if socket.assigns[:active_receiver] == :a do
-            socket |> assign(:page_title, frequency |> RadioViewHelpers.format_raw_frequency())
+            socket
+            |> assign(:page_title, frequency |> RadioViewHelpers.format_raw_frequency())
+            |> assign(:active_frequency, frequency)
           else
             socket
+            |> assign(:inactive_frequency, frequency)
           end
 
         socket = socket |> vfo_a_updated()
@@ -201,9 +207,12 @@ defmodule Open890Web.Live.RadioLive do
 
         socket =
           if socket.assigns[:active_receiver] == :b do
-            socket |> assign(:page_title, frequency |> RadioViewHelpers.format_raw_frequency())
+            socket
+            |> assign(:page_title, frequency |> RadioViewHelpers.format_raw_frequency())
+            |> assign(:active_frequency, frequency)
           else
             socket
+            |> assign(:inactive_frequency, frequency)
           end
 
         {:noreply, socket}
@@ -259,10 +268,18 @@ defmodule Open890Web.Live.RadioLive do
         {:noreply, socket |> assign(:ssb_data_filter_mode, ssb_data_filter_mode)}
 
       msg == "FR0" ->
-        {:noreply, socket |> assign(:active_receiver, :a)}
+        socket = socket
+        |> assign(:active_receiver, :a)
+        |> assign(:active_frequency, socket.assigns.vfo_a_frequency)
+
+        {:noreply, socket}
 
       msg == "FR1" ->
-        {:noreply, socket |> assign(:active_receiver, :b)}
+        socket = socket
+        |> assign(:active_receiver, :b)
+        |> assign(:active_frequency, socket.assigns.vfo_b_frequency)
+
+        {:noreply, socket}
 
       true ->
         Logger.debug("RadioLive: unknown message: #{inspect(msg)}")

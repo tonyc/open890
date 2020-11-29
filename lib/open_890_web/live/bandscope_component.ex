@@ -4,7 +4,10 @@ defmodule Open890Web.Live.BandscopeComponent do
   require Logger
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(socket) do
+    IO.puts "~~~~~~~~~~~ BANDSCOPE COMPONENT"
+    socket |> IO.inspect(label: "bandscope socket", limit: :infinity)
+    IO.puts "~~~~~~~~~~~ END BANDSCOPE COMPONENT"
     {:ok, socket}
   end
 
