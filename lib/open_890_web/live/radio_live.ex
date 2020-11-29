@@ -9,30 +9,30 @@ defmodule Open890Web.Live.RadioLive do
   alias Open890Web.Live.BandscopeComponent
 
   @init_socket [
-     {:s_meter, 0},
-     {:vfo_a_frequency, ""},
-     {:vfo_b_frequency, ""},
-     {:active_frequency, ""},
-     {:inactive_frequency, ""},
-     {:band_scope_mode, nil},
-     {:band_scope_low, nil},
-     {:band_scope_high, nil},
-     {:band_scope_span, ""},
-     {:projected_active_receiver_location, ""},
-     {:active_receiver, :a},
-     {:inactive_receiver, :b},
-     {:active_transmitter, :a},
-     {:band_scope_data, []},
-     {:audio_scope_data, []},
-     {:theme, "elecraft"},
-     {:active_mode, :unknown},
-     {:inactive_mode, :unknown},
-     {:ssb_filter_mode, nil},
-     {:ssb_data_filter_mode, nil},
-     {:filter_hi_shift, nil},
-     {:filter_lo_width, nil},
-     {:filter_low_freq, nil},
-     {:filter_high_freq, nil}
+    {:s_meter, 0},
+    {:vfo_a_frequency, ""},
+    {:vfo_b_frequency, ""},
+    {:active_frequency, ""},
+    {:inactive_frequency, ""},
+    {:band_scope_mode, nil},
+    {:band_scope_low, nil},
+    {:band_scope_high, nil},
+    {:band_scope_span, ""},
+    {:projected_active_receiver_location, ""},
+    {:active_receiver, :a},
+    {:inactive_receiver, :b},
+    {:active_transmitter, :a},
+    {:band_scope_data, []},
+    {:audio_scope_data, []},
+    {:theme, "elecraft"},
+    {:active_mode, :unknown},
+    {:inactive_mode, :unknown},
+    {:ssb_filter_mode, nil},
+    {:ssb_data_filter_mode, nil},
+    {:filter_hi_shift, nil},
+    {:filter_lo_width, nil},
+    {:filter_low_freq, nil},
+    {:filter_high_freq, nil}
   ]
 
   @impl true
@@ -49,7 +49,7 @@ defmodule Open890Web.Live.RadioLive do
 
     socket = init_socket(socket)
 
-    {:ok, socket }
+    {:ok, socket}
   end
 
   defp get_initial_radio_state do
@@ -67,7 +67,7 @@ defmodule Open890Web.Live.RadioLive do
 
   defp init_socket(socket) do
     @init_socket
-    |> Enum.reduce(socket, fn({key, val}, socket) ->
+    |> Enum.reduce(socket, fn {key, val}, socket ->
       socket |> assign(key, val)
     end)
   end
@@ -269,20 +269,22 @@ defmodule Open890Web.Live.RadioLive do
         {:noreply, socket |> assign(:ssb_data_filter_mode, ssb_data_filter_mode)}
 
       msg == "FR0" ->
-        socket = socket
-        |> assign(:active_receiver, :a)
-        |> assign(:active_frequency, socket.assigns.vfo_a_frequency)
-        |> assign(:inactive_receiver, :b)
-        |> assign(:inactive_frequency, socket.assigns.vfo_b_frequency)
+        socket =
+          socket
+          |> assign(:active_receiver, :a)
+          |> assign(:active_frequency, socket.assigns.vfo_a_frequency)
+          |> assign(:inactive_receiver, :b)
+          |> assign(:inactive_frequency, socket.assigns.vfo_b_frequency)
 
         {:noreply, socket}
 
       msg == "FR1" ->
-        socket = socket
-        |> assign(:active_receiver, :b)
-        |> assign(:active_frequency, socket.assigns.vfo_b_frequency)
-        |> assign(:inactive_receiver, :a)
-        |> assign(:inactive_frequency, socket.assigns.vfo_a_frequency)
+        socket =
+          socket
+          |> assign(:active_receiver, :b)
+          |> assign(:active_frequency, socket.assigns.vfo_b_frequency)
+          |> assign(:inactive_receiver, :a)
+          |> assign(:inactive_frequency, socket.assigns.vfo_a_frequency)
 
         {:noreply, socket}
 
