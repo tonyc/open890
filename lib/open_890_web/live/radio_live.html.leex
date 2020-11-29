@@ -119,7 +119,7 @@
   <!-- main bandscope -->
   <div class="row">
     <div id="bandScopeWrapper">
-      <%= live_component @socket, BandscopeComponent, id: :bandscope, theme: @theme, band_scope_data: @band_scope_data, band_scope_low: @band_scope_low, band_scope_high: @band_scope_high, band_scope_mode: @band_scope_mode, active_frequency: @active_frequency %>
+      <%= live_component @socket, BandscopeComponent, id: :bandscope, theme: @theme, band_scope_data: @band_scope_data, band_scope_low: @band_scope_low, band_scope_high: @band_scope_high, band_scope_mode: @band_scope_mode, active_frequency: @active_frequency, filter_lo_width: @filter_lo_width, filter_hi_shift: @filter_hi_shift, ssb_filter_mode: @ssb_filter_mode, ssb_data_filter_mode: @ssb_data_filter_mode, active_mode: @active_mode %>
     </div>
   </div>
 

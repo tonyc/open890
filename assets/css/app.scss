@@ -69,6 +69,7 @@ $kenwood-gradient-light: rgba(160, 160, 176, 1.0);
 $kenwood-button-bg: rgba(42, 42, 42, 1.0);
 
 $elecraft-green: rgba(0, 252, 0, 1.0);
+$elecraft-green-transparent: rgba(0, 252, 0, 0.25);
 $elecraft-yellow: rgba(251, 251, 0, 1.0);
 $elecraft-dark-blue: rgba(0, 0, 64, 1.0);
 
@@ -83,6 +84,10 @@ $border-radius-small: 3px;
   &.green { border-color: green; }
   &.orange { border-color: orange; }
   &.cyan { border-color: cyan; }
+}
+
+#passband {
+  fill: $elecraft-green-transparent;
 }
 
 nav { 
