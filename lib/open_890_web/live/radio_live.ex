@@ -20,6 +20,7 @@ defmodule Open890Web.Live.RadioLive do
      {:band_scope_span, ""},
      {:projected_active_receiver_location, ""},
      {:active_receiver, :a},
+     {:inactive_receiver, :b},
      {:active_transmitter, :a},
      {:band_scope_data, []},
      {:audio_scope_data, []},
@@ -270,6 +271,7 @@ defmodule Open890Web.Live.RadioLive do
       msg == "FR0" ->
         socket = socket
         |> assign(:active_receiver, :a)
+        |> assign(:inactive_receiver, :b)
         |> assign(:active_frequency, socket.assigns.vfo_a_frequency)
 
         {:noreply, socket}
@@ -277,6 +279,7 @@ defmodule Open890Web.Live.RadioLive do
       msg == "FR1" ->
         socket = socket
         |> assign(:active_receiver, :b)
+        |> assign(:inactive_receiver, :a)
         |> assign(:active_frequency, socket.assigns.vfo_b_frequency)
 
         {:noreply, socket}
