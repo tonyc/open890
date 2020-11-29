@@ -49,7 +49,7 @@
   <div class="row">
     <div id="vfos" class="">
       <%= if @active_receiver == :a do %>
-        <div class="freq active"><%= @vfo_a_frequency |> format_raw_frequency() %></div>
+        <div class="freq active"><%= @active_frequency |> format_raw_frequency() %></div>
         <div class="bandIndicator">
           <div class="receiver">
             <span class="bandPointer">◀</span>
@@ -62,9 +62,9 @@
             <span class="bandPointer">▶</span>
           </div>
         </div>
-        <div class="freq"><%= @vfo_b_frequency |> format_raw_frequency() %></div>
+        <div class="freq"><%= @inactive_frequency |> format_raw_frequency() %></div>
       <% else %>
-        <div class="freq active"><%= @vfo_b_frequency |> format_raw_frequency() %></div>
+        <div class="freq active"><%= @active_frequency |> format_raw_frequency() %></div>
         <div class="bandIndicator">
           <div class="receiver">
             <span class="bandPointer"></span>
@@ -77,7 +77,7 @@
             <span class="bandPointer"> </span>
           </div>
         </div>
-        <div class="freq"><%= @vfo_a_frequency |> format_raw_frequency() %></div>
+        <div class="freq"><%= @inactive_frequency |> format_raw_frequency() %></div>
       <% end %>
     </div>
   </div>

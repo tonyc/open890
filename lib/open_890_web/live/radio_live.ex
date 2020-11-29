@@ -271,16 +271,18 @@ defmodule Open890Web.Live.RadioLive do
       msg == "FR0" ->
         socket = socket
         |> assign(:active_receiver, :a)
-        |> assign(:inactive_receiver, :b)
         |> assign(:active_frequency, socket.assigns.vfo_a_frequency)
+        |> assign(:inactive_receiver, :b)
+        |> assign(:inactive_frequency, socket.assigns.vfo_b_frequency)
 
         {:noreply, socket}
 
       msg == "FR1" ->
         socket = socket
         |> assign(:active_receiver, :b)
-        |> assign(:inactive_receiver, :a)
         |> assign(:active_frequency, socket.assigns.vfo_b_frequency)
+        |> assign(:inactive_receiver, :a)
+        |> assign(:inactive_frequency, socket.assigns.vfo_a_frequency)
 
         {:noreply, socket}
 
