@@ -26,16 +26,22 @@
     </div>
 
     <div id="audioScopeWrapper" class="">
-      <svg id="audioScope" class="scope themed <%= @theme %>" viewbox="0 0 212 50">
-        <defs>
-          <linearGradient id="kenwood" gradientTransform="rotate(90)">
-            <stop offset="0" stop-color="white" />
-            <stop offset="50" stop-color="#0c0c5c" />
-          </linearGradient>
-        </defs>
-        <polygon id="audioSpectrum" class="spectrum" points="<%= @audio_scope_data %> 215,60 0,60" />
-        <line id="audioScopeTuneIndicator" class="primaryCarrier" x1="106" y1="0" x2="106" y2="50" />
-      </svg>
+      <div class="row">
+        <span>lo/width: <%= @filter_lo_width %></span>
+        <span>hi/shift: <%= @filter_hi_shift %></span>
+      </div>
+      <div class="row">
+        <svg id="audioScope" class="scope themed <%= @theme %>" viewbox="0 0 212 50">
+          <defs>
+            <linearGradient id="kenwood" gradientTransform="rotate(90)">
+              <stop offset="0" stop-color="white" />
+              <stop offset="50" stop-color="#0c0c5c" />
+            </linearGradient>
+          </defs>
+          <polygon id="audioSpectrum" class="spectrum" points="<%= @audio_scope_data %> 215,60 0,60" />
+          <line id="audioScopeTuneIndicator" class="primaryCarrier" x1="106" y1="0" x2="106" y2="50" />
+        </svg>
+      </div>
     </div>
   </div>
 
@@ -43,7 +49,7 @@
   <div class="row">
     <div id="vfos" class="">
       <%= if @active_receiver == :a do %>
-        <div class="freq active"><%= @vfo_a_frequency |> format_raw_frequency() %></div>
+        <div class="freq active"><%= @active_frequency |> format_raw_frequency() %></div>
         <div class="bandIndicator">
           <div class="receiver">
             <span class="bandPointer">◀</span>
@@ -56,9 +62,9 @@
             <span class="bandPointer">▶</span>
           </div>
         </div>
-        <div class="freq"><%= @vfo_b_frequency |> format_raw_frequency() %></div>
+        <div class="freq"><%= @inactive_frequency |> format_raw_frequency() %></div>
       <% else %>
-        <div class="freq active"><%= @vfo_b_frequency |> format_raw_frequency() %></div>
+        <div class="freq active"><%= @active_frequency |> format_raw_frequency() %></div>
         <div class="bandIndicator">
           <div class="receiver">
             <span class="bandPointer"></span>
@@ -71,7 +77,7 @@
             <span class="bandPointer"> </span>
           </div>
         </div>
-        <div class="freq"><%= @vfo_a_frequency |> format_raw_frequency() %></div>
+        <div class="freq"><%= @inactive_frequency |> format_raw_frequency() %></div>
       <% end %>
     </div>
   </div>
@@ -113,32 +119,7 @@
   <!-- main bandscope -->
   <div class="row">
     <div id="bandScopeWrapper">
-      <svg id="bandScope" class="scope themed <%= @theme %>" viewbox="0 0 640 140">
-        <defs>
-          <filter id="blur" filterUnits="userSpaceOnUse" x="0" y="0" width="640" height="150">
-            <feGaussianBlur in="sourceAlpha" stdDeviation="1" />
-          </filter>
-        </defs>
-
-        <polygon id="spectrumBlur" filter="url(#blur)" points="<%= @band_scope_data %> 645,150 0,150" />
-        <polygon id="bandSpectrum" class="spectrum" points="<%= @band_scope_data %> 645,150 0,150" />
-
-        <%= if @band_scope_mode == :center do %>
-          <line id="active_receiver_line" class="primaryCarrier" x1="320" y1="0" x2="320" y2="150" />
-        <% else %>
-          <%= if @band_scope_high && @band_scope_low do %>
-            <% loc = if @active_receiver == :a  && @vfo_a_frequency != "" do %>
-              <%= project_to_limits(@vfo_a_frequency, @band_scope_low, @band_scope_high) %>
-            <% else %>
-              <%= if @vfo_b_frequency != "" do %>
-                <%= project_to_limits(@vfo_b_frequency, @band_scope_low, @band_scope_high) %>
-              <% end %>
-            <% end %>
-
-            <line id="active_receiver_line" class="primaryCarrier" x1="<%= loc %>" y1="0" x2="<%= loc %>" y2="150" />
-          <% end %>
-        <% end %>
-      </svg>
+      <%= live_component @socket, BandscopeComponent, id: :bandscope, theme: @theme, band_scope_data: @band_scope_data, band_scope_low: @band_scope_low, band_scope_high: @band_scope_high, band_scope_mode: @band_scope_mode, active_frequency: @active_frequency, filter_lo_width: @filter_lo_width, filter_hi_shift: @filter_hi_shift, ssb_filter_mode: @ssb_filter_mode, ssb_data_filter_mode: @ssb_data_filter_mode, active_mode: @active_mode %>
     </div>
   </div>
 
@@ -222,7 +203,12 @@
       </div>
     </div>
   </div>
+</div>
 
-
-
+<div class="socket debug">
+<%= assigns
+  |> Map.drop([:__changed__, :socket])
+  |> Map.drop([:band_scope_data, :audio_scope_data])
+  |> inspect(pretty: true)
+%>
 </div>

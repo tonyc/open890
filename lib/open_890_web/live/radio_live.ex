@@ -1,4 +1,4 @@
-defmodule Open890Web.RadioLive do
+defmodule Open890Web.Live.RadioLive do
   use Open890Web, :live_view
   require Logger
   alias Phoenix.Socket.Broadcast
@@ -6,6 +6,34 @@ defmodule Open890Web.RadioLive do
   alias Open890.Extract
 
   alias Open890Web.RadioViewHelpers
+  alias Open890Web.Live.BandscopeComponent
+
+  @init_socket [
+     {:s_meter, 0},
+     {:vfo_a_frequency, ""},
+     {:vfo_b_frequency, ""},
+     {:active_frequency, ""},
+     {:inactive_frequency, ""},
+     {:band_scope_mode, nil},
+     {:band_scope_low, nil},
+     {:band_scope_high, nil},
+     {:band_scope_span, ""},
+     {:projected_active_receiver_location, ""},
+     {:active_receiver, :a},
+     {:inactive_receiver, :b},
+     {:active_transmitter, :a},
+     {:band_scope_data, []},
+     {:audio_scope_data, []},
+     {:theme, "elecraft"},
+     {:active_mode, :unknown},
+     {:inactive_mode, :unknown},
+     {:ssb_filter_mode, nil},
+     {:ssb_data_filter_mode, nil},
+     {:filter_hi_shift, nil},
+     {:filter_lo_width, nil},
+     {:filter_low_freq, nil},
+     {:filter_high_freq, nil}
+  ]
 
   @impl true
   def mount(_params, _session, socket) do
@@ -17,6 +45,14 @@ defmodule Open890Web.RadioLive do
       Phoenix.PubSub.subscribe(Open890.PubSub, "radio:band_scope")
     end
 
+    get_initial_radio_state()
+
+    socket = init_socket(socket)
+
+    {:ok, socket }
+  end
+
+  defp get_initial_radio_state do
     Radio.get_active_receiver()
     Radio.get_band_scope_limits()
     Radio.get_band_scope_mode()
@@ -24,24 +60,16 @@ defmodule Open890Web.RadioLive do
     Radio.get_vfo_b_freq()
     Radio.get_s_meter()
     Radio.get_modes()
+    Radio.get_filter_modes()
+    Radio.get_filter_state()
+    # Radio.get_filter_settings()
+  end
 
-    {:ok,
-     socket
-     |> assign(:s_meter, 0)
-     |> assign(:vfo_a_frequency, "")
-     |> assign(:vfo_b_frequency, "")
-     |> assign(:band_scope_mode, nil)
-     |> assign(:band_scope_low, nil)
-     |> assign(:band_scope_high, nil)
-     |> assign(:band_scope_span, "")
-     |> assign(:projected_active_receiver_location, "")
-     |> assign(:active_receiver, :a)
-     |> assign(:active_transmitter, :a)
-     |> assign(:band_scope_data, [])
-     |> assign(:audio_scope_data, [])
-     |> assign(:theme, "elecraft")
-     |> assign(:active_mode, :unknown)
-     |> assign(:inactive_mode, :unknown)}
+  defp init_socket(socket) do
+    @init_socket
+    |> Enum.reduce(socket, fn({key, val}, socket) ->
+      socket |> assign(key, val)
+    end)
   end
 
   @impl true
@@ -122,7 +150,6 @@ defmodule Open890Web.RadioLive do
 
         [low_int, high_int] =
           [bs_low, bs_high]
-          |> Enum.map(&String.to_integer/1)
           |> Enum.map(&Kernel.div(&1, 1000))
 
         span =
@@ -163,10 +190,15 @@ defmodule Open890Web.RadioLive do
 
         socket =
           if socket.assigns[:active_receiver] == :a do
-            socket |> assign(:page_title, frequency |> RadioViewHelpers.format_raw_frequency())
+            socket
+            |> assign(:page_title, frequency |> RadioViewHelpers.format_raw_frequency())
+            |> assign(:active_frequency, frequency)
           else
             socket
+            |> assign(:inactive_frequency, frequency)
           end
+
+        socket = socket |> vfo_a_updated()
 
         {:noreply, socket}
 
@@ -176,9 +208,12 @@ defmodule Open890Web.RadioLive do
 
         socket =
           if socket.assigns[:active_receiver] == :b do
-            socket |> assign(:page_title, frequency |> RadioViewHelpers.format_raw_frequency())
+            socket
+            |> assign(:page_title, frequency |> RadioViewHelpers.format_raw_frequency())
+            |> assign(:active_frequency, frequency)
           else
             socket
+            |> assign(:inactive_frequency, frequency)
           end
 
         {:noreply, socket}
@@ -188,15 +223,140 @@ defmodule Open890Web.RadioLive do
 
         {:noreply, socket |> assign(:band_scope_mode, band_scope_mode)}
 
+      # high/shift
+      msg |> String.starts_with?("SH0") ->
+        passband_id = msg |> Extract.passband_id()
+
+        %{
+          active_mode: current_mode,
+          ssb_filter_mode: filter_mode
+        } = socket.assigns
+
+        filter_hi_shift = passband_id |> Extract.filter_hi_shift(filter_mode, current_mode)
+
+        socket =
+          socket
+          |> assign(:filter_hi_shift, filter_hi_shift)
+          |> update_filter_hi_edge()
+
+        {:noreply, socket}
+
+      # lo/width
+      msg |> String.starts_with?("SL0") ->
+        passband_id = msg |> Extract.passband_id()
+
+        %{
+          active_mode: current_mode,
+          ssb_filter_mode: filter_mode
+        } = socket.assigns
+
+        filter_lo_width = passband_id |> Extract.filter_lo_width(filter_mode, current_mode)
+
+        socket =
+          socket
+          |> assign(:filter_lo_width, filter_lo_width)
+          |> update_filter_lo_edge()
+
+        {:noreply, socket}
+
+      # ssb/ssb+data filter modes
+      msg |> String.starts_with?("EX00611") ->
+        ssb_filter_mode = msg |> Extract.filter_mode()
+        {:noreply, socket |> assign(:ssb_filter_mode, ssb_filter_mode)}
+
+      msg |> String.starts_with?("EX00612") ->
+        ssb_data_filter_mode = msg |> Extract.filter_mode()
+        {:noreply, socket |> assign(:ssb_data_filter_mode, ssb_data_filter_mode)}
+
       msg == "FR0" ->
-        {:noreply, socket |> assign(:active_receiver, :a)}
+        socket = socket
+        |> assign(:active_receiver, :a)
+        |> assign(:active_frequency, socket.assigns.vfo_a_frequency)
+        |> assign(:inactive_receiver, :b)
+        |> assign(:inactive_frequency, socket.assigns.vfo_b_frequency)
+
+        {:noreply, socket}
 
       msg == "FR1" ->
-        {:noreply, socket |> assign(:active_receiver, :b)}
+        socket = socket
+        |> assign(:active_receiver, :b)
+        |> assign(:active_frequency, socket.assigns.vfo_b_frequency)
+        |> assign(:inactive_receiver, :a)
+        |> assign(:inactive_frequency, socket.assigns.vfo_a_frequency)
+
+        {:noreply, socket}
 
       true ->
         Logger.debug("RadioLive: unknown message: #{inspect(msg)}")
         {:noreply, socket}
+    end
+  end
+
+  defp vfo_a_updated(socket) do
+    socket
+    |> update_filter_hi_edge()
+    |> update_filter_lo_edge()
+  end
+
+  defp update_filter_edges(socket) do
+    socket
+    |> update_filter_hi_edge()
+    |> update_filter_lo_edge()
+  end
+
+  defp update_filter_hi_edge(socket) do
+    %{
+      active_mode: active_mode,
+      ssb_filter_mode: _ssb_filter_mode,
+      ssb_data_filter_mode: _ssb_data_filter_mode,
+      filter_hi_shift: filter_hi_shift
+    } = socket.assigns
+
+    active_frequency = socket |> get_active_receiver_frequency()
+
+    case active_mode do
+      :lsb ->
+        socket
+        |> assign(:filter_high_freq, active_frequency - filter_hi_shift)
+
+      :usb ->
+        socket
+        |> assign(:filter_high_freq, active_frequency + filter_hi_shift)
+
+      _ ->
+        socket
+    end
+  end
+
+  defp update_filter_lo_edge(socket) do
+    %{
+      active_mode: active_mode,
+      ssb_filter_mode: _ssb_filter_mode,
+      ssb_data_filter_mode: _ssb_data_filter_mode,
+      filter_lo_width: filter_lo_width
+    } = socket.assigns
+
+    active_frequency = socket |> get_active_receiver_frequency()
+
+    case active_mode do
+      :lsb ->
+        socket
+        |> assign(:filter_low_freq, active_frequency - filter_lo_width)
+
+      :usb ->
+        socket
+        |> assign(:filter_low_freq, active_frequency + filter_lo_width)
+
+      _ ->
+        socket
+    end
+  end
+
+  defp get_active_receiver_frequency(socket) do
+    socket.assigns.active_receiver
+    |> case do
+      :a -> socket.assigns.vfo_a_frequency
+      :b -> socket.assigns.vfo_b_frequency
     end
   end
 end

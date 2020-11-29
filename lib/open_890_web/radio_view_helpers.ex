@@ -18,18 +18,16 @@ defmodule Open890Web.RadioViewHelpers do
     end
   end
 
-  def project_to_limits(frequency, low, high) do
-    low = low |> String.to_integer()
-    high = high |> String.to_integer()
-    frequency = frequency |> String.to_integer()
-
+  def project_to_bandscope_limits(frequency, low, high)
+      when is_integer(frequency) and is_integer(low) and is_integer(high) do
     delta = high - low
-
     freq_delta = frequency - low
-
     percentage = freq_delta / delta
-
     percentage * 640
+  end
+
+  def project_to_bandscope_limits(_, _, _) do
+    0
   end
 
   # formats a raw frequency in Hz to e.g.
