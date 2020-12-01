@@ -1,6 +1,6 @@
-<div id="radio" class="">
-  <div id="topRow" class="row">
-    <span id="themeSelector" class="">
+<div id="radio" class="ui container grid">
+  <div class="row">
+    <span id="" class="">
       <span>
         Theme:
         <a href="#" phx-click="set_theme" phx-value-theme="elecraft">Elecraft</a> |
@@ -11,8 +11,8 @@
   </div>
 
   <div class="row">
-    <div id="sMeterWrapper" class="">
-      <div class="row">
+    <div id="sMeterWrapper" class="column">
+      <div class="ui grid">
         <div id="sMeterText"><%= s_meter_value_to_s_units(@s_meter) %></div>
         <svg id="sMeter" class="" viewbox="0 0 350 15">
           <%= for i <- (1..@s_meter) do %>
@@ -25,11 +25,12 @@
       </div>
     </div>
 
-    <div id="audioScopeWrapper" class="">
+    <div id="audioScopeWrapper" class="column">
       <div class="row">
         <span>lo/width: <%= @filter_lo_width %></span>
         <span>hi/shift: <%= @filter_hi_shift %></span>
       </div>
+
       <div class="row">
         <svg id="audioScope" class="scope themed <%= @theme %>" viewbox="0 0 212 50">
           <defs>
@@ -82,14 +83,14 @@
     </div>
   </div>
 
-  <div class="row">
-    <span>Left mode: <%= format_mode(@active_mode) %></span>
-    <span>Right mode: <%= format_mode(@inactive_mode) %></span>
+  <div class="row two column ui container grid">
+    <div class="column"><span>Left mode: <%= format_mode(@active_mode) %></span></div>
+    <div class="column"><span>Right mode: <%= format_mode(@inactive_mode) %></span></div>
   </div>
 
   <div class="row">
     <div class="controlButtons">
-      <button type="button" class="btn btn-lg radio-control multi-ch" phx-hook="MultiCH" id="multi-ch">Multi/CH</button>
+      <button type="button" class="ui huge circular button radio-control multi-ch" phx-hook="MultiCH" id="multi-ch">Multi/CH</button>
       <%= if @active_receiver == :b do %>
         <%= cmd_button "A/B", "FR0" %>
       <% else  %>
@@ -101,106 +102,131 @@
 
   <div id="bandScopeDetails" class="row">
     <%= if @band_scope_mode do %>
-      <span id="bandScopeMode" class="scopeDetailItem"><%= format_band_scope_mode(@band_scope_mode) %> Mode</span>
+      <div class="ui large black label">
+        Scope Mode
+        <div class="detail">
+          <%= format_band_scope_mode(@band_scope_mode) %>
+        </div>
+      </div>
     <% end %>
 
     <%= if @band_scope_span do %>
-      <span id="bandScopeSpan" class="scopeDetailItem">Span: <%= @band_scope_span %> kHz</span>
+      <div class="ui large black label">
+        Span
+        <div class="detail">
+          <%= @band_scope_span %> kHz
+        </div>
+      </div>
     <% end %>
   </div>
 
-  <div id="bandScopeLimits" class="row">
+  <div class="row">
+    <div id="scopeControls" class="">
+      Scope Mode
+      <div class="ui buttons">
+        <%= cmd_button "Center", "BS30" %>
+        <%= cmd_button "Fixed", "BS31" %>
+        <%= cmd_button "Auto Scroll", "BS32" %>
+      </div>
+    </div>
+  </div>
+
+  <div id="bandScopeLimits" class="row two column grid ui">
     <%= if @band_scope_low != "" do %>
-      <span class="scopeLimit" id="bandScopeLow"><%= @band_scope_low |> format_raw_frequency() %></span>
-      <span class="scopeLimit" id="bandScopeHigh"><%= @band_scope_high |> format_raw_frequency() %></span>
+      <div class="column">
+        <span class="scopeLimit" id="bandScopeLow"><%= @band_scope_low |> format_raw_frequency() %></span>
+      </div>
+      <div class="column">
+        <span class="scopeLimit" id="bandScopeHigh"><%= @band_scope_high |> format_raw_frequency() %></span>
+      </div>
     <% end %>
   </div>
 
   <!-- main bandscope -->
   <div class="row">
-    <div id="bandScopeWrapper">
+    <div id="bandScopeWrapper" class="fourteen wide column">
       <%= live_component @socket, BandscopeComponent, id: :bandscope, theme: @theme, band_scope_data: @band_scope_data, band_scope_low: @band_scope_low, band_scope_high: @band_scope_high, band_scope_mode: @band_scope_mode, active_frequency: @active_frequency, filter_lo_width: @filter_lo_width, filter_hi_shift: @filter_hi_shift, ssb_filter_mode: @ssb_filter_mode, ssb_data_filter_mode: @ssb_data_filter_mode, active_mode: @active_mode %>
+    </div>
+    <div class="two wide column">
+      <div id="modeKeys" class="ui basic vertical compact buttons">
+        <%= cmd_button "LSB/USB", "MK0" %>
+        <%= cmd_button "CW/CW-R", "MK1" %>
+        <%= cmd_button "FSK/PSK", "MK2" %>
+        <%= cmd_button "FM/AM", "MK3" %>
+        <%= cmd_button "FSK/FSK-R", "MK4" %>
+        <%= cmd_button "PSK/PSK-R", "MK5" %>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="row">
+    <%= if @band_scope_mode in [:center, :auto_scroll] do %>
+      Span
+      <div class="ui buttons">
+        <%= cmd_button "5", "BS40" %>
+        <%= cmd_button "10", "BS41" %>
+        <%= cmd_button "20", "BS42" %>
+        <%= cmd_button "30", "BS43" %>
+        <%= cmd_button "50", "BS44" %>
+        <%= cmd_button "100", "BS45" %>
+        <%= cmd_button "200", "BS46" %>
+        <%= cmd_button "500", "BS47" %>
+      </div>
+    <% else %>
+      Range
+      <div class="ui buttons">
+        <%= cmd_button "1", "BS51" %>
+        <%= cmd_button "2", "BS52" %>
+        <%= cmd_button "3", "BS53" %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="row">
+    WF Speed
+    <div class="ui buttons">
+      <%= cmd_button "1", "BSB1" %>
+      <%= cmd_button "2", "BSB2" %>
+      <%= cmd_button "3", "BSB3" %>
+      <%= cmd_button "4", "BSB4" %>
     </div>
   </div>
 
   <div class="row">
-    <div id="scopeControls">
-      <div>
-        S.Mode
-        <%= cmd_button "Center", "BS30" %>
-        <%= cmd_button "Fixed", "BS31" %>
-        <%= cmd_button "Auto Scroll", "BS32" %>
-      </div>
-
-      <div>
-        <%= if @band_scope_mode in [:center, :auto_scroll] do %>
-          Span
-          <%= cmd_button "5", "BS40" %>
-          <%= cmd_button "10", "BS41" %>
-          <%= cmd_button "20", "BS42" %>
-          <%= cmd_button "30", "BS43" %>
-          <%= cmd_button "50", "BS44" %>
-          <%= cmd_button "100", "BS45" %>
-          <%= cmd_button "200", "BS46" %>
-          <%= cmd_button "500", "BS47" %>
-        <% else %>
-          Range
-          <%= cmd_button "1", "BS51" %>
-          <%= cmd_button "2", "BS52" %>
-          <%= cmd_button "3", "BS53" %>
-        <% end %>
-      </div>
-
-      <div>
-        WF Speed
-        <%= cmd_button "1", "BSB1" %>
-        <%= cmd_button "2", "BSB2" %>
-        <%= cmd_button "3", "BSB3" %>
-        <%= cmd_button "4", "BSB4" %>
-      </div>
-
-      <div>
-        Scope Avg
-        <%= cmd_button "Off", "BSA0" %>
-        <%= cmd_button "1", "BSA1" %>
-        <%= cmd_button "2", "BSA2" %>
-        <%= cmd_button "3", "BSA3" %>
-      </div>
-
-      <div>
-        Data speed
-        <%= cmd_button "High", "DD01" %>
-        <%= cmd_button "Mid", "DD02" %>
-        <%= cmd_button "Low", "DD03" %>
-      </div>
+    Scope Avg
+    <div class="ui buttons">
+      <%= cmd_button "Off", "BSA0" %>
+      <%= cmd_button "1", "BSA1" %>
+      <%= cmd_button "2", "BSA2" %>
+      <%= cmd_button "3", "BSA3" %>
     </div>
+  </div>
 
-    <div id="modeKeys">
-      <%= cmd_button "LSB/USB", "MK0" %>
-      <%= cmd_button "CW/CW-R", "MK1" %>
-      <%= cmd_button "FSK/PSK", "MK2" %>
-      <%= cmd_button "FM/AM", "MK3" %>
-      <%= cmd_button "FSK/FSK-R", "MK4" %>
-      <%= cmd_button "PSK/PSK-R", "MK5" %>
+  <div class="row">
+    Data speed
+    <div class="ui buttons">
+      <%= cmd_button "High", "DD01" %>
+      <%= cmd_button "Mid", "DD02" %>
+      <%= cmd_button "Low", "DD03" %>
     </div>
+  </div>
 
-    <div id="bandSelectors">
-      <div class="bandTitle">Band</div>
-      <div>
-        <%= cmd_button "1.8", "BU000" %>
-        <%= cmd_button "3.5", "BU001" %>
-        <%= cmd_button "7", "BU002" %>
-      </div>
-      <div>
-        <%= cmd_button "10", "BU003" %>
-        <%= cmd_button "14", "BU004" %>
-        <%= cmd_button "18", "BU005" %>
-      </div>
-      <div>
-        <%= cmd_button "21", "BU006" %>
-        <%= cmd_button "24", "BU007" %>
-        <%= cmd_button "28", "BU008" %>
-      </div>
+  <div class="row">
+    <label>Band</label>
+    <div id="bandSelectors" class="ui buttons">
+      <%= cmd_button "1.8", "BU000" %>
+      <%= cmd_button "3.5", "BU001" %>
+      <%= cmd_button "7", "BU002" %>
+      <%= cmd_button "10", "BU003" %>
+      <%= cmd_button "14", "BU004" %>
+      <%= cmd_button "18", "BU005" %>
+      <%= cmd_button "21", "BU006" %>
+      <%= cmd_button "24", "BU007" %>
+      <%= cmd_button "28", "BU008" %>
+      <%= cmd_button "50", "BU009" %>
+      <%= cmd_button "GEN", "BU010" %>
     </div>
   </div>
 </div>

@@ -35,28 +35,35 @@
 }
 
 
+h1.title {
+  padding-bottom: 2rem;
+}
+
 // globals, probably will change
 
-body {
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
-}
+// body {
+//   margin: 0;
+//   padding: 0;
+//   padding-top: 1rem;
+//   padding-left: 1rem;
+//   padding-right: 1rem;
+//   font-family: sans-serif;
+// }
 
-button { 
-  cursor: pointer;
-}
+// button { 
+//   cursor: pointer;
+// }
 
 // grid etc
-.row {
-  display: flex;
-  justify-content: space-between;
-  // margin-left: 0.5rem;
-  // border: 1px dashed purple;
-  width: 100%;
-  margin-bottom: 1rem;
-  clear: both;
-}
+// .row {
+//   display: flex;
+//   justify-content: space-between;
+//   // margin-left: 0.5rem;
+//   // border: 1px dashed purple;
+//   width: 100%;
+//   margin-bottom: 1rem;
+//   clear: both;
+// }
 
 // theme variables
 $kenwood-cyan: rgba(0, 205, 238, 1.0);
@@ -132,9 +139,9 @@ nav {
 }
 
 #themeSelector {
-  float: right;
-  font-size: smaller;
-  font-weight: bold;
+  // float: right;
+  // font-size: smaller;
+  // font-weight: bold;
 }
 
 .receiverIndicator {
@@ -172,10 +179,6 @@ nav {
     float: right;
   }
 
-  .sMeterBG, .sMeter {
-    // shape-rendering: geometricPrecision;
-  }
-
   .sMeterBG {
     fill: $kenwood-grey;
   }
@@ -191,16 +194,16 @@ nav {
 }
 
 #audioScopeWrapper {
-  display: inline;
-  clear: both;
-  float: right;
+  // display: inline;
+  // clear: both;
+  // float: right;
 
   #audioScope {
     border-radius: $border-radius-small;
     height: 100px;
     background-color: black;
     fill: #999;
-    float: right;
+    // float: right;
   }
 }
 
@@ -326,53 +329,53 @@ nav {
   }
 }
 
-#bandScopeDetails {
-  align-content: start;
-  justify-content: flex-start;
+// #bandScopeDetails {
+//   align-content: start;
+//   justify-content: flex-start;
 
-  .scopeDetailItem {
-    background-color: black;
-    color: white;
-    border-radius: $border-radius-small;
-    padding: 0.25rem 0.5rem;
-    margin-right: 1rem;
-  }
-}
+//   .scopeDetailItem {
+//     background-color: black;
+//     color: white;
+//     border-radius: $border-radius-small;
+//     padding: 0.25rem 0.5rem;
+//     margin-right: 1rem;
+//   }
+// }
 
 
-#bandScopeWrapper {
+// #bandScopeWrapper {
 
-  #bandScopeLow {
-    padding-left: 1rem;
-    // display: inline;
-    // position: relative;
-  }
+//   #bandScopeLow {
+//     padding-left: 1rem;
+//     // display: inline;
+//     // position: relative;
+//   }
 
-  #bandScopeHigh {
-    padding-right: 1rem;
-    // display: inline;
-    // position: relative;
-    float: right;
-  }
-}
+//   #bandScopeHigh {
+//     padding-right: 1rem;
+//     // display: inline;
+//     // position: relative;
+//     float: right;
+//   }
+// }
 
 #bandSelectors div button {
   width: 11rem;
   font-size: 16pt;
 }
 
-#modeKeys {
-  // border: 1px dotted red;
-  width: 120px;
-  flex-direction: column;
+// #modeKeys {
+//   // border: 1px dotted red;
+//   width: 120px;
+//   // flex-direction: column;
 
-  button {
-    text-align: center;
-    width: 100%;
-    margin-bottom: 0.5rem;
-    padding: 0.5rem 0;
-  }
-}
+//   button {
+//     text-align: center;
+//     width: 100%;
+//     margin-bottom: 0.5rem;
+//     padding: 0.5rem 0;
+//   }
+// }
 
 .socket.debug {
   font-family: monospace;

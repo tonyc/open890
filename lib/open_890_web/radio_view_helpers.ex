@@ -6,7 +6,14 @@ defmodule Open890Web.RadioViewHelpers do
   end
 
   def cmd_button(name, cmd, opts \\ []) when is_binary(name) and is_binary(cmd) do
-    content_tag(:button, name, opts |> Keyword.merge(phx_click: "cmd", phx_value_cmd: cmd))
+    class_opts = opts |> Keyword.get(:class, "")
+
+    final_opts = opts
+    |> Keyword.delete(:class)
+    |> Keyword.merge(class: "ui button #{class_opts}")
+    |> Keyword.merge([phx_click: "cmd", phx_value_cmd: cmd])
+
+    content_tag(:button, name, final_opts)
   end
 
   def format_band_scope_mode(mode) do
