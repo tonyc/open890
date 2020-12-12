@@ -8,8 +8,6 @@ defmodule Open890Web.Live.BandscopeLive do
   @impl true
   def mount(_params, session, socket) do
     Logger.info("BandScopeLive.mount")
-    session |> IO.inspect(label: "bandscope session")
-    socket.assigns |> IO.inspect(label: "socket assigns")
 
     if connected?(socket) do
       Phoenix.PubSub.subscribe(Open890.PubSub, "radio:state")
