@@ -100,60 +100,17 @@
     </div>
   </div>
 
-  <div id="bandScopeLimits" class="four column row">
-    <%= if @band_scope_low != "" do %>
-      <div class="left floated column">
-        <span class="scopeLimit" id="bandScopeLow"><%= @band_scope_low |> format_raw_frequency() %></span>
-      </div>
-      <div class="right floated right aligned column">
-        <span class="scopeLimit" id="bandScopeHigh"><%= @band_scope_high |> format_raw_frequency() %></span>
-      </div>
-    <% end %>
+  <div>
+    <%= live_render @socket, BandscopeLive, id: :bandscope, session: %{
+      "theme" => @theme,
+      "active_frequency" => @active_frequency,
+      "active_mode" => @active_mode,
+      "filter_lo_width" => @filter_lo_width,
+      "filter_hi_shift" => @filter_hi_shift,
+      "ssb_filter_mode" => @ssb_filter_mode,
+      "ssb_data_filter_mode" => @ssb_data_filter_mode
+    } %>
   </div>
-
-  <!-- main bandscope -->
-
-  <div class="row">
-    <div id="bandScopeWrapper" class="sixteen wide column">
-      <%= live_render @socket, BandscopeLive, id: :bandscope, session: %{
-        "theme" => @theme,
-        "band_scope_low" => @band_scope_low,
-        "band_scope_high" => @band_scope_high,
-        "band_scope_mode" => @band_scope_mode,
-        "active_frequency" => @active_frequency,
-        "active_mode" => @active_mode,
-        "filter_lo_width" => @filter_lo_width,
-        "filter_hi_shift" => @filter_hi_shift,
-        "ssb_filter_mode" => @ssb_filter_mode,
-        "ssb_data_filter_mode" => @ssb_data_filter_mode
-      } %>
-    </div>
-  </div>
-
-  <!-- scope mode/span etc -->
-  <div id="bandScopeDetails" class="row">
-    <div class="column">
-      <%= if @band_scope_mode do %>
-        <div class="ui large black label">
-          Scope Mode
-          <div class="detail">
-            <%= format_band_scope_mode(@band_scope_mode) %>
-          </div>
-        </div>
-      <% end %>
-
-      <%= if @band_scope_span do %>
-        <div class="ui large black label">
-          Span
-          <div class="detail">
-            <%= @band_scope_span %> kHz
-          </div>
-        </div>
-      <% end %>
-    </div>
-  </div>
-
-  <%#= live_component @socket, ButtonsComponent, id: :buttons, band_scope_mode: @band_scope_mode %>
 
   <div class="row">
     <div class="column">

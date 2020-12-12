@@ -1,9 +1,9 @@
 defmodule Open890Web.Live.BandscopeLive do
   use Open890Web, :live_view
-
   require Logger
 
   alias Phoenix.Socket.Broadcast
+  alias Open890.Extract
 
   @impl true
   def mount(_params, session, socket) do
@@ -12,6 +12,7 @@ defmodule Open890Web.Live.BandscopeLive do
     socket.assigns |> IO.inspect(label: "socket assigns")
 
     if connected?(socket) do
+      Phoenix.PubSub.subscribe(Open890.PubSub, "radio:state")
       Phoenix.PubSub.subscribe(Open890.PubSub, "radio:band_scope")
     end
 
@@ -19,9 +20,10 @@ defmodule Open890Web.Live.BandscopeLive do
       socket
       |> assign(:band_scope_data, [])
       |> assign(:theme, session["theme"])
-      |> assign(:band_scope_mode, session["band_scope_mode"])
-      |> assign(:band_scope_low, session["band_scope_low"])
-      |> assign(:band_scope_high, session["band_scope_high"])
+      |> assign(:band_scope_mode, nil)
+      |> assign(:band_scope_low, nil)
+      |> assign(:band_scope_high, nil)
+      |> assign(:band_scope_span, "")
       |> assign(:active_frequency, session["active_frequency"])
       |> assign(:active_mode, session["active_mode"])
       |> assign(:filter_lo_width, session["filter_lo_width"])
@@ -37,5 +39,37 @@ defmodule Open890Web.Live.BandscopeLive do
     {:noreply,
      socket
      |> assign(:band_scope_data, band_data)}
+  end
+
+  @impl true
+  def handle_info(%Broadcast{event: "radio_state_data", payload: payload}, socket) do
+    %{msg: msg} = payload
+
+    cond do
+      msg |> String.starts_with?("BSM0") ->
+        [bs_low, bs_high] = msg |> Extract.band_edges()
+
+        [low_int, high_int] =
+          [bs_low, bs_high]
+          |> Enum.map(&Kernel.div(&1, 1000))
+
+        span =
+          (high_int - low_int)
+          |> to_string()
+          |> String.trim_leading("0")
+
+        {:noreply,
+         socket
+         |> assign(:band_scope_low, bs_low)
+         |> assign(:band_scope_high, bs_high)
+         |> assign(:band_scope_span, span)}
+
+      msg |> String.starts_with?("BS3") ->
+        band_scope_mode = msg |> Extract.scope_mode()
+
+        {:noreply, socket |> assign(:band_scope_mode, band_scope_mode)}
+      true ->
+        {:noreply, socket}
+    end
   end
 end

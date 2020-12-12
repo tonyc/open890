@@ -15,10 +15,10 @@ defmodule Open890Web.Live.RadioLive do
     {:active_transmitter, :a},
     {:audio_scope_data, []},
     #{:band_scope_data, []},
-    {:band_scope_high, nil},
-    {:band_scope_low, nil},
-    {:band_scope_mode, nil},
-    {:band_scope_span, ""},
+    #{:band_scope_high, nil},
+    #{:band_scope_low, nil},
+    #{:band_scope_mode, nil},
+    #{:band_scope_span, ""},
     {:filter_hi_shift, nil},
     {:filter_high_freq, nil},
     {:filter_lo_width, nil},
@@ -120,23 +120,23 @@ defmodule Open890Web.Live.RadioLive do
     %{msg: msg} = payload
 
     cond do
-      msg |> String.starts_with?("BSM0") ->
-        [bs_low, bs_high] = msg |> Extract.band_edges()
+      #msg |> String.starts_with?("BSM0") ->
+      #  [bs_low, bs_high] = msg |> Extract.band_edges()
 
-        [low_int, high_int] =
-          [bs_low, bs_high]
-          |> Enum.map(&Kernel.div(&1, 1000))
+      #  [low_int, high_int] =
+      #    [bs_low, bs_high]
+      #    |> Enum.map(&Kernel.div(&1, 1000))
 
-        span =
-          (high_int - low_int)
-          |> to_string()
-          |> String.trim_leading("0")
+      #  span =
+      #    (high_int - low_int)
+      #    |> to_string()
+      #    |> String.trim_leading("0")
 
-        {:noreply,
-         socket
-         |> assign(:band_scope_low, bs_low)
-         |> assign(:band_scope_high, bs_high)
-         |> assign(:band_scope_span, span)}
+      #  {:noreply,
+      #   socket
+      #   |> assign(:band_scope_low, bs_low)
+      #   |> assign(:band_scope_high, bs_high)
+      #   |> assign(:band_scope_span, span)}
 
       msg |> String.starts_with?("OM0") ->
         mode = msg |> Extract.operating_mode()
@@ -193,10 +193,10 @@ defmodule Open890Web.Live.RadioLive do
 
         {:noreply, socket}
 
-      msg |> String.starts_with?("BS3") ->
-        band_scope_mode = msg |> Extract.scope_mode()
+      #msg |> String.starts_with?("BS3") ->
+      #  band_scope_mode = msg |> Extract.scope_mode()
 
-        {:noreply, socket |> assign(:band_scope_mode, band_scope_mode)}
+      #  {:noreply, socket |> assign(:band_scope_mode, band_scope_mode)}
 
       # high/shift
       msg |> String.starts_with?("SH0") ->
