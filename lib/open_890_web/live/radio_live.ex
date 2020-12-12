@@ -6,7 +6,7 @@ defmodule Open890Web.Live.RadioLive do
   alias Open890.Extract
 
   alias Open890Web.RadioViewHelpers
-  alias Open890Web.Live.{BandscopeComponent, ButtonsComponent}
+  alias Open890Web.Live.{BandscopeLive, ButtonsComponent}
 
   @init_socket [
     {:active_frequency, ""},
@@ -14,7 +14,7 @@ defmodule Open890Web.Live.RadioLive do
     {:active_receiver, :a},
     {:active_transmitter, :a},
     {:audio_scope_data, []},
-    {:band_scope_data, []},
+    #{:band_scope_data, []},
     {:band_scope_high, nil},
     {:band_scope_low, nil},
     {:band_scope_mode, nil},
@@ -113,13 +113,6 @@ defmodule Open890Web.Live.RadioLive do
   @impl true
   def handle_info(%Broadcast{event: "scope_data", payload: %{payload: audio_scope_data}}, socket) do
     {:noreply, socket |> assign(:audio_scope_data, audio_scope_data)}
-  end
-
-  @impl true
-  def handle_info(%Broadcast{event: "band_scope_data", payload: %{payload: band_data}}, socket) do
-    { :noreply,
-      socket |> assign(:band_scope_data, band_data)
-    }
   end
 
   @impl true
@@ -334,6 +327,10 @@ defmodule Open890Web.Live.RadioLive do
       _ ->
         socket
     end
+  end
+
+  def handle_info(%Broadcast{}, socket) do
+    {:noreply, socket}
   end
 
   defp get_active_receiver_frequency(socket) do
