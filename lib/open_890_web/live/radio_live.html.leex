@@ -149,7 +149,7 @@
       <div class="socket debug">
 <%= assigns
   |> Map.drop([:__changed__, :socket])
-  |> inspect(pretty: true)
+  |> inspect(pretty: true, limit: :infinity, charlists: :as_lists)
 %>
       </div>
     </div>
