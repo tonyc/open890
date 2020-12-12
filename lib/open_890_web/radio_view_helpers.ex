@@ -70,4 +70,19 @@ defmodule Open890Web.RadioViewHelpers do
     |> String.replace("_", "-")
     |> String.upcase()
   end
+
+  def scope_data_to_svg(band_data, max_value) when is_list(band_data) do
+    band_data = band_data ++ [max_value]
+    length = band_data |> Enum.count()
+
+    0..length
+    |> Enum.zip(band_data)
+    |> Enum.map(fn {index, data} ->
+      "#{index},#{data}"
+    end)
+    |> Enum.join(" ")
+    |> case do
+      str -> "#{str} 0,#{max_value}"
+    end
+  end
 end

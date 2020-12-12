@@ -5,8 +5,8 @@
     </filter>
   </defs>
 
-  <polygon id="spectrumBlur" filter="url(#blur)" points="<%= @band_scope_data %> 645,150 0,150" />
-  <polygon id="bandSpectrum" class="spectrum" points="<%= @band_scope_data %> 645,150 0,150" />
+  <polygon id="spectrumBlur" filter="url(#blur)" points="<%= scope_data_to_svg(@band_scope_data, 150) %>" />
+  <polygon id="bandSpectrum" class="spectrum" points="<%= scope_data_to_svg(@band_scope_data, 150) %>" />
 
   <%= if @band_scope_mode == :center do %>
     <line id="active_receiver_line" class="primaryCarrier" x1="320" y1="0" x2="320" y2="150" />

@@ -112,31 +112,13 @@ defmodule Open890Web.Live.RadioLive do
 
   @impl true
   def handle_info(%Broadcast{event: "scope_data", payload: %{payload: audio_scope_data}}, socket) do
-    zipped_data =
-      0..212
-      |> Enum.zip(audio_scope_data)
-      |> Enum.map(fn {index, data} ->
-        "#{index},#{data}"
-      end)
-      |> Enum.join(" ")
-
-    {:noreply, socket |> assign(:audio_scope_data, zipped_data)}
+    {:noreply, socket |> assign(:audio_scope_data, audio_scope_data)}
   end
 
   @impl true
   def handle_info(%Broadcast{event: "band_scope_data", payload: %{payload: band_data}}, socket) do
-    zipped_data =
-      0..640
-      |> Enum.zip(band_data)
-      |> Enum.map(fn {index, data} ->
-        "#{index},#{data}"
-      end)
-      |> Enum.join(" ")
-
-    {
-      :noreply,
-      # socket |> push_event(:band_scope_data, payload)
-      socket |> assign(:band_scope_data, zipped_data)
+    { :noreply,
+      socket |> assign(:band_scope_data, band_data)
     }
   end
 
