@@ -21,7 +21,7 @@ defmodule Open890Web.Live.BandscopeLive do
       |> assign(:band_scope_mode, nil)
       |> assign(:band_scope_low, nil)
       |> assign(:band_scope_high, nil)
-      |> assign(:band_scope_span, "")
+      |> assign(:band_scope_span, nil)
       |> assign(:active_frequency, session["active_frequency"])
       |> assign(:active_mode, session["active_mode"])
       |> assign(:filter_lo_width, session["filter_lo_width"])

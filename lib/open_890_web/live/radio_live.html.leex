@@ -100,17 +100,15 @@
     </div>
   </div>
 
-  <div>
-    <%= live_render @socket, BandscopeLive, id: :bandscope, session: %{
-      "theme" => @theme,
-      "active_frequency" => @active_frequency,
-      "active_mode" => @active_mode,
-      "filter_lo_width" => @filter_lo_width,
-      "filter_hi_shift" => @filter_hi_shift,
-      "ssb_filter_mode" => @ssb_filter_mode,
-      "ssb_data_filter_mode" => @ssb_data_filter_mode
-    } %>
-  </div>
+  <%= live_render @socket, BandscopeLive, id: :bandscope, session: %{
+    "theme" => @theme,
+    "active_frequency" => @active_frequency,
+    "active_mode" => @active_mode,
+    "filter_lo_width" => @filter_lo_width,
+    "filter_hi_shift" => @filter_hi_shift,
+    "ssb_filter_mode" => @ssb_filter_mode,
+    "ssb_data_filter_mode" => @ssb_data_filter_mode
+  } %>
 
   <div class="row">
     <div class="column">
