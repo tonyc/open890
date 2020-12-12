@@ -1,4 +1,4 @@
-<div id="radio" class="ui grid container">
+<div id="radio" class="ui grid">
   <div class="row">
     <span id="" class="">
       <span>
@@ -147,10 +147,7 @@
   <div class="row">
     <div class="column">
       <div class="socket debug">
-<%= assigns
-  |> Map.drop([:__changed__, :socket])
-  |> inspect(pretty: true, limit: :infinity, charlists: :as_lists)
-%>
+<%= debug_assigns(assigns, except: [:audio_scope_data, :band_scope_data]) %>
       </div>
     </div>
   </div>

@@ -85,4 +85,11 @@ defmodule Open890Web.RadioViewHelpers do
       str -> "#{str} 0,#{max_value}"
     end
   end
+
+  def debug_assigns(assigns, opts \\ []) do
+    assigns
+    |> Map.drop([:__changed__, :socket])
+    |> Map.drop(opts |> Keyword.get(:except, []))
+    |> inspect(pretty: true, limit: :infinity, charlists: :as_lists)
+  end
 end
