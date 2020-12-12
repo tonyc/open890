@@ -237,7 +237,7 @@ defmodule Open890.TCPClient do
 
   def handle_msg(msg, %{socket: _socket} = state) when is_binary(msg) do
     cond do
-      # high speed filter/audio scope respnse
+      # high speed filter/audio scope response
       msg |> String.starts_with?("##DD3") ->
         audio_scope_data =
           msg
