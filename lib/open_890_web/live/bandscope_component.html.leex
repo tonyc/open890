@@ -17,19 +17,19 @@
 
 
       <%= case @active_mode do %>
-      <%= :usb -> %>
+      <% :usb -> %>
         <% filter_low = project_to_bandscope_limits(@active_frequency + @filter_lo_width, @band_scope_low, @band_scope_high) %>
         <% filter_high = project_to_bandscope_limits(@active_frequency + @filter_hi_shift, @band_scope_low, @band_scope_high) %>
         <polygon
           id="passband"
           points="<%= filter_low %>,0 <%= filter_high %>,0 <%= filter_high %>,150 <%= filter_low %>,150" />
-      <%= :lsb -> %>
+      <% :lsb -> %>
         <% filter_low = project_to_bandscope_limits(@active_frequency - @filter_lo_width, @band_scope_low, @band_scope_high) %>
         <% filter_high = project_to_bandscope_limits(@active_frequency - @filter_hi_shift, @band_scope_low, @band_scope_high) %>
         <polygon
           id="passband"
           points="<%= filter_low %>,0 <%= filter_high %>,0 <%= filter_high %>,150 <%= filter_low %>,150" />
-      <%= mode -> %>
+      <% mode -> %>
         <!-- unknown mode: <%= mode %> -->
       <% end %>
 
