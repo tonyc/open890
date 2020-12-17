@@ -90,9 +90,12 @@
 
   <div class="row">
     <div class="controlButtons">
-      <button type="button" class="ui huge circular button radio-control multi-ch" phx-hook="MultiCH" id="multi-ch">Multi/CH</button>
-      <%= vfo_switch_button(@active_receiver, class: "huge") %>
-      <%= vfo_equalize_button(class: "huge") %>
+      <button type="button" class="ui circular button radio-control multi-ch" phx-hook="MultiCH" id="multi-ch">
+        Multi/CH
+      </button>
+
+      <%= vfo_switch_button(@active_receiver) %>
+      <%= vfo_equalize_button() %>
     </div>
   </div>
 
@@ -153,6 +156,16 @@
     </div>
   </div>
 
-<%#= debug_assigns(assigns, except: [:audio_scope_data, :band_scope_data]) %>
+<%= if @debug do %>
+  <div class="row">
+    <div class="assigns">
+      <h2>Assigns</h2>
+      <em>Ignoring :audio_scope_data, :band_scope_data</em>
+      <div class="vars">
+<%= debug_assigns(assigns, except: [:audio_scope_data, :band_scope_data]) %>
+      </div>
+    </div>
+  </div>
+<% end %>
 
 </div>

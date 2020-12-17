@@ -11,6 +11,7 @@ defmodule Open890Web.Live.RadioLive do
   alias Open890Web.RadioViewHelpers
 
   @init_socket [
+    {:debug, false},
     {:active_frequency, ""},
     {:active_mode, :unknown},
     {:active_receiver, :a},
@@ -37,8 +38,11 @@ defmodule Open890Web.Live.RadioLive do
   ]
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(params, _session, socket) do
     Logger.info("LiveView mount()")
+
+    params
+    |> IO.inspect(label: "params", pretty: true, limit: :infinity)
 
     if connected?(socket) do
       Phoenix.PubSub.subscribe(Open890.PubSub, "radio:state")
@@ -49,6 +53,12 @@ defmodule Open890Web.Live.RadioLive do
     get_initial_radio_state()
 
     socket = init_socket(socket)
+
+    socket = if params["debug"] do
+      socket |> assign(:debug, true)
+    else
+      socket
+    end
 
     {:ok, socket}
   end

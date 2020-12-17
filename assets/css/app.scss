@@ -377,7 +377,13 @@ nav {
 //   }
 // }
 
-.dumpVar {
-  font-family: monospace;
-  white-space: pre;
+.assigns {
+  border: 2px solid grey;
+  padding: 0.5rem;
+  margin: 0;
+
+  .vars {
+    font-family: monospace;
+    white-space: pre;
+  }
 }
