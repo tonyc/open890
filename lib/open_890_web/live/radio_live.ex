@@ -9,7 +9,6 @@ defmodule Open890Web.Live.RadioLive do
   alias Open890.Extract
 
   alias Open890Web.RadioViewHelpers
-  alias Open890Web.Live.{BandscopeLive}
 
   @init_socket [
     {:active_frequency, ""},
@@ -17,6 +16,10 @@ defmodule Open890Web.Live.RadioLive do
     {:active_receiver, :a},
     {:active_transmitter, :a},
     {:audio_scope_data, []},
+    {:band_scope_data, []},
+    {:band_scope_edges, nil},
+    {:band_scope_mode, nil},
+    {:band_scope_span, nil},
     {:filter_hi_shift, nil},
     {:filter_high_freq, nil},
     {:filter_lo_width, nil},
@@ -40,7 +43,7 @@ defmodule Open890Web.Live.RadioLive do
     if connected?(socket) do
       Phoenix.PubSub.subscribe(Open890.PubSub, "radio:state")
       Phoenix.PubSub.subscribe(Open890.PubSub, "radio:audio_scope")
-      # Phoenix.PubSub.subscribe(Open890.PubSub, "radio:band_scope")
+      Phoenix.PubSub.subscribe(Open890.PubSub, "radio:band_scope")
     end
 
     get_initial_radio_state()
@@ -58,6 +61,8 @@ defmodule Open890Web.Live.RadioLive do
     Radio.get_modes()
     Radio.get_filter_modes()
     Radio.get_filter_state()
+    Radio.get_band_scope_limits()
+    Radio.get_band_scope_mode()
   end
 
   defp init_socket(socket) do
@@ -70,6 +75,13 @@ defmodule Open890Web.Live.RadioLive do
   @impl true
   def handle_info(%Broadcast{event: "scope_data", payload: %{payload: audio_scope_data}}, socket) do
     {:noreply, socket |> assign(:audio_scope_data, audio_scope_data)}
+  end
+
+  @impl true
+  def handle_info(%Broadcast{event: "band_scope_data", payload: %{payload: band_data}}, socket) do
+    {:noreply,
+     socket
+     |> assign(:band_scope_data, band_data)}
   end
 
   @impl true
@@ -197,6 +209,27 @@ defmodule Open890Web.Live.RadioLive do
 
         {:noreply, socket}
 
+      msg |> String.starts_with?("BSM0") ->
+        [bs_low, bs_high] = msg |> Extract.band_edges()
+
+        [low_int, high_int] =
+          [bs_low, bs_high]
+          |> Enum.map(&Kernel.div(&1, 1000))
+
+        span =
+          (high_int - low_int)
+          |> to_string()
+          |> String.trim_leading("0")
+
+        {:noreply,
+         socket
+         |> assign(:band_scope_edges, {bs_low, bs_high})
+         |> assign(:band_scope_span, span)}
+
+      msg |> String.starts_with?("BS3") ->
+        band_scope_mode = msg |> Extract.scope_mode()
+
+        {:noreply, socket |> assign(:band_scope_mode, band_scope_mode)}
       true ->
         Logger.debug("RadioLive: unknown message: #{inspect(msg)}")
         {:noreply, socket}
