@@ -19,6 +19,17 @@ defmodule Open890Web.RadioViewHelpers do
     content_tag(:button, name, final_opts)
   end
 
+  def vfo_switch_button(vfo, opts \\ []) do
+    "A/B" |> cmd_button(vfo_switch_command(vfo), opts)
+  end
+
+  defp vfo_switch_command(:a), do: "FR1"
+  defp vfo_switch_command(:b), do: "FR0"
+
+  def vfo_equalize_button(opts \\ []) do
+    "A=B" |> cmd_button("VV", opts)
+  end
+
   def format_band_scope_mode(mode) do
     mode
     |> case do

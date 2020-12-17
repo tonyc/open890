@@ -91,12 +91,8 @@
   <div class="row">
     <div class="controlButtons">
       <button type="button" class="ui huge circular button radio-control multi-ch" phx-hook="MultiCH" id="multi-ch">Multi/CH</button>
-      <%= if @active_receiver == :b do %>
-        <%= cmd_button "A/B", "FR0", class: "huge" %>
-      <% else  %>
-        <%= cmd_button "A/B", "FR1", class: "huge" %>
-      <% end %>
-      <%= cmd_button "A=B", "VV", class: "huge" %>
+      <%= vfo_switch_button(@active_receiver, class: "huge") %>
+      <%= vfo_equalize_button(class: "huge") %>
     </div>
   </div>
 
