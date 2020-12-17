@@ -4,6 +4,7 @@ defmodule Open890Web.Live.BandscopeLive do
 
   alias Phoenix.Socket.Broadcast
   alias Open890.Extract
+  alias Open890.TCPClient, as: Radio
 
   @impl true
   def mount(_params, session, socket) do
@@ -12,6 +13,9 @@ defmodule Open890Web.Live.BandscopeLive do
     if connected?(socket) do
       Phoenix.PubSub.subscribe(Open890.PubSub, "radio:state")
       Phoenix.PubSub.subscribe(Open890.PubSub, "radio:band_scope")
+
+      Radio.get_band_scope_limits()
+      Radio.get_band_scope_mode()
     end
 
     socket =
@@ -19,8 +23,7 @@ defmodule Open890Web.Live.BandscopeLive do
       |> assign(:band_scope_data, [])
       |> assign(:theme, session["theme"])
       |> assign(:band_scope_mode, nil)
-      |> assign(:band_scope_low, nil)
-      |> assign(:band_scope_high, nil)
+      |> assign(:band_scope_edges, nil)
       |> assign(:band_scope_span, nil)
       |> assign(:active_frequency, session["active_frequency"])
       |> assign(:active_mode, session["active_mode"])
@@ -58,8 +61,7 @@ defmodule Open890Web.Live.BandscopeLive do
 
         {:noreply,
          socket
-         |> assign(:band_scope_low, bs_low)
-         |> assign(:band_scope_high, bs_high)
+         |> assign(:band_scope_edges, {bs_low, bs_high})
          |> assign(:band_scope_span, span)}
 
       msg |> String.starts_with?("BS3") ->

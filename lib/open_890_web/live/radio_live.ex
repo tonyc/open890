@@ -1,12 +1,15 @@
 defmodule Open890Web.Live.RadioLive do
-  use Open890Web, :live_view
   require Logger
+
+  use Open890Web, :live_view
+  use Open890Web.Live.RadioLiveEventHandling
+
   alias Phoenix.Socket.Broadcast
   alias Open890.TCPClient, as: Radio
   alias Open890.Extract
 
   alias Open890Web.RadioViewHelpers
-  alias Open890Web.Live.{BandscopeLive, ButtonsComponent}
+  alias Open890Web.Live.{BandscopeLive}
 
   @init_socket [
     {:active_frequency, ""},
@@ -37,7 +40,7 @@ defmodule Open890Web.Live.RadioLive do
     if connected?(socket) do
       Phoenix.PubSub.subscribe(Open890.PubSub, "radio:state")
       Phoenix.PubSub.subscribe(Open890.PubSub, "radio:audio_scope")
-      Phoenix.PubSub.subscribe(Open890.PubSub, "radio:band_scope")
+      # Phoenix.PubSub.subscribe(Open890.PubSub, "radio:band_scope")
     end
 
     get_initial_radio_state()
@@ -49,15 +52,12 @@ defmodule Open890Web.Live.RadioLive do
 
   defp get_initial_radio_state do
     Radio.get_active_receiver()
-    Radio.get_band_scope_limits()
-    Radio.get_band_scope_mode()
     Radio.get_vfo_a_freq()
     Radio.get_vfo_b_freq()
     Radio.get_s_meter()
     Radio.get_modes()
     Radio.get_filter_modes()
     Radio.get_filter_state()
-    # Radio.get_filter_settings()
   end
 
   defp init_socket(socket) do
@@ -65,44 +65,6 @@ defmodule Open890Web.Live.RadioLive do
     |> Enum.reduce(socket, fn {key, val}, socket ->
       socket |> assign(key, val)
     end)
-  end
-
-  @impl true
-  def handle_event("mic_up", _params, socket) do
-    Radio.ch_up()
-    {:noreply, socket}
-  end
-
-  @impl true
-  def handle_event("mic_dn", _params, socket) do
-    Radio.ch_down()
-    {:noreply, socket}
-  end
-
-  @impl true
-  def handle_event("multi_ch", %{"is_up" => true} = params, socket) do
-    Logger.debug("multi_ch: params: #{inspect(params)}")
-    Radio.freq_change(:up)
-
-    {:noreply, socket}
-  end
-
-  @impl true
-  def handle_event("multi_ch", %{"is_up" => false} = params, socket) do
-    Logger.debug("multi_ch: params: #{inspect(params)})")
-    Radio.freq_change(:down)
-
-    {:noreply, socket}
-  end
-
-  @impl true
-  def handle_event("cmd", %{"cmd" => cmd} = _params, socket) do
-    cmd |> Radio.cmd()
-    {:noreply, socket}
-  end
-
-  def handle_event("set_theme", %{"theme" => theme_name} = _params, socket) do
-    {:noreply, socket |> assign(:theme, theme_name)}
   end
 
   @impl true
@@ -172,14 +134,14 @@ defmodule Open890Web.Live.RadioLive do
 
       # high/shift
       msg |> String.starts_with?("SH0") ->
-        passband_id = msg |> Extract.passband_id()
-
         %{
           active_mode: current_mode,
           ssb_filter_mode: filter_mode
         } = socket.assigns
 
-        filter_hi_shift = passband_id |> Extract.filter_hi_shift(filter_mode, current_mode)
+        filter_hi_shift = msg
+        |> Extract.passband_id()
+        |> Extract.filter_hi_shift(filter_mode, current_mode)
 
         socket =
           socket
@@ -190,14 +152,14 @@ defmodule Open890Web.Live.RadioLive do
 
       # lo/width
       msg |> String.starts_with?("SL0") ->
-        passband_id = msg |> Extract.passband_id()
-
         %{
           active_mode: current_mode,
           ssb_filter_mode: filter_mode
         } = socket.assigns
 
-        filter_lo_width = passband_id |> Extract.filter_lo_width(filter_mode, current_mode)
+        filter_lo_width = msg
+        |> Extract.passband_id()
+        |> Extract.filter_lo_width(filter_mode, current_mode)
 
         socket =
           socket
@@ -241,6 +203,11 @@ defmodule Open890Web.Live.RadioLive do
     end
   end
 
+  def handle_info(%Broadcast{}, socket) do
+    {:noreply, socket}
+  end
+
+
   defp vfo_a_updated(socket) do
     socket
     |> update_filter_hi_edge()
@@ -264,14 +231,9 @@ defmodule Open890Web.Live.RadioLive do
     active_frequency = socket |> get_active_receiver_frequency()
 
     case active_mode do
-      :lsb ->
+      mode when active_mode in [:lsb, :usb, :cw, :cw_r] ->
         socket
-        |> assign(:filter_high_freq, active_frequency - filter_hi_shift)
-
-      :usb ->
-        socket
-        |> assign(:filter_high_freq, active_frequency + filter_hi_shift)
-
+        |> assign(:filter_high_freq, offset_frequency(mode, active_frequency, filter_hi_shift))
       _ ->
         socket
     end
@@ -288,21 +250,12 @@ defmodule Open890Web.Live.RadioLive do
     active_frequency = socket |> get_active_receiver_frequency()
 
     case active_mode do
-      :lsb ->
+      mode when active_mode in [:lsb, :usb, :cw, :cw_r] ->
         socket
-        |> assign(:filter_low_freq, active_frequency - filter_lo_width)
-
-      :usb ->
-        socket
-        |> assign(:filter_low_freq, active_frequency + filter_lo_width)
-
+        |> assign(:filter_low_freq, offset_frequency_reverse(mode, active_frequency, filter_lo_width))
       _ ->
         socket
     end
-  end
-
-  def handle_info(%Broadcast{}, socket) do
-    {:noreply, socket}
   end
 
   defp get_active_receiver_frequency(socket) do
@@ -312,4 +265,5 @@ defmodule Open890Web.Live.RadioLive do
       :b -> socket.assigns.vfo_b_frequency
     end
   end
+
 end

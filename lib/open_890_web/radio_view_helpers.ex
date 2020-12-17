@@ -1,4 +1,7 @@
 defmodule Open890Web.RadioViewHelpers do
+  require Logger
+
+  import Phoenix.HTML
   import Phoenix.HTML.Tag
 
   def selected_theme?(theme, name) do
@@ -25,7 +28,7 @@ defmodule Open890Web.RadioViewHelpers do
     end
   end
 
-  def project_to_bandscope_limits(frequency, low, high)
+  def project_to_bandscope_limits(frequency, {low, high})
       when is_integer(frequency) and is_integer(low) and is_integer(high) do
     delta = high - low
     freq_delta = frequency - low
@@ -33,7 +36,7 @@ defmodule Open890Web.RadioViewHelpers do
     percentage * 640
   end
 
-  def project_to_bandscope_limits(_, _, _) do
+  def project_to_bandscope_limits(_, _edges) do
     0
   end
 
@@ -84,6 +87,71 @@ defmodule Open890Web.RadioViewHelpers do
     |> case do
       str -> "#{str} 0,#{max_value}"
     end
+  end
+
+  def format_band_scope_low({low, _high}) do
+    low |> format_raw_frequency()
+  end
+
+  def format_band_scope_high({_low, high}) do
+    high |> format_raw_frequency()
+  end
+
+  def center_carrier_line do
+    ~e{<line id="active_receiver_line" class="primaryCarrier" x1="320" y1="0" x2="320" y2="150" />}
+  end
+
+  def carrier_line(active_frequency, band_scope_edges) do
+    loc = project_to_bandscope_limits(active_frequency, band_scope_edges)
+
+    ~e{<line id="active_receiver_line" class="primaryCarrier" x1="<%= loc %>" y1="0" x2="<%= loc %>" y2="150" />}
+  end
+
+  def passband_polygon(mode, active_frequency, filter_lo_width, filter_hi_shift, scope_edges) when mode in [:lsb, :usb] do
+    filter_low = mode
+    |> offset_frequency(active_frequency, filter_lo_width)
+    |> project_to_bandscope_limits(scope_edges)
+
+    filter_high = mode
+    |> offset_frequency(active_frequency, filter_hi_shift)
+    |> project_to_bandscope_limits(scope_edges)
+
+    ~e{<polygon id="passband" points="<%= filter_low %>,0 <%= filter_high %>,0 <%= filter_high %>,150 <%= filter_low %>,150" />}
+  end
+
+  def passband_polygon(mode, _active_frequency, _filter_lo_width, _filter_hi_shift, _scope_edges) do
+    Logger.debug("passband_polygon: unknown mode: #{inspect(mode)}")
+    ""
+  end
+
+  @doc """
+  Offsets +freq+ by +amount+ in the direction of the +mode+'s sideband.
+  For USB and CW, this means higher in frequency. For LSB/CW-R, lower in frequency.
+  """
+  def offset_frequency(mode, freq, amount) when mode in [:usb, :cw] do
+    freq + amount
+  end
+
+  def offset_frequency(mode, freq, amount) when mode in [:lsb, :cw_r] do
+    freq - amount
+  end
+
+  def offset_frequency(mode, freq, _amount) do
+    Logger.debug("offset_frequency: Unknown mode: #{inspect(mode)}")
+
+    freq
+  end
+
+  @doc """
+  Offsets +freq+ by +amount+ in the opposite direction of +mode+'s sideband.
+  The opposite of offset_frequency/3
+  """
+  def offset_frequency_reverse(mode, freq, amount) when mode in [:usb, :cw] do
+    freq - amount
+  end
+
+  def offset_frequency_reverse(mode, freq, amount) when mode in [:lsb, :cw_r] do
+    freq + amount
   end
 
   def debug_assigns(assigns, opts \\ []) do

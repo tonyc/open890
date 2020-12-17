@@ -1,10 +1,10 @@
 <div id="bandScopeLimits" class="four column row">
-  <%= if @band_scope_low != "" do %>
+  <%= if @band_scope_edges do %>
     <div class="left floated column">
-      <span class="scopeLimit" id="bandScopeLow"><%= @band_scope_low |> format_raw_frequency() %></span>
+      <span class="scopeLimit" id="bandScopeLow"><%= @band_scope_edges |> format_band_scope_low() %></span>
     </div>
     <div class="right floated right aligned column">
-      <span class="scopeLimit" id="bandScopeHigh"><%= @band_scope_high |> format_raw_frequency() %></span>
+      <span class="scopeLimit" id="bandScopeHigh"><%= @band_scope_edges |> format_band_scope_high() %></span>
     </div>
   <% end %>
 </div>
@@ -22,30 +22,11 @@
       <polygon id="bandSpectrum" class="spectrum" points="<%= scope_data_to_svg(@band_scope_data, 150) %>" />
 
       <%= if @band_scope_mode == :center do %>
-        <line id="active_receiver_line" class="primaryCarrier" x1="320" y1="0" x2="320" y2="150" />
+        <%= center_carrier_line() %>
       <% else %>
-        <%= if @band_scope_high && @band_scope_low && @filter_hi_shift && @filter_lo_width do %>
-          <% loc = project_to_bandscope_limits(@active_frequency, @band_scope_low, @band_scope_high) %>
-          <line id="active_receiver_line" class="primaryCarrier" x1="<%= loc %>" y1="0" x2="<%= loc %>" y2="150" />
-
-
-          <%= case @active_mode do %>
-          <% :usb -> %>
-            <% filter_low = project_to_bandscope_limits(@active_frequency + @filter_lo_width, @band_scope_low, @band_scope_high) %>
-            <% filter_high = project_to_bandscope_limits(@active_frequency + @filter_hi_shift, @band_scope_low, @band_scope_high) %>
-            <polygon
-              id="passband"
-              points="<%= filter_low %>,0 <%= filter_high %>,0 <%= filter_high %>,150 <%= filter_low %>,150" />
-          <% :lsb -> %>
-            <% filter_low = project_to_bandscope_limits(@active_frequency - @filter_lo_width, @band_scope_low, @band_scope_high) %>
-            <% filter_high = project_to_bandscope_limits(@active_frequency - @filter_hi_shift, @band_scope_low, @band_scope_high) %>
-            <polygon
-              id="passband"
-              points="<%= filter_low %>,0 <%= filter_high %>,0 <%= filter_high %>,150 <%= filter_low %>,150" />
-          <% mode -> %>
-            <!-- unknown mode: <%= mode %> -->
-          <% end %>
-
+        <%= if @band_scope_edges && @filter_hi_shift && @filter_lo_width do %>
+          <%= carrier_line(@active_frequency, @band_scope_edges) %>
+          <%= passband_polygon(@active_mode, @active_frequency, @filter_lo_width, @filter_high_shift, @band_scope_edges) %>
         <% end %>
       <% end %>
     </svg>
@@ -72,4 +53,8 @@
       </div>
     <% end %>
   </div>
+</div>
+
+<div class="bandScopeDebug debug dumpVar row">
+<%= debug_assigns(assigns, except: [:band_scope_data]) %>
 </div>
