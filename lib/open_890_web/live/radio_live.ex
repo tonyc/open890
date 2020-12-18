@@ -41,9 +41,6 @@ defmodule Open890Web.Live.RadioLive do
   def mount(params, _session, socket) do
     Logger.info("LiveView mount()")
 
-    params
-    |> IO.inspect(label: "params", pretty: true, limit: :infinity)
-
     if connected?(socket) do
       Phoenix.PubSub.subscribe(Open890.PubSub, "radio:state")
       Phoenix.PubSub.subscribe(Open890.PubSub, "radio:audio_scope")

@@ -364,6 +364,14 @@ nav {
   font-size: 16pt;
 }
 
+.mono {
+  font-family: monospace;
+  // background-color: #dedede;
+  // padding: 0.25rem;
+  // border-radius: $border-radius-small;
+  // white-space: pre;
+}
+
 // #modeKeys {
 //   // border: 1px dotted red;
 //   width: 120px;
@@ -376,14 +384,3 @@ nav {
 //     padding: 0.5rem 0;
 //   }
 // }
-
-.assigns {
-  border: 2px solid grey;
-  padding: 0.5rem;
-  margin: 0;
-
-  .vars {
-    font-family: monospace;
-    white-space: pre;
-  }
-}

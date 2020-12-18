@@ -1,4 +1,21 @@
-<div id="radio" class="ui grid">
+<%= if @debug do %>
+  <div id="debugger" class="ui wide sidebar vertical menu left visible">
+    <h3 class="header item">Debug Vars</h3>
+
+    <table class="ui small very basic collapsing table item">
+      <tbody>
+      <%= for {k, v} <- assigns |> Map.drop([:__changed__, :socket, :live_module, :live_action, :band_scope_data, :audio_scope_data]) do %>
+        <tr>
+          <td class="right aligned"><span class="ui basic label"><%= k %></span></td>
+          <td><span class="mono"><%= inspect(v) %></span></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>
+
+<div id="radio" class="ui grid container pusher">
   <div class="row">
     <span id="" class="">
       <span>
@@ -155,17 +172,4 @@
       <% end %>
     </div>
   </div>
-
-<%= if @debug do %>
-  <div class="row">
-    <div class="assigns">
-      <h2>Assigns</h2>
-      <em>Ignoring :audio_scope_data, :band_scope_data</em>
-      <div class="vars">
-<%= debug_assigns(assigns, except: [:audio_scope_data, :band_scope_data]) %>
-      </div>
-    </div>
-  </div>
-<% end %>
-
 </div>
