@@ -377,6 +377,12 @@ defmodule Open890.Extract do
     end
   end
 
+  def display_screen_id(str) when is_binary(str) do
+    str
+    |> String.trim_leading("DS1")
+    |> String.to_integer()
+  end
+
   defp calculate_cw_shift(passband_id)
        when is_integer(passband_id) and passband_id >= 0 and passband_id <= 160 do
     10 * passband_id - 800

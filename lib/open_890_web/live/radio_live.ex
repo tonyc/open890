@@ -21,6 +21,7 @@ defmodule Open890Web.Live.RadioLive do
     {:band_scope_edges, nil},
     {:band_scope_mode, nil},
     {:band_scope_span, nil},
+    {:display_screen_id, 0},
     {:filter_hi_shift, nil},
     {:filter_high_freq, nil},
     {:filter_lo_width, nil},
@@ -70,6 +71,7 @@ defmodule Open890Web.Live.RadioLive do
     Radio.get_filter_state()
     Radio.get_band_scope_limits()
     Radio.get_band_scope_mode()
+    Radio.get_display_screen()
   end
 
   defp init_socket(socket) do
@@ -96,6 +98,12 @@ defmodule Open890Web.Live.RadioLive do
     %{msg: msg} = payload
 
     cond do
+      msg |> String.starts_with?("DS1") ->
+        display_screen_id = Extract.display_screen_id(msg)
+
+        socket = socket |> assign(:display_screen_id, display_screen_id)
+
+        {:noreply, socket}
       msg |> String.starts_with?("OM0") ->
         mode = msg |> Extract.operating_mode()
 

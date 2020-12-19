@@ -4,12 +4,16 @@ defmodule Open890Web.RadioViewHelpers do
   import Phoenix.HTML
   import Phoenix.HTML.Tag
 
+  alias Open890.Menu
+
   def selected_theme?(theme, name) do
     if theme == name, do: "selected"
   end
 
   def cmd_button(name, cmd, opts \\ []) when is_binary(name) and is_binary(cmd) do
     class_opts = opts |> Keyword.get(:class, "")
+
+    # icon_opts = opts |> Keyword.get(:icon)
 
     final_opts = opts
     |> Keyword.delete(:class)
@@ -21,6 +25,10 @@ defmodule Open890Web.RadioViewHelpers do
 
   def vfo_switch_button(vfo, opts \\ []) do
     "A / B" |> cmd_button(vfo_switch_command(vfo), opts)
+  end
+
+  def q_min_button(opts \\ []) do
+    "Q-M.IN" |> cmd_button("QI", opts)
   end
 
   defp vfo_switch_command(:a), do: "FR1"
@@ -83,6 +91,10 @@ defmodule Open890Web.RadioViewHelpers do
     |> to_string()
     |> String.replace("_", "-")
     |> String.upcase()
+  end
+
+  def esc_button(opts \\ []) do
+    cmd_button("ESC", "DS3", opts)
   end
 
   def scope_data_to_svg(band_data, max_value) when is_list(band_data) do
@@ -170,5 +182,27 @@ defmodule Open890Web.RadioViewHelpers do
     |> Map.drop([:__changed__, :socket])
     |> Map.drop(opts |> Keyword.get(:except, []))
     |> inspect(pretty: true, limit: :infinity, charlists: :as_lists)
+  end
+
+  def render_menu_items(id) do
+    Menu.get(id)
+    |> case do
+      {:ok, menu} ->
+        ~e{
+          <%= for item <- menu.items do %>
+          <a class="item" phx-click="open_menu_by_id", phx-value-id="<%= item.menu_id%>">
+            <%= item.title %>
+            &mdash;
+            <em><%= item.info %></em>
+            <div class="ui label"><%= item.num %></div>
+          </a>
+          <% end %>
+        }
+      _ ->
+        ~e{
+          <a class="item">Unknown menu</a>
+        }
+    end
+
   end
 end

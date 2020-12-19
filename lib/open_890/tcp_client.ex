@@ -48,11 +48,11 @@ defmodule Open890.TCPClient do
   def cw_decode_off, do: "CD00" |> cmd()
 
   def freq_change(:up) do
-    ("FC0" <> freq_change_step()) |> cmd()
+    "CH0" |> cmd()
   end
 
   def freq_change(:down) do
-    ("FC1" <> freq_change_step()) |> cmd()
+    "CH1" |> cmd()
   end
 
   def vfo_a_b_swap, do: "EC" |> cmd()
@@ -62,6 +62,7 @@ defmodule Open890.TCPClient do
   def get_band_scope_limits, do: "BSM0" |> cmd()
   def get_band_scope_mode, do: "BS3" |> cmd()
   def get_s_meter, do: "SM" |> cmd()
+  def get_display_screen, do: "DS1" |> cmd()
 
   def get_modes do
     get_active_mode()
@@ -87,6 +88,10 @@ defmodule Open890.TCPClient do
 
   def get_ssb_data_filter_mode do
     "EX00612" |> cmd()
+  end
+
+  def esc do
+    "DS3" |> cmd()
   end
 
   # TODO: Make this configurable
