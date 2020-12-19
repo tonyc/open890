@@ -123,8 +123,8 @@
   </div>
 
   <div class="row two column">
-    <div class="column"><span><%= format_mode(@active_mode) %></span></div>
-    <div class="column"><span><%= format_mode(@inactive_mode) %></span></div>
+    <div class="column"><span class="ui basic label"><%= format_mode(@active_mode) %></span></div>
+    <div class="column"><span class="ui basic label"><%= format_mode(@inactive_mode) %></span></div>
   </div>
 
   <div class="row">
@@ -134,8 +134,10 @@
         Multi/CH
       </button>
 
-      <%= vfo_switch_button(@active_receiver) %>
-      <%= vfo_equalize_button() %>
+      <div class="ui compact buttons">
+        <%= vfo_switch_button(@active_receiver, class: "attached") %>
+        <%= vfo_equalize_button(class: "attached") %>
+      </div>
     </div>
   </div>
 
@@ -231,13 +233,11 @@
           <span>Off</span>
         </button>
       </div>
-
     </div>
-
   </div>
 
   <div class="row">
-    <div id="horizontalSoftKeys" class="column">
+    <div id="horizontalSoftKeys" class="fifteen wide column">
       <div class="ten ui buttons">
         <button class="ui attached button">S.Mode</button>
         <button class="ui attached button">Span</button>
@@ -247,16 +247,15 @@
         <button class="ui attached button">Pause</button>
         <button class="ui attached button">Expand</button>
         <button class="ui attached button">Speed</button>
-        <button class="ui attached button">Ave.</button>
-        <button class="ui attached button">Max. Hld</button>
+        <button class="ui attached button">Avg.</button>
+        <button class="ui attached button">Max Hold</button>
       </div>
     </div>
   </div>
 
   <div class="row">
-    <div id="functionKeys" class="column">
-        <div class="eight ui buttons">
-          <%= esc_button class: "attached secondary" %>
+    <div id="functionKeys" class="fifteen wide column">
+        <div class="seven ui buttons">
           <button class="ui attached button">F1</button>
           <button class="ui attached button">F2</button>
           <button class="ui attached button">F3</button>
