@@ -313,8 +313,6 @@ nav {
 }
 
 #scopeControls {
-  float: left;
-  margin-right: 50px;
 }
 
 #bandScopeLimits {
@@ -326,42 +324,9 @@ nav {
   }
 }
 
-// #bandScopeDetails {
-//   align-content: start;
-//   justify-content: flex-start;
-
-//   .scopeDetailItem {
-//     background-color: black;
-//     color: white;
-//     border-radius: $border-radius-small;
-//     padding: 0.25rem 0.5rem;
-//     margin-right: 1rem;
-//   }
-// }
-
-
-// #bandScopeWrapper {
-
-//   #bandScopeLow {
-//     padding-left: 1rem;
-//     // display: inline;
-//     // position: relative;
-//   }
-
-//   #bandScopeHigh {
-//     padding-right: 1rem;
-//     // display: inline;
-//     // position: relative;
-//     float: right;
-//   }
-// }
-
 #bandSelectors div button {
   width: 11rem;
   font-size: 16pt;
-}
-
-#menuModal {
 }
 
 .ui.modal {
@@ -375,21 +340,4 @@ nav {
 
 .mono {
   font-family: monospace;
-  // background-color: #dedede;
-  // padding: 0.25rem;
-  // border-radius: $border-radius-small;
-  // white-space: pre;
 }
-
-// #modeKeys {
-//   // border: 1px dotted red;
-//   width: 120px;
-//   // flex-direction: column;
-
-//   button {
-//     text-align: center;
-//     width: 100%;
-//     margin-bottom: 0.5rem;
-//     padding: 0.5rem 0;
-//   }
-// }

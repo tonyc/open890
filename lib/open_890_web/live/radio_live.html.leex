@@ -1,4 +1,3 @@
-<%#-- debug --%>
 <%= if @debug do %>
   <div id="debugger" class="ui wide sidebar vertical menu left visible">
     <h3 class="header item">Debug Vars</h3>
@@ -16,42 +15,39 @@
   </div>
 <% end %>
 
-<%#-- menu modal --%>
-<div id="radio" class="ui grid ">
-<%= if @display_screen_id != 0 do %>
-  <div id="menuModal" class="ui active modal">
-    <div class="header">
-      <%# <div class="ui icon tiny button">
-        <i class="angle left icon"></i>
-        Back
-      </div> %>
-      <%= esc_button(class: "tiny") %>
-      <button class="ui tiny button" phx-click="close_menu">
-        Close Menu
-      </button>
+<div class="ui attached menu">
+  <a class="item" phx-click="open_top_menu">
+    Menu
+  </a>
+  <div class="right menu">
+    <div class="ui simple dropdown icon item">
+      Theme
+      <i class="dropdown gear icon"></i>
+      <div class="menu">
+        <a class="item" phx-click="set_theme" phx-value-theme="elecraft">Elecraft</a>
+        <a class="item" phx-click="set_theme" phx-value-theme="phosphor-green">Phosphor Green</a>
+        <a class="item" phx-click="set_theme" phx-value-theme="phosphor-red">Phosphor Red</a>
+      </div>
+
     </div>
-    <div class="content">
-      <h2 class="header">Menu #<%= @display_screen_id %></h3>
-      <div class="ui vertical stackable attached fluid menu">
-        <%= render_menu_items(@display_screen_id) %>
+  </div>
+</div>
+
+
+<div id="radio" class="ui grid">
+  <%= if @display_screen_id != 0 do %>
+    <div id="menuModal" class="ui active modal">
+      <div class="header">
+        <a href="#"><i class="close window icon" phx-click="close_menu"></i></a>
+      </div>
+      <div class="content">
+        <h2 class="header">Menu #<%= @display_screen_id %></h3>
+        <div class="ui vertical stackable attached fluid menu">
+          <%= render_menu_items(@display_screen_id) %>
+        </div>
       </div>
     </div>
-  </div>
-<% end %>
-
-
-
-
-  <div class="row">
-    <span id="" class="">
-      <span>
-        Theme:
-        <a href="#" phx-click="set_theme" phx-value-theme="elecraft">Elecraft</a> |
-        <a href="#" phx-click="set_theme" phx-value-theme="phosphor-green">Phosphor Green</a> |
-        <a href="#" phx-click="set_theme" phx-value-theme="phosphor-red">Phosphor Red</a>
-      </span>
-    </span>
-  </div>
+  <% end %>
 
   <div class="row">
     <div id="sMeterWrapper" class="column">
@@ -140,10 +136,6 @@
 
       <%= vfo_switch_button(@active_receiver) %>
       <%= vfo_equalize_button() %>
-
-      <button class="ui button" phx-click="open_top_menu">
-        Menu
-      </button>
     </div>
   </div>
 
@@ -179,88 +171,84 @@
       <% end %>
     </div>
   </div>
+
   <div class="row">
-    <div id="bandScopeWrapper" class="ui">
-      <div class="row">
-        <div class="ui fourteen wide column black">
-          <svg id="bandScope" class="scope themed <%= @theme %>" viewbox="0 0 640 140">
-            <defs>
-              <filter id="blur" filterUnits="userSpaceOnUse" x="0" y="0" width="640" height="150">
-              <feGaussianBlur in="sourceAlpha" stdDeviation="1" />
-              </filter>
-            </defs>
+    <div class="fifteen wide column">
+      <svg id="bandScope" class="scope themed <%= @theme %>" viewbox="0 0 640 140">
+        <defs>
+          <filter id="blur" filterUnits="userSpaceOnUse" x="0" y="0" width="640" height="150">
+          <feGaussianBlur in="sourceAlpha" stdDeviation="1" />
+          </filter>
+        </defs>
 
-            <polygon id="spectrumBlur" filter="url(#blur)" points="<%= scope_data_to_svg(@band_scope_data, 150) %>" />
-            <polygon id="bandSpectrum" class="spectrum" points="<%= scope_data_to_svg(@band_scope_data, 150) %>" />
+        <polygon id="spectrumBlur" filter="url(#blur)" points="<%= scope_data_to_svg(@band_scope_data, 150) %>" />
+        <polygon id="bandSpectrum" class="spectrum" points="<%= scope_data_to_svg(@band_scope_data, 150) %>" />
 
-            <%= if @band_scope_mode == :center do %>
-              <%= center_carrier_line() %>
-            <% else %>
-              <%= if @band_scope_edges && @filter_hi_shift && @filter_lo_width do %>
-                <%= carrier_line(@active_frequency, @band_scope_edges) %>
-                <%= passband_polygon(@active_mode, @active_frequency, @filter_lo_width, @filter_hi_shift, @band_scope_edges) %>
-              <% end %>
-            <% end %>
-          </svg>
-        </div>
-        <div class="ui two wide column black">
-          <div class="ui tiny secondary compact vertical buttons">
-            <button class="ui button">
-              <span>ANT 1</span>
-            </button>
+        <%= if @band_scope_mode == :center do %>
+          <%= center_carrier_line() %>
+        <% else %>
+          <%= if @band_scope_edges && @filter_hi_shift && @filter_lo_width do %>
+            <%= carrier_line(@active_frequency, @band_scope_edges) %>
+            <%= passband_polygon(@active_mode, @active_frequency, @filter_lo_width, @filter_hi_shift, @band_scope_edges) %>
+          <% end %>
+        <% end %>
+      </svg>
+    </div>
 
-            <button class="ui button">
-              <span>PRE OFF</span>
-            </button>
+    <div class="column">
+      <div class="ui small vertical buttons">
+        <button class="ui attached button">
+          <span>ANT 1</span>
+        </button>
 
-            <button class="ui button">
-              <span>ATT</span>
-              <span>6dB</span>
-            </button>
+        <button class="ui attached button">
+          <span>PRE OFF</span>
+        </button>
 
-            <button class="ui button">
-              <span>RX EQ</span>
-              <span>OFF</span>
-            </button>
+        <button class="ui attached button">
+          <span>ATT</span>
+          <span>6dB</span>
+        </button>
 
-            <button class="ui button">&mdash;</button>
-            <button class="ui button">
-              <span>MAX-Po</span>
-              <span>Off</span>
-            </button>
+        <button class="ui attached button">
+          <span>RX EQ</span>
+          <span>OFF</span>
+        </button>
 
-            <button class="ui button">
-              <span>METER</span>
-              <span>SWR</span>
-            </button>
+        <button class="ui attached button">&mdash;</button>
+        <button class="ui attached button">
+          <span>MAX-Po</span>
+          <span>Off</span>
+        </button>
 
-            <button class="ui button">
-              <span>APF</span>
-              <span>Off</span>
-            </button>
+        <button class="ui attached button">
+          <span>METER</span>
+          <span>SWR</span>
+        </button>
 
-          </div>
-        </div>
-
-
+        <button class="ui attached button">
+          <span>APF</span>
+          <span>Off</span>
+        </button>
       </div>
-    </div> <!-- bandScopeWrapper -->
+
+    </div>
 
   </div>
 
   <div class="row">
     <div id="horizontalSoftKeys" class="column">
       <div class="ten ui buttons">
-        <button class="ui button">S.Mode</button>
-        <button class="ui button">Span</button>
-        <button class="ui button">Shift</button>
-        <button class="ui button">Ref. Lev</button>
-        <button class="ui button">ATT</button>
-        <button class="ui button">Pause</button>
-        <button class="ui button">Expand</button>
-        <button class="ui button">Speed</button>
-        <button class="ui button">Ave.</button>
-        <button class="ui button">Max. Hld</button>
+        <button class="ui attached button">S.Mode</button>
+        <button class="ui attached button">Span</button>
+        <button class="ui attached button">Shift</button>
+        <button class="ui attached button">Ref. Lev</button>
+        <button class="ui attached button">ATT</button>
+        <button class="ui attached button">Pause</button>
+        <button class="ui attached button">Expand</button>
+        <button class="ui attached button">Speed</button>
+        <button class="ui attached button">Ave.</button>
+        <button class="ui attached button">Max. Hld</button>
       </div>
     </div>
   </div>
@@ -268,14 +256,14 @@
   <div class="row">
     <div id="functionKeys" class="column">
         <div class="eight ui buttons">
-          <%= esc_button class: "secondary" %>
-          <button class="ui button">F1</button>
-          <button class="ui button">F2</button>
-          <button class="ui button">F3</button>
-          <button class="ui button">F4</button>
-          <button class="ui button">F5</button>
-          <button class="ui button">F6</button>
-          <button class="ui button">F7</button>
+          <%= esc_button class: "attached secondary" %>
+          <button class="ui attached button">F1</button>
+          <button class="ui attached button">F2</button>
+          <button class="ui attached button">F3</button>
+          <button class="ui attached button">F4</button>
+          <button class="ui attached button">F5</button>
+          <button class="ui attached button">F6</button>
+          <button class="ui attached button">F7</button>
         </div>
     </div>
   </div>
