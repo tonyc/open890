@@ -164,8 +164,16 @@ defmodule Open890Web.RadioViewHelpers do
 
   def carrier_line(active_frequency, band_scope_edges) do
     loc = project_to_bandscope_limits(active_frequency, band_scope_edges)
+    tri_ofs = 8
 
-    ~e{<line id="active_receiver_line" class="primaryCarrier" x1="<%= loc %>" y1="0" x2="<%= loc %>" y2="150" />}
+
+    ~e{
+      <line id="active_receiver_line" class="primaryCarrier" x1="<%= loc %>" y1="0" x2="<%= loc %>" y2="150" />
+      <g id="rxTriangleGroup">
+        <polygon class="rx triangle" points="<%= loc %>,<%= tri_ofs %> <%= loc - tri_ofs %>,0 <%= loc + tri_ofs %>,0" />
+        <text class="rx triangleText" x="<%= loc - 2 %>" y="5">R</text>
+      </g>
+    }
   end
 
   def band_scope_horizontal_grid do
