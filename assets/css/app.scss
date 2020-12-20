@@ -46,6 +46,7 @@ $kenwood-smeter-bg: rgba(40, 40, 40, 1.0);
 $kenwood-grey: rgba(90, 90, 90, 1.0);
 $kenwood-grid: rgba(64, 64, 64, 1.0);
 $kenwood-grid-width: 0.75;
+$kenwood-passband-fill: rgba(255, 255, 255, 0.25);
 // $kenwood-grey: rgba(120, 120, 120, 1.0);
 $kenwood-gradient-dark: rgba(3, 3, 86, 1.0);
 $kenwood-gradient-light: rgba(242, 242, 242, 1.0);
@@ -68,10 +69,6 @@ $border-radius-small: 3px;
   &.green { border-color: green; }
   &.orange { border-color: orange; }
   &.cyan { border-color: cyan; }
-}
-
-#passband {
-  fill: $elecraft-green-transparent;
 }
 
 nav { 
@@ -233,6 +230,10 @@ nav {
 }
 
 .scope.themed {
+  #passband {
+    fill: $kenwood-passband-fill;
+  }
+
   .spectrum {
     stroke-width: 0.75;
   }
@@ -244,6 +245,10 @@ nav {
   }
 
   &.kenwood {
+    #passband {
+      fill: $kenwood-passband-fill;
+    }
+
     .bandscopeGrid {
       stroke: $kenwood-grid;
       stroke-width: $kenwood-grid-width;
@@ -260,6 +265,10 @@ nav {
   
   &.elecraft {
     background-color: $elecraft-dark-blue;
+
+    #passband {
+      fill: $elecraft-green-transparent;
+    }
 
     .primaryCarrier {
       stroke: $elecraft-green;
