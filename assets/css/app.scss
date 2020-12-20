@@ -245,11 +245,23 @@ nav {
     stroke-dasharray: 0;
   }
 
+  .triangle.rx {
+    fill: white;
+  }
+
+  .triangleText.rx {
+    color: #666;
+    font-size: 6px;
+    font-weight: bold;
+    font-family: sans-serif;
+  }
+
+
+
   &.kenwood {
     .primaryCarrier {
       stroke: $kenwood-carrier-stroke;
     }
-
 
     .triangle.rx {
       fill: white;
