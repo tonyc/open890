@@ -168,6 +168,26 @@ defmodule Open890Web.RadioViewHelpers do
     ~e{<line id="active_receiver_line" class="primaryCarrier" x1="<%= loc %>" y1="0" x2="<%= loc %>" y2="150" />}
   end
 
+  def band_scope_horizontal_grid do
+    offset = 140 / 8
+
+    ~e{
+      <%= for i <- (1..7) do %>
+        <line class="bandscopeGrid horizontal" x1="0" y1="<%= i * offset %>" x2="640" y2="<%= i * offset %>" />
+      <% end %>
+    }
+  end
+
+  def band_scope_vertical_grid do
+    offset = 64
+
+    ~e{
+      <%= for i <- (1..9) do %>
+        <line class="bandscopeGrid vertical" x1="<%= i * offset %>" y1="0" x2="<%= i * offset %>" y2="640" />
+      <% end %>
+    }
+  end
+
   def passband_polygon(mode, active_frequency, filter_lo_width, filter_hi_shift, scope_edges) when mode in [:lsb, :usb] do
     filter_low = mode
     |> offset_frequency(active_frequency, filter_lo_width)

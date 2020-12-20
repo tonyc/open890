@@ -39,46 +39,23 @@ h1.title {
   padding-bottom: 2rem;
 }
 
-// globals, probably will change
-
-// body {
-//   margin: 0;
-//   padding: 0;
-//   padding-top: 1rem;
-//   padding-left: 1rem;
-//   padding-right: 1rem;
-//   font-family: sans-serif;
-// }
-
-// button { 
-//   cursor: pointer;
-// }
-
-// grid etc
-// .row {
-//   display: flex;
-//   justify-content: space-between;
-//   // margin-left: 0.5rem;
-//   // border: 1px dashed purple;
-//   width: 100%;
-//   margin-bottom: 1rem;
-//   clear: both;
-// }
-
 // theme variables
 $kenwood-cyan: rgba(0, 205, 238, 1.0);
 $kenwood-red: rgba(204, 0, 0, 1.0);
 $kenwood-smeter-bg: rgba(40, 40, 40, 1.0);
 $kenwood-grey: rgba(90, 90, 90, 1.0);
+$kenwood-grid: rgba(64, 64, 64, 1.0);
+$kenwood-grid-width: 0.75;
 // $kenwood-grey: rgba(120, 120, 120, 1.0);
 $kenwood-gradient-dark: rgba(3, 3, 86, 1.0);
-$kenwood-gradient-light: rgba(160, 160, 176, 1.0);
+$kenwood-gradient-light: rgba(242, 242, 242, 1.0);
 $kenwood-button-bg: rgba(42, 42, 42, 1.0);
 
 $elecraft-green: rgba(0, 252, 0, 1.0);
 $elecraft-green-transparent: rgba(0, 252, 0, 0.25);
 $elecraft-yellow: rgba(251, 251, 0, 1.0);
 $elecraft-dark-blue: rgba(0, 0, 64, 1.0);
+$elecraft-grid: rgba(128, 128, 128, 1.0);
 
 $border-radius-medium: 10px;
 $border-radius-small: 3px;
@@ -246,6 +223,7 @@ nav {
   background-color: black;
   // width: 100%;
   // height: 100%;
+
 }
 
 #bandScope #carrier {
@@ -256,7 +234,7 @@ nav {
 
 .scope.themed {
   .spectrum {
-    stroke-width: 0.75px;
+    stroke-width: 0.75;
   }
 
   .primaryCarrier {
@@ -265,6 +243,45 @@ nav {
     stroke-dasharray: 0;
   }
 
+  &.kenwood {
+    .bandscopeGrid {
+      stroke: $kenwood-grid;
+      stroke-width: $kenwood-grid-width;
+    }
+
+    .spectrum {
+      // background: linear-gradient($kenwood-gradient-light, $kenwood-gradient-dark);
+      // fill: rgba(0, 0, 0, 1.0);
+      fill: url(#kenwood);
+      stroke: rgba(192, 207, 204, 1.0);
+
+    }
+  }
+  
+  &.elecraft {
+    background-color: $elecraft-dark-blue;
+
+    .primaryCarrier {
+      stroke: $elecraft-green;
+      stroke-width: 0.5pt;
+      stroke-dasharray: 0;
+    }
+
+    .spectrum {
+      fill: none;
+      stroke: $elecraft-yellow;
+    }
+
+    .spectrumBlur {
+      display: none;
+    }
+
+    .bandscopeGrid.horizontal {
+      stroke: $elecraft-grid;
+      stroke-width: 0.75;
+      stroke-dasharray: 2 2;
+    }
+  }
   &.phosphor-red {
     .spectrum {
       fill: rgba(51, 0, 0, 1.0);
@@ -293,24 +310,7 @@ nav {
 
   }
 
-  &.elecraft {
-    background-color: $elecraft-dark-blue;
 
-    .primaryCarrier {
-      stroke: $elecraft-green;
-      stroke-width: 0.5pt;
-      stroke-dasharray: 0;
-    }
-
-    .spectrum {
-      fill: none;
-      stroke: $elecraft-yellow;
-    }
-
-    .spectrumBlur {
-      display: none;
-    }
-  }
 }
 
 #scopeControls {

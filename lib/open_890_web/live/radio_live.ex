@@ -36,7 +36,7 @@ defmodule Open890Web.Live.RadioLive do
     {:s_meter, 0},
     {:ssb_data_filter_mode, nil},
     {:ssb_filter_mode, nil},
-    {:theme, "elecraft"},
+    {:theme, "kenwood"},
     {:vfo_a_frequency, ""},
     {:vfo_b_frequency, ""},
   ]

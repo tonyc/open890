@@ -24,6 +24,7 @@
       Theme
       <i class="dropdown gear icon"></i>
       <div class="menu">
+        <a class="item" phx-click="set_theme" phx-value-theme="kenwood">Kenwood</a>
         <a class="item" phx-click="set_theme" phx-value-theme="elecraft">Elecraft</a>
         <a class="item" phx-click="set_theme" phx-value-theme="phosphor-green">Phosphor Green</a>
         <a class="item" phx-click="set_theme" phx-value-theme="phosphor-red">Phosphor Red</a>
@@ -188,9 +189,16 @@
       <svg id="bandScope" class="scope themed <%= @theme %>" viewbox="0 0 640 140">
         <defs>
           <filter id="blur" filterUnits="userSpaceOnUse" x="0" y="0" width="640" height="150">
-          <feGaussianBlur in="sourceAlpha" stdDeviation="1" />
+            <feGaussianBlur in="sourceAlpha" stdDeviation="1" />
           </filter>
+          <linearGradient id="kenwood" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="rgba(3, 3, 86, 1.0)" />
+            <stop offset="1" stop-color="rgba(242, 242, 242, 1.0)" />
+          </linearGradient>
         </defs>
+
+        <%= band_scope_vertical_grid() %>
+        <%= band_scope_horizontal_grid() %>
 
         <polygon id="spectrumBlur" filter="url(#blur)" points="<%= scope_data_to_svg(@band_scope_data, 150) %>" />
         <polygon id="bandSpectrum" class="spectrum" points="<%= scope_data_to_svg(@band_scope_data, 150) %>" />
