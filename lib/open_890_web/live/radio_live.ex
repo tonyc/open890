@@ -102,48 +102,34 @@ defmodule Open890Web.Live.RadioLive do
   def handle_info(%Broadcast{event: "radio_state_data", payload: payload}, socket) do
     %{msg: msg} = payload
 
-    cond do
+    socket = cond do
       msg |> String.starts_with?("RA") ->
         rf_att = msg |> Extract.to_integer("RA")
-        socket = socket |> assign(:rf_att, rf_att)
-
-        {:noreply, socket}
+        socket |> assign(:rf_att, rf_att)
 
       msg |> String.starts_with?("PA") ->
         rf_pre = msg |> Extract.to_integer("PA")
-        socket = socket |> assign(:rf_pre, rf_pre)
-        {:noreply, socket}
+        socket |> assign(:rf_pre, rf_pre)
 
       msg |> String.starts_with?("BS8") ->
         band_scope_att = msg |> Extract.to_integer("BS8")
-        socket = socket |> assign(:band_scope_att, band_scope_att)
-        {:noreply, socket}
+        socket |> assign(:band_scope_att, band_scope_att)
+
       msg |> String.starts_with?("DS1") ->
         display_screen_id = Extract.display_screen_id(msg)
+        socket |> assign(:display_screen_id, display_screen_id)
 
-        socket = socket |> assign(:display_screen_id, display_screen_id)
-
-        {:noreply, socket}
       msg |> String.starts_with?("OM0") ->
         mode = msg |> Extract.operating_mode()
-
-        socket = socket |> assign(:active_mode, mode)
-
-        {:noreply, socket}
+        socket |> assign(:active_mode, mode)
 
       msg |> String.starts_with?("OM1") ->
         mode = msg |> Extract.operating_mode()
-
-        socket = socket |> assign(:inactive_mode, mode)
-
-        {:noreply, socket}
+        socket |> assign(:inactive_mode, mode)
 
       msg |> String.starts_with?("SM") ->
         s_meter_value = msg |> Extract.s_meter()
-
-        socket = socket |> assign(:s_meter, s_meter_value)
-
-        {:noreply, socket}
+        socket |> assign(:s_meter, s_meter_value)
 
       msg |> String.starts_with?("FA") ->
         frequency = msg |> Extract.frequency()
@@ -159,25 +145,22 @@ defmodule Open890Web.Live.RadioLive do
             |> assign(:inactive_frequency, frequency)
           end
 
-        socket = socket |> vfo_a_updated()
-
-        {:noreply, socket}
+        socket |> vfo_a_updated()
 
       msg |> String.starts_with?("FB") ->
         frequency = msg |> Extract.frequency()
         socket = socket |> assign(:vfo_b_frequency, frequency)
 
-        socket =
-          if socket.assigns[:active_receiver] == :b do
-            socket
-            |> assign(:page_title, frequency |> RadioViewHelpers.format_raw_frequency())
-            |> assign(:active_frequency, frequency)
-          else
-            socket
-            |> assign(:inactive_frequency, frequency)
-          end
+        socket = if socket.assigns[:active_receiver] == :b do
+          socket
+          |> assign(:page_title, frequency |> RadioViewHelpers.format_raw_frequency())
+          |> assign(:active_frequency, frequency)
+        else
+          socket
+          |> assign(:inactive_frequency, frequency)
+        end
 
-        {:noreply, socket}
+        socket
 
       # high/shift
       msg |> String.starts_with?("SH0") ->
@@ -190,12 +173,9 @@ defmodule Open890Web.Live.RadioLive do
         |> Extract.passband_id()
         |> Extract.filter_hi_shift(filter_mode, current_mode)
 
-        socket =
-          socket
-          |> assign(:filter_hi_shift, filter_hi_shift)
-          |> update_filter_hi_edge()
-
-        {:noreply, socket}
+        socket
+        |> assign(:filter_hi_shift, filter_hi_shift)
+        |> update_filter_hi_edge()
 
       # lo/width
       msg |> String.starts_with?("SL0") ->
@@ -208,41 +188,35 @@ defmodule Open890Web.Live.RadioLive do
         |> Extract.passband_id()
         |> Extract.filter_lo_width(filter_mode, current_mode)
 
-        socket =
-          socket
-          |> assign(:filter_lo_width, filter_lo_width)
-          |> update_filter_lo_edge()
-
-        {:noreply, socket}
+        socket
+        |> assign(:filter_lo_width, filter_lo_width)
+        |> update_filter_lo_edge()
 
       # ssb/ssb+data filter modes
       msg |> String.starts_with?("EX00611") ->
         ssb_filter_mode = msg |> Extract.filter_mode()
-        {:noreply, socket |> assign(:ssb_filter_mode, ssb_filter_mode)}
+        socket
+        |> assign(:ssb_filter_mode, ssb_filter_mode)
 
       msg |> String.starts_with?("EX00612") ->
         ssb_data_filter_mode = msg |> Extract.filter_mode()
-        {:noreply, socket |> assign(:ssb_data_filter_mode, ssb_data_filter_mode)}
+
+        socket
+        |> assign(:ssb_data_filter_mode, ssb_data_filter_mode)
 
       msg == "FR0" ->
-        socket =
-          socket
-          |> assign(:active_receiver, :a)
-          |> assign(:active_frequency, socket.assigns.vfo_a_frequency)
-          |> assign(:inactive_receiver, :b)
-          |> assign(:inactive_frequency, socket.assigns.vfo_b_frequency)
-
-        {:noreply, socket}
+        socket
+        |> assign(:active_receiver, :a)
+        |> assign(:active_frequency, socket.assigns.vfo_a_frequency)
+        |> assign(:inactive_receiver, :b)
+        |> assign(:inactive_frequency, socket.assigns.vfo_b_frequency)
 
       msg == "FR1" ->
-        socket =
-          socket
-          |> assign(:active_receiver, :b)
-          |> assign(:active_frequency, socket.assigns.vfo_b_frequency)
-          |> assign(:inactive_receiver, :a)
-          |> assign(:inactive_frequency, socket.assigns.vfo_a_frequency)
-
-        {:noreply, socket}
+        socket
+        |> assign(:active_receiver, :b)
+        |> assign(:active_frequency, socket.assigns.vfo_b_frequency)
+        |> assign(:inactive_receiver, :a)
+        |> assign(:inactive_frequency, socket.assigns.vfo_a_frequency)
 
       msg |> String.starts_with?("BSM0") ->
         [bs_low, bs_high] = msg |> Extract.band_edges()
@@ -257,19 +231,20 @@ defmodule Open890Web.Live.RadioLive do
           |> String.trim_leading("0")
           |> String.to_integer()
 
-        {:noreply,
          socket
          |> assign(:band_scope_edges, {bs_low, bs_high})
-         |> assign(:band_scope_span, span)}
+         |> assign(:band_scope_span, span)
 
       msg |> String.starts_with?("BS3") ->
         band_scope_mode = msg |> Extract.scope_mode()
 
-        {:noreply, socket |> assign(:band_scope_mode, band_scope_mode)}
+        socket |> assign(:band_scope_mode, band_scope_mode)
       true ->
         Logger.debug("RadioLive: unknown message: #{inspect(msg)}")
-        {:noreply, socket}
+        socket
     end
+
+    {:noreply, socket}
   end
 
   def handle_info(%Broadcast{}, socket) do
