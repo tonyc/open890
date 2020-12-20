@@ -216,12 +216,14 @@
           0 => "PA1",
           1 => "PA2",
           2 => "PA0"
-        }) %>
+        }, class: "attached") %>
 
-        <button class="ui attached button">
-          <span>ATT</span>
-          <span>6dB</span>
-        </button>
+        <%= cycle_button("ATT #{format_rf_att(@rf_att)}", @rf_att, %{
+          0 => "RA1",
+          1 => "RA2",
+          2 => "RA3",
+          3 => "RA0"
+        }, class: "attached") %>
 
         <button class="ui attached button">
           <span>RX EQ</span>

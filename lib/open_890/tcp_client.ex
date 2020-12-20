@@ -65,6 +65,11 @@ defmodule Open890.TCPClient do
   def get_display_screen, do: "DS1" |> cmd()
   def get_band_scope_att, do: "BS8" |> cmd()
 
+  def get_rf_pre_att() do
+    "PA" |> cmd()
+    "RA" |> cmd()
+  end
+
   def get_modes do
     get_active_mode()
     get_inactive_mode()

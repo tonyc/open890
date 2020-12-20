@@ -75,6 +75,16 @@ defmodule Open890Web.RadioViewHelpers do
     end
   end
 
+  def format_rf_att(level) do
+    level
+    |> case do
+      0 -> "OFF"
+      1 -> "6dB"
+      2 -> "12dB"
+      3 -> "18dB"
+    end
+  end
+
   def project_to_bandscope_limits(frequency, {low, high})
       when is_integer(frequency) and is_integer(low) and is_integer(high) do
     delta = high - low
