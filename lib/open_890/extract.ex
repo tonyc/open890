@@ -405,8 +405,6 @@ defmodule Open890.Extract do
 
   def trim_all_leading(src, items) when is_binary(src) and is_list(items) do
     items
-    |> Enum.reduce(src, fn(items, acc) ->
-      acc |> String.trim_leading(items)
-    end)
+    |> Enum.reduce(src, &String.trim_leading(&2, &1))
   end
 end
