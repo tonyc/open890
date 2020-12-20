@@ -207,8 +207,8 @@
           <%= center_carrier_line() %>
         <% else %>
           <%= if @band_scope_edges && @filter_hi_shift && @filter_lo_width do %>
-            <%= carrier_line(@active_frequency, @band_scope_edges) %>
             <%= passband_polygon(@active_mode, @active_frequency, @filter_lo_width, @filter_hi_shift, @band_scope_edges) %>
+            <%= carrier_line(@active_frequency, @band_scope_edges) %>
           <% end %>
         <% end %>
       </svg>
