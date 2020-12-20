@@ -269,23 +269,24 @@
           }, class: "ui attached button") %>
         <% end %>
 
-        <%= if @band_scope_mode == :auto_scroll do %>
-          <%= cmd_button "Shift", "BSE", class: "attached" %>
-        <% end %>
-
-        <%= if @band_scope_mode == :fixed  do %>
-          <%= cmd_button "MKR.CTR", "BSE", class: "attached" %>
-        <% else %>
-          <button class="ui attached button"></button>
+        <%= case @band_scope_mode do %>
+          <%= :auto_scroll -> %>
+            <%= cmd_button "Shift", "BSE", class: "attached" %>
+          <%= :fixed -> %>
+            <%= cmd_button "MKR.CTR", "BSE", class: "attached" %>
+          <%= _ -> %>
+            <button class="ui attached button"></button>
         <% end %>
 
         <button class="ui attached button">Ref. Lev</button>
+
         <%= cycle_button("ATT", @band_scope_att, %{
           0 => "BS81",
           1 => "BS82",
           2 => "BS83",
           3 => "BS80"
-        }) %>
+        }, class: "attached") %>
+
         <button class="ui attached button">Pause</button>
         <button class="ui attached button">Expand</button>
         <button class="ui attached button">Speed</button>
