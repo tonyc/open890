@@ -159,7 +159,15 @@ defmodule Open890Web.RadioViewHelpers do
   end
 
   def center_carrier_line do
-    ~e{<line id="active_receiver_line" class="primaryCarrier" x1="320" y1="0" x2="320" y2="150" />}
+    tri_ofs = 8
+
+    ~e{
+      <line id="active_receiver_line" class="primaryCarrier" x1="320" y1="0" x2="320" y2="150" />
+      <g id="rxTriangleGroup">
+        <polygon class="rx triangle" points="320,<%= tri_ofs %> <%= 320 - tri_ofs %>,0 <%= 320 + tri_ofs %>,0" />
+        <text class="rx triangleText" x="<%= 320 - 2 %>" y="5">R</text>
+      </g>
+    }
   end
 
   def carrier_line(active_frequency, band_scope_edges) do
