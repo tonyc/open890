@@ -31,6 +31,7 @@ defmodule Open890Web.Live.RadioLive do
     {:inactive_mode, :unknown},
     {:inactive_receiver, :b},
     {:projected_active_receiver_location, ""},
+    {:rf_pre, 0},
     {:s_meter, 0},
     {:ssb_data_filter_mode, nil},
     {:ssb_filter_mode, nil},
@@ -100,8 +101,13 @@ defmodule Open890Web.Live.RadioLive do
     %{msg: msg} = payload
 
     cond do
+      msg |> String.starts_with?("PA") ->
+        rf_pre = msg |> Extract.to_integer("PA")
+        socket = socket |> assign(:rf_pre, rf_pre)
+        {:noreply, socket}
+
       msg |> String.starts_with?("BS8") ->
-        band_scope_att = Extract.band_scope_att(msg)
+        band_scope_att = msg |> Extract.to_integer("BS8")
         socket = socket |> assign(:band_scope_att, band_scope_att)
         {:noreply, socket}
       msg |> String.starts_with?("DS1") ->

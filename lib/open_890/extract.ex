@@ -378,11 +378,11 @@ defmodule Open890.Extract do
   end
 
   def display_screen_id(str) when is_binary(str) do
-    str |> extract_to_integer("DS1")
+    str |> to_integer("DS1")
   end
 
   def band_scope_att(str) when is_binary(str) do
-    str |> extract_to_integer("BS8")
+    str |> to_integer("BS8")
   end
 
   defp calculate_cw_shift(passband_id)
@@ -395,7 +395,7 @@ defmodule Open890.Extract do
     50 * passband_id + 50
   end
 
-  defp extract_to_integer(src, leading_str) when is_binary(src) and is_binary(leading_str) do
+  def to_integer(src, leading_str) when is_binary(src) and is_binary(leading_str) do
     src
     |> String.trim_leading(leading_str)
     |> String.to_integer()

@@ -60,10 +60,18 @@ defmodule Open890Web.RadioViewHelpers do
   def format_band_scope_att(level) do
     level
     |> case do
-      0 -> "Off"
+      0 -> "OFF"
       1 -> "10 dB"
       2 -> "20 dB"
       3 -> "30 dB"
+    end
+  end
+
+  def format_rf_pre(level) do
+    level
+    |> case do
+      0 -> "OFF"
+      str -> str |> to_string()
     end
   end
 

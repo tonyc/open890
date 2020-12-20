@@ -212,9 +212,11 @@
           <span>ANT 1</span>
         </button>
 
-        <button class="ui attached button">
-          <span>PRE OFF</span>
-        </button>
+        <%= cycle_button("PRE #{format_rf_pre(@rf_pre)}", @rf_pre, %{
+          0 => "PA1",
+          1 => "PA2",
+          2 => "PA0"
+        }) %>
 
         <button class="ui attached button">
           <span>ATT</span>
