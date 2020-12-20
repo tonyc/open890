@@ -104,32 +104,29 @@ defmodule Open890Web.Live.RadioLive do
 
     socket = cond do
       msg |> String.starts_with?("RA") ->
-        rf_att = msg |> Extract.to_integer("RA")
+        rf_att = msg |> Extract.rf_att()
         socket |> assign(:rf_att, rf_att)
 
       msg |> String.starts_with?("PA") ->
-        rf_pre = msg |> Extract.to_integer("PA")
-        socket |> assign(:rf_pre, rf_pre)
+        socket |> assign(:rf_pre, Extract.rf_pre(msg))
+
+      msg |> String.starts_with?("BS3") ->
+        socket |> assign(:band_scope_mode, Extract.scope_mode(msg))
 
       msg |> String.starts_with?("BS8") ->
-        band_scope_att = msg |> Extract.to_integer("BS8")
-        socket |> assign(:band_scope_att, band_scope_att)
+        socket |> assign(:band_scope_att, Extract.band_scope_att(msg))
 
       msg |> String.starts_with?("DS1") ->
-        display_screen_id = Extract.display_screen_id(msg)
-        socket |> assign(:display_screen_id, display_screen_id)
+        socket |> assign(:display_screen_id, Extract.display_screen_id(msg))
 
       msg |> String.starts_with?("OM0") ->
-        mode = msg |> Extract.operating_mode()
-        socket |> assign(:active_mode, mode)
+        socket |> assign(:active_mode, Extract.operating_mode(msg))
 
       msg |> String.starts_with?("OM1") ->
-        mode = msg |> Extract.operating_mode()
-        socket |> assign(:inactive_mode, mode)
+        socket |> assign(:inactive_mode, Extract.operating_mode(msg))
 
       msg |> String.starts_with?("SM") ->
-        s_meter_value = msg |> Extract.s_meter()
-        socket |> assign(:s_meter, s_meter_value)
+        socket |> assign(:s_meter, Extract.s_meter(msg))
 
       msg |> String.starts_with?("FA") ->
         frequency = msg |> Extract.frequency()
@@ -194,15 +191,12 @@ defmodule Open890Web.Live.RadioLive do
 
       # ssb/ssb+data filter modes
       msg |> String.starts_with?("EX00611") ->
-        ssb_filter_mode = msg |> Extract.filter_mode()
         socket
-        |> assign(:ssb_filter_mode, ssb_filter_mode)
+        |> assign(:ssb_filter_mode, Extract.filter_mode(msg))
 
       msg |> String.starts_with?("EX00612") ->
-        ssb_data_filter_mode = msg |> Extract.filter_mode()
-
         socket
-        |> assign(:ssb_data_filter_mode, ssb_data_filter_mode)
+        |> assign(:ssb_data_filter_mode, Extract.filter_mode(msg))
 
       msg == "FR0" ->
         socket
@@ -235,10 +229,6 @@ defmodule Open890Web.Live.RadioLive do
          |> assign(:band_scope_edges, {bs_low, bs_high})
          |> assign(:band_scope_span, span)
 
-      msg |> String.starts_with?("BS3") ->
-        band_scope_mode = msg |> Extract.scope_mode()
-
-        socket |> assign(:band_scope_mode, band_scope_mode)
       true ->
         Logger.debug("RadioLive: unknown message: #{inspect(msg)}")
         socket

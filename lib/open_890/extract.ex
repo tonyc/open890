@@ -253,19 +253,14 @@ defmodule Open890.Extract do
 
   # TODO: Convert this to return an integer frequency in Hz
   def frequency(str) when is_binary(str) do
-    str
-    |> String.trim_leading("FA")
-    |> String.trim_leading("FB")
-    |> String.trim_leading("0")
-    |> String.to_integer()
+    str |> trim_to_integer(["FA", "FB", "0"])
   end
 
   def s_meter(""), do: 0
 
   def s_meter(str) when is_binary(str) do
     str
-    |> String.trim_leading("SM")
-    |> String.trim_leading("0")
+    |> trim_all_leading(["SM", "0"])
     |> case do
       "" -> 0
       val -> val |> String.to_integer()
@@ -283,20 +278,13 @@ defmodule Open890.Extract do
   # passband shift/width/hi/lo cut id
   def passband_id(str) when is_binary(str) do
     str
-    |> String.trim_leading("SH0")
-    |> String.trim_leading("SH1")
-    |> String.trim_leading("SL0")
-    |> String.trim_leading("SL1")
-    |> String.to_integer()
+    |> trim_to_integer(["SH0", "SH1", "SL0", "SL1"])
   end
 
   # returns hi_lo_cut or :shift_width based on the filter mode for menu EX 0 06 11/12
   def filter_mode(str) when is_binary(str) do
     str
-    |> String.trim_leading("EX006")
-    |> String.trim_leading("11")
-    |> String.trim_leading("12")
-    |> String.trim_leading(" 00")
+    |> trim_all_leading(["EX006", "11", "12", " 00"])
     |> case do
       "0" -> :hi_lo_cut
       "1" -> :shift_width
@@ -378,11 +366,19 @@ defmodule Open890.Extract do
   end
 
   def display_screen_id(str) when is_binary(str) do
-    str |> to_integer("DS1")
+    str |> trim_to_integer("DS1")
+  end
+
+  def rf_att(str) when is_binary(str) do
+    str |> trim_to_integer("RA")
+  end
+
+  def rf_pre(str) when is_binary(str) do
+    str |> trim_to_integer("PA")
   end
 
   def band_scope_att(str) when is_binary(str) do
-    str |> to_integer("BS8")
+    str |> trim_to_integer("BS8")
   end
 
   defp calculate_cw_shift(passband_id)
@@ -395,9 +391,22 @@ defmodule Open890.Extract do
     50 * passband_id + 50
   end
 
-  def to_integer(src, leading_str) when is_binary(src) and is_binary(leading_str) do
+  def trim_to_integer(src, leading_str) when is_binary(src) and is_binary(leading_str) do
     src
     |> String.trim_leading(leading_str)
     |> String.to_integer()
+  end
+
+  def trim_to_integer(src, items) when is_binary(src) and is_list(items) do
+    src
+    |> trim_all_leading(items)
+    |> String.to_integer()
+  end
+
+  def trim_all_leading(src, items) when is_binary(src) and is_list(items) do
+    items
+    |> Enum.reduce(src, fn(items, acc) ->
+      acc |> String.trim_leading(items)
+    end)
   end
 end
