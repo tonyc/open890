@@ -23,6 +23,16 @@ defmodule Open890Web.RadioViewHelpers do
     content_tag(:button, name, final_opts)
   end
 
+  # cycle_button("Scope Mode", @scope_mode, %{auto_scroll: "BS30", fixed: "BS32", center: "BS31"}
+  def cycle_button(title, var, values, opts \\ []) when is_map(values) do
+    values
+    |> Map.get(var)
+    |> case do
+      nil -> ""
+      cmd -> cmd_button(title, cmd, opts)
+    end
+  end
+
   def vfo_switch_button(vfo, opts \\ []) do
     "A / B" |> cmd_button(vfo_switch_command(vfo), opts)
   end

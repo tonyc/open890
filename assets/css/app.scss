@@ -1,4 +1,4 @@
-/* This file is for your main application css. */
+// /* This file is for your main application css. */
 // @import "./phoenix.css";
 /* Alerts and form errors */
 .alert {
@@ -208,20 +208,21 @@ nav {
 }
 
 #vfos {
-  display: inline;
-  float: left;
-  
   .freq {
     font-weight: bold;
     display: inline-block;
-    width: 350px;
-    font-size: 36pt;
-    color: #555;
 
     &.active {
-      font-size: 46pt;
+      font-size: 6rem;
       text-align: right;
       color: black;
+    }
+
+    &.inactive {
+      font-size: 3rem;
+      color: #555;
+      text-align: left;
+      margin-left: 1em;
     }
   }
 }

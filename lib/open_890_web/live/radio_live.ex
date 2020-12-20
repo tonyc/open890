@@ -235,6 +235,7 @@ defmodule Open890Web.Live.RadioLive do
           (high_int - low_int)
           |> to_string()
           |> String.trim_leading("0")
+          |> String.to_integer()
 
         {:noreply,
          socket

@@ -86,8 +86,8 @@
   </div>
 
   <!-- VFO indicator -->
-  <div class="row">
-    <div id="vfos" class="">
+  <div class="ui grid row">
+    <div id="vfos" class="eight column centered row">
       <%= if @active_receiver == :a do %>
         <div class="freq active"><%= @active_frequency |> format_raw_frequency() %></div>
         <div class="bandIndicator">
@@ -102,7 +102,7 @@
             <span class="bandPointer">▶</span>
           </div>
         </div>
-        <div class="freq"><%= @inactive_frequency |> format_raw_frequency() %></div>
+        <div class="freq inactive"><%= @inactive_frequency |> format_raw_frequency() %></div>
       <% else %>
         <div class="freq active"><%= @active_frequency |> format_raw_frequency() %></div>
         <div class="bandIndicator">
@@ -117,7 +117,7 @@
             <span class="bandPointer"> </span>
           </div>
         </div>
-        <div class="freq"><%= @inactive_frequency |> format_raw_frequency() %></div>
+        <div class="freq inactive"><%= @inactive_frequency |> format_raw_frequency() %></div>
       <% end %>
     </div>
   </div>
@@ -239,9 +239,33 @@
   <div class="row">
     <div id="horizontalSoftKeys" class="fifteen wide column">
       <div class="ten ui buttons">
-        <button class="ui attached button">S.Mode</button>
-        <button class="ui attached button">Span</button>
-        <button class="ui attached button">Shift</button>
+        <%= cycle_button("Scope Mode", @band_scope_mode, %{auto_scroll: "BS30", fixed: "BS32", center: "BS31"}, class: "ui attached button") %>
+
+        <%= if @band_scope_mode == :fixed do %>
+          <button class="ui attached button">Range: (fixme)</button>
+        <% else %>
+          <%= cycle_button("Span: #{@band_scope_span} kHz", @band_scope_span, %{
+            5 => "BS41",
+            10 => "BS42",
+            20 => "BS43",
+            30 => "BS44",
+            50 => "BS45",
+            100 => "BS46",
+            200 => "BS47",
+            500 => "BS40"
+          }, class: "ui attached button") %>
+        <% end %>
+
+        <%= if @band_scope_mode == :auto_scroll do %>
+          <%= cmd_button "Shift", "BSE", class: "attached" %>
+        <% end %>
+
+        <%= if @band_scope_mode == :fixed  do %>
+          <%= cmd_button "MKR.CTR", "BSE", class: "attached" %>
+        <% else %>
+          <button class="ui attached button"></button>
+        <% end %>
+
         <button class="ui attached button">Ref. Lev</button>
         <button class="ui attached button">ATT</button>
         <button class="ui attached button">Pause</button>
@@ -253,6 +277,7 @@
     </div>
   </div>
 
+<!--
   <div class="row">
     <div id="functionKeys" class="fifteen wide column">
         <div class="seven ui buttons">
@@ -266,5 +291,6 @@
         </div>
     </div>
   </div>
+  -->
 
 </div>
