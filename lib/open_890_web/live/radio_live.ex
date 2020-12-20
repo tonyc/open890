@@ -17,6 +17,7 @@ defmodule Open890Web.Live.RadioLive do
     {:active_receiver, :a},
     {:active_transmitter, :a},
     {:audio_scope_data, []},
+    {:band_scope_att, nil},
     {:band_scope_data, []},
     {:band_scope_edges, nil},
     {:band_scope_mode, nil},
@@ -71,6 +72,7 @@ defmodule Open890Web.Live.RadioLive do
     Radio.get_filter_state()
     Radio.get_band_scope_limits()
     Radio.get_band_scope_mode()
+    Radio.get_band_scope_att()
     Radio.get_display_screen()
   end
 
@@ -98,6 +100,10 @@ defmodule Open890Web.Live.RadioLive do
     %{msg: msg} = payload
 
     cond do
+      msg |> String.starts_with?("BS8") ->
+        band_scope_att = Extract.band_scope_att(msg)
+        socket = socket |> assign(:band_scope_att, band_scope_att)
+        {:noreply, socket}
       msg |> String.starts_with?("DS1") ->
         display_screen_id = Extract.display_screen_id(msg)
 

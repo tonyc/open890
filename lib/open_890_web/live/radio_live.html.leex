@@ -171,6 +171,15 @@
           </div>
         </div>
       <% end %>
+
+      <%= if @band_scope_att do %>
+        <div class="ui large black label">
+          Scope ATT
+          <div class="detail">
+            <%= format_band_scope_att(@band_scope_att) %>
+          </div>
+        </div>
+      <% end %>
     </div>
   </div>
 
@@ -267,7 +276,12 @@
         <% end %>
 
         <button class="ui attached button">Ref. Lev</button>
-        <button class="ui attached button">ATT</button>
+        <%= cycle_button("ATT", @band_scope_att, %{
+          0 => "BS81",
+          1 => "BS82",
+          2 => "BS83",
+          3 => "BS80"
+        }) %>
         <button class="ui attached button">Pause</button>
         <button class="ui attached button">Expand</button>
         <button class="ui attached button">Speed</button>
