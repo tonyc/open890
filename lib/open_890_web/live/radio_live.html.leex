@@ -220,7 +220,7 @@
 
     <div class="column">
       <div class="ui small vertical buttons">
-        <button class="ui attached button">
+        <button class="ui attached basic button">
           <span>ANT 1</span>
         </button>
 
@@ -237,23 +237,23 @@
           3 => "RA0"
         }, class: "attached") %>
 
-        <button class="ui attached button">
+        <button class="ui attached basic button">
           <span>RX EQ</span>
           <span>OFF</span>
         </button>
 
-        <button class="ui attached button">&mdash;</button>
-        <button class="ui attached button">
+        <button class="ui attached basic button">&mdash;</button>
+        <button class="ui attached basic button">
           <span>MAX-Po</span>
           <span>Off</span>
         </button>
 
-        <button class="ui attached button">
+        <button class="ui attached basic button">
           <span>METER</span>
           <span>SWR</span>
         </button>
 
-        <button class="ui attached button">
+        <button class="ui attached basic button">
           <span>APF</span>
           <span>Off</span>
         </button>
@@ -290,7 +290,7 @@
             <button class="ui attached button"></button>
         <% end %>
 
-        <button class="ui attached button">Ref. Lev</button>
+        <button class="ui attached basic button">Ref. Lev</button>
 
         <%= cycle_button("ATT", @band_scope_att, %{
           0 => "BS81",
@@ -299,29 +299,13 @@
           3 => "BS80"
         }, class: "attached") %>
 
-        <button class="ui attached button">Pause</button>
-        <button class="ui attached button">Expand</button>
-        <button class="ui attached button">Speed</button>
-        <button class="ui attached button">Avg.</button>
-        <button class="ui attached button">Max Hold</button>
+        <button class="ui attached basic button">Pause</button>
+        <button class="ui attached basic button">Expand</button>
+        <button class="ui attached basic button">Speed</button>
+        <button class="ui attached basic button">Avg.</button>
+        <button class="ui attached basic button">Max Hold</button>
       </div>
     </div>
   </div>
-
-<!--
-  <div class="row">
-    <div id="functionKeys" class="fifteen wide column">
-        <div class="seven ui buttons">
-          <button class="ui attached button">F1</button>
-          <button class="ui attached button">F2</button>
-          <button class="ui attached button">F3</button>
-          <button class="ui attached button">F4</button>
-          <button class="ui attached button">F5</button>
-          <button class="ui attached button">F6</button>
-          <button class="ui attached button">F7</button>
-        </div>
-    </div>
-  </div>
-  -->
 
 </div>

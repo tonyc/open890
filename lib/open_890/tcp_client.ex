@@ -275,8 +275,11 @@ defmodule Open890.TCPClient do
         state
 
       true ->
-        Logger.info("<- #{inspect(msg)}")
         # otherwise, we just braodcast everything to the liveview to let it deal with it
+        if !(msg |> String.starts_with?("SM0")) do
+          Logger.info("<- #{inspect(msg)}")
+        end
+
         msg |> broadcast()
         state
     end
