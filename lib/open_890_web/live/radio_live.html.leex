@@ -197,6 +197,7 @@
           </linearGradient>
         </defs>
 
+
         <%= band_scope_vertical_grid() %>
         <%= band_scope_horizontal_grid() %>
 
@@ -211,6 +212,9 @@
             <%= carrier_line(@active_frequency, @band_scope_edges) %>
           <% end %>
         <% end %>
+
+        <rect id="bandscopeBackground" x="0" y="0" height="150" width="640" pointer-events="visibleFill" phx-click="scope_clicked" />
+
       </svg>
     </div>
 

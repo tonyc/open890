@@ -59,7 +59,27 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
 
       def handle_event("close_menu", _params, socket) do
         {:noreply, socket |> set_screen_id(0)}
+      end
 
+      def handle_event("scope_clicked", %{"x" => x} = _params, %{assigns: %{active_receiver: active_receiver, band_scope_edges: {scope_low, scope_high}}} = socket) do
+        socket
+        |> IO.inspect(label: "socket", limit: :infinity)
+
+        new_frequency = x
+        |> screen_to_frequency({scope_low, scope_high})
+        |> to_string()
+        |> IO.inspect(label: "frequency")
+        |> String.pad_leading(11, "0")
+
+        active_receiver
+        |> case do
+          :a -> Radio.cmd("FA#{new_frequency}")
+          :b -> Radio.cmd("FB#{new_frequency}")
+          vfo ->
+            Logger.debug("Unknown vfo: #{vfo}")
+        end
+
+        {:noreply, socket}
       end
 
       defp set_screen_id(socket, id) do

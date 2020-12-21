@@ -97,6 +97,15 @@ defmodule Open890Web.RadioViewHelpers do
     0
   end
 
+  def screen_to_frequency(scope_coord, {low, high}) do
+    coord_percentage = scope_coord / 640
+
+    f_delta = high - low
+
+    low + coord_percentage * f_delta
+    |> round()
+  end
+
   # formats a raw frequency in Hz to e.g.
   # 7.055.123
   def format_raw_frequency(str) do
