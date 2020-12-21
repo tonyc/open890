@@ -62,13 +62,9 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
       end
 
       def handle_event("scope_clicked", %{"x" => x} = _params, %{assigns: %{active_receiver: active_receiver, band_scope_edges: {scope_low, scope_high}}} = socket) do
-        socket
-        |> IO.inspect(label: "socket", limit: :infinity)
-
         new_frequency = x
         |> screen_to_frequency({scope_low, scope_high})
         |> to_string()
-        |> IO.inspect(label: "frequency")
         |> String.pad_leading(11, "0")
 
         active_receiver
