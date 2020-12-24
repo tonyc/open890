@@ -15,11 +15,7 @@
   <body>
     <header>
       <nav role="navigation">
-        <h1 class="title">openX90</h1>
-
-        <%= if function_exported?(Routes, :live_dashboard_path, 2) do %>
-          <div class="dashboardNavLink"><%= link "LiveDashboard", to: Routes.live_dashboard_path(@conn, :home) %></div>
-        <% end %>
+        <h1 class="title">open890</h1>
       </nav>
     </header>
     <%= @inner_content %>
