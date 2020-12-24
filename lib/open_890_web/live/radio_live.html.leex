@@ -205,7 +205,10 @@
         </defs>
 
 
-        <%= band_scope_vertical_grid() %>
+        <%= if @band_scope_mode == :auto_scroll do %>
+          <%= band_scope_vertical_grid() %>
+        <% end %>
+
         <%= band_scope_horizontal_grid() %>
 
         <polygon id="spectrumBlur" filter="url(#blur)" points="<%= scope_data_to_svg(@band_scope_data, 150) %>" />
