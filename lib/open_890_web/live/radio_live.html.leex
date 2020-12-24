@@ -290,7 +290,10 @@
             <button class="ui attached button"></button>
         <% end %>
 
-        <button class="ui attached basic button">Ref. Lev</button>
+        <button class="ui attached basic button">
+          Ref. Lev
+        </button>
+
 
         <%= cycle_button("ATT", @band_scope_att, %{
           0 => "BS81",
@@ -299,11 +302,25 @@
           3 => "BS80"
         }, class: "attached") %>
 
-        <button class="ui attached basic button">Pause</button>
-        <button class="ui attached basic button">Expand</button>
-        <button class="ui attached basic button">Speed</button>
-        <button class="ui attached basic button">Avg.</button>
-        <button class="ui attached basic button">Max Hold</button>
+        <button class="ui attached basic button">
+          Pause
+        </button>
+
+        <button class="ui attached basic button">
+          Expand
+        </button>
+
+        <button class="ui attached basic button">
+          Speed
+        </button>
+
+        <button class="ui attached button">
+          Avg.
+        </button>
+
+        <button class="ui attached basic button">
+          Max Hold
+        </button>
       </div>
     </div>
   </div>
