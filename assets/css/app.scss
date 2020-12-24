@@ -140,20 +140,10 @@ nav {
 
 #sMeterWrapper {
   padding: 0.25rem;
-  width: 475px;
-  float: left;
+  //width: 475px;
   background-color: black;
   color: white;
   border-radius: $border-radius-small;
-
-  #sMeterText {
-    float: left;
-    width: 4rem;
-  }
-
-  #sMeter {
-    float: right;
-  }
 
   .sMeterBG {
     fill: $kenwood-grey;
@@ -167,6 +157,35 @@ nav {
       fill: $kenwood-red
     }
   }
+
+  #sMeterLegend {
+    line {
+      stroke-width: 1px;
+
+      &.low { stroke: white; }
+      &.high { stroke: red; }
+    }
+
+    #levelPips {
+      .pip {
+        stroke-width: 1px;
+        &.low { stroke: white; }
+        &.high { stroke: red; }
+      }
+      text {
+        .low { color: white; z-index: 999; }
+        .high { color: red; }
+      }
+    }
+
+    text {
+      font-size: 9px;
+      font-family: sans-serif;
+
+      &.low { fill: white; }
+      &.high { fill: red; }
+    }
+  }
 }
 
 #audioScopeWrapper {
@@ -176,7 +195,7 @@ nav {
 
   #audioScope {
     border-radius: $border-radius-small;
-    height: 100px;
+    //height: 100px;
     background-color: black;
     fill: #999;
     // float: right;
@@ -189,9 +208,8 @@ nav {
     display: inline-block;
 
     &.active {
-      font-size: 6rem;
+      font-size: 4rem;
       text-align: right;
-      color: black;
     }
 
     &.inactive {

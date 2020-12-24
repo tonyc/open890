@@ -35,7 +35,7 @@
 </div>
 
 
-<div id="radio" class="ui grid">
+<div id="radio" class="ui grid container">
   <%= if @display_screen_id != 0 do %>
     <div id="menuModal" class="ui active modal">
       <div class="header">
@@ -50,28 +50,54 @@
     </div>
   <% end %>
 
-  <div class="row">
+  <div class="row two columns">
     <div id="sMeterWrapper" class="column">
-      <div class="ui grid">
-        <div id="sMeterText"><%= s_meter_value_to_s_units(@s_meter) %></div>
-        <svg id="sMeter" class="" viewbox="0 0 350 15">
+      <svg id="sMeter" class="" viewbox="0 0 350 100">
+        <g id="sMeterLegend" transform="translate(0 2)">
+          <line class="low" x1="0" y1="0" x2="172" y2="0" />
+          <line class="high" x1="175" y1="0" x2="348" y2="0" />
+
+          <g id="levelPips" transform="translate(0 0)">
+            <line class="pip low s1" x1="12" x2="12" y1="0" y2="5" />
+            <text class="low s1" x="10" y="13">1</text>
+
+            <line class="pip low s3" x1="52" x2="52" y1="0" y2="5" />
+            <text class="low s3" x="49" y="13">3</text>
+
+            <line class="pip low s5" x1="92" x2="92" y1="0" y2="5" />
+            <text class="low s5" x="90" y="13">5</text>
+
+            <line class="pip low s7" x1="132" x2="132" y1="0" y2="5" />
+            <text class="low s7" x="130" y="13">7</text>
+
+            <line class="pip low s9" x1="172" x2="172" y1="0" y2="5" />
+            <text class="low s9" x="170" y="13">9</text>
+
+            <line class="pip high plus20" x1="232" x2="232" y1="0" y2="5" />
+            <text class="high plus20" x="223" y="13">+20</text>
+
+            <line class="pip high plus40" x1="288" x2="288" y1="0" y2="5" />
+            <text class="high plus40" x="279" y="13">+40</text>
+
+            <line class="pip high plus60" x1="348" x2="348" y1="0" y2="5" />
+            <text class="high plus60" x="323" y="13">+60dB</text>
+
+          </g>
+
+        </g>
+
+        <g transform="translate(0 20)">
           <%= for i <- (1..@s_meter) do %>
             <rect class="sMeter <%= if i >= 36, do: "high" %>" x="<%= i-1 + ((i-1) * 4) %>" width="3" height="15" />
           <% end %>
           <%= for i <- (@s_meter..70) do %>
             <rect class="sMeterBG" x="<%= i + (i * 4) %>" width="3" height="15" />
           <% end %>
-        </svg>
-      </div>
+        </g>
+      </svg>
     </div>
 
     <div id="audioScopeWrapper" class="column">
-      <div class="row">
-        <span>lo/width: <%= @filter_lo_width %></span>
-        <span>hi/shift: <%= @filter_hi_shift %></span>
-      </div>
-
-      <div class="row">
         <svg id="audioScope" class="scope themed <%= @theme %>" viewbox="0 0 212 50">
           <defs>
             <linearGradient id="kenwood" gradientTransform="rotate(90)">
@@ -82,8 +108,8 @@
           <polygon id="audioSpectrum" class="spectrum" points="<%= scope_data_to_svg(@audio_scope_data, 60) %>" />
           <line id="audioScopeTuneIndicator" class="primaryCarrier" x1="106" y1="0" x2="106" y2="50" />
         </svg>
-      </div>
     </div>
+
   </div>
 
   <!-- VFO indicator -->
