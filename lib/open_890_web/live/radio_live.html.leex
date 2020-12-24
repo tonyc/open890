@@ -177,17 +177,6 @@
     </div>
   </div>
 
-  <div id="bandScopeLimits" class="four column row">
-    <%= if @band_scope_edges do %>
-      <div class="left floated column">
-        <span class="scopeLimit" id="bandScopeLow"><%= @band_scope_edges |> format_band_scope_low() %></span>
-      </div>
-      <div class="right floated right aligned column">
-        <span class="scopeLimit" id="bandScopeHigh"><%= @band_scope_edges |> format_band_scope_high() %></span>
-      </div>
-    <% end %>
-  </div>
-
   <div id="bandScopeDetails" class="row">
     <div class="column">
       <%= if @band_scope_mode do %>
@@ -241,6 +230,14 @@
 
         <polygon id="spectrumBlur" filter="url(#blur)" points="<%= scope_data_to_svg(@band_scope_data, 150) %>" />
         <polygon id="bandSpectrum" class="spectrum" points="<%= scope_data_to_svg(@band_scope_data, 150) %>" />
+
+        <%= if @band_scope_edges do %>
+          <g transform="translate(0 12)">
+            <text id="bandScopeLowFreq" class="bandEdge low" x="5" y="0"><%= @band_scope_edges |> format_band_scope_low() %></text>
+            <text id="bandScopeHighFreq" class="bandEdge high" x="590" y="0"><%= @band_scope_edges |> format_band_scope_high() %></text>
+          </g>
+        <% end %>
+
 
         <%= if @band_scope_mode == :center do %>
           <%= center_carrier_line() %>
