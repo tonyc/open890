@@ -90,6 +90,7 @@
   <div class="ui grid row">
     <div id="vfos" class="eight column centered row">
       <%= if @active_receiver == :a do %>
+        <span class="ui basic label"><%= format_mode(@active_mode) %></span>
         <div class="freq active"><%= @active_frequency |> format_raw_frequency() %></div>
         <div class="bandIndicator">
           <div class="receiver">
@@ -103,8 +104,10 @@
             <span class="bandPointer">▶</span>
           </div>
         </div>
+        <span class="ui basic label"><%= format_mode(@inactive_mode) %></span>
         <div class="freq inactive"><%= @inactive_frequency |> format_raw_frequency() %></div>
       <% else %>
+        <span class="ui basic label"><%= format_mode(@active_mode) %></span>
         <div class="freq active"><%= @active_frequency |> format_raw_frequency() %></div>
         <div class="bandIndicator">
           <div class="receiver">
@@ -118,14 +121,10 @@
             <span class="bandPointer"> </span>
           </div>
         </div>
+        <span class="ui basic label"><%= format_mode(@inactive_mode) %></span>
         <div class="freq inactive"><%= @inactive_frequency |> format_raw_frequency() %></div>
       <% end %>
     </div>
-  </div>
-
-  <div class="row two column">
-    <div class="column"><span class="ui basic label"><%= format_mode(@active_mode) %></span></div>
-    <div class="column"><span class="ui basic label"><%= format_mode(@inactive_mode) %></span></div>
   </div>
 
   <div class="row">
