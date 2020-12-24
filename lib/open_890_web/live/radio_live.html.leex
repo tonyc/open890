@@ -88,7 +88,7 @@
 
   <!-- VFO indicator -->
   <div class="ui grid row">
-    <div id="vfos" class="eight column centered row">
+    <div id="vfos" class="eight column row">
       <%= if @active_receiver == :a do %>
         <span class="ui basic label"><%= format_mode(@active_mode) %></span>
         <div class="freq active"><%= @active_frequency |> format_raw_frequency() %></div>
