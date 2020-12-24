@@ -144,6 +144,10 @@ defmodule Open890Web.RadioViewHelpers do
     cmd_button("ESC", "DS3", opts)
   end
 
+  def cwt_button(opts \\ []) do
+    "CW Tune" |> cmd_button("CA1", opts)
+  end
+
   def scope_data_to_svg(band_data, max_value) when is_list(band_data) do
     band_data = band_data ++ [max_value]
     length = band_data |> Enum.count()
