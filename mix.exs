@@ -44,6 +44,7 @@ defmodule Open890.MixProject do
       {:credo, "~> 1.5", only: [:dev, :test]},
       {:excoveralls, "~> 0.13.3", only: [:dev, :test]},
       {:ecto_sql, "~> 3.4"},
+      {:elixir_math, "~> 0.1.2"},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:postgrex, ">= 0.0.0"},
