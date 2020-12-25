@@ -35,7 +35,7 @@
 </div>
 
 
-<div id="radio" class="ui grid container">
+<div id="radio" class="ui grid ">
   <%= if @display_screen_id != 0 do %>
     <div id="menuModal" class="ui active modal">
       <div class="header">
@@ -155,28 +155,6 @@
     </div>
   </div>
 
-  <div class="row">
-    <div class="controlButtons column">
-
-      <button type="button" class="ui circular button radio-control multi-ch" phx-hook="MultiCH" id="multi-ch">
-        Multi/CH
-      </button>
-
-      <div class="ui compact buttons">
-        <%= vfo_switch_button(@active_receiver, class: "attached left") %>
-        <%= vfo_equalize_button(class: "right attached") %>
-
-      </div>
-
-      <%= if @active_mode in [:cw, :cw_r] do %>
-        <div class="ui compact buttons">
-          <%= cmd_button("CW Tune", "CA1", class: "") %>
-        </div>
-      <% end %>
-
-    </div>
-  </div>
-
   <div id="bandScopeDetails" class="row">
     <div class="column">
       <%= if @band_scope_mode do %>
@@ -209,7 +187,7 @@
   </div>
 
   <div id="bandScopeContainer" class="row">
-    <div class="fifteen wide column">
+    <div class="wide column">
       <svg id="bandScope" class="scope themed <%= @theme %>" viewbox="0 0 640 140">
         <defs>
           <filter id="blur" filterUnits="userSpaceOnUse" x="0" y="0" width="640" height="150">
@@ -233,8 +211,8 @@
 
         <%= if @band_scope_edges do %>
           <g transform="translate(0 12)">
-            <text id="bandScopeLowFreq" class="bandEdge low" x="5" y="0"><%= @band_scope_edges |> format_band_scope_low() %></text>
-            <text id="bandScopeHighFreq" class="bandEdge high" x="590" y="0"><%= @band_scope_edges |> format_band_scope_high() %></text>
+            <text class="bandEdge low" x="5" y="0"><%= @band_scope_edges |> format_band_scope_low() %></text>
+            <text class="bandEdge high" x="635" y="0"><%= @band_scope_edges |> format_band_scope_high() %></text>
           </g>
         <% end %>
 
@@ -248,116 +226,144 @@
           <% end %>
         <% end %>
 
-        <rect id="bandscopeBackground" x="0" y="0" height="150" width="640" pointer-events="visibleFill" phx-click="scope_clicked" />
+        <rect id="bandscopeBackground" x="0" y="0" height="150" width="640" pointer-events="visibleFill" phx-hook="BandScope" />
 
       </svg>
-    </div>
 
-    <div class="column">
-      <div class="ui small vertical buttons">
-        <button class="ui attached basic button">
-          <span>ANT 1</span>
-        </button>
+      <div class="row">
+        <div class="wide column">
+          <div class="controlButtons column">
+            <button type="button" class="ui circular button radio-control multi-ch" phx-hook="MultiCH" id="multi-ch">
+              Multi/CH
+            </button>
 
-        <%= cycle_button("PRE #{format_rf_pre(@rf_pre)}", @rf_pre, %{
-          0 => "PA1",
-          1 => "PA2",
-          2 => "PA0"
-        }, class: "attached") %>
+            <div class="ui compact buttons">
+              <%= vfo_switch_button(@active_receiver, class: "attached left") %>
+              <%= vfo_equalize_button(class: "right attached") %>
 
-        <%= cycle_button("ATT #{format_rf_att(@rf_att)}", @rf_att, %{
-          0 => "RA1",
-          1 => "RA2",
-          2 => "RA3",
-          3 => "RA0"
-        }, class: "attached") %>
+            </div>
 
-        <button class="ui attached basic button">
-          <span>RX EQ</span>
-          <span>OFF</span>
-        </button>
+            <%= if @active_mode in [:cw, :cw_r] do %>
+              <div class="ui compact buttons">
+                <%= cmd_button("CW Tune", "CA1", class: "") %>
+              </div>
+            <% end %>
 
-        <button class="ui attached basic button">&mdash;</button>
-        <button class="ui attached basic button">
-          <span>MAX-Po</span>
-          <span>Off</span>
-        </button>
-
-        <button class="ui attached basic button">
-          <span>METER</span>
-          <span>SWR</span>
-        </button>
-
-        <button class="ui attached basic button">
-          <span>APF</span>
-          <span>Off</span>
-        </button>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
 
-  <div class="row">
-    <div id="horizontalSoftKeys" class="fifteen wide column">
-      <div class="ten ui buttons">
-        <%= cycle_button("Scope Mode", @band_scope_mode, %{auto_scroll: "BS30", fixed: "BS32", center: "BS31"}, class: "ui attached button") %>
+      <div class="row">
+        <div id="horizontalSoftKeys" class="wide column">
+          <div class="ten ui buttons">
+            <%= cycle_button("Scope Mode", @band_scope_mode, %{auto_scroll: "BS30", fixed: "BS32", center: "BS31"}, class: "ui attached button") %>
 
-        <%= if @band_scope_mode == :fixed do %>
-          <button class="ui attached button">Range: (fixme)</button>
-        <% else %>
-          <%= cycle_button("Span: #{@band_scope_span} kHz", @band_scope_span, %{
-            5 => "BS41",
-            10 => "BS42",
-            20 => "BS43",
-            30 => "BS44",
-            50 => "BS45",
-            100 => "BS46",
-            200 => "BS47",
-            500 => "BS40"
-          }, class: "ui attached button") %>
-        <% end %>
+            <%= if @band_scope_mode == :fixed do %>
+              <button class="ui attached button">Range: (fixme)</button>
+            <% else %>
+              <%= cycle_button("Span: #{@band_scope_span} kHz", @band_scope_span, %{
+                5 => "BS41",
+                10 => "BS42",
+                20 => "BS43",
+                30 => "BS44",
+                50 => "BS45",
+                100 => "BS46",
+                200 => "BS47",
+                500 => "BS40"
+              }, class: "ui attached button") %>
+            <% end %>
 
-        <%= case @band_scope_mode do %>
-          <%= :auto_scroll -> %>
-            <%= cmd_button "Shift", "BSE", class: "attached" %>
-          <%= :fixed -> %>
-            <%= cmd_button "MKR.CTR", "BSE", class: "attached" %>
-          <%= _ -> %>
-            <button class="ui attached button"></button>
-        <% end %>
+            <%= case @band_scope_mode do %>
+              <%= :auto_scroll -> %>
+                <%= cmd_button "Shift", "BSE", class: "attached" %>
+              <%= :fixed -> %>
+                <%= cmd_button "MKR.CTR", "BSE", class: "attached" %>
+              <%= _ -> %>
+                <button class="ui attached button"></button>
+            <% end %>
 
-        <button class="ui attached basic button">
-          Ref. Lev
-        </button>
+            <button class="ui attached basic button">
+              Ref. Lev
+            </button>
 
 
-        <%= cycle_button("ATT", @band_scope_att, %{
-          0 => "BS81",
-          1 => "BS82",
-          2 => "BS83",
-          3 => "BS80"
-        }, class: "attached") %>
+            <%= cycle_button("ATT", @band_scope_att, %{
+              0 => "BS81",
+              1 => "BS82",
+              2 => "BS83",
+              3 => "BS80"
+            }, class: "attached") %>
 
-        <button class="ui attached basic button">
-          Pause
-        </button>
+            <button class="ui attached basic button">
+              Pause
+            </button>
 
-        <button class="ui attached basic button">
-          Expand
-        </button>
+            <button class="ui attached basic button">
+              Expand
+            </button>
 
-        <button class="ui attached basic button">
-          Speed
-        </button>
+            <button class="ui attached basic button">
+              Speed
+            </button>
 
-        <button class="ui attached button">
-          Avg.
-        </button>
+            <button class="ui attached button">
+              Avg.
+            </button>
 
-        <button class="ui attached basic button">
-          Max Hold
-        </button>
+            <button class="ui attached basic button">
+              Max Hold
+            </button>
+          </div>
+        </div>
       </div>
+
+      <div class="row">
+        <div class="column">
+          <div class="ui small buttons">
+            <button class="ui attached basic button">
+              <span>ANT 1</span>
+            </button>
+
+            <%= cycle_button("PRE #{format_rf_pre(@rf_pre)}", @rf_pre, %{
+              0 => "PA1",
+              1 => "PA2",
+              2 => "PA0"
+            }, class: "attached") %>
+
+            <%= cycle_button("ATT #{format_rf_att(@rf_att)}", @rf_att, %{
+              0 => "RA1",
+              1 => "RA2",
+              2 => "RA3",
+              3 => "RA0"
+            }, class: "attached") %>
+
+            <button class="ui attached basic button">
+              <span>RX EQ</span>
+              <span>OFF</span>
+            </button>
+
+            <button class="ui attached basic button">&mdash;</button>
+            <button class="ui attached basic button">
+              <span>MAX-Po</span>
+              <span>Off</span>
+            </button>
+
+            <button class="ui attached basic button">
+              <span>METER</span>
+              <span>SWR</span>
+            </button>
+
+            <button class="ui attached basic button">
+              <span>APF</span>
+              <span>Off</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
     </div>
-  </div>
+
+
+
 
 </div>
