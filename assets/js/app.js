@@ -23,29 +23,7 @@ let liveSocket = new LiveSocket("/live", Socket, {
   params: {_csrf_token: csrfToken},
   metadata: {
     click: (evt, el) => {
-      // var e = evt.target;
-      // var dim = e.getBoundingClientRect();
-      // console.log("dim", dim);
-
-      // var x = evt.clientX - dim.left;
-      // var y = evt.clientY - dim.top;
-      // console.log("coords:", {x:x, y:y})
-
-      // This is all specific to the bandscope SVG click,
-      // NOT all click events going to phoenix
-
-      let svg = document.querySelector('svg#bandScope');
-      let pt = svg.createSVGPoint();
-
-      pt.x = evt.clientX;
-      pt.y = evt.clientY;
-
-      var cursorPt = pt.matrixTransform(svg.getScreenCTM().inverse());
-
-      return {
-        x: cursorPt.x,
-        y: cursorPt.y
-      }
+      return {}
     }
   }
 })
@@ -66,7 +44,7 @@ audioStreamChannel.on("audio_data", (data) => {
   for (var i = 0; i < decoded.length; i++) {
     buffer.push(decoded.charCodeAt(i))
   }
-  
+
   audioCount += 1
 
   if (audioCount % 500 == 0) {
