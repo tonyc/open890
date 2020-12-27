@@ -79,7 +79,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./_build/prod/rel/bakeware/open990
+          asset_path: ./_build/prod/rel/bakeware/open890
           asset_name: open890
           asset_content_type: application/octet-stream
 
