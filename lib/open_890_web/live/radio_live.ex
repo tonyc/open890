@@ -61,6 +61,12 @@ defmodule Open890Web.Live.RadioLive do
       socket
     end
 
+    socket = if params["wide"] do
+      socket |> assign(:layout_wide, "")
+    else
+      socket |> assign(:layout_wide, "container")
+    end
+
     {:ok, socket}
   end
 

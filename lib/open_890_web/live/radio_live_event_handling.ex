@@ -23,7 +23,6 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
 
       @impl true
       def handle_event("multi_ch", %{"is_up" => true} = params, socket) do
-        Logger.debug("multi_ch: params: #{inspect(params)}")
         Radio.freq_change(:up)
 
         {:noreply, socket}
@@ -31,7 +30,6 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
 
       @impl true
       def handle_event("multi_ch", %{"is_up" => false} = params, socket) do
-        Logger.debug("multi_ch: params: #{inspect(params)})")
         Radio.freq_change(:down)
 
         {:noreply, socket}
