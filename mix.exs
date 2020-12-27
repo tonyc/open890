@@ -20,7 +20,7 @@ defmodule Open890.MixProject do
         "coveralls.html": :test,
         "coveralls.json": :test
       ],
-      releases: [{@app, release()}]
+      releases: [{:open890, release()}]
     ]
   end
 
