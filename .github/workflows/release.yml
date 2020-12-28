@@ -43,17 +43,21 @@ jobs:
           mix local.rebar --force
           mix local.hex --force
           mix deps.get --only prod
-      - name: Prepare Release
+      - name: Compile Web Assets
         run: |
-          sudo apt -y install zstd
           npm install --prefix ./assets
           npm run deploy --prefix ./assets
           mix phx.digest
+        env:
+          MIX_ENV: prod
+          SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
+      - name: mix release
+        run: |
           mix release
         env:
           MIX_ENV: prod
           SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
-      - name: Create Release
+      - name: Create Github Release
         id: create_release
         uses: actions/create-release@v1
         env:
