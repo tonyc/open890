@@ -43,18 +43,6 @@ jobs:
           mix local.rebar --force
           mix local.hex --force
           mix deps.get --only prod
-      # - name: Compile
-      #   run: |
-      #     mix clean
-      #     mix compile
-      #   env:
-      #     MIX_ENV: test
-      #- name: Credo + Sobelow
-      #  run: |
-      #    mix credo suggest --mute-exit-status
-      #    mix sobelow --ignore Config.CSP,Config.HTTPS
-      #  env:
-      #    MIX_ENV: test
       - name: Prepare Release
         run: |
           sudo apt -y install zstd

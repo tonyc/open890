@@ -18,10 +18,6 @@ jobs:
           otp-version: 22.3.4.6
           elixir-version: 1.10.4
           experimental-otp: true
-      # - name: Install NodeJS
-      #   uses: actions/setup-node@v1
-      #   with:
-      #     node-version: 14.15.3
       #- name: Retrieve Mix Dependencies Cache (uncompiled)
       #  uses: actions/cache@v2
       #  id: mix-cache # used to check if we can skip `mix deps.get`
@@ -55,34 +51,3 @@ jobs:
         env:
           MIX_ENV: test
       #  mix sobelow --ignore Config.CSP,Config.HTTPS
-      # - name: Prepare Release
-      #   run: |
-      #     sudo apt -y install zstd
-      #     npm install --prefix ./assets
-      #     npm run deploy --prefix ./assets
-      #     mix phx.digest
-      #     mix release
-      #   env:
-      #     MIX_ENV: prod
-      #     SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
-      # - name: Create Release
-      #   id: create_release
-      #   uses: actions/create-release@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     tag_name: ${{ github.ref }}
-      #     release_name: Release ${{ github.ref }}
-      #     draft: false
-      #     prerelease: true
-      # - name: Upload Release Asset
-      #   id: upload-release-asset
-      #   uses: actions/upload-release-asset@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
-      #     asset_path: ./_build/prod/rel/bakeware/open890
-      #     asset_name: open890
-      #     asset_content_type: application/octet-stream
-
