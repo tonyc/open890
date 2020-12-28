@@ -1,6 +1,9 @@
 name: Elixir CI
 
-on: [push]
+on:
+  push:
+    branches:
+      - '*'
 
 jobs:
   test:
