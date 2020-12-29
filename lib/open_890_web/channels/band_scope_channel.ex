@@ -1,8 +1,8 @@
-defmodule Open890Web.AudioScopeChannel do
+defmodule Open890Web.BandScopeChannel do
   use Open890Web, :channel
 
   @impl true
-  def join("radio:audio_scope", payload, socket) do
+  def join("radio:band_scope", payload, socket) do
     if authorized?(payload) do
       {:ok, socket}
     else

@@ -189,16 +189,19 @@ nav {
 }
 
 #audioScopeWrapper {
-  // display: inline;
-  // clear: both;
-  // float: right;
-
   #audioScope {
     border-radius: $border-radius-small;
-    //height: 100px;
     background-color: black;
     fill: #999;
-    // float: right;
+    width: 75%;
+    float: right;
+  }
+
+  #AudioScopeCanvas {
+    width: 75%;
+    float: right;
+    // this should be 0, not sure where it's coming from
+    margin-top: 1px
   }
 }
 
@@ -238,6 +241,8 @@ nav {
 svg#bandScope {
   border-radius: $border-radius-small;
   background-color: black;
+  margin-bottom: 0;
+  padding-bottom: 0;
   // width: 100%;
   // height: 100%;
 
@@ -427,7 +432,11 @@ svg#bandScope {
 }
 
 
-#AudioScopeCanvas {
-  width: 100%;
-  margin-top: -5px;
+.waterfall {
+  &.bandscope {
+    width: 100%;
+    margin-top: -5px;
+    border-top: 2px solid $kenwood-grey;
+  }
 }
+

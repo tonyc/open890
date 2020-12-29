@@ -1,3 +1,5 @@
+import linearInterpolate from "./linear_interpolate"
+
 let ControlHooks = {
   MultiCH: {
     mounted() {
@@ -17,7 +19,11 @@ let ControlHooks = {
         this.pushEvent("multi_ch", {is_up: isScrollUp})
       });
 
-      this.el.addEventListener("click", event => {
+      this.el.addEventListener("mousemove", event => {
+        console.log("mousemove", event)
+      })
+
+      this.el.addEventListener("mouseup", event => {
         // this doesn't work
         event.preventDefault();
 
@@ -36,54 +42,62 @@ let ControlHooks = {
   AudioScopeCanvas: {
     mounted() {
       console.log("audioscope canvas mounted")
-      //this.canvas = document.getElementById("AudioScopeCanvas")
-      //this.ctx = canvas.getContext("2d")
 
-      // var self = this;
+      this.canvas = this.el
+      this.ctx = this.canvas.getContext("2d")
+      this.draw = true;
 
       this.handleEvent("scope_data", (event) => {
-        let data = event.scope_data;
+        if (this.draw) {
+          let data = event.scope_data;
 
-        let canvas = document.getElementById("AudioScopeCanvas")
-        let ctx = canvas.getContext("2d")
+          this.ctx.drawImage(this.canvas, 0, 1)
 
-        ctx.drawImage(canvas, 0, 1)
+          for(var i = 0; i < data.length; i++) {
+            let imgData = this.ctx.createImageData(1, 1)
 
+            let val = linearInterpolate(data[i], 0, 50, 255, 0)
 
-        for(var i = 0; i < data.length; i++) {
-          let imgData = ctx.createImageData(1, 1)
-          let d = imgData.data;
+            let pixel = imgData.data;
+            pixel[0] = pixel[1] = pixel[2] = val
+            pixel[3] = 255
 
-          let c = Math.floor(Math.random() * 255)
-          //console.log("color", c)
-          //console.log(data)
-
-          let value = data[i]
-
-          let xMin = 255
-          let xMax = 0
-
-          let yMin = 0
-          let yMax = 50
-
-          let percent = (value - yMin) / (yMax - yMin)
-          let val = percent * (xMax - xMin) + xMin
-
-
-          d[0] = 0
-          d[1] = val
-          d[2] = 0
-          d[3] = 255
-
-          ctx.putImageData(imgData, i, 1)
+            this.ctx.putImageData(imgData, i, 0)
+          }
         }
 
-      })
-    },
-
-    randomColor() {
-      Math.floor(Math.random() * 255)
+      });
     }
-  }
+  },
+  BandScopeCanvas: {
+    mounted() {
+      console.log("bandscope canvas mounted")
+
+      this.canvas = this.el
+      this.ctx = this.canvas.getContext("2d")
+      this.maxVal = 140
+      this.multiplier = 2.5
+
+      this.handleEvent("band_scope_data", (event) => {
+        let data = event.scope_data
+
+        this.ctx.drawImage(this.canvas, 0, 1)
+
+        for(var i = 0; i < data.length; i++) {
+          let imgData = this.ctx.createImageData(1, 1)
+
+          let val = linearInterpolate(data[i], 0, this.maxVal, 255, 0) * this.multiplier
+
+          let pixel = imgData.data
+          pixel[0] = val
+          pixel[1] = val
+          pixel[2] = val
+          pixel[3] = 255
+
+          this.ctx.putImageData(imgData, i, 0)
+        }
+      });
+    }
+  },
 }
 export default ControlHooks

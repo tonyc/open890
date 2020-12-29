@@ -101,10 +101,11 @@ defmodule Open890Web.Live.RadioLive do
   end
 
   @impl true
-  def handle_info(%Broadcast{event: "band_scope_data", payload: %{payload: band_data}}, socket) do
+  def handle_info(%Broadcast{event: "band_scope_data", payload: %{payload: band_scope_data}}, socket) do
     {:noreply,
      socket
-     |> assign(:band_scope_data, band_data)}
+     |> push_event("band_scope_data", %{scope_data: band_scope_data})
+     |> assign(:band_scope_data, band_scope_data)}
   end
 
   @impl true
