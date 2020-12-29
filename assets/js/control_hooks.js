@@ -39,13 +39,16 @@ let ControlHooks = {
       //this.canvas = document.getElementById("AudioScopeCanvas")
       //this.ctx = canvas.getContext("2d")
 
-      var self = this;
+      // var self = this;
 
       this.handleEvent("scope_data", (event) => {
         let data = event.scope_data;
 
         let canvas = document.getElementById("AudioScopeCanvas")
         let ctx = canvas.getContext("2d")
+
+        ctx.drawImage(canvas, 0, 1)
+
 
         for(var i = 0; i < data.length; i++) {
           let imgData = ctx.createImageData(1, 1)
@@ -67,31 +70,14 @@ let ControlHooks = {
           let val = percent * (xMax - xMin) + xMin
 
 
-          d[0] = val
-          d[1] = 0
+          d[0] = 0
+          d[1] = val
           d[2] = 0
           d[3] = 255
 
-          ctx.putImageData(imgData, i, 5)
+          ctx.putImageData(imgData, i, 1)
         }
 
-        //let canvas = document.getElementById("AudioScopeCanvas")
-        //let ctx = canvas.getContext("2d")
-        //let imgData = ctx.createImageData(213, 1)
-
-        //for(var i = 0; i < 213; i++) {
-        //  let randColor = Math.floor(Math.random() * 255)
-
-        //  imgData[0] = randColor;
-        //  imgData[1] = randColor;
-        //  imgData[2] = randColor;
-        //  imgData[3] = randColor;
-
-        //  ctx.putImageData(imgData, 0, 0)
-        //}
-
-
-        //console.log("scope_data:", event)
       })
     },
 
