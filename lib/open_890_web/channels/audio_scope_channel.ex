@@ -3,7 +3,9 @@ defmodule Open890Web.AudioScopeChannel do
 
   @impl true
   def join("radio:audio_scope", payload, socket) do
+    IO.puts("Audio Scope: join")
     if authorized?(payload) do
+      IO.puts("join: authorized")
       {:ok, socket}
     else
       {:error, %{reason: "unauthorized"}}

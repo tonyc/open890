@@ -29,6 +29,11 @@ let liveSocket = new LiveSocket("/live", Socket, {
 })
 liveSocket.connect()
 
+let audioScopeChannel = socket.channel("radio:audio_scope", {})
+audioScopeChannel.join()
+  .receive("ok", resp => { console.log("joined audio_scope channel", resp) })
+  .receive("error", resp => { console.log("error joining audio_scope channel", resp) })
+
 
 let audioStreamChannel = socket.channel("radio:audio_stream", {})
 audioStreamChannel.join()
