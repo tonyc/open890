@@ -110,7 +110,7 @@
           <line id="audioScopeTuneIndicator" class="primaryCarrier" x1="106" y1="0" x2="106" y2="50" />
         </svg>
 
-        <canvas phx-hook="AudioScopeCanvas" id="AudioScopeCanvas" class="waterfall" width="213" height="50"></canvas>
+        <canvas phx-hook="AudioScopeCanvas" id="AudioScopeCanvas" data-theme="<%= @theme %>" class="waterfall" width="213" height="50"></canvas>
       </div>
 
     </div> <!-- column containing audioScopeWrapper -->
@@ -232,7 +232,7 @@
         <rect id="bandscopeBackground" x="0" y="0" height="150" width="640" pointer-events="visibleFill" phx-hook="BandScope" />
       </svg>
 
-      <canvas phx-hook="BandScopeCanvas" id="BandScopeCanvas" class="waterfall bandscope" width="640" height="100"></canvas>
+      <canvas phx-hook="BandScopeCanvas" id="BandScopeCanvas" data-theme="<%= @theme %>" class="waterfall bandscope" width="640" height="100"></canvas>
 
       <div class="row">
         <div class="wide column">
@@ -365,6 +365,7 @@
         </div>
       </div>
 
+      <%= live_component @socket, ButtonsComponent, id: :buttons, band_scope_mode: @band_scope_mode %>
     </div>
 
 

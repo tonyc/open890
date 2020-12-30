@@ -9,6 +9,7 @@ defmodule Open890Web.Live.RadioLive do
   alias Open890.Extract
 
   alias Open890Web.RadioViewHelpers
+  alias Open890Web.Live.{ButtonsComponent}
 
   @init_socket [
     {:debug, false},
