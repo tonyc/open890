@@ -1,4 +1,4 @@
-import linearInterpolate from "./linear_interpolate"
+import Interpolate from "./interpolate"
 import ColorMap from "./colormap"
 
 let ControlHooks = {
@@ -66,7 +66,7 @@ let ControlHooks = {
           let i = 0;
 
           for(i; i < data.length; i++) {
-            let val = linearInterpolate(data[i], 0, this.maxVal, 255, 0) * this.multiplier
+            let val = Interpolate.linear(data[i], 0, this.maxVal, 255, 0) * this.multiplier
 
             const mappedColor = ColorMap.applyMap(val, this.theme)
 
@@ -92,9 +92,14 @@ let ControlHooks = {
       this.canvas = this.el
       this.ctx = this.canvas.getContext("2d")
       this.maxVal = 140
-      this.multiplier = 3
+      this.multiplier = 1.0
       this.theme = this.el.dataset.theme
       this.draw = true
+
+      this.fs = this.ctx.fillStyle;
+      this.ctx.fillStyle = 'black';
+      this.ctx.fillRect(0, 0, 640, 200)
+      this.ctx.fillStyle = this.fs
 
       this.handleEvent("band_scope_data", (event) => {
         if (this.draw) {
@@ -106,7 +111,9 @@ let ControlHooks = {
 
           let i = 0;
           for(i; i < data.length; i++) {
-            let val = linearInterpolate(data[i], 0, this.maxVal, 255, 0) * this.multiplier
+
+            // interpolate signal strength to 0..255
+            let val = Interpolate.linear(data[i], 0, this.maxVal, 255, 0) * this.multiplier
 
             const mappedColor = ColorMap.applyMap(val, this.theme)
 

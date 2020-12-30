@@ -18,6 +18,12 @@ import ControlHooks from "./control_hooks"
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 
+import linearInterpolate from "./linear_interpolate"
+import ColorMap from "./colormap"
+
+window.linearInterpolate = linearInterpolate;
+window.ColorMap = ColorMap;
+
 let liveSocket = new LiveSocket("/live", Socket, {
   hooks: ControlHooks,
   params: {_csrf_token: csrfToken},
