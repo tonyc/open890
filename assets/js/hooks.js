@@ -1,7 +1,7 @@
 import Interpolate from "./interpolate"
 import ColorMap from "./colormap"
 
-let ControlHooks = {
+let Hooks = {
   MultiCH: {
     mounted() {
       this.el.addEventListener("wheel", event => {
@@ -130,4 +130,4 @@ let ControlHooks = {
     }
   },
 }
-export default ControlHooks
+export default Hooks

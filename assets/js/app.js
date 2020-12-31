@@ -14,7 +14,7 @@ import socket from "./socket"
 import "phoenix_html"
 import LiveSocket from "phoenix_live_view"
 
-import ControlHooks from "./control_hooks"
+import Hooks from "./hooks"
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 
@@ -25,7 +25,7 @@ window.Interpolate = Interpolate;
 window.ColorMap = ColorMap;
 
 let liveSocket = new LiveSocket("/live", Socket, {
-  hooks: ControlHooks,
+  hooks: Hooks,
   params: {_csrf_token: csrfToken},
   metadata: {
     click: (evt, el) => {
