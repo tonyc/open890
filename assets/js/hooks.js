@@ -45,16 +45,31 @@ let Hooks = {
       this.theme = this.el.dataset.theme;
     },
 
+    blankScope() {
+      if (this.ctx) {
+        this.ctx.save();
+        this.ctx.fillStyle = 'black';
+        this.ctx.fillRect(0, 0, this.width, this.height)
+        this.ctx.restore()
+      }
+    },
+
     mounted() {
       console.log("audioscope canvas mounted")
 
       this.canvas = this.el
       this.ctx = this.canvas.getContext("2d")
 
-      this.maxVal = 50
-      this.multiplier = 1.25
+      this.multiplier = 1 / 3.0
       this.theme = this.el.dataset.theme;
       this.draw = true
+
+      // these items should be computed or passed in via data- attributes
+      this.maxVal = 50
+      this.width = 212
+      this.height = 50
+
+      this.blankScope()
 
       this.handleEvent("scope_data", (event) => {
         if (this.draw) {
@@ -86,20 +101,32 @@ let Hooks = {
       this.theme = this.el.dataset.theme
     },
 
+    blankScope() {
+      if (this.ctx) {
+        this.ctx.save();
+        this.ctx.fillStyle = 'black';
+        this.ctx.fillRect(0, 0, this.width, this.height)
+        this.ctx.restore()
+      }
+    },
+
     mounted() {
       console.log("bandscope canvas mounted")
 
       this.canvas = this.el
       this.ctx = this.canvas.getContext("2d")
+
+      // these items should be computed or passed in via data- attributes
       this.maxVal = 140
+      this.width = 640
+      this.height = 200
+
       this.multiplier = 1.0
       this.theme = this.el.dataset.theme
       this.draw = true
 
-      this.fs = this.ctx.fillStyle;
-      this.ctx.fillStyle = 'black';
-      this.ctx.fillRect(0, 0, 640, 200)
-      this.ctx.fillStyle = this.fs
+      this.blankScope()
+
 
       this.handleEvent("band_scope_data", (event) => {
         if (this.draw) {
