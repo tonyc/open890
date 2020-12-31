@@ -60,7 +60,7 @@ let Hooks = {
       this.canvas = this.el
       this.ctx = this.canvas.getContext("2d")
 
-      this.multiplier = 1 / 3.0
+      this.multiplier = 0.6
       this.theme = this.el.dataset.theme;
       this.draw = true
 
@@ -121,12 +121,11 @@ let Hooks = {
       this.width = 640
       this.height = 200
 
-      this.multiplier = 1.0
+      this.multiplier = 1.25
       this.theme = this.el.dataset.theme
       this.draw = true
 
       this.blankScope()
-
 
       this.handleEvent("band_scope_data", (event) => {
         if (this.draw) {
@@ -140,7 +139,7 @@ let Hooks = {
           for(i; i < data.length; i++) {
 
             // interpolate signal strength to 0..255
-            let val = Interpolate.linear(data[i], 0, this.maxVal, 255, 0) * this.multiplier
+            let val = Interpolate.linear(data[i], 0, 140, 255, 0) * this.multiplier
 
             const mappedColor = ColorMap.applyMap(val, this.theme)
 
