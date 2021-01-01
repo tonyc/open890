@@ -34,6 +34,12 @@
   margin: -1rem 0 2rem;
 }
 
+body {
+  background-color: #111;
+}
+
+
+
 
 h1.title {
   padding-bottom: 2rem;
@@ -61,7 +67,7 @@ $elecraft-dark-blue: rgba(0, 0, 64, 1.0);
 $elecraft-grid: rgba(128, 128, 128, 1.0);
 
 $border-radius-medium: 10px;
-$border-radius-small: 3px;
+$border-radius-small: 4px;
 
 .debug {
   border-width: 1px;
@@ -73,7 +79,7 @@ $border-radius-small: 3px;
   &.cyan { border-color: cyan; }
 }
 
-nav { 
+nav {
   // float: left;
   // align-content: start;
   // justify-content: space-between;
@@ -91,7 +97,6 @@ nav {
     display: inline;
     float: right;
   }
-
 }
 
 // radio specific stuff
@@ -99,6 +104,8 @@ nav {
 #radio {
   margin: 0;
   padding: 0rem 0.5rem;
+  background-color: black;
+  color: white;
   // padding-right: 1rem;
   // padding: 0.5rem 0.5rem;
 }
@@ -121,8 +128,9 @@ nav {
 }
 
 .receiverIndicator {
-  background-color: black;
-  color: gray;
+  background-color: #ccc;
+  color: black;
+
   text-align: center;
   padding: 5px 5px;
   width: 42px;
@@ -133,8 +141,14 @@ nav {
   }
 
   &.active {
-    color: white;
+    background-color: white;
+    color: black;
   }
+}
+
+.ui.button {
+  background-color: #333;
+  color: #ccc;
 }
 
 
@@ -190,7 +204,13 @@ nav {
 
 #audioScopeWrapper {
   #audioScope {
-    border-radius: $border-radius-small;
+    //border-radius: $border-radius-small;
+    border-top: 2px solid $kenwood-grey;
+    border-left: 2px solid $kenwood-grey;
+    border-right: 2px solid $kenwood-grey;
+    border-top-left-radius: $border-radius-small;
+    border-top-right-radius: $border-radius-small;
+
     background-color: black;
     fill: #999;
     width: 75%;
@@ -198,6 +218,11 @@ nav {
   }
 
   #AudioScopeCanvas {
+    border-bottom: 2px solid $kenwood-grey;
+    border-left: 2px solid $kenwood-grey;
+    border-right: 2px solid $kenwood-grey;
+    border-bottom-left-radius: $border-radius-small;
+    border-bottom-right-radius: $border-radius-small;
     width: 75%;
     float: right;
     // this should be 0, not sure where it's coming from
@@ -427,11 +452,11 @@ svg#bandScope {
   padding-bottom: 0;
 }
 
-//#bandScopeWrapper {
-//  border: 1px solid $kenwood-grey;
-//  padding: 0;
-//  margin: 0;
-//}
+#bandScopeWrapper {
+  border: 2px solid $kenwood-grey;
+  margin-bottom: 1rem;
+  border-radius: 5px;
+}
 
 #bandScopeContainer {
   //padding-top: 0;
