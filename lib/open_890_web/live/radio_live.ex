@@ -114,6 +114,8 @@ defmodule Open890Web.Live.RadioLive do
     %{msg: msg} = payload
 
     socket = cond do
+      msg |> String.starts_with?("BSD") ->
+        socket |> push_event("clear_band_scope", %{})
       msg |> String.starts_with?("RA") ->
         rf_att = msg |> Extract.rf_att()
         socket |> assign(:rf_att, rf_att)

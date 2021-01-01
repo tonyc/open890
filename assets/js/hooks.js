@@ -45,7 +45,7 @@ let Hooks = {
       this.theme = this.el.dataset.theme;
     },
 
-    blankScope() {
+    clearScope() {
       if (this.ctx) {
         this.ctx.save();
         this.ctx.fillStyle = 'black';
@@ -69,7 +69,7 @@ let Hooks = {
       this.width = 212
       this.height = 50
 
-      this.blankScope()
+      this.clearScope()
 
       this.handleEvent("scope_data", (event) => {
         if (this.draw) {
@@ -101,7 +101,7 @@ let Hooks = {
       this.theme = this.el.dataset.theme
     },
 
-    blankScope() {
+    clearScope() {
       if (this.ctx) {
         this.ctx.save();
         this.ctx.fillStyle = 'black';
@@ -125,7 +125,11 @@ let Hooks = {
       this.theme = this.el.dataset.theme
       this.draw = true
 
-      this.blankScope()
+      this.clearScope()
+
+      this.handleEvent("clear_band_scope", (event) => {
+        this.clearScope()
+      })
 
       this.handleEvent("band_scope_data", (event) => {
         if (this.draw) {
