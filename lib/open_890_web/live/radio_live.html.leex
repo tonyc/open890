@@ -248,14 +248,7 @@
             <div class="ui compact buttons">
               <%= vfo_switch_button(@active_receiver, class: "attached left") %>
               <%= vfo_equalize_button(class: "right attached") %>
-
             </div>
-
-            <%= if @active_mode in [:cw, :cw_r] do %>
-              <div class="ui compact buttons">
-                <%= cmd_button("CW Tune", "CA1", class: "") %>
-              </div>
-            <% end %>
 
           </div>
         </div>
