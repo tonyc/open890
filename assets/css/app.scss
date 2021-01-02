@@ -34,13 +34,6 @@
   margin: -1rem 0 2rem;
 }
 
-body {
-  background-color: #111;
-}
-
-
-
-
 h1.title {
   padding-bottom: 2rem;
 }
@@ -68,6 +61,27 @@ $elecraft-grid: rgba(128, 128, 128, 1.0);
 
 $border-radius-medium: 10px;
 $border-radius-small: 4px;
+
+// dark mode?
+body {
+  background-color: #222;
+}
+
+#radio {
+  background-color: #000;
+  color: #ccc;
+}
+
+.ui.basic.button {
+  //background-color: $kenwood-grey !important;
+  color: $kenwood-grey !important;
+  border: 1px solid $kenwood-grey !important;
+}
+
+.ui.button {
+  background-color: #333;
+  color: #ccc;
+}
 
 .debug {
   border-width: 1px;
@@ -104,8 +118,6 @@ nav {
 #radio {
   margin: 0;
   padding: 0rem 0.5rem;
-  background-color: black;
-  color: white;
   // padding-right: 1rem;
   // padding: 0.5rem 0.5rem;
 }
@@ -144,11 +156,6 @@ nav {
     background-color: white;
     color: black;
   }
-}
-
-.ui.button {
-  background-color: #333;
-  color: #ccc;
 }
 
 
