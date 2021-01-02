@@ -133,6 +133,12 @@ let Hooks = {
         this.clearScope()
       })
 
+      this.el.addEventListener("wheel", event => {
+        event.preventDefault();
+        var isScrollUp = (event.deltaY < 0)
+        this.pushEvent("multi_ch", {is_up: isScrollUp})
+      });
+
       this.el.addEventListener("mouseup", event => {
         event.preventDefault();
         //console.log("bandscope clicked", event)
