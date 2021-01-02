@@ -55,6 +55,7 @@ defmodule Open890.TCPClient do
     "CH1" |> cmd()
   end
 
+  def cw_tune, do: "CA1" |> cmd()
   def vfo_a_b_swap, do: "EC" |> cmd()
   def get_vfo_a_freq, do: "FA" |> cmd()
   def get_vfo_b_freq, do: "FB" |> cmd()

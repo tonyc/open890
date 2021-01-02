@@ -42,6 +42,14 @@ let Hooks = {
       })
     }
   },
+  AudioScope: {
+    mounted() {
+      this.el.addEventListener("mouseup", (event) => {
+        event.preventDefault();
+        this.pushEvent("cw_tune", {})
+      })
+    }
+  },
   AudioScopeCanvas: {
     updated() {
       this.theme = this.el.dataset.theme;
@@ -72,6 +80,11 @@ let Hooks = {
       this.height = 50
 
       this.clearScope()
+
+      this.el.addEventListener("mouseup", (event) => {
+        event.preventDefault();
+        this.pushEvent("cw_tune", {})
+      })
 
       this.handleEvent("scope_data", (event) => {
         if (this.draw) {

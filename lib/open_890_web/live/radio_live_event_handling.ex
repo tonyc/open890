@@ -76,6 +76,11 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
         {:noreply, socket}
       end
 
+      def handle_event("cw_tune", _params, socket) do
+        Radio.cw_tune()
+        {:noreply, socket}
+      end
+
       defp set_screen_id(socket, id) do
         socket |> assign(:display_screen_id, id)
       end

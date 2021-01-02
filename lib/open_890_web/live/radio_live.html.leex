@@ -99,8 +99,8 @@
 
     <div class="column">
 
-      <div id="audioScopeWrapper">
-        <svg id="audioScope" class="scope themed <%= @theme %>" viewbox="0 0 212 50">
+      <div id="audioScopeWrapper" class="hover-pointer">
+        <svg id="audioScope" class="scope themed <%= @theme %>" viewbox="0 0 212 50" phx-hook="AudioScope">
           <defs>
             <linearGradient id="kenwood" gradientTransform="rotate(90)">
               <stop offset="0" stop-color="white" />
@@ -193,7 +193,7 @@
   <div id="bandScopeContainer" class="row">
     <div class="wide column">
 
-      <div id="bandScopeWrapper">
+      <div id="bandScopeWrapper" class="hover-pointer">
         <svg id="bandScope" class="scope themed <%= @theme %>" viewbox="0 0 640 140">
           <defs>
             <filter id="blur" filterUnits="userSpaceOnUse" x="0" y="0" width="640" height="150">
