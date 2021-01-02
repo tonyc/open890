@@ -20,9 +20,9 @@ let Hooks = {
         this.pushEvent("multi_ch", {is_up: isScrollUp})
       });
 
-      this.el.addEventListener("mousemove", event => {
-        console.log("mousemove", event)
-      })
+      //this.el.addEventListener("mousemove", event => {
+      //  console.log("mousemove", event)
+      //})
 
       this.el.addEventListener("mouseup", event => {
         // this doesn't work
@@ -34,7 +34,9 @@ let Hooks = {
         pt.x = event.clientX;
         pt.y = event.clientY;
 
+
         var cursorPt = pt.matrixTransform(svg.getScreenCTM().inverse());
+        console.log("scope clicked", cursorPt)
 
         this.pushEvent("scope_clicked", {x: cursorPt.x, y: cursorPt.y})
       })
@@ -129,6 +131,24 @@ let Hooks = {
 
       this.handleEvent("clear_band_scope", (event) => {
         this.clearScope()
+      })
+
+      this.el.addEventListener("mouseup", event => {
+        event.preventDefault();
+        //console.log("bandscope clicked", event)
+
+        let rect = this.canvas.getBoundingClientRect()
+
+        let scaleX = this.canvas.width / rect.width;
+        let scaleY = this.canvas.height / rect.height;
+
+        let x = (event.clientX - rect.left) * scaleX;
+        let y = (event.clientY - rect.top) * scaleY;
+
+
+        //console.log("computed:", {x, y})
+
+        this.pushEvent("scope_clicked", {x, y})
       })
 
       this.handleEvent("band_scope_data", (event) => {
