@@ -13,6 +13,18 @@ let Hooks = {
     }
   },
   BandScope: {
+    tuneToClick(event) {
+      event.preventDefault()
+
+      let svg = document.querySelector('svg#bandScope');
+      let pt = svg.createSVGPoint();
+
+      pt.x = event.clientX;
+      pt.y = event.clientY;
+
+      var cursorPt = pt.matrixTransform(svg.getScreenCTM().inverse());
+      this.pushEvent("scope_clicked", {x: cursorPt.x, y: cursorPt.y})
+    },
     mounted() {
       this.el.addEventListener("wheel", event => {
         event.preventDefault();
@@ -20,25 +32,14 @@ let Hooks = {
         this.pushEvent("multi_ch", {is_up: isScrollUp})
       });
 
-      //this.el.addEventListener("mousemove", event => {
-      //  console.log("mousemove", event)
-      //})
+      this.el.addEventListener("mousemove", event => {
+        if (event.buttons && event.buttons == 1) {
+          this.tuneToClick(event)
+        }
+      })
 
-      this.el.addEventListener("mouseup", event => {
-        // this doesn't work
-        event.preventDefault();
-
-        let svg = document.querySelector('svg#bandScope');
-        let pt = svg.createSVGPoint();
-
-        pt.x = event.clientX;
-        pt.y = event.clientY;
-
-
-        var cursorPt = pt.matrixTransform(svg.getScreenCTM().inverse());
-        console.log("scope clicked", cursorPt)
-
-        this.pushEvent("scope_clicked", {x: cursorPt.x, y: cursorPt.y})
+      this.el.addEventListener("mousedown", (event) => {
+        this.tuneToClick(event)
       })
     }
   },
@@ -81,7 +82,7 @@ let Hooks = {
 
       this.clearScope()
 
-      this.el.addEventListener("mouseup", (event) => {
+      this.el.addEventListener("click", (event) => {
         event.preventDefault();
         this.pushEvent("cw_tune", {})
       })
@@ -114,6 +115,18 @@ let Hooks = {
   BandScopeCanvas: {
     updated() {
       this.theme = this.el.dataset.theme
+    },
+
+    tuneToClick(event) {
+      let rect = this.canvas.getBoundingClientRect()
+
+      let scaleX = this.canvas.width / rect.width;
+      let scaleY = this.canvas.height / rect.height;
+
+      let x = (event.clientX - rect.left) * scaleX;
+      let y = (event.clientY - rect.top) * scaleY;
+
+      this.pushEvent("scope_clicked", {x, y})
     },
 
     clearScope() {
@@ -152,22 +165,14 @@ let Hooks = {
         this.pushEvent("multi_ch", {is_up: isScrollUp})
       });
 
-      this.el.addEventListener("mouseup", event => {
-        event.preventDefault();
-        //console.log("bandscope clicked", event)
+      this.el.addEventListener("mousemove", event => {
+        if (event.buttons && event.buttons == 1) {
+          this.tuneToClick(event)
+        }
+      })
 
-        let rect = this.canvas.getBoundingClientRect()
-
-        let scaleX = this.canvas.width / rect.width;
-        let scaleY = this.canvas.height / rect.height;
-
-        let x = (event.clientX - rect.left) * scaleX;
-        let y = (event.clientY - rect.top) * scaleY;
-
-
-        //console.log("computed:", {x, y})
-
-        this.pushEvent("scope_clicked", {x, y})
+      this.el.addEventListener("mousedown", event => {
+        this.tuneToClick(event);
       })
 
       this.handleEvent("band_scope_data", (event) => {

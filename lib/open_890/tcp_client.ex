@@ -133,8 +133,9 @@ defmodule Open890.TCPClient do
 
   def handle_info({:tcp_closed, _socket}, state) do
     Logger.warn("TCP socket closed. State: #{inspect(state)}")
-
     {:noreply, state}
+
+    #{:stop, :normal, state}
   end
 
   def handle_info(:connect_socket, state) do
@@ -246,6 +247,11 @@ defmodule Open890.TCPClient do
 
   # filter scope LAN/high cycle respnose
   def handle_msg("DD11", state), do: state
+
+  def handle_msg("PS0", state) do
+    {:noreply, state}
+    #{:stop, :normal, state}
+  end
 
   def handle_msg(msg, %{socket: _socket} = state) when is_binary(msg) do
     cond do
