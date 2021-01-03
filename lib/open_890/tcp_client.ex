@@ -55,6 +55,19 @@ defmodule Open890.TCPClient do
     "CH1" |> cmd()
   end
 
+  def get_ref_level() do
+    "BSC" |> cmd()
+  end
+
+  def set_ref_level(db_value) when is_float(db_value) do
+    cmd_value = (db_value + 20) * 2
+                |> round()
+                |> to_string()
+                |> String.pad_leading(3, "0")
+
+    "BSC#{cmd_value}" |> cmd()
+  end
+
   def cw_tune, do: "CA1" |> cmd()
   def vfo_a_b_swap, do: "EC" |> cmd()
   def get_vfo_a_freq, do: "FA" |> cmd()

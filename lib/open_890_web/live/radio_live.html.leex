@@ -250,6 +250,19 @@
               <%= vfo_equalize_button(class: "right attached") %>
             </div>
 
+            <div class="ui row">
+
+              <div class="two wide columns">
+                <form class="ui form" id="refLevel" phx-change="ref_level_changed">
+                 <div class="inline field">
+                    <label>Ref Level</label>
+                    <input class="ui input" name="refLevel" type="number" min="-20" max="10" step="0.5" value="<%= format_ref_level(@ref_level) %>"></input>
+                    <label>dB</label>
+                  </div>
+                </form>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>

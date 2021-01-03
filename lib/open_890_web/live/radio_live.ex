@@ -32,6 +32,7 @@ defmodule Open890Web.Live.RadioLive do
     {:inactive_mode, :unknown},
     {:inactive_receiver, :b},
     {:projected_active_receiver_location, ""},
+    {:ref_level, 0},
     {:rf_pre, 0},
     {:rf_att, 0},
     {:s_meter, 0},
@@ -84,6 +85,7 @@ defmodule Open890Web.Live.RadioLive do
     Radio.get_band_scope_att()
     Radio.get_display_screen()
     Radio.get_rf_pre_att()
+    Radio.get_ref_level()
   end
 
   defp init_socket(socket) do
@@ -114,8 +116,13 @@ defmodule Open890Web.Live.RadioLive do
     %{msg: msg} = payload
 
     socket = cond do
+      msg |> String.starts_with?("BSC0") ->
+        ref_level = msg |> Extract.ref_level()
+        socket |> assign(:ref_level, ref_level)
+
       msg |> String.starts_with?("BSD") ->
         socket |> push_event("clear_band_scope", %{})
+
       msg |> String.starts_with?("RA") ->
         rf_att = msg |> Extract.rf_att()
         socket |> assign(:rf_att, rf_att)
