@@ -256,6 +256,30 @@ defmodule Open890.Extract do
     str |> trim_to_integer(["FA", "FB", "0"])
   end
 
+  def alc_meter(str) when is_binary(str) do
+    str |> trim_to_integer(["RM1"])
+  end
+
+  def swr_meter(str) when is_binary(str) do
+    str |> trim_to_integer(["RM2"])
+  end
+
+  def comp_meter(str) when is_binary(str) do
+    str |> trim_to_integer(["RM3"])
+  end
+
+  def id_meter(str) when is_binary(str) do
+    str |> trim_to_integer(["RM4"])
+  end
+
+  def vd_meter(str) when is_binary(str) do
+    str |> trim_to_integer(["RM5"])
+  end
+
+  def temp_meter(str) when is_binary(str) do
+    str |> trim_to_integer(["RM6"])
+  end
+
   def s_meter(""), do: 0
 
   def s_meter(str) when is_binary(str) do
@@ -265,6 +289,11 @@ defmodule Open890.Extract do
       "" -> 0
       val -> val |> String.to_integer()
     end
+  end
+
+  def ref_level(str) when is_binary(str) do
+    str
+    |> trim_to_integer(["BSC0"])
   end
 
   def band_edges("BSM0" <> low_high) do

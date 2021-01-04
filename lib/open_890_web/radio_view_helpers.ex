@@ -48,6 +48,11 @@ defmodule Open890Web.RadioViewHelpers do
     "A = B" |> cmd_button("VV", opts)
   end
 
+  # converts the kenwood ref level (BSC) command number to a dB value from -20 to +10
+  def format_ref_level(ref_level) do
+    (ref_level / 2.0) - 20
+  end
+
   def format_band_scope_mode(mode) do
     mode
     |> case do

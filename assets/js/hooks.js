@@ -2,6 +2,18 @@ import Interpolate from "./interpolate"
 import ColorMap from "./colormap"
 
 let Hooks = {
+  RefLevelControl: {
+    mounted() {
+      console.log("ref level mount")
+      this.el.addEventListener("wheel", event => {
+        event.preventDefault();
+        console.log("ref level wheel", event)
+
+        //var isScrollUp = (event.deltaY < 0)
+        //this.pushEvent("adjust_ref_level", {is_up: isScrollUp})
+      })
+    }
+  },
   MultiCH: {
     mounted() {
       this.el.addEventListener("wheel", event => {
@@ -13,6 +25,18 @@ let Hooks = {
     }
   },
   BandScope: {
+    tuneToClick(event) {
+      event.preventDefault()
+
+      let svg = document.querySelector('svg#bandScope');
+      let pt = svg.createSVGPoint();
+
+      pt.x = event.clientX;
+      pt.y = event.clientY;
+
+      var cursorPt = pt.matrixTransform(svg.getScreenCTM().inverse());
+      this.pushEvent("scope_clicked", {x: cursorPt.x, y: cursorPt.y})
+    },
     mounted() {
       this.el.addEventListener("wheel", event => {
         event.preventDefault();
@@ -21,22 +45,21 @@ let Hooks = {
       });
 
       this.el.addEventListener("mousemove", event => {
-        console.log("mousemove", event)
+        if (event.buttons && event.buttons == 1) {
+          this.tuneToClick(event)
+        }
       })
 
-      this.el.addEventListener("mouseup", event => {
-        // this doesn't work
+      this.el.addEventListener("mousedown", (event) => {
+        this.tuneToClick(event)
+      })
+    }
+  },
+  AudioScope: {
+    mounted() {
+      this.el.addEventListener("mouseup", (event) => {
         event.preventDefault();
-
-        let svg = document.querySelector('svg#bandScope');
-        let pt = svg.createSVGPoint();
-
-        pt.x = event.clientX;
-        pt.y = event.clientY;
-
-        var cursorPt = pt.matrixTransform(svg.getScreenCTM().inverse());
-
-        this.pushEvent("scope_clicked", {x: cursorPt.x, y: cursorPt.y})
+        this.pushEvent("cw_tune", {})
       })
     }
   },
@@ -71,6 +94,11 @@ let Hooks = {
 
       this.clearScope()
 
+      this.el.addEventListener("click", (event) => {
+        event.preventDefault();
+        this.pushEvent("cw_tune", {})
+      })
+
       this.handleEvent("scope_data", (event) => {
         if (this.draw) {
           let data = event.scope_data;
@@ -101,6 +129,18 @@ let Hooks = {
       this.theme = this.el.dataset.theme
     },
 
+    tuneToClick(event) {
+      let rect = this.canvas.getBoundingClientRect()
+
+      let scaleX = this.canvas.width / rect.width;
+      let scaleY = this.canvas.height / rect.height;
+
+      let x = (event.clientX - rect.left) * scaleX;
+      let y = (event.clientY - rect.top) * scaleY;
+
+      this.pushEvent("scope_clicked", {x, y})
+    },
+
     clearScope() {
       if (this.ctx) {
         this.ctx.save();
@@ -129,6 +169,22 @@ let Hooks = {
 
       this.handleEvent("clear_band_scope", (event) => {
         this.clearScope()
+      })
+
+      this.el.addEventListener("wheel", event => {
+        event.preventDefault();
+        var isScrollUp = (event.deltaY < 0)
+        this.pushEvent("multi_ch", {is_up: isScrollUp})
+      });
+
+      this.el.addEventListener("mousemove", event => {
+        if (event.buttons && event.buttons == 1) {
+          this.tuneToClick(event)
+        }
+      })
+
+      this.el.addEventListener("mousedown", event => {
+        this.tuneToClick(event);
       })
 
       this.handleEvent("band_scope_data", (event) => {

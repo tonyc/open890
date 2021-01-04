@@ -86,10 +86,46 @@
 
           <g transform="translate(0 20)">
             <%= for i <- (1..@s_meter) do %>
-              <rect class="sMeter <%= if i >= 36, do: "high" %>" x="<%= i-1 + ((i-1) * 4) %>" width="3" height="15" />
+              <rect class="sMeter meterIndicator <%= if i >= 36, do: "high" %>" x="<%= i-1 + ((i-1) * 4) %>" width="3" height="15" />
             <% end %>
             <%= for i <- (@s_meter..70) do %>
-              <rect class="sMeterBG" x="<%= i + (i * 4) %>" width="3" height="15" />
+              <rect class="sMeterBG meterBG" x="<%= i + (i * 4) %>" width="3" height="15" />
+            <% end %>
+          </g>
+        </svg>
+
+        <svg id="alcMeter" viewbox="0 0 350 35" class="">
+          <g id="alcMeterLegend" transform="translate(0 10)">
+            <line x1="0" y1="0" x2="75" y2="0" class="high" />
+            <line x1="102" y1="0" x2="172" y2="0" class="high" />
+            <text x="80" y="3">ALC</text>
+          </g>
+
+          <g transform="translate(0 20)">
+            <%= for i <- (1..@alc_meter) do %>
+              <rect class="alcMeter meterIndicator <%= if i >= 36, do: "high" %>" x="<%= i-1 + ((i-1) * 4) %>" width="3" height="15" />
+            <% end %>
+            <%= for i <- (@alc_meter..70) do %>
+              <rect class="alcMeterBG meterBG" x="<%= i + (i * 4) %>" width="3" height="15" />
+            <% end %>
+          </g>
+        </svg>
+
+        <svg id="swrMeter" viewbox="0 0 350 35" class="">
+          <g id="swrMeterLegend" class="meterLegend" transform="translate(0 15)">
+            <text y="0" x="0">1</text>
+            <text y="0" x="28">1.5</text>
+            <text y="0" x="90">2</text>
+            <text y="0" x="170">3</text>
+            <text y="0" x="335" class="inf">∞</text>
+          </g>
+
+          <g transform="translate(0 20)">
+            <%= for i <- (1..@swr_meter) do %>
+              <rect class="meterIndicator <%= if i >= 36, do: "high" %>" x="<%= i-1 + ((i-1) * 4) %>" width="3" height="15" />
+            <% end %>
+            <%= for i <- (@swr_meter..70) do %>
+              <rect class="meterBG" x="<%= i + (i * 4) %>" width="3" height="15" />
             <% end %>
           </g>
         </svg>
@@ -99,8 +135,8 @@
 
     <div class="column">
 
-      <div id="audioScopeWrapper">
-        <svg id="audioScope" class="scope themed <%= @theme %>" viewbox="0 0 212 50">
+      <div id="audioScopeWrapper" class="hover-pointer">
+        <svg id="audioScope" class="scope themed <%= @theme %>" viewbox="0 0 212 50" phx-hook="AudioScope">
           <defs>
             <linearGradient id="kenwood" gradientTransform="rotate(90)">
               <stop offset="0" stop-color="white" />
@@ -122,7 +158,7 @@
   <div class="ui row">
     <div id="vfos" class="eight column row">
       <%= if @active_receiver == :a do %>
-        <span class="ui basic label"><%= format_mode(@active_mode) %></span>
+        <span class="ui black label"><%= format_mode(@active_mode) %></span>
         <div class="freq active"><%= @active_frequency |> format_raw_frequency() %></div>
         <div class="bandIndicator">
           <div class="receiver">
@@ -136,10 +172,10 @@
             <span class="bandPointer">▶</span>
           </div>
         </div>
-        <span class="ui basic label"><%= format_mode(@inactive_mode) %></span>
+        <span class="ui black label"><%= format_mode(@inactive_mode) %></span>
         <div class="freq inactive"><%= @inactive_frequency |> format_raw_frequency() %></div>
       <% else %>
-        <span class="ui basic label"><%= format_mode(@active_mode) %></span>
+        <span class="ui black label"><%= format_mode(@active_mode) %></span>
         <div class="freq active"><%= @active_frequency |> format_raw_frequency() %></div>
         <div class="bandIndicator">
           <div class="receiver">
@@ -153,7 +189,7 @@
             <span class="bandPointer"> </span>
           </div>
         </div>
-        <span class="ui basic label"><%= format_mode(@inactive_mode) %></span>
+        <span class="ui black label"><%= format_mode(@inactive_mode) %></span>
         <div class="freq inactive"><%= @inactive_frequency |> format_raw_frequency() %></div>
       <% end %>
     </div>
@@ -187,13 +223,20 @@
           </div>
         </div>
       <% end %>
+
+      <div class="ui large black label" phx-hook="RefLevelControl" id="RefLevelControl">
+        Ref Level
+        <div class="detail">
+          <%= format_ref_level(@ref_level) %> dB
+        </div>
+      </div>
     </div>
   </div>
 
   <div id="bandScopeContainer" class="row">
     <div class="wide column">
 
-      <div id="bandScopeWrapper">
+      <div id="bandScopeWrapper" class="hover-pointer">
         <svg id="bandScope" class="scope themed <%= @theme %>" viewbox="0 0 640 140">
           <defs>
             <filter id="blur" filterUnits="userSpaceOnUse" x="0" y="0" width="640" height="150">
@@ -248,14 +291,20 @@
             <div class="ui compact buttons">
               <%= vfo_switch_button(@active_receiver, class: "attached left") %>
               <%= vfo_equalize_button(class: "right attached") %>
-
             </div>
 
-            <%= if @active_mode in [:cw, :cw_r] do %>
-              <div class="ui compact buttons">
-                <%= cmd_button("CW Tune", "CA1", class: "") %>
+            <div class="ui row">
+
+              <div class="two wide columns">
+                <form class="ui form" id="refLevel" phx-change="ref_level_changed">
+                 <div class="inline compact field">
+                    <label>Ref Level</label>
+                    <input class="ui input" name="refLevel" type="number" min="-20" max="10" step="0.5" value="<%= format_ref_level(@ref_level) %>"></input>
+                    <label>dB</label>
+                  </div>
+                </form>
               </div>
-            <% end %>
+            </div>
 
           </div>
         </div>
@@ -289,11 +338,6 @@
               <%= _ -> %>
                 <button class="ui attached button"></button>
             <% end %>
-
-            <button class="ui attached basic button">
-              Ref. Lev
-            </button>
-
 
             <%= cycle_button("ATT", @band_scope_att, %{
               0 => "BS81",

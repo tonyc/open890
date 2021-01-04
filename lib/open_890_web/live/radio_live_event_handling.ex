@@ -9,6 +9,17 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
       alias Open890.TCPClient, as: Radio
       alias Open890.Menu
 
+      def handle_event("ref_level_changed", params, socket) do
+        with {parsed_number, _extra} <- params["refLevel"] |> Float.parse() do
+          Radio.set_ref_level(parsed_number)
+        else
+          other ->
+            Logger.info("Unable to parse ref level. Result: #{inspect(other)}")
+        end
+
+        {:noreply, socket}
+      end
+
       @impl true
       def handle_event("mic_up", _params, socket) do
         Radio.ch_up()
@@ -73,6 +84,11 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
             Logger.debug("Unknown vfo: #{vfo}")
         end
 
+        {:noreply, socket}
+      end
+
+      def handle_event("cw_tune", _params, socket) do
+        Radio.cw_tune()
         {:noreply, socket}
       end
 

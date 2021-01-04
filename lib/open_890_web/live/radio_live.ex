@@ -31,7 +31,14 @@ defmodule Open890Web.Live.RadioLive do
     {:inactive_frequency, ""},
     {:inactive_mode, :unknown},
     {:inactive_receiver, :b},
+    {:alc_meter, 0},
+    {:swr_meter, 0},
+    {:comp_meter, 0},
+    {:id_meter, 0},
+    {:vd_meter, 0},
+    {:temp_meter, 0},
     {:projected_active_receiver_location, ""},
+    {:ref_level, 0},
     {:rf_pre, 0},
     {:rf_att, 0},
     {:s_meter, 0},
@@ -84,6 +91,9 @@ defmodule Open890Web.Live.RadioLive do
     Radio.get_band_scope_att()
     Radio.get_display_screen()
     Radio.get_rf_pre_att()
+    Radio.get_ref_level()
+
+    Radio.monitor_meters()
   end
 
   defp init_socket(socket) do
@@ -114,8 +124,37 @@ defmodule Open890Web.Live.RadioLive do
     %{msg: msg} = payload
 
     socket = cond do
+      msg |> String.starts_with?("RM1") ->
+        meter = msg |> Extract.alc_meter()
+        socket |> assign(:alc_meter, meter)
+
+      msg |> String.starts_with?("RM2") ->
+        meter = msg |> Extract.swr_meter()
+        socket |> assign(:swr_meter, meter)
+
+      msg |> String.starts_with?("RM3") ->
+        meter = msg |> Extract.comp_meter()
+        socket |> assign(:comp_meter, meter)
+
+      msg |> String.starts_with?("RM4") ->
+        meter = msg |> Extract.id_meter()
+        socket |> assign(:id_meter, meter)
+
+      msg |> String.starts_with?("RM5") ->
+        meter = msg |> Extract.vd_meter()
+        socket |> assign(:vd_meter, meter)
+
+      msg |> String.starts_with?("RM6") ->
+        meter = msg |> Extract.temp_meter()
+        socket |> assign(:temp_meter, meter)
+
+      msg |> String.starts_with?("BSC0") ->
+        ref_level = msg |> Extract.ref_level()
+        socket |> assign(:ref_level, ref_level)
+
       msg |> String.starts_with?("BSD") ->
         socket |> push_event("clear_band_scope", %{})
+
       msg |> String.starts_with?("RA") ->
         rf_att = msg |> Extract.rf_att()
         socket |> assign(:rf_att, rf_att)

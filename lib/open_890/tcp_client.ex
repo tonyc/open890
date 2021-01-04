@@ -55,6 +55,20 @@ defmodule Open890.TCPClient do
     "CH1" |> cmd()
   end
 
+  def get_ref_level() do
+    "BSC" |> cmd()
+  end
+
+  def set_ref_level(db_value) when is_float(db_value) do
+    cmd_value = (db_value + 20) * 2
+                |> round()
+                |> to_string()
+                |> String.pad_leading(3, "0")
+
+    "BSC#{cmd_value}" |> cmd()
+  end
+
+  def cw_tune, do: "CA1" |> cmd()
   def vfo_a_b_swap, do: "EC" |> cmd()
   def get_vfo_a_freq, do: "FA" |> cmd()
   def get_vfo_b_freq, do: "FB" |> cmd()
@@ -100,6 +114,13 @@ defmodule Open890.TCPClient do
     "DS3" |> cmd()
   end
 
+  def monitor_meters do
+    Logger.info("********** monitor meters")
+    ["RM11", "RM21", "RM31", "RM41", "RM51", "RM61"]
+    |> Enum.each(fn command -> command |> cmd() end)
+  end
+
+
   # TODO: Make this configurable
   defp freq_change_step, do: "5"
 
@@ -132,8 +153,9 @@ defmodule Open890.TCPClient do
 
   def handle_info({:tcp_closed, _socket}, state) do
     Logger.warn("TCP socket closed. State: #{inspect(state)}")
-
     {:noreply, state}
+
+    #{:stop, :normal, state}
   end
 
   def handle_info(:connect_socket, state) do
@@ -245,6 +267,11 @@ defmodule Open890.TCPClient do
 
   # filter scope LAN/high cycle respnose
   def handle_msg("DD11", state), do: state
+
+  def handle_msg("PS0", state) do
+    {:noreply, state}
+    #{:stop, :normal, state}
+  end
 
   def handle_msg(msg, %{socket: _socket} = state) when is_binary(msg) do
     cond do
