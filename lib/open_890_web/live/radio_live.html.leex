@@ -122,7 +122,7 @@
   <div class="ui row">
     <div id="vfos" class="eight column row">
       <%= if @active_receiver == :a do %>
-        <span class="ui basic label"><%= format_mode(@active_mode) %></span>
+        <span class="ui black label"><%= format_mode(@active_mode) %></span>
         <div class="freq active"><%= @active_frequency |> format_raw_frequency() %></div>
         <div class="bandIndicator">
           <div class="receiver">
@@ -136,10 +136,10 @@
             <span class="bandPointer">▶</span>
           </div>
         </div>
-        <span class="ui basic label"><%= format_mode(@inactive_mode) %></span>
+        <span class="ui black label"><%= format_mode(@inactive_mode) %></span>
         <div class="freq inactive"><%= @inactive_frequency |> format_raw_frequency() %></div>
       <% else %>
-        <span class="ui basic label"><%= format_mode(@active_mode) %></span>
+        <span class="ui black label"><%= format_mode(@active_mode) %></span>
         <div class="freq active"><%= @active_frequency |> format_raw_frequency() %></div>
         <div class="bandIndicator">
           <div class="receiver">
@@ -153,7 +153,7 @@
             <span class="bandPointer"> </span>
           </div>
         </div>
-        <span class="ui basic label"><%= format_mode(@inactive_mode) %></span>
+        <span class="ui black label"><%= format_mode(@inactive_mode) %></span>
         <div class="freq inactive"><%= @inactive_frequency |> format_raw_frequency() %></div>
       <% end %>
     </div>
@@ -187,6 +187,13 @@
           </div>
         </div>
       <% end %>
+
+      <div class="ui large black label" phx-hook="RefLevelControl" id="RefLevelControl">
+        Ref Level
+        <div class="detail">
+          <%= format_ref_level(@ref_level) %> dB
+        </div>
+      </div>
     </div>
   </div>
 
@@ -254,7 +261,7 @@
 
               <div class="two wide columns">
                 <form class="ui form" id="refLevel" phx-change="ref_level_changed">
-                 <div class="inline field">
+                 <div class="inline compact field">
                     <label>Ref Level</label>
                     <input class="ui input" name="refLevel" type="number" min="-20" max="10" step="0.5" value="<%= format_ref_level(@ref_level) %>"></input>
                     <label>dB</label>
@@ -295,11 +302,6 @@
               <%= _ -> %>
                 <button class="ui attached button"></button>
             <% end %>
-
-            <button class="ui attached basic button">
-              Ref. Lev
-            </button>
-
 
             <%= cycle_button("ATT", @band_scope_att, %{
               0 => "BS81",

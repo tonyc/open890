@@ -2,6 +2,18 @@ import Interpolate from "./interpolate"
 import ColorMap from "./colormap"
 
 let Hooks = {
+  RefLevelControl: {
+    mounted() {
+      console.log("ref level mount")
+      this.el.addEventListener("wheel", event => {
+        event.preventDefault();
+        console.log("ref level wheel", event)
+
+        //var isScrollUp = (event.deltaY < 0)
+        //this.pushEvent("adjust_ref_level", {is_up: isScrollUp})
+      })
+    }
+  },
   MultiCH: {
     mounted() {
       this.el.addEventListener("wheel", event => {
