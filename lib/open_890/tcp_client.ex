@@ -114,6 +114,13 @@ defmodule Open890.TCPClient do
     "DS3" |> cmd()
   end
 
+  def monitor_meters do
+    Logger.info("********** monitor meters")
+    ["RM11", "RM21", "RM31", "RM41", "RM51", "RM61"]
+    |> Enum.each(fn command -> command |> cmd() end)
+  end
+
+
   # TODO: Make this configurable
   defp freq_change_step, do: "5"
 
