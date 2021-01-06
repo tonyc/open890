@@ -170,13 +170,12 @@ nav {
     fill: $kenwood-grey;
   }
 
-  rect.meterIndicator {
-    fill: $kenwood-cyan;
-    margin-right: 1px;
+  .meter.high {
+    fill: $kenwood-red
+  }
 
-    &.high {
-      fill: $kenwood-red
-    }
+  .meter.low {
+    fill: $kenwood-cyan;
   }
 
   #sMeterLegend {
@@ -234,8 +233,6 @@ nav {
       }
     }
   }
-
-
 }
 
 #audioScopeWrapper {

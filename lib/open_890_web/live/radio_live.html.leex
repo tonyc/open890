@@ -91,10 +91,10 @@
           </g>
 
           <g transform="translate(0 20)">
-            <rect x="0" y="0" width="350" height="15" fill="grey" />
-            <rect x="0" y="0" width="<%= (@s_meter * 5) %>" height="15" fill="cyan" />
+            <rect x="0" y="0" width="350" height="15" class="meterBG" />
+            <rect x="0" y="0" width="<%= (@s_meter * 5) %>" height="15" class="meter low" />
             <%= if @s_meter > 35 do %>
-              <rect x="175" y="0" width="<%= (@s_meter * 5) - 175 %>" height="15" fill="red" />
+              <rect x="175" y="0" width="<%= (@s_meter * 5) - 175 %>" height="15" class="meter high" />
             <% end %>
 
             <rect x="0" y="-2" width="350" height="25" fill="black" mask="url(#m)" />
@@ -109,10 +109,10 @@
           </g>
 
           <g transform="translate(0 20)">
-            <rect x="0" y="0" width="350" height="15" fill="grey" />
-            <rect x="0" y="0" width="<%= (@alc_meter * 5) %>" height="15" fill="cyan" />
+            <rect x="0" y="0" width="350" height="15" class="meterBG" />
+            <rect x="0" y="0" width="<%= (@alc_meter * 5) %>" height="15" class="meter low" />
             <%= if @alc_meter > 35 do %>
-              <rect x="175" y="0" width="<%= (@alc_meter * 5) - 175 %>" height="15" fill="red" />
+              <rect x="175" y="0" width="<%= (@alc_meter * 5) - 175 %>" height="15" class="meter high" />
             <% end %>
             <rect x="0" y="-2" width="350" height="25" fill="black" mask="url(#m)" />
           </g>
@@ -128,10 +128,10 @@
           </g>
 
           <g transform="translate(0 20)">
-            <rect x="0" y="0" width="350" height="15" fill="grey" />
-            <rect x="0" y="0" width="<%= (@swr_meter * 5) %>" height="15" fill="cyan" />
+            <rect x="0" y="0" width="350" height="15" class="meterBG" />
+            <rect x="0" y="0" width="<%= (@swr_meter * 5) %>" height="15" class="meter low" />
             <%= if @swr_meter > 35 do %>
-              <rect x="175" y="0" width="<%= (@swr_meter * 5) - 175 %>" height="15" fill="red" />
+              <rect x="175" y="0" width="<%= (@swr_meter * 5) - 175 %>" height="15" class="meter high" />
             <% end %>
             <rect x="0" y="-2" width="350" height="25" fill="black" mask="url(#m)" />
           </g>
