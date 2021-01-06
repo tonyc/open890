@@ -63,6 +63,8 @@ $elecraft-grid: rgba(128, 128, 128, 1.0);
 $border-radius-medium: 10px;
 $border-radius-small: 3px;
 
+$meter-legend-font-size: 9px;
+
 .debug {
   border-width: 1px;
   border-style: dashed;
@@ -177,7 +179,7 @@ nav {
     }
 
     text {
-      font-size: 9px;
+      font-size: $meter-legend-font-size;
       font-family: sans-serif;
 
       &.low { fill: white; }
@@ -188,7 +190,7 @@ nav {
 
   #alcMeterLegend {
     text {
-      font-size: 9px;
+      font-size: $meter-legend-font-size;
       font-family: sans-serif;
       fill: red;
     }
@@ -202,7 +204,7 @@ nav {
   .meterLegend {
     text {
       fill: white;
-      font-size: 9px;
+      font-size: $meter-legend-font-size;
       font-family: sans-serif;
 
       &.inf {
