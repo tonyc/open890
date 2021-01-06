@@ -110,12 +110,12 @@
           </g>
 
           <g transform="translate(0 20)">
-            <%= for i <- (1..@alc_meter) do %>
-              <rect class="alcMeter meterIndicator <%= if i >= 36, do: "high" %>" x="<%= i-1 + ((i-1) * 4) %>" width="3" height="15" />
+            <rect x="0" y="0" width="350" height="15" fill="grey" />
+            <rect x="0" y="0" width="<%= (@alc_meter * 5) %>" height="15" fill="cyan" />
+            <%= if @alc_meter > 35 do %>
+              <rect x="175" y="0" width="<%= (@alc_meter * 5) - 175 %>" height="15" fill="red" />
             <% end %>
-            <%= for i <- (@alc_meter..70) do %>
-              <rect class="alcMeterBG meterBG" x="<%= i + (i * 4) %>" width="3" height="15" />
-            <% end %>
+            <rect x="0" y="-2" width="350" height="25" fill="black" mask="url(#m)" />
           </g>
         </svg>
 
