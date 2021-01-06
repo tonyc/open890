@@ -57,6 +57,12 @@
 
       <div id="sMeterWrapper">
         <svg id="sMeter" class="" viewbox="0 0 350 35">
+          <mask id="m">
+            <%= for x <- (0..70) do %>
+              <rect x="<%= (x * 5) - 2 %>" y="-3" width="2" height="25" fill="white" />
+            <% end %>
+          </mask>
+
           <g id="sMeterLegend" transform="translate(0 2)">
             <line class="low" x1="0" y1="0" x2="172" y2="0" />
             <line class="high" x1="175" y1="0" x2="348" y2="0" />
@@ -85,13 +91,15 @@
           </g>
 
           <g transform="translate(0 20)">
-            <%= for i <- (1..@s_meter) do %>
-              <rect class="sMeter meterIndicator <%= if i >= 36, do: "high" %>" x="<%= i-1 + ((i-1) * 4) %>" width="3" height="15" />
+            <rect x="0" y="0" width="350" height="15" fill="grey" />
+            <rect x="0" y="0" width="<%= (@s_meter * 5) %>" height="15" fill="cyan" />
+            <%= if @s_meter > 35 do %>
+              <rect x="175" y="0" width="<%= (@s_meter * 5) - 175 %>" height="15" fill="red" />
             <% end %>
-            <%= for i <- (@s_meter..70) do %>
-              <rect class="sMeterBG meterBG" x="<%= i + (i * 4) %>" width="3" height="15" />
-            <% end %>
+
+            <rect x="0" y="-2" width="350" height="25" fill="black" mask="url(#m)" />
           </g>
+
         </svg>
 
         <svg id="alcMeter" viewbox="0 0 350 35" class="">
