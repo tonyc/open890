@@ -234,6 +234,15 @@ defmodule Open890Web.RadioViewHelpers do
     ~e{<polygon id="passband" points="<%= filter_low %>,0 <%= filter_high %>,0 <%= filter_high %>,150 <%= filter_low %>,150" />}
   end
 
+  def passband_polygon(mode, active_frequency, filter_lo_width, filter_hi_shift, scope_edges) when mode in [:cw, :cw_r] do
+    half_width = filter_lo_width / 2 |> round()
+
+    filter_low = (active_frequency + half_width) |> project_to_bandscope_limits(scope_edges)
+    filter_high = (active_frequency - half_width) |> project_to_bandscope_limits(scope_edges)
+
+    ~e{<polygon id="passband" points="<%= filter_low %>,0 <%= filter_high %>,0 <%= filter_high %>,150 <%= filter_low %>,150" />}
+  end
+
   def passband_polygon(mode, _active_frequency, _filter_lo_width, _filter_hi_shift, _scope_edges) do
     Logger.debug("passband_polygon: unknown mode: #{inspect(mode)}")
     ""
