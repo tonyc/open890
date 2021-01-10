@@ -116,7 +116,7 @@ defmodule Open890.TCPClient do
 
   def monitor_meters do
     Logger.info("********** monitor meters")
-    ["RM11", "RM21", "RM31", "RM41", "RM51", "RM61"]
+    ["RM11", "RM21"]
     |> Enum.each(fn command -> command |> cmd() end)
   end
 
