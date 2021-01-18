@@ -310,6 +310,38 @@ defmodule Open890.Extract do
     |> trim_to_integer(["SH0", "SH1", "SL0", "SL1"])
   end
 
+  def current_roofing_filter(str) when is_binary(str) do
+    str
+    |> String.trim_leading("FL0")
+    |> String.first()
+    |> case do
+      "0" -> :a
+      "1" -> :b
+      _ -> :c
+    end
+  end
+
+  # Returns e.g. {:roofing_filter_a, filter_width_in_hz}
+  def roofing_filter(str) when is_binary(str) do
+    # FL1 0 00050
+
+    raw_val = str |> String.trim_leading("FL1")
+
+    filter_id = raw_val
+                |> String.first()
+                |> case do
+                  "0" -> :a
+                  "1" -> :b
+                  "2" -> :c
+                end
+
+    filter_value = raw_val
+                   |> trim_to_integer(["0", "1", "2"])
+                   |> Kernel.*(10)
+
+    {filter_id, filter_value}
+  end
+
   # returns hi_lo_cut or :shift_width based on the filter mode for menu EX 0 06 11/12
   def filter_mode(str) when is_binary(str) do
     str

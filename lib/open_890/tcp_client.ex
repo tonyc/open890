@@ -79,6 +79,11 @@ defmodule Open890.TCPClient do
   def get_display_screen, do: "DS1" |> cmd()
   def get_band_scope_att, do: "BS8" |> cmd()
 
+  def get_roofing_filter_info() do
+    ~w(FL0 FL10 FL11 FL12) |> run_commands()
+  end
+
+
   def get_rf_pre_att() do
     "PA" |> cmd()
     "RA" |> cmd()
@@ -338,5 +343,9 @@ defmodule Open890.TCPClient do
     |> Enum.map(fn value ->
       Integer.parse(value, 16) |> elem(0)
     end)
+  end
+
+  defp run_commands(cmds) when is_list(cmds) do
+    cmds |> Enum.each(&cmd/1)
   end
 end

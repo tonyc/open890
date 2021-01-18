@@ -253,17 +253,19 @@ defmodule Open890Web.RadioViewHelpers do
     ""
   end
 
-  def audio_scope_filter_edges(mode, {filter_lo_width, filter_hi_shift}) when is_integer(filter_lo_width) and is_integer(filter_hi_shift) do
-    low = (filter_lo_width |> IO.inspect(label: "low_width")) / 2.0 |> round()
+  def audio_scope_filter_edges(mode, {filter_lo_width, filter_hi_shift} = edges, active_roofing_filter, roofing_filter_data) when is_integer(filter_lo_width) and is_integer(filter_hi_shift) do
+    edges |> IO.inspect(label: "filter edges")
+
+    width = filter_lo_width / 2 |> round()
 
     # todo: need to know the roofing filter value so we know the actual width of the passband
 
 
-    ~e{<line id="audioScopeLowFilter" class="audioScopeFilter lowWidth" x1="150" y1="<%= low %>" x2="0" y2="<%= low %>" />}
+    ~e{<line id="audioScopeLowFilter" class="audioScopeFilter lowWidth" x1="<%= width %>" y1="0" x2="<%= width %>" y2="150" />}
   end
 
-  def audio_scope_filter_edges(_mode, {_, _}) do
-    Logger.info("Skipping audio scope filter edges because shift/width are not integers")
+  def audio_scope_filter_edges(_mode, _edges, _active_roofing_filter, _roofing_filter_data) do
+    Logger.debug("Skipping audio scope filter edges because shift/width are not integers")
     ""
   end
 

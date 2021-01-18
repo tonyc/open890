@@ -4,12 +4,12 @@
 
     <table class="ui small very basic collapsing table item">
       <tbody>
-      <%= for {k, v} <- assigns |> Map.drop([:__changed__, :socket, :live_module, :live_action, :band_scope_data, :audio_scope_data]) do %>
-        <tr>
-          <td class="right aligned"><span class="ui basic label"><%= k %></span></td>
-          <td><span class="mono"><%= inspect(v) %></span></td>
-        </tr>
-      <% end %>
+        <%= for k <- assigns |> Map.drop([:__changed__, :socket, :live_module, :live_action, :band_scope_data, :audio_scope_data]) |> Map.keys() |> Enum.sort() do %>
+          <tr>
+            <td class="right aligned"><span class="ui basic label"><%= k %></span></td>
+            <td><span class="mono"><%= inspect(assigns[k]) %></span></td>
+          </tr>
+        <% end %>
       </tbody>
     </table>
   </div>
@@ -152,7 +152,7 @@
           </defs>
           <polygon id="audioSpectrum" class="spectrum" points="<%= scope_data_to_svg(@audio_scope_data, 50) %>" />
 
-          <%= audio_scope_filter_edges(@active_mode, {@filter_lo_width, @filter_hi_shift}) %>
+          <%= audio_scope_filter_edges(@active_mode, {@filter_lo_width, @filter_hi_shift}, @active_roofing_filter, @roofing_filter_data) %>
 
           <line id="audioScopeTuneIndicator" class="primaryCarrier" x1="106" y1="0" x2="106" y2="50" />
         </svg>
