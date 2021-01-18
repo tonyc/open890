@@ -272,17 +272,23 @@ defmodule Open890Web.RadioViewHelpers do
     low_val = 106 - distance
     high_val = 106 + distance
 
-    edge_offset = 25
+    points = audio_scope_filter_points(low_val, high_val)
 
     ~e{
-      <line id="audioScopeLowFilter" class="audioScopeFilter lowWidth" x1="<%= low_val %>" y1="10" x2="<%= low_val - edge_offset %>" y2="150" stroke="blue" />
-      <line id="audioScopeHighFilter" class="audioScopeFilter highWidth" x1="<%= high_val %>" y1="10" x2="<%= high_val + edge_offset %>" y2="150" stroke="red" />
+      <polyline id="audioScopeFilter" points="<%= points %>" />
     }
   end
 
   def audio_scope_filter_edges(_mode, _edges, _active_roofing_filter, _roofing_filter_data) do
     Logger.debug("Skipping audio scope filter edges because shift/width are not integers")
     ""
+  end
+
+
+  defp audio_scope_filter_points(low_val, high_val) do
+    edge_offset = 7
+
+    "#{low_val - edge_offset},50 #{low_val},10 #{high_val},10 #{high_val + edge_offset},50"
   end
 
   @doc """

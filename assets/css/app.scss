@@ -250,7 +250,14 @@ nav {
     width: 75%;
     float: right;
 
+    #audioScopeFilter {
+      fill: none;
+      stroke: rgba(128, 128, 128, 1.0);
+      stroke-width: 1px;
+    }
+
   }
+
 
     //#audioScopeLowFilter {
     //  stroke: 1px solid red;
