@@ -152,7 +152,9 @@
           </defs>
           <polygon id="audioSpectrum" class="spectrum" points="<%= scope_data_to_svg(@audio_scope_data, 50) %>" />
 
-          <%= audio_scope_filter_edges(@active_mode, {@filter_lo_width, @filter_hi_shift}, @active_roofing_filter, @roofing_filter_data) %>
+          <%= if @active_roofing_filter && @roofing_filter_data[@active_roofing_filter] do %>
+            <%= audio_scope_filter_edges(@active_mode, {@filter_lo_width, @filter_hi_shift}, @active_roofing_filter, @roofing_filter_data) %>
+          <% end %>
 
           <line id="audioScopeTuneIndicator" class="primaryCarrier" x1="106" y1="0" x2="106" y2="50" />
         </svg>

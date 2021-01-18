@@ -253,15 +253,31 @@ defmodule Open890Web.RadioViewHelpers do
     ""
   end
 
-  def audio_scope_filter_edges(mode, {filter_lo_width, filter_hi_shift} = edges, active_roofing_filter, roofing_filter_data) when is_integer(filter_lo_width) and is_integer(filter_hi_shift) do
-    edges |> IO.inspect(label: "filter edges")
+  def project_to_audioscope_limits(value, width)
+    when is_integer(value) and is_integer(width) do
+    percentage = value / width
+    percentage * 212
+  end
 
-    width = filter_lo_width / 2 |> round()
+  def audio_scope_filter_edges(mode, {filter_lo_width, filter_hi_shift} = _filter_edges, active_roofing_filter, roofing_filter_data) when is_integer(filter_lo_width) and is_integer(filter_hi_shift) and not is_nil(active_roofing_filter) do
+    half_width = filter_lo_width / 2 |> round()
 
-    # todo: need to know the roofing filter value so we know the actual width of the passband
+    roofing_width = roofing_filter_data |> Map.get(active_roofing_filter)
+    half_roofing_width = roofing_width / 2 |> round()
 
+    midpoint = roofing_width / 2 |> round()
 
-    ~e{<line id="audioScopeLowFilter" class="audioScopeFilter lowWidth" x1="<%= width %>" y1="0" x2="<%= width %>" y2="150" />}
+    distance = (half_width |> project_to_audioscope_limits(roofing_width)) / 2 |> round()
+
+    low_val = 106 - distance
+    high_val = 106 + distance
+
+    edge_offset = 25
+
+    ~e{
+      <line id="audioScopeLowFilter" class="audioScopeFilter lowWidth" x1="<%= low_val %>" y1="10" x2="<%= low_val - edge_offset %>" y2="150" stroke="blue" />
+      <line id="audioScopeHighFilter" class="audioScopeFilter highWidth" x1="<%= high_val %>" y1="10" x2="<%= high_val + edge_offset %>" y2="150" stroke="red" />
+    }
   end
 
   def audio_scope_filter_edges(_mode, _edges, _active_roofing_filter, _roofing_filter_data) do

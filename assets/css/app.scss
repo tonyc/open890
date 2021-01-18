@@ -250,12 +250,15 @@ nav {
     width: 75%;
     float: right;
 
-    #audioScopeLowFilter {
-      stroke: 1px solid red;
-
-    }
   }
 
+    //#audioScopeLowFilter {
+    //  stroke: 1px solid red;
+    //}
+
+    //#audioScopeHighFilter {
+    //  stroke: 1px solid green;
+    //}
 
   #AudioScopeCanvas {
     border-bottom: 2px solid $kenwood-grey;
