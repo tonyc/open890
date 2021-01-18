@@ -249,7 +249,13 @@ nav {
     fill: #999;
     width: 75%;
     float: right;
+
+    line.audioScopeFilter {
+      stroke: 1px solid red;
+
+    }
   }
+
 
   #AudioScopeCanvas {
     border-bottom: 2px solid $kenwood-grey;

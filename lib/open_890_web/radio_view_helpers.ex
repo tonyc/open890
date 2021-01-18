@@ -253,6 +253,20 @@ defmodule Open890Web.RadioViewHelpers do
     ""
   end
 
+  def audio_scope_filter_edges(mode, {filter_lo_width, filter_hi_shift}) when is_integer(filter_lo_width) and is_integer(filter_hi_shift) do
+    low = (filter_lo_width |> IO.inspect(label: "low_width")) / 2.0 |> round()
+
+    # todo: need to know the roofing filter value so we know the actual width of the passband
+
+
+    ~e{<line id="audioScopeLowFilter" class="audioScopeFilter lowWidth" x1="150" y1="<%= low %>" x2="0" y2="<%= low %>" />}
+  end
+
+  def audio_scope_filter_edges(_mode, {_, _}) do
+    Logger.info("Skipping audio scope filter edges because shift/width are not integers")
+    ""
+  end
+
   @doc """
   Offsets +freq+ by +amount+ in the direction of the +mode+'s sideband.
   For USB and CW, this means higher in frequency. For LSB/CW-R, lower in frequency.
