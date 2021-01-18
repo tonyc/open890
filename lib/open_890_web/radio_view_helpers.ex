@@ -177,27 +177,27 @@ defmodule Open890Web.RadioViewHelpers do
   end
 
   def center_carrier_line do
-    tri_ofs = 8
+    tri_ofs = 10
 
     ~e{
       <line id="active_receiver_line" class="primaryCarrier" x1="320" y1="0" x2="320" y2="150" />
       <g id="rxTriangleGroup">
         <polygon class="rx triangle" points="320,<%= tri_ofs %> <%= 320 - tri_ofs %>,0 <%= 320 + tri_ofs %>,0" />
-        <text class="rx triangleText" x="<%= 320 - 2 %>" y="5">R</text>
+        <text class="rx triangleText" x="<%= 320 - 3 %>" y="7">R</text>
       </g>
     }
   end
 
   def carrier_line(active_frequency, band_scope_edges) do
     loc = project_to_bandscope_limits(active_frequency, band_scope_edges)
-    tri_ofs = 8
+    tri_ofs = 10
 
 
     ~e{
       <line id="active_receiver_line" class="primaryCarrier" x1="<%= loc %>" y1="0" x2="<%= loc %>" y2="150" />
       <g id="rxTriangleGroup">
         <polygon class="rx triangle" points="<%= loc %>,<%= tri_ofs %> <%= loc - tri_ofs %>,0 <%= loc + tri_ofs %>,0" />
-        <text class="rx triangleText" x="<%= loc - 2 %>" y="5">R</text>
+        <text class="rx triangleText" x="<%= loc - 3 %>" y="7">R</text>
       </g>
     }
   end
@@ -237,8 +237,13 @@ defmodule Open890Web.RadioViewHelpers do
   def passband_polygon(mode, active_frequency, filter_lo_width, filter_hi_shift, scope_edges) when mode in [:cw, :cw_r] do
     half_width = filter_lo_width / 2 |> round()
 
-    filter_low = (active_frequency + half_width) |> project_to_bandscope_limits(scope_edges)
-    filter_high = (active_frequency - half_width) |> project_to_bandscope_limits(scope_edges)
+    shift = case mode do
+      :cw_r -> -filter_hi_shift
+      _ -> filter_hi_shift
+    end
+
+    filter_low = (active_frequency + half_width) + shift |> project_to_bandscope_limits(scope_edges)
+    filter_high = (active_frequency - half_width) + shift |> project_to_bandscope_limits(scope_edges)
 
     ~e{<polygon id="passband" points="<%= filter_low %>,0 <%= filter_high %>,0 <%= filter_high %>,150 <%= filter_low %>,150" />}
   end

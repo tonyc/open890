@@ -272,7 +272,6 @@
             </g>
           <% end %>
 
-
           <%= if @band_scope_mode == :center do %>
             <%= center_carrier_line() %>
           <% else %>
@@ -298,16 +297,13 @@
             <div class="ui compact buttons">
               <%= vfo_switch_button(@active_receiver, class: "attached left") %>
               <%= vfo_equalize_button(class: "right attached") %>
-            </div>
-
-            <div class="ui row">
 
               <div class="two wide columns">
                 <form class="ui form" id="refLevel" phx-change="ref_level_changed">
                  <div class="inline compact field">
-                    <label>Ref Level</label>
+                     &nbsp;&nbsp; Ref level:
                     <input class="ui input" name="refLevel" type="number" min="-20" max="10" step="0.5" value="<%= format_ref_level(@ref_level) %>"></input>
-                    <label>dB</label>
+                    dB
                   </div>
                 </form>
               </div>
