@@ -288,7 +288,7 @@ defmodule Open890Web.RadioViewHelpers do
   defp audio_scope_filter_points(low_val, high_val) do
     edge_offset = 7
 
-    "#{low_val - edge_offset},50 #{low_val},10 #{high_val},10 #{high_val + edge_offset},50"
+    "#{low_val - edge_offset},50 #{low_val},5 #{high_val},5 #{high_val + edge_offset},50"
   end
 
   @doc """

@@ -41,7 +41,7 @@ defmodule Open890Web.Live.RadioLive do
     {:ref_level, 0},
     {:rf_pre, 0},
     {:rf_att, 0},
-    {:active_roofing_filter, nil},
+    {:active_if_filter, nil},
     {:roofing_filter_data, %{a: nil, b: nil, c: nil}},
     {:s_meter, 0},
     {:ssb_data_filter_mode, nil},
@@ -128,8 +128,8 @@ defmodule Open890Web.Live.RadioLive do
 
     socket = cond do
       msg |> String.starts_with?("FL0") ->
-        roofing_filter = msg |> Extract.current_roofing_filter()
-        socket |> assign(:active_roofing_filter, roofing_filter)
+        if_filter = msg |> Extract.current_if_filter()
+        socket |> assign(:active_if_filter, if_filter)
 
       msg |> String.starts_with?("FL1") ->
         {filter_id, filter_value} = msg |> Extract.roofing_filter()

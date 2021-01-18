@@ -310,7 +310,7 @@ defmodule Open890.Extract do
     |> trim_to_integer(["SH0", "SH1", "SL0", "SL1"])
   end
 
-  def current_roofing_filter(str) when is_binary(str) do
+  def current_if_filter(str) when is_binary(str) do
     str
     |> String.trim_leading("FL0")
     |> String.first()
