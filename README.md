@@ -2,7 +2,19 @@
 
 ![Elixir CI status](https://github.com/tonyc/open890/workflows/Test/badge.svg)
 
-## Dependencies
+## Binary releases
+
+Binary releases are available from [releases](https://github.com/tonyc/open890/releases/).
+They currently are only supported to run on 64-bit Ubuntu 20.04, although other modern Linux releases may work.
+
+The binary is a self-contained ELF executable that expands itself into `~/.cache/bakeware`
+
+After downloading:
+
+        chmod u+x open890
+        ./open890
+
+## Installation from source
 
 You will need Elixir (and thus, erlang) and NodeJS installed, particularly if you are either
 developing features for open890, or using a non-binary (e.g. source) release.
