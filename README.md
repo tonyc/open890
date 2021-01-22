@@ -1,6 +1,6 @@
 # Open890
 
-![Elixir CI status](https://github.com/tonyc/open890/workflows/Elixir%20CI/badge.svg)
+![Elixir CI status](https://github.com/tonyc/open890/workflows/test/badge.svg)
 
 To start your Phoenix server:
 
