@@ -2,18 +2,6 @@
 
 ![Elixir CI status](https://github.com/tonyc/open890/workflows/Test/badge.svg)
 
-## Binary releases
-
-Binary releases are available from [releases](https://github.com/tonyc/open890/releases/).
-They currently are only supported to run on 64-bit Ubuntu 20.04, although other modern Linux releases may work.
-
-The binary is a self-contained ELF executable that expands itself into `~/.cache/bakeware`
-
-After downloading:
-
-        chmod u+x open890
-        ./open890
-
 ## Installation from source
 
 You will need Elixir (and thus, erlang) and NodeJS installed, particularly if you are either
@@ -39,6 +27,24 @@ to manage the various versions of the development dependencies.
 
   * Once everything has installed, you should be able to run `elixir --version` and see the correct version listed.
 
+
+## Binary releases
+
+Binary releases are available from [releases](https://github.com/tonyc/open890/releases/).
+They currently are only supported to run on 64-bit Ubuntu 20.04, although other modern Linux releases may work (or not).
+
+The binary is a self-contained ELF executable that expands itself into `~/.cache/bakeware`
+
+After downloading:
+
+        chmod u+x open890
+        ./open890
+
+If you encounter an error related to shared libraries, etc, they _may_ be solved by installing the correct version,
+although the correct packages may not be available in your OS distribution's package manager. 
+
+If all else fails, install from source.
+
 ## Config
 
 This app needs the following variables set in your ENV. These will eventually be moved into a UI.
@@ -47,6 +53,14 @@ This app needs the following variables set in your ENV. These will eventually be
   * `RADIO_USERNAME` - The KNS username
   * `RADIO_PASSWORD` - The KNS password
   * `RADIO_USER_IS_ADMIN` (true/false) - Whether the KNS user is an admin
+
+You will need to use a wrapper shell script, or do something like:
+
+        export RADIO_IP_ADDRESS=w.x.y.z
+        export RADIO_USERNAME=whatever
+        # etc..
+        
+And then start your server.
 
 ## To start your server:
 
