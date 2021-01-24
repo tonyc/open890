@@ -76,10 +76,10 @@ And then start your server.
   * Install Node.js dependencies with `npm install` inside the `assets` directory
   * Start Phoenix endpoint with `mix phx.server`
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+Now you can visit [`http://localhost:4000`](http://localhost:4000) from your browser.
 
 
-## Legal mumbo-jumbo.
+## Legal mumbo-jumbo
 
 This project is licensed under the MIT license. Please see `MIT-LICENSE` for more details.
 
