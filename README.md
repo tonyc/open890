@@ -15,7 +15,7 @@ currently untested.
 These instructions assume a basic knowledge of Linux/Unix and command-line tools.
 
 open890 is currently supported under Linux, or Linux-like operating systems. You can also run it
-in Windows 10 if you have [WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10) installed.
+in Windows 10 if you have [WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10) installed - much of this project was written under WSL.
 
 You will need Elixir (and thus, Erlang) and NodeJS installed, particularly if you are either
 developing features for open890, or using a non-binary (e.g. source) release.
