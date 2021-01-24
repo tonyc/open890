@@ -78,6 +78,16 @@ And then start your server.
 
 Now you can visit [`http://localhost:4000`](http://localhost:4000) from your browser.
 
+## Getting Help
+
+If you encounter a bug, please open an issue. Please do not directly email me for technical support!
+
+## Contributing
+
+* Open an issue here so we can discuss your idea
+* Fork this repository
+* Make your changes in a branch in your own repo
+* Open a pull request!
 
 ## Legal mumbo-jumbo
 
