@@ -54,8 +54,8 @@ The binary is a self-contained ELF executable that expands itself into `~/.cache
 
 After downloading:
 
-        chmod u+x open890
-        ./open890
+    chmod u+x open890
+    ./open890
 
 If you encounter an error related to shared libraries, etc, they _may_ be solved by installing the correct version,
 although the correct packages may not be available in your OS distribution's package manager. 
@@ -73,9 +73,9 @@ The following variables must be set in your ENV. These will eventually be moved 
 
 You will need to use a wrapper shell script, or do something like:
 
-        export RADIO_IP_ADDRESS=w.x.y.z
-        export RADIO_USERNAME=whatever
-        # etc..
+    export RADIO_IP_ADDRESS=w.x.y.z
+    export RADIO_USERNAME=whatever
+    # etc..
         
 ## To start your server:
 
