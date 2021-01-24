@@ -91,11 +91,11 @@ Type `^c^c` (aka: ctrl-c twice)
 
 ## Getting Help
 
-If you encounter a bug, please [open a discussion](https://github.com/tonyc/open890/discussions). Please do not directly email me for technical support!
+If you encounter a bug, please [open a discussion](https://github.com/tonyc/open890/discussions/new). Please do not directly email me for technical support!
 
 ## Contributing
 
-* [Start a discussion](https://github.com/tonyc/open890/discussions) so we can discuss your idea
+* [Start a discussion](https://github.com/tonyc/open890/discussions/new) so we can discuss your idea
 * Fork this repository
 * Make your changes in a branch in your own repo
 * Open a pull request!
