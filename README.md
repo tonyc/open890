@@ -87,7 +87,7 @@ Now you can visit [`http://localhost:4000`](http://localhost:4000) from your bro
 
 ## Stopping your server
 
-Press ^C^C (aka: Control-C twice)
+Type `^c^c` (aka: ctrl-c twice)
 
 ## Getting Help
 
