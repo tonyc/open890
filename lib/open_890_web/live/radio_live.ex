@@ -6,9 +6,9 @@ defmodule Open890Web.Live.RadioLive do
 
   alias Phoenix.Socket.Broadcast
   alias Open890.TCPClient, as: Radio
-  alias Open890.Extract
 
-  alias Open890Web.RadioViewHelpers
+  alias Open890Web.Live.Dispatch
+
   alias Open890Web.Live.{ButtonsComponent}
 
   @init_socket [
@@ -46,7 +46,7 @@ defmodule Open890Web.Live.RadioLive do
     {:ssb_filter_mode, nil},
     {:theme, "kenwood"},
     {:vfo_a_frequency, ""},
-    {:vfo_b_frequency, ""},
+    {:vfo_b_frequency, ""}
   ]
 
   @impl true
@@ -63,17 +63,19 @@ defmodule Open890Web.Live.RadioLive do
 
     socket = init_socket(socket)
 
-    socket = if params["debug"] do
-      socket |> assign(:debug, true)
-    else
-      socket
-    end
+    socket =
+      if params["debug"] do
+        socket |> assign(:debug, true)
+      else
+        socket
+      end
 
-    socket = if params["wide"] do
-      socket |> assign(:layout_wide, "")
-    else
-      socket |> assign(:layout_wide, "container")
-    end
+    socket =
+      if params["wide"] do
+        socket |> assign(:layout_wide, "")
+      else
+        socket |> assign(:layout_wide, "container")
+      end
 
     {:ok, socket}
   end
@@ -106,13 +108,16 @@ defmodule Open890Web.Live.RadioLive do
   @impl true
   def handle_info(%Broadcast{event: "scope_data", payload: %{payload: audio_scope_data}}, socket) do
     {:noreply,
-      socket
-      |> push_event("scope_data", %{scope_data: audio_scope_data})
-      |> assign(:audio_scope_data, audio_scope_data)}
+     socket
+     |> push_event("scope_data", %{scope_data: audio_scope_data})
+     |> assign(:audio_scope_data, audio_scope_data)}
   end
 
   @impl true
-  def handle_info(%Broadcast{event: "band_scope_data", payload: %{payload: band_scope_data}}, socket) do
+  def handle_info(
+        %Broadcast{event: "band_scope_data", payload: %{payload: band_scope_data}},
+        socket
+      ) do
     {:noreply,
      socket
      |> push_event("band_scope_data", %{scope_data: band_scope_data})
@@ -123,168 +128,7 @@ defmodule Open890Web.Live.RadioLive do
   def handle_info(%Broadcast{event: "radio_state_data", payload: payload}, socket) do
     %{msg: msg} = payload
 
-    socket = cond do
-      msg |> String.starts_with?("RM1") ->
-        meter = msg |> Extract.alc_meter()
-        socket |> assign(:alc_meter, meter)
-
-      msg |> String.starts_with?("RM2") ->
-        meter = msg |> Extract.swr_meter()
-        socket |> assign(:swr_meter, meter)
-
-      msg |> String.starts_with?("RM3") ->
-        meter = msg |> Extract.comp_meter()
-        socket |> assign(:comp_meter, meter)
-
-      msg |> String.starts_with?("RM4") ->
-        meter = msg |> Extract.id_meter()
-        socket |> assign(:id_meter, meter)
-
-      msg |> String.starts_with?("RM5") ->
-        meter = msg |> Extract.vd_meter()
-        socket |> assign(:vd_meter, meter)
-
-      msg |> String.starts_with?("RM6") ->
-        meter = msg |> Extract.temp_meter()
-        socket |> assign(:temp_meter, meter)
-
-      msg |> String.starts_with?("BSC0") ->
-        ref_level = msg |> Extract.ref_level()
-        socket |> assign(:ref_level, ref_level)
-
-      msg |> String.starts_with?("BSD") ->
-        socket |> push_event("clear_band_scope", %{})
-
-      msg |> String.starts_with?("RA") ->
-        rf_att = msg |> Extract.rf_att()
-        socket |> assign(:rf_att, rf_att)
-
-      msg |> String.starts_with?("PA") ->
-        socket |> assign(:rf_pre, Extract.rf_pre(msg))
-
-      msg |> String.starts_with?("BS3") ->
-        socket |> assign(:band_scope_mode, Extract.scope_mode(msg))
-
-      msg |> String.starts_with?("BS8") ->
-        socket |> assign(:band_scope_att, Extract.band_scope_att(msg))
-
-      msg |> String.starts_with?("DS1") ->
-        socket |> assign(:display_screen_id, Extract.display_screen_id(msg))
-
-      msg |> String.starts_with?("OM0") ->
-        socket |> assign(:active_mode, Extract.operating_mode(msg))
-
-      msg |> String.starts_with?("OM1") ->
-        socket |> assign(:inactive_mode, Extract.operating_mode(msg))
-
-      msg |> String.starts_with?("SM") ->
-        socket |> assign(:s_meter, Extract.s_meter(msg))
-
-      msg |> String.starts_with?("FA") ->
-        frequency = msg |> Extract.frequency()
-        socket = socket |> assign(:vfo_a_frequency, frequency)
-
-        socket =
-          if socket.assigns[:active_receiver] == :a do
-            socket
-            |> assign(:page_title, frequency |> RadioViewHelpers.format_raw_frequency())
-            |> assign(:active_frequency, frequency)
-          else
-            socket
-            |> assign(:inactive_frequency, frequency)
-          end
-
-        socket |> vfo_a_updated()
-
-      msg |> String.starts_with?("FB") ->
-        frequency = msg |> Extract.frequency()
-        socket = socket |> assign(:vfo_b_frequency, frequency)
-
-        socket = if socket.assigns[:active_receiver] == :b do
-          socket
-          |> assign(:page_title, frequency |> RadioViewHelpers.format_raw_frequency())
-          |> assign(:active_frequency, frequency)
-        else
-          socket
-          |> assign(:inactive_frequency, frequency)
-        end
-
-        socket
-
-      # high/shift
-      msg |> String.starts_with?("SH0") ->
-        %{
-          active_mode: current_mode,
-          ssb_filter_mode: filter_mode
-        } = socket.assigns
-
-        filter_hi_shift = msg
-        |> Extract.passband_id()
-        |> Extract.filter_hi_shift(filter_mode, current_mode)
-
-        socket
-        |> assign(:filter_hi_shift, filter_hi_shift)
-        |> update_filter_hi_edge()
-
-      # lo/width
-      msg |> String.starts_with?("SL0") ->
-        %{
-          active_mode: current_mode,
-          ssb_filter_mode: filter_mode
-        } = socket.assigns
-
-        filter_lo_width = msg
-        |> Extract.passband_id()
-        |> Extract.filter_lo_width(filter_mode, current_mode)
-
-        socket
-        |> assign(:filter_lo_width, filter_lo_width)
-        |> update_filter_lo_edge()
-
-      # ssb/ssb+data filter modes
-      msg |> String.starts_with?("EX00611") ->
-        socket
-        |> assign(:ssb_filter_mode, Extract.filter_mode(msg))
-
-      msg |> String.starts_with?("EX00612") ->
-        socket
-        |> assign(:ssb_data_filter_mode, Extract.filter_mode(msg))
-
-      msg == "FR0" ->
-        socket
-        |> assign(:active_receiver, :a)
-        |> assign(:active_frequency, socket.assigns.vfo_a_frequency)
-        |> assign(:inactive_receiver, :b)
-        |> assign(:inactive_frequency, socket.assigns.vfo_b_frequency)
-
-      msg == "FR1" ->
-        socket
-        |> assign(:active_receiver, :b)
-        |> assign(:active_frequency, socket.assigns.vfo_b_frequency)
-        |> assign(:inactive_receiver, :a)
-        |> assign(:inactive_frequency, socket.assigns.vfo_a_frequency)
-
-      msg |> String.starts_with?("BSM0") ->
-        [bs_low, bs_high] = msg |> Extract.band_edges()
-
-        [low_int, high_int] =
-          [bs_low, bs_high]
-          |> Enum.map(&Kernel.div(&1, 1000))
-
-        span =
-          (high_int - low_int)
-          |> to_string()
-          |> String.trim_leading("0")
-          |> String.to_integer()
-
-         socket
-         |> assign(:band_scope_edges, {bs_low, bs_high})
-         |> assign(:band_scope_span, span)
-
-      true ->
-        Logger.debug("RadioLive: unknown message: #{inspect(msg)}")
-        socket
-    end
+    socket = Dispatch.dispatch(msg, socket)
 
     {:noreply, socket}
   end
@@ -292,64 +136,4 @@ defmodule Open890Web.Live.RadioLive do
   def handle_info(%Broadcast{}, socket) do
     {:noreply, socket}
   end
-
-
-  defp vfo_a_updated(socket) do
-    socket
-    |> update_filter_hi_edge()
-    |> update_filter_lo_edge()
-  end
-
-  defp update_filter_edges(socket) do
-    socket
-    |> update_filter_hi_edge()
-    |> update_filter_lo_edge()
-  end
-
-  defp update_filter_hi_edge(socket) do
-    %{
-      active_mode: active_mode,
-      ssb_filter_mode: _ssb_filter_mode,
-      ssb_data_filter_mode: _ssb_data_filter_mode,
-      filter_hi_shift: filter_hi_shift
-    } = socket.assigns
-
-    active_frequency = socket |> get_active_receiver_frequency()
-
-    case active_mode do
-      mode when active_mode in [:lsb, :usb, :cw, :cw_r] ->
-        socket
-        |> assign(:filter_high_freq, offset_frequency(mode, active_frequency, filter_hi_shift))
-      _ ->
-        socket
-    end
-  end
-
-  defp update_filter_lo_edge(socket) do
-    %{
-      active_mode: active_mode,
-      ssb_filter_mode: _ssb_filter_mode,
-      ssb_data_filter_mode: _ssb_data_filter_mode,
-      filter_lo_width: filter_lo_width
-    } = socket.assigns
-
-    active_frequency = socket |> get_active_receiver_frequency()
-
-    case active_mode do
-      mode when active_mode in [:lsb, :usb, :cw, :cw_r] ->
-        socket
-        |> assign(:filter_low_freq, offset_frequency_reverse(mode, active_frequency, filter_lo_width))
-      _ ->
-        socket
-    end
-  end
-
-  defp get_active_receiver_frequency(socket) do
-    socket.assigns.active_receiver
-    |> case do
-      :a -> socket.assigns.vfo_a_frequency
-      :b -> socket.assigns.vfo_b_frequency
-    end
-  end
-
 end
