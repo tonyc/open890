@@ -105,3 +105,4 @@ If you encounter a bug, please open an issue. Please do not directly email me fo
 This project is licensed under the MIT license. Please see [MIT-LICENSE](MIT-LICENSE) for more details.
 
 All product names, logos, brands, trademarks and registered trademarks are property of their respective owners. All company, product and service names used in this software are for identification purposes only.
+
