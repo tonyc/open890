@@ -7,7 +7,7 @@ clean design, and high-speed bandscope/audio scope displays, among other feature
 either on the radio itself, or in the ARCP remote control software.
 
 It is currently only designed to interface with the TS890 via a LAN (or wifi) connection, and not
-a USB connection.
+a USB (or serial) connection.
 
 ## Installation from source
 
