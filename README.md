@@ -64,7 +64,7 @@ If all else fails, install from source.
 
 ## Config
 
-This app needs the following variables set in your ENV. These will eventually be moved into a UI.
+The following variables must be set in your ENV. These will eventually be moved into a UI.
 
   * `RADIO_IP_ADDRESS` - IP address of the TS-890
   * `RADIO_USERNAME` - The KNS username
