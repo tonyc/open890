@@ -6,8 +6,9 @@ open890 is a web-based UI for the Kenwood TS-890S amateur radio, and features go
 clean design, and high-speed bandscope/audio scope displays, among other features not available
 either on the radio itself, or in the ARCP remote control software.
 
-It is currently only designed to interface with the TS890 via a LAN (or wifi) connection, and not
-a USB (or serial) connection.
+It is currently only designed to interface with the TS-890 via a LAN (or wifi) connection, and not
+a USB (or serial) connection. It may work with the TS-990, as the command set is very similar, but is
+currently untested.
 
 ## Installation from source
 
@@ -77,3 +78,9 @@ And then start your server.
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
+
+## Legal mumbo-jumbo.
+
+This project is licensed under the MIT license. Please see `MIT-LICENSE` for more details.
+
+All product names, logos, brands, trademarks and registered trademarks are property of their respective owners. All company, product and service names used in this software are for identification purposes only.
