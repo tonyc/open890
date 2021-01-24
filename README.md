@@ -34,6 +34,8 @@ to manage the various versions of the development dependencies.
         asdf install nodejs 12.18.3
 
   * Once everything has installed, you should be able to run `elixir --version` and see the correct version listed.
+  
+  * Continue from [Config](#config)
 
 
 ## Binary releases
