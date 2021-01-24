@@ -26,7 +26,7 @@ to manage the various versions of the development dependencies.
         asdf plugin-add elixir https://github.com/asdf-vm/asdf-elixir.git
         asdf plugin-add nodejs https://github.com/asdf-vm/asdf-nodejs.git
 
-  * Install the specific versions listed in .tool-versions:
+  * Install the specific versions listed in the `.tool-versions` file:
 
         asdf install erlang 22.3.4.6
         asdf install elixir 1.10.4-otp-22
