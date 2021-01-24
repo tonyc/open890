@@ -85,6 +85,10 @@ You will need to use a wrapper shell script, or do something like:
 
 Now you can visit [`http://localhost:4000`](http://localhost:4000) from your browser.
 
+## Stopping your server
+
+Press ^C^C (aka: Control-C twice)
+
 ## Getting Help
 
 If you encounter a bug, please open an issue. Please do not directly email me for technical support!
