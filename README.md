@@ -72,8 +72,6 @@ You will need to use a wrapper shell script, or do something like:
         export RADIO_USERNAME=whatever
         # etc..
         
-And then start your server.
-
 ## To start your server:
 
   * Install dependencies with `mix deps.get`. First-time users may need to answer `Y` to a couple prompts
