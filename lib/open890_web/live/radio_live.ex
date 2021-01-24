@@ -102,10 +102,9 @@ defmodule Open890Web.Live.RadioLive do
   end
 
   defp init_socket(socket) do
-    @init_socket
-    |> Enum.reduce(socket, fn {key, val}, socket ->
-      socket |> assign(key, val)
-    end)
+    initial_state = @init_socket |> Enum.into(%{})
+
+    socket |> assign(initial_state)
   end
 
   @impl true
@@ -128,9 +127,7 @@ defmodule Open890Web.Live.RadioLive do
   end
 
   @impl true
-  def handle_info(%Broadcast{event: "radio_state_data", payload: payload}, socket) do
-    %{msg: msg} = payload
-
+  def handle_info(%Broadcast{event: "radio_state_data", payload: %{msg: msg}}, socket) do
     socket = Dispatch.dispatch(msg, socket)
 
     {:noreply, socket}
