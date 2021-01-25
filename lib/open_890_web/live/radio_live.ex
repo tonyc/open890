@@ -59,7 +59,7 @@ defmodule Open890Web.Live.RadioLive do
       Phoenix.PubSub.subscribe(Open890.PubSub, "radio:band_scope")
     end
 
-    get_initial_radio_state()
+    Radio.get_initial_state()
 
     socket = init_socket(socket)
 
@@ -78,24 +78,6 @@ defmodule Open890Web.Live.RadioLive do
       end
 
     {:ok, socket}
-  end
-
-  defp get_initial_radio_state do
-    Radio.get_active_receiver()
-    Radio.get_vfo_a_freq()
-    Radio.get_vfo_b_freq()
-    Radio.get_s_meter()
-    Radio.get_modes()
-    Radio.get_filter_modes()
-    Radio.get_filter_state()
-    Radio.get_band_scope_limits()
-    Radio.get_band_scope_mode()
-    Radio.get_band_scope_att()
-    Radio.get_display_screen()
-    Radio.get_rf_pre_att()
-    Radio.get_ref_level()
-
-    Radio.monitor_meters()
   end
 
   defp init_socket(socket) do
