@@ -278,13 +278,4 @@ defmodule Open890Web.Live.Dispatch do
     end
   end
 
-  ## LiveView compatibility
-
-  # defp assign(socket, key, val) do
-  #  socket |> Phoenix.LiveView.assign(key, val)
-  # end
-
-  # defp push_event(socket, key, value) do
-  #  socket |> Phoenix.LiveView.push_event(key, value)
-  # end
 end
