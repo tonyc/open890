@@ -6,16 +6,16 @@ defmodule Open890Web.Live.Dispatch do
 
   import Phoenix.LiveView, only: [assign: 3, push_event: 3]
 
-  def dispatch("BSC0" <> _ = msg, socket) do
+  def dispatch("BSC0" <> _rest = msg, socket) do
     ref_level = msg |> Extract.ref_level()
     socket |> assign(:ref_level, ref_level)
   end
 
-  def dispatch("BSD" <> _, socket) do
+  def dispatch("BSD" <> _rest, socket) do
     socket |> push_event("clear_band_scope", %{})
   end
 
-  def dispatch("BSM0" <> _ = msg, socket) do
+  def dispatch("BSM0" <> _rest = msg, socket) do
     [bs_low, bs_high] = msg |> Extract.band_edges()
 
     [low_int, high_int] =
@@ -33,29 +33,29 @@ defmodule Open890Web.Live.Dispatch do
     |> assign(:band_scope_span, span)
   end
 
-  def dispatch("BS3" <> _ = msg, socket) do
+  def dispatch("BS3" <> _rest = msg, socket) do
     socket |> assign(:band_scope_mode, Extract.scope_mode(msg))
   end
 
-  def dispatch("BS8" <> _ = msg, socket) do
+  def dispatch("BS8" <> _rest = msg, socket) do
     socket |> assign(:band_scope_att, Extract.band_scope_att(msg))
   end
 
-  def dispatch("DS1" <> _ = msg, socket) do
+  def dispatch("DS1" <> _rest = msg, socket) do
     socket |> assign(:display_screen_id, Extract.display_screen_id(msg))
   end
 
-  def dispatch("EX00611" <> _ = msg, socket) do
+  def dispatch("EX00611" <> _rest = msg, socket) do
     socket
     |> assign(:ssb_filter_mode, Extract.filter_mode(msg))
   end
 
-  def dispatch("EX00612" <> _ = msg, socket) do
+  def dispatch("EX00612" <> _rest = msg, socket) do
     socket
     |> assign(:ssb_data_filter_mode, Extract.filter_mode(msg))
   end
 
-  def dispatch("FA" <> _ = msg, socket) do
+  def dispatch("FA" <> _rest = msg, socket) do
     frequency = msg |> Extract.frequency()
     socket = socket |> assign(:vfo_a_frequency, frequency)
 
@@ -72,7 +72,7 @@ defmodule Open890Web.Live.Dispatch do
     socket |> vfo_a_updated()
   end
 
-  def dispatch("FB" <> _ = msg, socket) do
+  def dispatch("FB" <> _rest = msg, socket) do
     frequency = msg |> Extract.frequency()
     socket = socket |> assign(:vfo_b_frequency, frequency)
 
@@ -119,54 +119,54 @@ defmodule Open890Web.Live.Dispatch do
     |> assign(:inactive_frequency, socket.assigns.vfo_a_frequency)
   end
 
-  def dispatch("OM0" <> _ = msg, socket) do
+  def dispatch("OM0" <> _rest = msg, socket) do
     socket |> assign(:active_mode, Extract.operating_mode(msg))
   end
 
-  def dispatch("OM1" <> _ = msg, socket) do
+  def dispatch("OM1" <> _rest = msg, socket) do
     socket |> assign(:inactive_mode, Extract.operating_mode(msg))
   end
 
-  def dispatch("PA" <> _ = msg, socket) do
+  def dispatch("PA" <> _rest = msg, socket) do
     socket |> assign(:rf_pre, Extract.rf_pre(msg))
   end
 
-  def dispatch("RA" <> _ = msg, socket) do
+  def dispatch("RA" <> _rest = msg, socket) do
     rf_att = msg |> Extract.rf_att()
     socket |> assign(:rf_att, rf_att)
   end
 
-  def dispatch("RM1" <> _ = msg, socket) do
+  def dispatch("RM1" <> _rest = msg, socket) do
     meter = msg |> Extract.alc_meter()
     socket |> assign(:alc_meter, meter)
   end
 
-  def dispatch("RM2" <> _ = msg, socket) do
+  def dispatch("RM2" <> _rest = msg, socket) do
     meter = msg |> Extract.swr_meter()
     socket |> assign(:swr_meter, meter)
   end
 
-  def dispatch("RM3" <> _ = msg, socket) do
+  def dispatch("RM3" <> _rest = msg, socket) do
     meter = msg |> Extract.comp_meter()
     socket |> assign(:comp_meter, meter)
   end
 
-  def dispatch("RM4" <> _ = msg, socket) do
+  def dispatch("RM4" <> _rest = msg, socket) do
     meter = msg |> Extract.id_meter()
     socket |> assign(:id_meter, meter)
   end
 
-  def dispatch("RM5" <> _ = msg, socket) do
+  def dispatch("RM5" <> _rest = msg, socket) do
     meter = msg |> Extract.vd_meter()
     socket |> assign(:vd_meter, meter)
   end
 
-  def dispatch("RM6" <> _ = msg, socket) do
+  def dispatch("RM6" <> _rest = msg, socket) do
     meter = msg |> Extract.temp_meter()
     socket |> assign(:temp_meter, meter)
   end
 
-  def dispatch("SH0" <> _ = msg, socket) do
+  def dispatch("SH0" <> _rest = msg, socket) do
     %{
       active_mode: current_mode,
       ssb_filter_mode: filter_mode
@@ -182,7 +182,7 @@ defmodule Open890Web.Live.Dispatch do
     |> update_filter_hi_edge()
   end
 
-  def dispatch("SL0" <> _ = msg, socket) do
+  def dispatch("SL0" <> _rest = msg, socket) do
     %{
       active_mode: current_mode,
       ssb_filter_mode: filter_mode
@@ -198,7 +198,7 @@ defmodule Open890Web.Live.Dispatch do
     |> update_filter_lo_edge()
   end
 
-  def dispatch("SM" <> _ = msg, socket) do
+  def dispatch("SM" <> _rest = msg, socket) do
     socket |> assign(:s_meter, Extract.s_meter(msg))
   end
 
