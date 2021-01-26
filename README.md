@@ -42,8 +42,8 @@ to manage the various versions of the development dependencies.
         asdf install elixir 1.10.4-otp-22
         asdf install nodejs 12.18.3
 
-  * Once everything has installed, you should be able to run `elixir --version` and see the correct version listed.
-  
+  * You may see scary-looking messages during the Erlang install that says something like "fop is missing" or "documentation cannot be built" - this is OK.       
+  * Once everything has installed, you should be able to run `elixir --version` and also `npm --version`
   * Clone this repository
   
   * Continue from [Config](#config)
