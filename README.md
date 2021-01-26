@@ -32,6 +32,10 @@ to manage the various versions of the development dependencies.
         asdf plugin-add elixir https://github.com/asdf-vm/asdf-elixir.git
         asdf plugin-add nodejs https://github.com/asdf-vm/asdf-nodejs.git
 
+  * At this point, Raspberry Pi users may need to install the following packages:
+  
+        sudo apt -y install autoconf libssl-dev libncurses5-dev
+  
   * Install the specific versions listed in the `.tool-versions` file:
 
         asdf install erlang 22.3.4.6
