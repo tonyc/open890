@@ -37,13 +37,13 @@ to manage the various versions of the development dependencies.
         sudo apt -y install autoconf libssl-dev libncurses5-dev
   
   * Install the specific versions listed in the `.tool-versions` file:
+ 
+        bash -c '${ASDF_DATA_DIR:=$HOME/.asdf}/plugins/nodejs/bin/import-release-team-keyring'
+        asdf install
 
-        asdf install erlang 22.3.4.6
-        asdf install elixir 1.10.4-otp-22
-        asdf install nodejs 12.18.3
-
-  * The Erlang install will take a long time on a Raspberry Pi. You may also see scary-looking messages during the Erlang install that says something like "fop is missing" or "documentation cannot be built" - this is OK.       
+  * The Erlang install will take a very long time on a Raspberry Pi. You may also see scary-looking messages during the Erlang install that says something like "fop is missing" or "documentation cannot be built" - this is OK.       
   * Once everything has installed, you should be able to run `elixir --version` and also `npm --version`
+  
   * Clone this repository
   
   * Continue from [Config](#config)
@@ -85,7 +85,7 @@ You will need to use a wrapper shell script, or add e.g. the following lines to 
 
   * Install dependencies with `mix deps.get`. First-time users may need to answer `Y` to a couple prompts
   * Install Node.js dependencies with `npm install` inside the `assets` directory
-  * Start Phoenix endpoint with `mix phx.server`
+  * Start Phoenix endpoint with `mix phx.server` from the main directory.
 
 Now you can visit [`http://localhost:4000`](http://localhost:4000) from your browser.
 
