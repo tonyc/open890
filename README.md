@@ -42,7 +42,7 @@ to manage the various versions of the development dependencies.
         asdf install elixir 1.10.4-otp-22
         asdf install nodejs 12.18.3
 
-  * You may see scary-looking messages during the Erlang install that says something like "fop is missing" or "documentation cannot be built" - this is OK.       
+  * The Erlang install will take a long time on a Raspberry Pi. You may also see scary-looking messages during the Erlang install that says something like "fop is missing" or "documentation cannot be built" - this is OK.       
   * Once everything has installed, you should be able to run `elixir --version` and also `npm --version`
   * Clone this repository
   
