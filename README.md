@@ -20,12 +20,12 @@ in Windows 10 if you have [WSL](https://docs.microsoft.com/en-us/windows/wsl/ins
 You will need Elixir (and thus, Erlang) and NodeJS installed, particularly if you are either
 developing features for open890, or using a non-binary (e.g. source) release.
 
-Using a tool like [asdf](https://asdf-vm.com/#/core-manage-asdf) is recommended
+Using a tool like [asdf](https://asdf-vm.com/) is recommended
 to manage the various versions of the development dependencies.
 
 ### Using asdf
 
-  * Install asdf
+  * [Install asdf](https://asdf-vm.com/#/core-manage-asdf?id=install)
   * Install erlang, elixir and nodeJS plugins
 
         asdf plugin add erlang https://github.com/asdf-vm/asdf-erlang.git
