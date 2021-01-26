@@ -68,14 +68,14 @@ If all else fails, install from source.
 
 ## Config
 
-The following variables must be set in your ENV. These will eventually be moved into a UI.
+The following environment variables must be set in your shell environment. These will eventually be moved into a UI.
 
   * `RADIO_IP_ADDRESS` - IP address of the TS-890
   * `RADIO_USERNAME` - The KNS username
   * `RADIO_PASSWORD` - The KNS password
   * `RADIO_USER_IS_ADMIN` (true/false) - Whether the KNS user is an admin
 
-You will need to use a wrapper shell script, or do something like:
+You will need to use a wrapper shell script, or add e.g. the following lines to your `.bash_profile` (or shell startup script of your choice):
 
     export RADIO_IP_ADDRESS=w.x.y.z
     export RADIO_USERNAME=whatever
