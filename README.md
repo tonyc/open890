@@ -99,7 +99,7 @@ If you encounter a bug, please [open a discussion](https://github.com/tonyc/open
 
 ## Contributing
 
-* [Start a discussion](https://github.com/tonyc/open890/discussions/new) so we can discuss your idea
+* [Start a discussion](https://github.com/tonyc/open890/discussions) so we can discuss your idea
 * Fork this repository
 * Make your changes in a branch in your own repo
 * Open a pull request!
