@@ -31,11 +31,11 @@ defmodule Open890Web.Telemetry do
       ),
 
       # Database Metrics
-      summary("open_890.repo.query.total_time", unit: {:native, :millisecond}),
-      summary("open_890.repo.query.decode_time", unit: {:native, :millisecond}),
-      summary("open_890.repo.query.query_time", unit: {:native, :millisecond}),
-      summary("open_890.repo.query.queue_time", unit: {:native, :millisecond}),
-      summary("open_890.repo.query.idle_time", unit: {:native, :millisecond}),
+      summary("open890.repo.query.total_time", unit: {:native, :millisecond}),
+      summary("open890.repo.query.decode_time", unit: {:native, :millisecond}),
+      summary("open890.repo.query.query_time", unit: {:native, :millisecond}),
+      summary("open890.repo.query.queue_time", unit: {:native, :millisecond}),
+      summary("open890.repo.query.idle_time", unit: {:native, :millisecond}),
 
       # VM Metrics
       summary("vm.memory.total", unit: {:byte, :kilobyte}),

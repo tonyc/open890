@@ -7,14 +7,14 @@
 # General application configuration
 use Mix.Config
 
-config :open_890,
+config :open890,
   ecto_repos: []
 
-# config :open_890,
+# config :open890,
 #   ecto_repos: [Open890.Repo]
 
 # Configures the endpoint
-config :open_890, Open890Web.Endpoint,
+config :open890, Open890Web.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "+EZsnAuOzfVGlj0Gh7d4qinSyI3sVfc97UM1Ppc4Tw5Gb90zLXR6GEojtVxqvd1r",
   render_errors: [view: Open890Web.ErrorView, accepts: ~w(html json), layout: false],

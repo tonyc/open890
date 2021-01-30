@@ -30,7 +30,7 @@ defmodule Open890Web do
   def view do
     quote do
       use Phoenix.View,
-        root: "lib/open_890_web/templates",
+        root: "lib/open890_web/templates",
         namespace: Open890Web
 
       # Import convenience functions from controllers

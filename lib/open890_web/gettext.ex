@@ -20,5 +20,5 @@ defmodule Open890Web.Gettext do
 
   See the [Gettext Docs](https://hexdocs.pm/gettext) for detailed usage.
   """
-  use Gettext, otp_app: :open_890
+  use Gettext, otp_app: :open890
 end
