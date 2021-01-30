@@ -2,7 +2,7 @@
 
 ![Elixir CI status](https://github.com/tonyc/open890/workflows/Test/badge.svg)
 
-![open890 screenshot](docs/screenshot.png){:height="50%" :width="50%"}
+![open890 screenshot](docs/screenshot.png)
 
 open890 is a web-based UI for the Kenwood TS-890S amateur radio, and features good usability, 
 clean design, and high-speed bandscope/audio scope displays, among other features not available
