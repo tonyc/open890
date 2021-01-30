@@ -95,7 +95,7 @@ Type `^c^c` (aka: ctrl-c twice)
 
 ## Getting Help
 
-If you encounter a bug, please [open a discussion](https://github.com/tonyc/open890/discussions/new). Please do not directly email me for technical support!
+If you encounter a bug, please [open a discussion](https://github.com/tonyc/open890/discussions). Please do not directly email me for technical support!
 
 ## Contributing
 
