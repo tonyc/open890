@@ -10,17 +10,33 @@ defmodule Open890.TCPClient do
 
   alias Open890.KNS.User
 
-  def start_link() do
-    Logger.info("************** START_LINK")
-    GenServer.start_link(__MODULE__, [], name: :radio)
+  def default_args do
+    [
+      radio_ip_address: "192.168.1.229",
+      radio_username: "testuser",
+      radio_password: "testpass123!",
+      radio_user_is_admin: false
+    ]
+  end
+
+  def start_link(args) do
+    Logger.info("************** TCPClient: START_LINK: args: #{inspect(args)}")
+    GenServer.start_link(__MODULE__, args, name: :radio)
   end
 
   @impl true
-  def init(_args) do
-    radio_ip_address = System.fetch_env!("RADIO_IP_ADDRESS") |> String.to_charlist()
-    radio_username = System.fetch_env!("RADIO_USERNAME")
-    radio_password = System.fetch_env!("RADIO_PASSWORD")
-    radio_user_is_admin = System.fetch_env("RADIO_USER_IS_ADMIN") == "true"
+  def init(args) do
+    Logger.info("**** TCPClient: INIT")
+
+    radio_ip_address = args |> Keyword.fetch!(:radio_ip_address) |> String.to_charlist()
+    radio_username = args |> Keyword.fetch!(:radio_username)
+    radio_password = args |> Keyword.fetch!(:radio_password)
+    radio_user_is_admin = args |> Keyword.fetch!(:radio_user_is_admin)
+
+    # radio_ip_address = System.fetch_env!("RADIO_IP_ADDRESS") |> String.to_charlist()
+    # radio_username = System.fetch_env!("RADIO_USERNAME")
+    # radio_password = System.fetch_env!("RADIO_PASSWORD")
+    # radio_user_is_admin = System.fetch_env("RADIO_USER_IS_ADMIN") == "true"
 
     kns_user =
       User.build()
