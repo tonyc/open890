@@ -7,10 +7,7 @@ defmodule Open890.RadioConnectionSupervisor do
 
   def start_connection(args) do
     spec = {Open890.TCPClient, args}
-    res = DynamicSupervisor.start_child(__MODULE__, spec)
-    IO.puts "Result from starting child: #{inspect(res)}"
-
-    res
+    DynamicSupervisor.start_child(__MODULE__, spec)
   end
 
   @impl true

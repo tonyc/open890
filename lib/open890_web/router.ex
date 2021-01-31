@@ -17,7 +17,7 @@ defmodule Open890Web.Router do
   scope "/", Open890Web do
     pipe_through :browser
 
-    live "/", Live.RadioLive, :index
+    live "/connections/:id", Live.RadioLive, :index
   end
 
   # Other scopes may use custom stacks.

@@ -6,12 +6,14 @@ defmodule Open890Web.Live.RadioLive do
 
   alias Phoenix.Socket.Broadcast
   alias Open890.TCPClient, as: Radio
+  alias Open890.RadioConnection
 
   alias Open890Web.Live.Dispatch
 
   alias Open890Web.Live.{ButtonsComponent}
 
   @init_socket [
+    {:__connection, nil},
     {:debug, false},
     {:active_frequency, ""},
     {:active_mode, :unknown},
@@ -52,8 +54,8 @@ defmodule Open890Web.Live.RadioLive do
   ]
 
   @impl true
-  def mount(params, _session, socket) do
-    Logger.info("LiveView mount()")
+  def mount(%{"id" => connection_id} = params, _session, socket) do
+    Logger.info("LiveView mount: params: #{inspect(params)}")
 
     if connected?(socket) do
       Phoenix.PubSub.subscribe(Open890.PubSub, "radio:state")
@@ -61,9 +63,14 @@ defmodule Open890Web.Live.RadioLive do
       Phoenix.PubSub.subscribe(Open890.PubSub, "radio:band_scope")
     end
 
+    {:ok, connection} = RadioConnection.find(connection_id)
+
+    Logger.info("Found connection: #{inspect(connection)}")
+
     Radio.get_initial_state()
 
     socket = init_socket(socket)
+    |> assign(:__connection, connection)
 
     socket =
       if params["debug"] do

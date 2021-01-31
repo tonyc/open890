@@ -3,8 +3,6 @@ defmodule Open890.Application do
   # for more information on OTP Applications
   @moduledoc false
 
-  @connection_registry :radio_connections
-
   use Application
 
   def start(_type, _args) do

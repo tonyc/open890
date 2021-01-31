@@ -3,40 +3,33 @@ defmodule Open890.TCPClient do
   require Logger
 
   @socket_opts [:binary, active: true]
+  @connect_timeout_ms 5000
+
   @port 60000
 
   @enable_audio_scope true
   @enable_band_scope true
 
+  alias Open890.RadioConnection
   alias Open890.KNS.User
 
-  def default_args do
-    [
-      radio_ip_address: "192.168.1.229",
-      radio_username: "testuser",
-      radio_password: "testpass123!",
-      radio_user_is_admin: false
-    ]
+  def start_link(%RadioConnection{id: id} = args) do
+    Logger.info("************** TCPClient: START_LINK: args: #{inspect(args)}")
+    GenServer.start_link(__MODULE__, args, name: via_tuple(id))
   end
 
-  def start_link(args) do
-    Logger.info("************** TCPClient: START_LINK: args: #{inspect(args)}")
-    GenServer.start_link(__MODULE__, args, name: :radio)
+  def via_tuple(connection_id) do
+    {:via, Registry, {:radio_connection_registry, connection_id}}
   end
 
   @impl true
-  def init(args) do
+  def init(%RadioConnection{} = connection) do
     Logger.info("**** TCPClient: INIT")
 
-    radio_ip_address = args |> Keyword.fetch!(:radio_ip_address) |> String.to_charlist()
-    radio_username = args |> Keyword.fetch!(:radio_username)
-    radio_password = args |> Keyword.fetch!(:radio_password)
-    radio_user_is_admin = args |> Keyword.fetch!(:radio_user_is_admin)
-
-    # radio_ip_address = System.fetch_env!("RADIO_IP_ADDRESS") |> String.to_charlist()
-    # radio_username = System.fetch_env!("RADIO_USERNAME")
-    # radio_password = System.fetch_env!("RADIO_PASSWORD")
-    # radio_user_is_admin = System.fetch_env("RADIO_USER_IS_ADMIN") == "true"
+    radio_ip_address = connection.ip_address |> String.to_charlist()
+    radio_username = connection.user_name
+    radio_password = connection.password
+    radio_user_is_admin = connection.user_is_admin
 
     kns_user =
       User.build()
@@ -55,7 +48,7 @@ defmodule Open890.TCPClient do
 
   # Client API
 
-  def get_initial_state do
+  def get_initial_state(_id \\ nil) do
     get_active_receiver()
     get_vfo_a_freq()
     get_vfo_b_freq()
@@ -195,7 +188,7 @@ defmodule Open890.TCPClient do
   end
 
   def handle_info(:connect_socket, state) do
-    {:ok, socket} = :gen_tcp.connect(state.radio_ip_address, @port, @socket_opts)
+    {:ok, socket} = :gen_tcp.connect(state.radio_ip_address, @port, @socket_opts, @connect_timeout_ms)
 
     Logger.info("Established TCP socket with radio on port #{@port}")
 
