@@ -344,9 +344,9 @@
             <%= case @band_scope_mode do %>
               <%= :auto_scroll -> %>
                 <%= cmd_button "Shift", "BSE", class: "attached" %>
-              <%= :fixed -> %>
+              <% :fixed -> %>
                 <%= cmd_button "MKR.CTR", "BSE", class: "attached" %>
-              <%= _ -> %>
+              <% _ -> %>
                 <button class="ui attached button"></button>
             <% end %>
 
