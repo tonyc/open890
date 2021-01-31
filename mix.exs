@@ -27,7 +27,7 @@ defmodule Open890.MixProject do
   defp release do
     [
       steps: [:assemble, &Bakeware.assemble/1],
-      strip_beams: Mix.env() == :prod,
+      strip_beams: Mix.env() == :prod
     ]
   end
 
@@ -58,17 +58,17 @@ defmodule Open890.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:observer_cli, "~> 1.5"},
-      {:phoenix, "~> 1.5.4"},
+      {:phoenix, "~> 1.5"},
       {:phoenix_ecto, "~> 4.1"},
       {:phoenix_html, "~> 2.11"},
       {:phoenix_live_dashboard, "~> 0.4.0"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_live_view, "0.15.1"},
+      {:phoenix_live_view, "~> 0.15"},
       {:plug_cowboy, "~> 2.0"},
       {:postgrex, ">= 0.0.0"},
-      {:sobelow, "~> 0.10.5", only: [:dev, :test]},
+      {:sobelow, "~> 0.11", only: [:dev, :test]},
       {:telemetry_metrics, "~> 0.4"},
-      {:telemetry_poller, "~> 0.4"},
+      {:telemetry_poller, "~> 0.4"}
     ]
   end
 
