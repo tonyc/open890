@@ -34,3 +34,5 @@ npm-debug.log
 /priv/static/
 
 .elixir_ls/
+
+.iex.exs
