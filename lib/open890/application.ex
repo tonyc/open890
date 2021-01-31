@@ -9,11 +9,6 @@ defmodule Open890.Application do
     children = [
       # Start the Ecto repository
       # Open890.Repo,
-      %{
-        id: Open890.TCPClient,
-        start: {Open890.TCPClient, :start_link, []},
-        type: :supervisor
-      },
       # %{
       #   id: Open890.UDPAudioServer,
       #   start: {Open890.UDPAudioServer, :start_link, []},
@@ -24,7 +19,12 @@ defmodule Open890.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Open890.PubSub},
       # Start the Endpoint (http/https)
-      Open890Web.Endpoint
+      Open890Web.Endpoint,
+      %{
+        id: Open890.TCPClient,
+        start: {Open890.TCPClient, :start_link, []},
+        type: :supervisor
+      },
       # Start a worker by calling: Open890.Worker.start_link(arg)
       # {Open890.Worker, arg}
     ]
