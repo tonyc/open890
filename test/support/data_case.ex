@@ -18,22 +18,11 @@ defmodule Open890.DataCase do
 
   using do
     quote do
-      alias Open890.Repo
-
-      import Ecto
-      import Ecto.Changeset
-      import Ecto.Query
       import Open890.DataCase
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Open890.Repo)
-
-    unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Open890.Repo, {:shared, self()})
-    end
-
     :ok
   end
 

@@ -32,12 +32,6 @@ defmodule Open890Web.ConnCase do
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Open890.Repo)
-
-    unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Open890.Repo, {:shared, self()})
-    end
-
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
 end
