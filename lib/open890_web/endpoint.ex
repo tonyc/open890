@@ -1,12 +1,12 @@
 defmodule Open890Web.Endpoint do
-  use Phoenix.Endpoint, otp_app: :open_890
+  use Phoenix.Endpoint, otp_app: :open890
 
   # The session will be stored in the cookie and signed,
   # this means its contents can be read but not tampered with.
   # Set :encryption_salt if you would also like to encrypt it.
   @session_options [
     store: :cookie,
-    key: "_open_890_key",
+    key: "_open890_key",
     signing_salt: "u421W6Wo"
   ]
 
@@ -22,7 +22,7 @@ defmodule Open890Web.Endpoint do
   # when deploying your static files in production.
   plug Plug.Static,
     at: "/",
-    from: :open_890,
+    from: :open890,
     gzip: false,
     only: ~w(css fonts images js favicon.ico robots.txt)
 
@@ -32,7 +32,7 @@ defmodule Open890Web.Endpoint do
     socket "/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket
     plug Phoenix.LiveReloader
     plug Phoenix.CodeReloader
-    plug Phoenix.Ecto.CheckRepoStatus, otp_app: :open_890
+    plug Phoenix.Ecto.CheckRepoStatus, otp_app: :open890
   end
 
   plug Phoenix.LiveDashboard.RequestLogger,

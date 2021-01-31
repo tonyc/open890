@@ -1,10 +1,10 @@
 use Mix.Config
 
 # Configure your database
-# config :open_890, Open890.Repo,
+# config :open890, Open890.Repo,
 #   username: "postgres",
 #   password: "postgres",
-#   database: "open_890_dev",
+#   database: "open890_dev",
 #   hostname: "localhost",
 #   show_sensitive_data_on_connection_error: true,
 #   pool_size: 10
@@ -15,7 +15,7 @@ use Mix.Config
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we use it
 # with webpack to recompile .js and .css sources.
-config :open_890, Open890Web.Endpoint,
+config :open890, Open890Web.Endpoint,
   http: [port: 4000],
   debug_errors: true,
   code_reloader: true,
@@ -55,13 +55,13 @@ config :open_890, Open890Web.Endpoint,
 # different ports.
 
 # Watch static and templates for browser reloading.
-config :open_890, Open890Web.Endpoint,
+config :open890, Open890Web.Endpoint,
   live_reload: [
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
-      ~r"lib/open_890_web/(live|views)/.*(ex)$",
-      ~r"lib/open_890_web/templates/.*(eex)$"
+      ~r"lib/open890_web/(live|views)/.*(ex)$",
+      ~r"lib/open890_web/templates/.*(eex)$"
     ]
   ]
 

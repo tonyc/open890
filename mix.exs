@@ -1,6 +1,6 @@
 defmodule Open890.MixProject do
   use Mix.Project
-  @app :open_890
+  @app :open890
 
   def project do
     [
