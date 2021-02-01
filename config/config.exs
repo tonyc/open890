@@ -7,12 +7,6 @@
 # General application configuration
 use Mix.Config
 
-config :open890,
-  ecto_repos: []
-
-# config :open890,
-#   ecto_repos: [Open890.Repo]
-
 # Configures the endpoint
 config :open890, Open890Web.Endpoint,
   url: [host: "localhost"],

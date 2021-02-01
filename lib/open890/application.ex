@@ -7,8 +7,6 @@ defmodule Open890.Application do
 
   def start(_type, _args) do
     children = [
-      # Start the Ecto repository
-      # Open890.Repo,
       # %{
       #   id: Open890.UDPAudioServer,
       #   start: {Open890.UDPAudioServer, :start_link, []},
