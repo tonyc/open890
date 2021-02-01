@@ -259,14 +259,10 @@ defmodule Open890Web.RadioViewHelpers do
     percentage * 212
   end
 
-  def audio_scope_filter_edges(mode, {filter_lo_width, filter_hi_shift} = filter_edges, active_roofing_filter, roofing_filter_data) when is_integer(filter_lo_width) and is_integer(filter_hi_shift) and not is_nil(active_roofing_filter) do
+  def audio_scope_filter_edges(mode, {filter_lo_width, filter_hi_shift}, active_roofing_filter, roofing_filter_data) when mode in [:cw, :cw_r] and is_integer(filter_lo_width) and is_integer(filter_hi_shift) and not is_nil(active_roofing_filter) do
     half_width = (filter_lo_width / 2 |> round())
 
-    filter_edges |> IO.inspect(label: "filter_edges")
-
     roofing_width = roofing_filter_data |> Map.get(active_roofing_filter)
-    # half_roofing_width = roofing_width / 2 |> round()
-    # _midpoint = roofing_width / 2 |> round()
 
     shift = case mode do
       :cw_r -> filter_hi_shift
@@ -287,6 +283,10 @@ defmodule Open890Web.RadioViewHelpers do
     ~e{
       <polyline id="audioScopeFilter" points="<%= points %>" />
     }
+  end
+
+  def audio_scope_filter_edges(mode, {_filter_lo_width, _filter_hi_shift} = _filter_edges, _active_roofing_filter, _roofing_filter_data) when mode in [:usb, :lsb] do
+    ""
   end
 
   def audio_scope_filter_edges(_mode, _edges, _active_roofing_filter, _roofing_filter_data) do
