@@ -140,14 +140,9 @@ defmodule Open890.TCPClient do
   end
 
   def monitor_meters do
-    Logger.info("********** monitor meters")
-
     ["RM11", "RM21"]
     |> Enum.each(fn command -> command |> cmd() end)
   end
-
-  # TODO: Make this configurable
-  defp freq_change_step, do: "5"
 
   def cmd(cmd) do
     Logger.info("#{__MODULE__}.send_command(#{inspect(cmd)})")

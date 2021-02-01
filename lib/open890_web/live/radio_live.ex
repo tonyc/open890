@@ -315,12 +315,6 @@ defmodule Open890Web.Live.RadioLive do
     |> update_filter_lo_edge()
   end
 
-  defp update_filter_edges(socket) do
-    socket
-    |> update_filter_hi_edge()
-    |> update_filter_lo_edge()
-  end
-
   defp update_filter_hi_edge(socket) do
     %{
       active_mode: active_mode,
