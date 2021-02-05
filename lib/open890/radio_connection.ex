@@ -1,5 +1,7 @@
 defmodule Open890.RadioConnection do
-  defstruct id: nil, ip_address: nil, user_name: nil, password: nil, user_is_admin: false, pid: nil
+  defstruct id: nil, ip_address: nil, user_name: nil, password: nil, user_is_admin: false
+
+  require Logger
 
   alias Open890.RadioConnectionSupervisor
 
@@ -48,7 +50,19 @@ defmodule Open890.RadioConnection do
     |> DynamicSupervisor.terminate_child(pid)
   end
 
-  def get_connection_pid(%__MODULE__{id: id}) do
+  def cmd(%__MODULE__{} = connection, command) when is_binary(command) do
+    Logger.debug("cmd(#{inspect(command)}): Finding pid for #{inspect(connection)}")
+
+    connection
+    |> get_connection_pid()
+    |> cast_cmd(command)
+  end
+
+  defp cast_cmd(pid, command) when is_pid(pid) and is_binary(command) do
+    pid |> GenServer.cast({:send_command, command})
+  end
+
+  defp get_connection_pid(%__MODULE__{id: id}) do
     [{pid, _}] = Registry.lookup(:radio_connection_registry, id)
     pid
   end

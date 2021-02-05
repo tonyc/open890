@@ -68,14 +68,8 @@ defmodule Open890Web.Live.RadioLive do
       {:ok, %RadioConnection{} = connection} ->
         Logger.info("Found connection: #{connection_id}")
 
-        connection_pid = connection |> RadioConnection.get_connection_pid()
-        Logger.info("Found connection_pid: #{inspect(connection_pid)}")
-
-        radio_connection = %{connection | pid: connection_pid}
-        |> IO.inspect(label: "radio_connection_with_pid")
-
         socket = init_socket(socket)
-        |> assign(:radio_connection, radio_connection)
+        |> assign(:radio_connection, connection)
 
         socket =
           if params["debug"] do
@@ -91,7 +85,7 @@ defmodule Open890Web.Live.RadioLive do
             socket |> assign(:layout_wide, "container")
           end
 
-        radio_connection |> ConnectionCommands.get_initial_state()
+        connection |> ConnectionCommands.get_initial_state()
 
         socket
       {:error, reason} ->

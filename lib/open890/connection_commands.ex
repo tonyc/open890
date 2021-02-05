@@ -159,20 +159,8 @@ defmodule Open890.ConnectionCommands do
   @doc """
   Send a command to the given Radio Connection
   """
-  def cmd(%RadioConnection{pid: pid} = _connection, command) when is_pid(pid) and is_binary(command) do
-    cmd(pid, command)
-  end
-
   def cmd(%RadioConnection{} = connection, command) when is_binary(command) do
-    Logger.debug("cmd(#{inspect(command)}): Need to look up pid for #{inspect(connection)}")
-
-    connection
-    |> RadioConnection.get_connection_pid()
-    |> cmd(command)
-  end
-
-  def cmd(pid, command) when is_pid(pid) and is_binary(command) do
-    pid |> GenServer.cast({:send_command, command})
+    connection |> RadioConnection.cmd(command)
   end
 
 end
