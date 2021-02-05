@@ -1,5 +1,7 @@
 defmodule Open890.RadioConnection do
-  defstruct id: nil, ip_address: nil, user_name: nil, password: nil, user_is_admin: false
+  @derive {Inspect, only: [:id, :type, :ip_address, :user_name]}
+
+  defstruct id: nil, ip_address: nil, user_name: nil, password: nil, user_is_admin: false, type: nil
 
   require Logger
 
@@ -8,6 +10,7 @@ defmodule Open890.RadioConnection do
   def find(1 = id) do
     {:ok,
       %__MODULE__{
+        type: :tcp,
         id: id,
         ip_address: "192.168.1.229",
         user_name: "testuser",
@@ -32,9 +35,8 @@ defmodule Open890.RadioConnection do
   end
 
   def start(%__MODULE__{} = connection) do
-    {:ok, pid} = RadioConnectionSupervisor.start_connection(connection)
-
-    %{connection | pid: pid}
+    {:ok, _pid} = RadioConnectionSupervisor.start_connection(connection)
+    connection
   end
 
   def stop(id) when is_integer(id) do
