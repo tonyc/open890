@@ -1,5 +1,5 @@
 defmodule Open890.RadioConnection do
-  defstruct id: nil, ip_address: nil, user_name: nil, password: nil, user_is_admin: false
+  defstruct id: nil, ip_address: nil, user_name: nil, password: nil, user_is_admin: false, pid: nil
 
   alias Open890.RadioConnectionSupervisor
 
@@ -30,7 +30,9 @@ defmodule Open890.RadioConnection do
   end
 
   def start(%__MODULE__{} = connection) do
-    {:ok, _pid} = RadioConnectionSupervisor.start_connection(connection)
+    {:ok, pid} = RadioConnectionSupervisor.start_connection(connection)
+
+    %{connection | pid: pid}
   end
 
   def stop(id) when is_integer(id) do
@@ -44,6 +46,11 @@ defmodule Open890.RadioConnection do
 
     RadioConnectionSupervisor
     |> DynamicSupervisor.terminate_child(pid)
+  end
+
+  def get_connection_pid(%__MODULE__{id: id}) do
+    [{pid, _}] = Registry.lookup(:radio_connection_registry, id)
+    pid
   end
 
 

@@ -1,4 +1,6 @@
 defmodule Open890.ConnectionCommands do
+  require Logger
+
   alias Open890.RadioConnection
 
   def get_initial_state(%RadioConnection{} = conn) do
@@ -157,15 +159,20 @@ defmodule Open890.ConnectionCommands do
   @doc """
   Send a command to the given Radio Connection
   """
-  def cmd(%RadioConnection{} = connection, command) when is_binary(command) do
-    connection
-    |> get_connection_pid()
-    |> GenServer.cast({:send_command, command})
+  def cmd(%RadioConnection{pid: pid} = _connection, command) when is_pid(pid) and is_binary(command) do
+    cmd(pid, command)
   end
 
-  defp get_connection_pid(%RadioConnection{id: id}) do
-    [{pid, _}] = Registry.lookup(:radio_connection_registry, id)
-    pid
+  def cmd(%RadioConnection{} = connection, command) when is_binary(command) do
+    Logger.debug("cmd(#{inspect(command)}): Need to look up pid for #{inspect(connection)}")
+
+    connection
+    |> RadioConnection.get_connection_pid()
+    |> cmd(command)
+  end
+
+  def cmd(pid, command) when is_pid(pid) and is_binary(command) do
+    pid |> GenServer.cast({:send_command, command})
   end
 
 end

@@ -13,7 +13,7 @@ defmodule Open890Web.Live.RadioLive do
   alias Open890Web.Live.{ButtonsComponent}
 
   @init_socket [
-    {:__connection, nil},
+    {:radio_connection, nil},
     {:debug, false},
     {:active_frequency, ""},
     {:active_mode, :unknown},
@@ -68,9 +68,14 @@ defmodule Open890Web.Live.RadioLive do
       {:ok, %RadioConnection{} = connection} ->
         Logger.info("Found connection: #{connection_id}")
 
-        connection |> ConnectionCommands.get_initial_state()
+        connection_pid = connection |> RadioConnection.get_connection_pid()
+        Logger.info("Found connection_pid: #{inspect(connection_pid)}")
 
-        socket = init_socket(socket) |> assign(:__connection, connection)
+        radio_connection = %{connection | pid: connection_pid}
+        |> IO.inspect(label: "radio_connection_with_pid")
+
+        socket = init_socket(socket)
+        |> assign(:radio_connection, radio_connection)
 
         socket =
           if params["debug"] do
@@ -85,6 +90,8 @@ defmodule Open890Web.Live.RadioLive do
           else
             socket |> assign(:layout_wide, "container")
           end
+
+        radio_connection |> ConnectionCommands.get_initial_state()
 
         socket
       {:error, reason} ->
