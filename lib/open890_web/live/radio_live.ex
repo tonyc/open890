@@ -63,28 +63,34 @@ defmodule Open890Web.Live.RadioLive do
       Phoenix.PubSub.subscribe(Open890.PubSub, "radio:band_scope")
     end
 
-    {:ok, %RadioConnection{} = connection} = RadioConnection.find(connection_id)
+    socket = RadioConnection.find(connection_id)
+    |> case do
+      {:ok, %RadioConnection{} = connection} ->
+        Logger.info("Found connection: #{connection_id}")
 
-    Logger.info("Found connection: #{inspect(connection)}")
+        connection |> ConnectionCommands.get_initial_state()
 
-    connection |> ConnectionCommands.get_initial_state()
+        socket = init_socket(socket) |> assign(:__connection, connection)
 
-    socket = init_socket(socket)
-    |> assign(:__connection, connection)
+        socket =
+          if params["debug"] do
+            socket |> assign(:debug, true)
+          else
+            socket
+          end
 
-    socket =
-      if params["debug"] do
-        socket |> assign(:debug, true)
-      else
+        socket =
+          if params["wide"] do
+            socket |> assign(:layout_wide, "")
+          else
+            socket |> assign(:layout_wide, "container")
+          end
+
         socket
-      end
-
-    socket =
-      if params["wide"] do
-        socket |> assign(:layout_wide, "")
-      else
-        socket |> assign(:layout_wide, "container")
-      end
+      {:error, reason} ->
+        Logger.warn("Could not find radio connection id: #{connection_id}: #{inspect(reason)}")
+        socket
+    end
 
     {:ok, socket}
   end
