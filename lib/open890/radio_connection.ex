@@ -29,8 +29,8 @@ defmodule Open890.RadioConnection do
     end
   end
 
-  def start(%__MODULE___{} = connection) do
-    {:ok, pid} = RadioConnectionSupervisor.start_connection(connection)
+  def start(%__MODULE__{} = connection) do
+    {:ok, _pid} = RadioConnectionSupervisor.start_connection(connection)
   end
 
   def stop(id) when is_integer(id) do
@@ -39,11 +39,13 @@ defmodule Open890.RadioConnection do
     end
   end
 
-  def stop(%__MODULE__{id: id} = connection) do
+  def stop(%__MODULE__{id: id}) do
     [{pid, _}] = Registry.lookup(:radio_connection_registry, id)
 
     RadioConnectionSupervisor
     |> DynamicSupervisor.terminate_child(pid)
   end
+
+
 
 end

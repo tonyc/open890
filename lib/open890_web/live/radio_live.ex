@@ -5,8 +5,8 @@ defmodule Open890Web.Live.RadioLive do
   use Open890Web.Live.RadioLiveEventHandling
 
   alias Phoenix.Socket.Broadcast
-  alias Open890.TCPClient, as: Radio
   alias Open890.RadioConnection
+  alias Open890.ConnectionCommands
 
   alias Open890Web.Live.Dispatch
 
@@ -63,11 +63,11 @@ defmodule Open890Web.Live.RadioLive do
       Phoenix.PubSub.subscribe(Open890.PubSub, "radio:band_scope")
     end
 
-    {:ok, connection} = RadioConnection.find(connection_id)
+    {:ok, %RadioConnection{} = connection} = RadioConnection.find(connection_id)
 
     Logger.info("Found connection: #{inspect(connection)}")
 
-    Radio.get_initial_state()
+    connection |> ConnectionCommands.get_initial_state()
 
     socket = init_socket(socket)
     |> assign(:__connection, connection)

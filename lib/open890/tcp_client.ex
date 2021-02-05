@@ -46,118 +46,6 @@ defmodule Open890.TCPClient do
      }}
   end
 
-  # Client API
-
-  def get_initial_state(_id \\ nil) do
-    get_active_receiver()
-    get_vfo_a_freq()
-    get_vfo_b_freq()
-    get_s_meter()
-    get_modes()
-    get_filter_modes()
-    get_filter_state()
-    get_band_scope_limits()
-    get_band_scope_mode()
-    get_band_scope_att()
-    get_display_screen()
-    get_rf_pre_att()
-    get_ref_level()
-
-    monitor_meters()
-  end
-
-  def ch_up, do: "CH0" |> cmd()
-  def ch_down, do: "CH1" |> cmd()
-
-  def radio_up(args \\ "03") when is_binary(args), do: "UP#{args}" |> cmd()
-  def radio_down(args \\ "03") when is_binary(args), do: "DN#{args}" |> cmd()
-
-  def cw_decode_on, do: "CD01" |> cmd()
-  def cw_decode_off, do: "CD00" |> cmd()
-
-  def freq_change(:up) do
-    "CH0" |> cmd()
-  end
-
-  def freq_change(:down) do
-    "CH1" |> cmd()
-  end
-
-  def get_ref_level() do
-    "BSC" |> cmd()
-  end
-
-  def set_ref_level(db_value) when is_float(db_value) do
-    cmd_value =
-      ((db_value + 20) * 2)
-      |> round()
-      |> to_string()
-      |> String.pad_leading(3, "0")
-
-    "BSC#{cmd_value}" |> cmd()
-  end
-
-  def cw_tune, do: "CA1" |> cmd()
-  def vfo_a_b_swap, do: "EC" |> cmd()
-  def get_vfo_a_freq, do: "FA" |> cmd()
-  def get_vfo_b_freq, do: "FB" |> cmd()
-  def get_active_receiver, do: "FR" |> cmd()
-  def get_band_scope_limits, do: "BSM0" |> cmd()
-  def get_band_scope_mode, do: "BS3" |> cmd()
-  def get_s_meter, do: "SM" |> cmd()
-  def get_display_screen, do: "DS1" |> cmd()
-  def get_band_scope_att, do: "BS8" |> cmd()
-
-  def get_roofing_filter_info() do
-    ~w(FL0 FL10 FL11 FL12) |> run_commands()
-  end
-
-
-  def get_rf_pre_att() do
-    "PA" |> cmd()
-    "RA" |> cmd()
-  end
-
-  def get_modes do
-    get_active_mode()
-    get_inactive_mode()
-  end
-
-  def get_active_mode, do: "OM0" |> cmd()
-  def get_inactive_mode, do: "OM1" |> cmd()
-
-  def get_filter_state do
-    "SH0" |> cmd()
-    "SL0" |> cmd()
-  end
-
-  def get_filter_modes do
-    get_ssb_filter_mode()
-    get_ssb_data_filter_mode()
-  end
-
-  def get_ssb_filter_mode do
-    "EX00611" |> cmd()
-  end
-
-  def get_ssb_data_filter_mode do
-    "EX00612" |> cmd()
-  end
-
-  def esc do
-    "DS3" |> cmd()
-  end
-
-  def monitor_meters do
-    ["RM11", "RM21"]
-    |> Enum.each(fn command -> command |> cmd() end)
-  end
-
-  def cmd(cmd) do
-    Logger.info("#{__MODULE__}.send_command(#{inspect(cmd)})")
-    GenServer.cast(:radio, {:send_command, cmd})
-  end
-
   # Server API
   @impl true
   def handle_cast({:send_command, cmd}, state) do
@@ -367,9 +255,5 @@ defmodule Open890.TCPClient do
     |> Enum.map(fn value ->
       Integer.parse(value, 16) |> elem(0)
     end)
-  end
-
-  defp run_commands(cmds) when is_list(cmds) do
-    cmds |> Enum.each(&cmd/1)
   end
 end

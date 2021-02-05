@@ -5,6 +5,8 @@ defmodule Open890.Application do
 
   use Application
 
+  @connection_registry :radio_connection_registry
+
   def start(_type, _args) do
     children = [
       {Registry, [keys: :unique, name: @connection_registry]},
