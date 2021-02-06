@@ -45,8 +45,6 @@ defmodule Open890.RadioConnection do
   end
 
   def cmd(%__MODULE__{} = connection, command) when is_binary(command) do
-    Logger.debug("cmd(#{inspect(command)}): Finding pid for #{inspect(connection)}")
-
     connection
     |> get_connection_pid()
     |> case do
