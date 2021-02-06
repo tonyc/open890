@@ -14,7 +14,6 @@ defmodule Open890.TCPClient do
   alias Open890.KNS.User
 
   def start_link(%RadioConnection{id: id} = args) do
-    Logger.info("************** TCPClient: START_LINK: args: #{inspect(args)}")
     GenServer.start_link(__MODULE__, args, name: via_tuple(id))
   end
 
@@ -24,8 +23,6 @@ defmodule Open890.TCPClient do
 
   @impl true
   def init(%RadioConnection{} = connection) do
-    Logger.info("**** TCPClient: INIT")
-
     radio_ip_address = connection.ip_address |> String.to_charlist()
     radio_username = connection.user_name
     radio_password = connection.password
@@ -49,7 +46,6 @@ defmodule Open890.TCPClient do
   # Server API
   @impl true
   def handle_cast({:send_command, cmd}, state) do
-    Logger.info("handle_cast: send_command: #{cmd}")
     state.socket |> send_command(cmd)
     {:noreply, state}
   end
@@ -221,7 +217,7 @@ defmodule Open890.TCPClient do
       true ->
         # otherwise, we just braodcast everything to the liveview to let it deal with it
         if !(msg |> String.starts_with?("SM0")) do
-          Logger.info("<- #{inspect(msg)}")
+          Logger.info("▼ #{inspect(msg)}")
         end
 
         msg |> broadcast()
@@ -240,7 +236,7 @@ defmodule Open890.TCPClient do
   defp send_command(socket, msg) when is_binary(msg) do
     cmd = msg <> ";"
 
-    if cmd != "PS;", do: Logger.debug("-> #{inspect(cmd)}")
+    if cmd != "PS;", do: Logger.info("▲ #{inspect(cmd)}")
 
     socket |> :gen_tcp.send(cmd)
 
