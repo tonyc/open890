@@ -36,3 +36,5 @@ npm-debug.log
 .elixir_ls/
 
 .iex.exs
+
+*.dets

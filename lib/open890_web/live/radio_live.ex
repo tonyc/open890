@@ -14,6 +14,7 @@ defmodule Open890Web.Live.RadioLive do
 
   @init_socket [
     {:radio_connection, nil},
+    {:connection_state, nil},
     {:debug, false},
     {:active_frequency, ""},
     {:active_mode, :unknown},
@@ -34,6 +35,7 @@ defmodule Open890Web.Live.RadioLive do
     {:inactive_mode, :unknown},
     {:inactive_receiver, :b},
     {:alc_meter, 0},
+    {:layout_wide, "container"},
     {:swr_meter, 0},
     {:comp_meter, 0},
     {:id_meter, 0},
@@ -63,13 +65,14 @@ defmodule Open890Web.Live.RadioLive do
       Phoenix.PubSub.subscribe(Open890.PubSub, "radio:band_scope")
     end
 
+    socket = init_socket(socket)
+
     socket = RadioConnection.find(connection_id)
     |> case do
       {:ok, %RadioConnection{} = connection} ->
         Logger.info("Found connection: #{connection_id}")
 
-        socket = init_socket(socket)
-        |> assign(:radio_connection, connection)
+        socket = socket |> assign(:radio_connection, connection)
 
         socket =
           if params["debug"] do
@@ -82,10 +85,18 @@ defmodule Open890Web.Live.RadioLive do
           if params["wide"] do
             socket |> assign(:layout_wide, "")
           else
-            socket |> assign(:layout_wide, "container")
+            socket
           end
 
-        connection |> ConnectionCommands.get_initial_state()
+        socket = connection
+        |> RadioConnection.process_exists?
+        |> case do
+          true ->
+            connection |> ConnectionCommands.get_initial_state()
+            socket |> assign(:connection_state, :up)
+          _ ->
+            socket
+        end
 
         socket
       {:error, reason} ->

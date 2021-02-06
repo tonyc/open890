@@ -65,7 +65,8 @@ defmodule Open890.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:sobelow, "~> 0.11", only: [:dev, :test]},
       {:telemetry_metrics, "~> 0.4"},
-      {:telemetry_poller, "~> 0.4"}
+      {:telemetry_poller, "~> 0.4"},
+      {:uuid, "~> 1.1.8 "}
     ]
   end
 

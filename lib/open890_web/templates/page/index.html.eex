@@ -1,1 +1,5 @@
-<div id="audioscope"></div>
+<div class="ui container">
+  <h1>open890</h1>
+
+  <p><%= link "Connections", to: Routes.radio_connection_path(@conn, :index) %>
+</div>

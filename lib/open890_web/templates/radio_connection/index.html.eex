@@ -1,0 +1,23 @@
+<div class="ui container">
+  <div class="row">
+    <div class="column">
+      <h1>Manage Connections</h1>
+    </div>
+  </div>
+
+  <div class="row">
+    <%# <button class="ui button primary">New connection...</button> %>
+  </div>
+
+  <div class="row">
+    <ul>
+      <%= for connection <- @radio_connections do %>
+        <li>
+          <%= link(connection.name, to: Routes.radio_path(@conn, :index, connection) ) %>
+          <div class="ui tiny label"><%= connection.type %></div>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+
+</div>

@@ -17,6 +17,10 @@ defmodule Open890Web.Router do
   scope "/", Open890Web do
     pipe_through :browser
 
+    get "/", PageController, :index
+
+    get "/connections", RadioConnectionController, :index
+
     live "/connections/:id", Live.RadioLive, :index
   end
 

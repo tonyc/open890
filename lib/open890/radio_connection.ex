@@ -1,34 +1,26 @@
 defmodule Open890.RadioConnection do
-  @derive {Inspect, only: [:id, :type, :ip_address, :user_name]}
+  @moduledoc """
+  Radio Connection Context Module
+  """
 
-  defstruct id: nil, ip_address: nil, user_name: nil, password: nil, user_is_admin: false, type: nil
+  @derive {Inspect, only: [:id, :name, :type, :ip_address, :user_name]}
+
+  defstruct id: nil, name: nil, ip_address: nil, user_name: nil, password: nil, user_is_admin: false, type: nil
 
   require Logger
 
   alias Open890.RadioConnectionSupervisor
+  alias Open890.RadioConnectionRepo, as: Repo
 
-  def find(1 = id) do
-    {:ok,
-      %__MODULE__{
-        type: :tcp,
-        id: id,
-        ip_address: "192.168.1.229",
-        user_name: "testuser",
-        password: "testpass123!",
-        user_is_admin: false
-      }
-    }
+  def find(id) do
+    id |> Repo.find()
   end
 
-  def find(id) when is_binary(id) do
-    id |> String.to_integer() |> find()
+  def all do
+    Repo.all()
   end
 
-  def find(_) do
-    {:error, :not_found}
-  end
-
-  def start(id) when is_integer(id) do
+  def start(id) when is_integer(id) or is_binary(id) do
     with {:ok, conn} <- find(id) do
       conn |> start()
     end
@@ -57,18 +49,33 @@ defmodule Open890.RadioConnection do
 
     connection
     |> get_connection_pid()
-    |> cast_cmd(command)
+    |> case do
+      {:ok, pid} -> pid |> cast_cmd(command)
+      {:error, _reason} ->
+        Logger.warn("Unable to send command to connection #{inspect(connection)}, pid not found. Is the connection up?")
+    end
   end
 
   defp cast_cmd(pid, command) when is_pid(pid) and is_binary(command) do
     pid |> GenServer.cast({:send_command, command})
   end
 
-  defp get_connection_pid(%__MODULE__{id: id}) do
-    [{pid, _}] = Registry.lookup(:radio_connection_registry, id)
-    pid
+  def process_exists?(%__MODULE__{} = conn) do
+    conn
+    |> get_connection_pid()
+    |> case do
+      {:ok, _} -> true
+      _ -> false
+    end
   end
 
+  defp get_connection_pid(%__MODULE__{id: id}) do
+    Registry.lookup(:radio_connection_registry, id)
+    |> case do
+      [{pid, _}]  -> {:ok, pid}
+      [] -> {:error, :not_found}
+    end
+  end
 
 
 end

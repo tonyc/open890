@@ -5,9 +5,13 @@ defmodule Open890.Application do
 
   use Application
 
+  alias Open890.RadioConnectionRepo
+
   @connection_registry :radio_connection_registry
 
   def start(_type, _args) do
+    {:ok, _filename} = RadioConnectionRepo.init()
+
     children = [
       {Registry, [keys: :unique, name: @connection_registry]},
       # Start the Telemetry supervisor
