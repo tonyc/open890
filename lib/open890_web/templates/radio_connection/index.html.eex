@@ -1,30 +1,61 @@
 <div class="ui container">
   <div class="row">
-    <div class="column">
-      <h1>Manage Connections</h1>
-    </div>
-  </div>
-
-  <div class="row">
-    <%# <button class="ui button primary">New connection...</button> %>
-  </div>
-
-  <div class="row">
-    <ul>
+    <h1>Manage Radio Connections</h1>
+    <table class="ui very basic table">
+      <thead>
+        <tr>
+          <th class="four wide">Name</th>
+          <th class="two wide"></th>
+          <th>Status</th>
+          <th>Details</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
       <%= for connection <- @radio_connections do %>
-        <li>
-          <%= link(connection.name, to: Routes.radio_path(@conn, :index, connection) ) %>
+        <tr>
 
-          <%= if RadioConnection.process_exists?(connection) do %>
-            <div class="ui tiny green label">Running</div>
-            <%= button("Stop", to: Routes.radio_connection_path(@conn, :stop, connection), class: "ui tiny primary button") %>
-          <% else %>
-            <div class="ui tiny red label">Stopped</div>
-            <%= button("Start", to: Routes.radio_connection_path(@conn, :start, connection), class: "ui tiny primary button") %>
-          <% end %>
-        </li>
+          <td>
+            <%= link(connection.name, to: Routes.radio_path(@conn, :index, connection), class: "ui ") %>
+          </td>
+          <td>
+            <%= if RadioConnection.process_exists?(connection) do %>
+              <div class="ui tiny basic button">
+                <i class="stop icon"></i>
+                Stop
+              </div>
+            <% else %>
+              <div class="ui tiny basic button">
+                <i class="play icon"></i>
+                Start
+              </div>
+            <% end %>
+          </td>
+
+          <td>
+            <%= if RadioConnection.process_exists?(connection) do %>
+              <div class="ui large fluid center aligned green label">Running</div>
+            <% else %>
+              <div class="ui large fluid center aligned secondary label">Stopped</div>
+            <% end %>
+          </td>
+
+          <td>
+            <%= connection_to_uri(connection) %>
+          </td>
+          <td class="right aligned">
+            <%= if RadioConnection.process_exists?(connection) do %>
+              <%= button("Stop", to: Routes.radio_connection_path(@conn, :stop, connection), class: "ui basic primary button") %>
+            <% else %>
+              <%= button("Start", to: Routes.radio_connection_path(@conn, :start, connection), class: "ui basic primary button") %>
+            <% end %>
+
+            <button class="ui basic button">Edit</button>
+            <button class="ui basic button">Delete</button>
+          </td>
+        </tr>
       <% end %>
-    </ul>
-  </div>
+      </tbody>
+    </table>
 
 </div>
