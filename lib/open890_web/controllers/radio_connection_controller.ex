@@ -66,7 +66,7 @@ defmodule Open890Web.RadioConnectionController do
     end
   end
 
-  def destroy(conn, %{"id" => id} = _params) do
+  def delete(conn, %{"id" => id} = _params) do
     id
     |> RadioConnection.find()
     |> case do

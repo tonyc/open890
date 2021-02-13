@@ -4,18 +4,18 @@
 </div>
 
 <div class="field">
-  <%= label @f, :ip_address, "IP Address" %>
+  <%= label @f, :ip_address, "IP address" %>
   <%= text_input @f, :ip_address, value: @radio_connection.ip_address, required: true %>
 </div>
 
 <div class="two fields">
   <div class="field">
-    <%= label @f, :user_name, "KNS User" %>
+    <%= label @f, :user_name, "User" %>
     <%= text_input @f, :user_name, value: @radio_connection.user_name, required: true %>
   </div>
 
   <div class="field">
-    <%= label @f, :user_pass, "KNS Password" %>
+    <%= label @f, :user_pass, "Password" %>
     <%= password_input @f, :password, value: @radio_connection.password, required: true %>
   </div>
 </div>

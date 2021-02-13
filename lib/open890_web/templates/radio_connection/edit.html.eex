@@ -4,7 +4,7 @@
   </div>
 
   <div class="row">
-    <%= form_for @conn, Routes.radio_connection_path(@conn, :update, @radio_connection), [as: :radio_connection, class: "ui form"], fn f -> %>
+    <%= form_for @conn, Routes.radio_connection_path(@conn, :update, @radio_connection), [as: :radio_connection, method: :put, class: "ui form"], fn f -> %>
       <%= render "_form.html", f: f, radio_connection: @radio_connection %>
       <%= link "Cancel", to: Routes.radio_connection_path(@conn, :index), class: "ui left floated button" %>
       <%= submit "Update", class: "ui primary button right floated" %>

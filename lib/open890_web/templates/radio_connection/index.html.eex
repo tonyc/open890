@@ -1,26 +1,18 @@
 <%= if @radio_connections == [] do %>
-  <div class="ui centered grid">
-    <div class="row">
-      <div class="six wide left aligned column">
-        <h1>Welcome to open890!</h1>
-      </div>
-    </div>
-    <div class="ui grid row">
-      <div class="six wide column">
-        <p>It looks like you don't have any connections set up yet. Create one now!</p>
-        <div class="ui stacked segment">
-          <%= form_for @conn, Routes.radio_connection_path(@conn, :create), [as: :radio_connection, class: "ui form"], fn f -> %>
-            <%= render "_form.html", f: f, radio_connection: %RadioConnection{} %>
-            <%= submit "Create", class: "ui primary fluid button" %>
-          <% end %>
-        </div>
-      </div>
-    </div>
-  </div>
+  <%= render "_empty_state.html", conn: @conn %>
 <% else %>
   <div class="ui container">
-    <div class="row">
-      <h2>Manage Radio Connections</h2>
+    <div class="ui grid debug">
+    <div class="row debug">
+      <div class="left aligned eight wide column debug">
+        <h2>Radio Connections</h2>
+      </div>
+      <div class="right aligned eight wide column debug">
+        <a href="<%= Routes.radio_connection_path(@conn, :new) %>" class="ui basic tiny icon button">
+          <i class="ui icon plus"></i>
+          Add new connection
+        </a>
+      </div>
     </div>
     <div class="row">
       <table class="ui very basic table">
@@ -57,7 +49,7 @@
               <%= if RadioConnection.process_exists?(connection) do %>
                 <div class="ui large fluid center aligned green label">Running</div>
               <% else %>
-                <div class="ui large fluid center aligned secondary label">Stopped</div>
+                <div class="ui large fluid center aligned basic label">Stopped</div>
               <% end %>
             </td>
 
@@ -72,7 +64,7 @@
               <% end %>
 
               <%= link("Edit", to: Routes.radio_connection_path(@conn, :edit, connection), class: "ui button") %>
-              <%= button("Delete", to: Routes.radio_connection_path(@conn, :destroy, connection), method: :delete, data: [confirm: "Delete this connection?"], class: "ui button") %>
+              <%= button("Delete", to: Routes.radio_connection_path(@conn, :delete, connection), method: :delete, data: [confirm: "Delete this connection?"], class: "ui button") %>
             </td>
           </tr>
         <% end %>
@@ -80,8 +72,8 @@
       </table>
     </div>
 
-    <div class="row">
-      <%= link "New connection", to: Routes.radio_connection_path(@conn, :new), class: "ui button" %>
-    </div>
-  </div>
+  </div> <!--  grid -->
+
+
+  </div> <!-- top-level ui container -->
 <% end %>
