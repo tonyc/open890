@@ -1,0 +1,28 @@
+<div class="field">
+  <%= label @f, :name, "Connection Name" %>
+  <%= text_input @f, :name, value: @radio_connection.name, required: true %>
+</div>
+
+<div class="field">
+  <%= label @f, :ip_address, "IP address" %>
+  <%= text_input @f, :ip_address, value: @radio_connection.ip_address, required: true %>
+</div>
+
+<div class="two fields">
+  <div class="field">
+    <%= label @f, :user_name, "KNS User" %>
+    <%= text_input @f, :user_name, value: @radio_connection.user_name, required: true %>
+  </div>
+
+  <div class="field">
+    <%= label @f, :user_pass, "KNS Password" %>
+    <%= password_input @f, :password, value: @radio_connection.password, required: true %>
+  </div>
+</div>
+
+<div class="field">
+  <div class="ui checkbox">
+    <%= checkbox @f, :user_is_admin, value: @radio_connection.user_is_admin, class: "hidden", tabindex: "0" %>
+    <%= label @f, :user_is_admin, "User is admin" %>
+  </div>
+</div>

@@ -3,7 +3,7 @@ defmodule Open890.RadioConnection do
   Radio Connection Context Module
   """
 
-  @derive {Inspect, only: [:id, :name, :type, :ip_address, :user_name]}
+  @derive {Inspect, except: [:password]}
 
   defstruct id: nil, name: nil, ip_address: nil, user_name: nil, password: nil, user_is_admin: false, type: nil
 
@@ -11,6 +11,7 @@ defmodule Open890.RadioConnection do
 
   alias Open890.RadioConnectionSupervisor
   alias Open890.RadioConnectionRepo, as: Repo
+  alias Open890.RadioConnection
 
   def find(id) do
     id |> Repo.find()
@@ -22,6 +23,23 @@ defmodule Open890.RadioConnection do
 
   def create(params) when is_map(params) do
     params |> Repo.insert()
+  end
+
+  def delete_connection(id) do
+    id |> Repo.delete()
+  end
+
+  def update_connection(%RadioConnection{} = conn, params) when is_map(params) do
+    # TODO: this should use a changeset
+    new_connection = %{conn |
+      name: params["name"],
+      ip_address: params["ip_address"],
+      user_name: params["user_name"],
+      password: params["password"],
+      user_is_admin: params["user_is_admin"]
+    }
+
+    new_connection |> Repo.update()
   end
 
   def start(id) when is_integer(id) or is_binary(id) do

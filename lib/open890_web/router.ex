@@ -24,6 +24,7 @@ defmodule Open890Web.Router do
     post "/connections", RadioConnectionController, :create
     get "/connections/:id/edit", RadioConnectionController, :edit
     post "/connections/:id", RadioConnectionController, :update
+    delete "/connections/:id", RadioConnectionController, :destroy
 
     post "/connections/:id/start", RadioConnectionController, :start
     post "/connections/:id/stop", RadioConnectionController, :stop

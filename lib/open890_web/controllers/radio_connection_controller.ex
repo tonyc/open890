@@ -42,19 +42,33 @@ defmodule Open890Web.RadioConnectionController do
     end
   end
 
-  def update(conn, %{"id" => id} = _params) do
+  def update(conn, %{"id" => id, "radio_connection" => radio_params}) do
     id
     |> RadioConnection.find()
     |> case do
       {:ok, radio_connection} ->
-        # try to update connection
-
-        conn |> redirect(to: Routes.radio_connection_path(conn, :edit, radio_connection))
+        radio_connection
+        |> RadioConnection.update_connection(radio_params)
+        |> case do
+          :ok ->
+            conn |> redirect(to: Routes.radio_connection_path(conn, :index))
+          {:error, reason} ->
+            Logger.debug("Could not update connection: #{inspect(reason)}")
+            conn |> render("edit.html")
+        end
 
       _ ->
+        Logger.warn("Could not find connection: #{id}")
         conn |> redirect(to: Routes.radio_connection_path(conn, :index))
 
     end
+  end
+
+  def destroy(conn, %{"id" => id} = _params) do
+    id |> RadioConnection.delete_connection()
+
+    conn
+    |> redirect(to: Routes.radio_connection_path(conn, :index))
   end
 
   def start(conn, %{"id" => id} = _params) do

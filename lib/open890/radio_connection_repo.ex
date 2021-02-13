@@ -71,17 +71,23 @@ defmodule Open890.RadioConnectionRepo do
 
   end
 
-
   def insert(%RadioConnection{id: nil} = conn) do
     id = UUID.uuid4()
     conn = %{conn | id: id}
 
-    @table_name
-    |> :dets.insert_new({id, conn})
+    @table_name |> :dets.insert_new({id, conn})
+  end
+
+  def update(%RadioConnection{id: id} = conn) when not is_nil(id) do
+    @table_name |> :dets.insert({id, conn})
   end
 
   def delete(%RadioConnection{id: id} = _conn) do
-    @table_name
-    |> :dets.delete(id)
+    id |> delete()
   end
+
+  def delete(id) do
+    @table_name |> :dets.delete(id)
+  end
+
 end
