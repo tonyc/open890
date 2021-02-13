@@ -25,6 +25,10 @@ defmodule Open890.RadioConnection do
     params |> Repo.insert()
   end
 
+  def delete_connection(%RadioConnection{id: id}) when is_integer(id) do
+    id |> String.to_integer() |> delete_connection()
+  end
+
   def delete_connection(id) do
     id |> Repo.delete()
   end

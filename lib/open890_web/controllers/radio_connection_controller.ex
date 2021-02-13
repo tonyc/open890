@@ -65,7 +65,14 @@ defmodule Open890Web.RadioConnectionController do
   end
 
   def destroy(conn, %{"id" => id} = _params) do
-    id |> RadioConnection.delete_connection()
+    id
+    |> RadioConnection.find()
+    |> case do
+      {:ok, connection} ->
+        connection |> RadioConnection.delete_connection()
+        _ ->
+          Logger.warn("Could not find connection id: #{inspect(id)}")
+    end
 
     conn
     |> redirect(to: Routes.radio_connection_path(conn, :index))

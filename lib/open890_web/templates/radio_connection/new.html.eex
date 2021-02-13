@@ -1,10 +1,13 @@
-<div class="ui container">
+<div class="ui container grid">
   <div class="row">
-    <h1>New Connection</h1>
+    <h1>New Radio Connection</h1>
+  </div>
 
+  <div class="row">
     <%= form_for @conn, Routes.radio_connection_path(@conn, :create), [as: :radio_connection, class: "ui form"], fn f -> %>
       <%= render "_form.html", f: f, radio_connection: @radio_connection %>
-      <%= submit "Create", class: "ui button" %>
+      <%= link "Cancel", to: Routes.radio_connection_path(@conn, :index), class: "ui button" %>
+      <%= submit "Create", class: "ui primary button" %>
     <% end %>
   </div>
 </div>

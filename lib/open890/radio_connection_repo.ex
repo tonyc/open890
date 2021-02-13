@@ -12,22 +12,6 @@ defmodule Open890.RadioConnectionRepo do
     |> Enum.map(fn {_id, conn} -> conn end)
   end
 
-  def find("1"), do: find(1)
-
-  def find(1) do
-    {:ok,
-      %RadioConnection{
-        type: :tcp,
-        id: 1,
-        name: "TS-890 Default",
-        ip_address: "192.168.1.229",
-        user_name: "testuser",
-        password: "testpass123!",
-        user_is_admin: false
-      }
-    }
-  end
-
   def find(id) do
     @table_name
     |> :dets.lookup(id)
@@ -39,7 +23,6 @@ defmodule Open890.RadioConnectionRepo do
       _ -> {:error, :not_found}
     end
   end
-
 
   def all_raw do
     @table_name
@@ -83,10 +66,10 @@ defmodule Open890.RadioConnectionRepo do
   end
 
   def delete(%RadioConnection{id: id} = _conn) do
-    id |> delete()
+    id |> __delete()
   end
 
-  def delete(id) do
+  def __delete(id) do
     @table_name |> :dets.delete(id)
   end
 
