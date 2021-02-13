@@ -1,6 +1,6 @@
 <%= if @connection_state != :up do %>
   <p>Radio connection not up.</p>
-<%= else %>
+<% else %>
   <%= if @debug do %>
     <div id="debugger" class="ui wide sidebar vertical menu left visible">
       <h3 class="header item">Debug Vars</h3>

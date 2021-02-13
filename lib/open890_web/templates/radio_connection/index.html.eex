@@ -14,7 +14,14 @@
       <%= for connection <- @radio_connections do %>
         <li>
           <%= link(connection.name, to: Routes.radio_path(@conn, :index, connection) ) %>
-          <div class="ui tiny label"><%= connection.type %></div>
+
+          <%= if RadioConnection.process_exists?(connection) do %>
+            <div class="ui tiny green label">Running</div>
+            <%= button("Stop", to: Routes.radio_connection_path(@conn, :stop, connection), class: "ui tiny primary button") %>
+          <% else %>
+            <div class="ui tiny red label">Stopped</div>
+            <%= button("Start", to: Routes.radio_connection_path(@conn, :start, connection), class: "ui tiny primary button") %>
+          <% end %>
         </li>
       <% end %>
     </ul>

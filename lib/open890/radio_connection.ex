@@ -27,21 +27,35 @@ defmodule Open890.RadioConnection do
   end
 
   def start(%__MODULE__{} = connection) do
-    {:ok, _pid} = RadioConnectionSupervisor.start_connection(connection)
     connection
+    |> RadioConnectionSupervisor.start_connection()
+    |> case do
+      {:ok, _pid} ->
+        {:ok, connection}
+      {:error, {:already_started, _pid}} ->
+        {:error, :already_started}
+      other ->
+        other
+    end
   end
 
-  def stop(id) when is_integer(id) do
+  def stop(id) when is_integer(id) or is_binary(id) do
     with {:ok, conn} <- find(id) do
       conn |> stop()
     end
   end
 
   def stop(%__MODULE__{id: id}) do
-    [{pid, _}] = Registry.lookup(:radio_connection_registry, id)
+    Registry.lookup(:radio_connection_registry, id)
+    |> case do
+      [{pid, _}] ->
+        RadioConnectionSupervisor
+        |> DynamicSupervisor.terminate_child(pid)
+      _ ->
+        Logger.debug("Unable to find process for connection id #{id}")
+        {:error, :not_found}
+    end
 
-    RadioConnectionSupervisor
-    |> DynamicSupervisor.terminate_child(pid)
   end
 
   def cmd(%__MODULE__{} = connection, command) when is_binary(command) do
