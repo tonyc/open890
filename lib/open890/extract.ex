@@ -327,17 +327,19 @@ defmodule Open890.Extract do
 
     raw_val = str |> String.trim_leading("FL1")
 
-    filter_id = raw_val
-                |> String.first()
-                |> case do
-                  "0" -> :a
-                  "1" -> :b
-                  "2" -> :c
-                end
+    filter_id =
+      raw_val
+      |> String.first()
+      |> case do
+        "0" -> :a
+        "1" -> :b
+        "2" -> :c
+      end
 
-    filter_value = raw_val
-                   |> trim_to_integer(["0", "1", "2"])
-                   |> Kernel.*(10)
+    filter_value =
+      raw_val
+      |> trim_to_integer(["0", "1", "2"])
+      |> Kernel.*(10)
 
     {filter_id, filter_value}
   end

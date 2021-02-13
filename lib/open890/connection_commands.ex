@@ -27,7 +27,7 @@ defmodule Open890.ConnectionCommands do
   def esc(conn), do: conn |> cmd("DS3")
 
   def ch_up(conn), do: conn |> cmd("CH0")
-  def ch_down(conn), do: conn|>  cmd("CH1")
+  def ch_down(conn), do: conn |> cmd("CH1")
 
   def radio_up(conn, args \\ "03") when is_binary(args) do
     conn |> cmd("UP#{args}")
@@ -151,7 +151,8 @@ defmodule Open890.ConnectionCommands do
   end
 
   defp run_commands(conn, cmds) when is_list(cmds) do
-    cmds |> Enum.each(fn(c) ->
+    cmds
+    |> Enum.each(fn c ->
       conn |> cmd(c)
     end)
   end
@@ -162,5 +163,4 @@ defmodule Open890.ConnectionCommands do
   def cmd(%RadioConnection{} = connection, command) when is_binary(command) do
     connection |> RadioConnection.cmd(command)
   end
-
 end

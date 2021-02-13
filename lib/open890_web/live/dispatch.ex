@@ -95,12 +95,13 @@ defmodule Open890Web.Live.Dispatch do
   end
 
   def dispatch("FL1" <> _rest = msg, socket) do
-        {filter_id, filter_value} = msg |> Extract.roofing_filter()
+    {filter_id, filter_value} = msg |> Extract.roofing_filter()
 
-        roofing_filter_data = socket.assigns.roofing_filter_data
-                              |> Map.put(filter_id, filter_value)
+    roofing_filter_data =
+      socket.assigns.roofing_filter_data
+      |> Map.put(filter_id, filter_value)
 
-        socket |> assign(:roofing_filter_data, roofing_filter_data)
+    socket |> assign(:roofing_filter_data, roofing_filter_data)
   end
 
   def dispatch("FR0", socket) do
@@ -277,5 +278,4 @@ defmodule Open890Web.Live.Dispatch do
       :b -> socket.assigns.vfo_b_frequency
     end
   end
-
 end

@@ -67,42 +67,46 @@ defmodule Open890Web.Live.RadioLive do
 
     socket = init_socket(socket)
 
-    socket = RadioConnection.find(connection_id)
-    |> case do
-      {:ok, %RadioConnection{} = connection} ->
-        Logger.info("Found connection: #{connection_id}")
+    socket =
+      RadioConnection.find(connection_id)
+      |> case do
+        {:ok, %RadioConnection{} = connection} ->
+          Logger.info("Found connection: #{connection_id}")
 
-        socket = socket |> assign(:radio_connection, connection)
+          socket = socket |> assign(:radio_connection, connection)
 
-        socket =
-          if params["debug"] do
-            socket |> assign(:debug, true)
-          else
-            socket
-          end
+          socket =
+            if params["debug"] do
+              socket |> assign(:debug, true)
+            else
+              socket
+            end
 
-        socket =
-          if params["wide"] do
-            socket |> assign(:layout_wide, "")
-          else
-            socket
-          end
+          socket =
+            if params["wide"] do
+              socket |> assign(:layout_wide, "")
+            else
+              socket
+            end
 
-        socket = connection
-        |> RadioConnection.process_exists?
-        |> case do
-          true ->
-            connection |> ConnectionCommands.get_initial_state()
-            socket |> assign(:connection_state, :up)
-          _ ->
-            socket
-        end
+          socket =
+            connection
+            |> RadioConnection.process_exists?()
+            |> case do
+              true ->
+                connection |> ConnectionCommands.get_initial_state()
+                socket |> assign(:connection_state, :up)
 
-        socket
-      {:error, reason} ->
-        Logger.warn("Could not find radio connection id: #{connection_id}: #{inspect(reason)}")
-        socket
-    end
+              _ ->
+                socket
+            end
+
+          socket
+
+        {:error, reason} ->
+          Logger.warn("Could not find radio connection id: #{connection_id}: #{inspect(reason)}")
+          socket
+      end
 
     {:ok, socket}
   end

@@ -5,7 +5,13 @@ defmodule Open890.RadioConnection do
 
   @derive {Inspect, except: [:password]}
 
-  defstruct id: nil, name: nil, ip_address: nil, user_name: nil, password: nil, user_is_admin: false, type: nil
+  defstruct id: nil,
+            name: nil,
+            ip_address: nil,
+            user_name: nil,
+            password: nil,
+            user_is_admin: false,
+            type: nil
 
   require Logger
 
@@ -35,12 +41,13 @@ defmodule Open890.RadioConnection do
 
   def update_connection(%RadioConnection{} = conn, params) when is_map(params) do
     # TODO: this should use a changeset
-    new_connection = %{conn |
-      name: params["name"],
-      ip_address: params["ip_address"],
-      user_name: params["user_name"],
-      password: params["password"],
-      user_is_admin: params["user_is_admin"]
+    new_connection = %{
+      conn
+      | name: params["name"],
+        ip_address: params["ip_address"],
+        user_name: params["user_name"],
+        password: params["password"],
+        user_is_admin: params["user_is_admin"]
     }
 
     new_connection |> Repo.update()
@@ -58,8 +65,10 @@ defmodule Open890.RadioConnection do
     |> case do
       {:ok, _pid} ->
         {:ok, connection}
+
       {:error, {:already_started, _pid}} ->
         {:error, :already_started}
+
       other ->
         other
     end
@@ -77,20 +86,24 @@ defmodule Open890.RadioConnection do
       [{pid, _}] ->
         RadioConnectionSupervisor
         |> DynamicSupervisor.terminate_child(pid)
+
       _ ->
         Logger.debug("Unable to find process for connection id #{id}")
         {:error, :not_found}
     end
-
   end
 
   def cmd(%__MODULE__{} = connection, command) when is_binary(command) do
     connection
     |> get_connection_pid()
     |> case do
-      {:ok, pid} -> pid |> cast_cmd(command)
+      {:ok, pid} ->
+        pid |> cast_cmd(command)
+
       {:error, _reason} ->
-        Logger.warn("Unable to send command to connection #{inspect(connection)}, pid not found. Is the connection up?")
+        Logger.warn(
+          "Unable to send command to connection #{inspect(connection)}, pid not found. Is the connection up?"
+        )
     end
   end
 
@@ -110,10 +123,8 @@ defmodule Open890.RadioConnection do
   defp get_connection_pid(%__MODULE__{id: id}) do
     Registry.lookup(:radio_connection_registry, id)
     |> case do
-      [{pid, _}]  -> {:ok, pid}
+      [{pid, _}] -> {:ok, pid}
       [] -> {:error, :not_found}
     end
   end
-
-
 end

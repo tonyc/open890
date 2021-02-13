@@ -16,11 +16,16 @@ defmodule Open890.RadioConnectionRepo do
     @table_name
     |> :dets.lookup(id)
     |> case do
-      [{
-        ^id,
-        %RadioConnection{} = conn
-      }] -> {:ok, conn}
-      _ -> {:error, :not_found}
+      [
+        {
+          ^id,
+          %RadioConnection{} = conn
+        }
+      ] ->
+        {:ok, conn}
+
+      _ ->
+        {:error, :not_found}
     end
   end
 
@@ -31,16 +36,20 @@ defmodule Open890.RadioConnectionRepo do
 
   def init do
     Logger.debug("RadioConnectionRepo.init")
-    :dets.open_file(@table_name, [type: :set])
+    :dets.open_file(@table_name, type: :set)
   end
 
-  def insert(%{"radio_connection" => %{
-    "name" => name,
-    "ip_address" => ip_address,
-    "user_name" => user_name,
-    "password" => password,
-    "user_is_admin" => user_is_admin
-  }} = _params) do
+  def insert(
+        %{
+          "radio_connection" => %{
+            "name" => name,
+            "ip_address" => ip_address,
+            "user_name" => user_name,
+            "password" => password,
+            "user_is_admin" => user_is_admin
+          }
+        } = _params
+      ) do
     %RadioConnection{
       id: nil,
       type: :tcp,
@@ -51,7 +60,6 @@ defmodule Open890.RadioConnectionRepo do
       user_is_admin: user_is_admin
     }
     |> insert()
-
   end
 
   def insert(%RadioConnection{id: nil} = conn) do

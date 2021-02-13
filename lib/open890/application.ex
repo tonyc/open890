@@ -20,7 +20,8 @@ defmodule Open890.Application do
       {Phoenix.PubSub, name: Open890.PubSub},
       # Start the Endpoint (http/https)
       Open890Web.Endpoint,
-      {Open890.RadioConnectionSupervisor, strategy: :one_for_one, name: Open890.RadioConnectionSupervisor}
+      {Open890.RadioConnectionSupervisor,
+       strategy: :one_for_one, name: Open890.RadioConnectionSupervisor}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

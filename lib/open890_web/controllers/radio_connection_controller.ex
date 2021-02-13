@@ -13,6 +13,7 @@ defmodule Open890Web.RadioConnectionController do
 
   def new(conn, _params) do
     radio_connection = %RadioConnection{}
+
     conn
     |> assign(:radio_connection, radio_connection)
     |> render("new.html")
@@ -36,6 +37,7 @@ defmodule Open890Web.RadioConnectionController do
         conn
         |> assign(:radio_connection, radio_connection)
         |> render("edit.html")
+
       _ ->
         conn
         |> redirect(to: Routes.radio_connection_path(conn, :index))
@@ -52,6 +54,7 @@ defmodule Open890Web.RadioConnectionController do
         |> case do
           :ok ->
             conn |> redirect(to: Routes.radio_connection_path(conn, :index))
+
           {:error, reason} ->
             Logger.debug("Could not update connection: #{inspect(reason)}")
             conn |> render("edit.html")
@@ -60,7 +63,6 @@ defmodule Open890Web.RadioConnectionController do
       _ ->
         Logger.warn("Could not find connection: #{id}")
         conn |> redirect(to: Routes.radio_connection_path(conn, :index))
-
     end
   end
 
@@ -70,8 +72,9 @@ defmodule Open890Web.RadioConnectionController do
     |> case do
       {:ok, connection} ->
         connection |> RadioConnection.delete_connection()
-        _ ->
-          Logger.warn("Could not find connection id: #{inspect(id)}")
+
+      _ ->
+        Logger.warn("Could not find connection id: #{inspect(id)}")
     end
 
     conn
@@ -81,17 +84,19 @@ defmodule Open890Web.RadioConnectionController do
   def start(conn, %{"id" => id} = _params) do
     result = id |> RadioConnection.start()
 
+    conn =
+      result
+      |> case do
+        {:ok, _radio_connection} ->
+          Logger.debug("Successfully started connection: #{id}")
 
-    conn = result
-    |> case do
-      {:ok, _radio_connection} ->
-        Logger.debug("Successfully started connection: #{id}")
-        conn
-        |> redirect(to: Routes.radio_connection_path(conn, :index))
-      {:error, reason} ->
-        Logger.debug("Could not start connection #{id}: #{inspect(reason)}")
-        conn |> put_status(422)
-    end
+          conn
+          |> redirect(to: Routes.radio_connection_path(conn, :index))
+
+        {:error, reason} ->
+          Logger.debug("Could not start connection #{id}: #{inspect(reason)}")
+          conn |> put_status(422)
+      end
 
     conn
   end
@@ -103,6 +108,7 @@ defmodule Open890Web.RadioConnectionController do
     |> case do
       :ok ->
         Logger.info("stopped connection id #{id}")
+
       {:error, reason} ->
         Logger.warn("Unable to stop connection #{id}: #{inspect(reason)}")
     end

@@ -72,7 +72,8 @@ defmodule Open890.TCPClient do
   end
 
   def handle_info(:connect_socket, state) do
-    {:ok, socket} = :gen_tcp.connect(state.radio_ip_address, @port, @socket_opts, @connect_timeout_ms)
+    {:ok, socket} =
+      :gen_tcp.connect(state.radio_ip_address, @port, @socket_opts, @connect_timeout_ms)
 
     Logger.info("Established TCP socket with radio on port #{@port}")
 
