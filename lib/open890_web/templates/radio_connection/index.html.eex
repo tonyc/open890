@@ -1,14 +1,14 @@
 <%= if @radio_connections == [] do %>
   <div class="ui centered grid">
     <div class="row">
-      <div class="eight wide left aligned column">
+      <div class="six wide left aligned column">
         <h1>Welcome to open890!</h1>
       </div>
     </div>
     <div class="ui grid row">
-      <div class="eight wide column">
+      <div class="six wide column">
         <p>It looks like you don't have any connections set up yet. Create one now!</p>
-        <div class="ui padded stacked segment">
+        <div class="ui stacked segment">
           <%= form_for @conn, Routes.radio_connection_path(@conn, :create), [as: :radio_connection, class: "ui form"], fn f -> %>
             <%= render "_form.html", f: f, radio_connection: %RadioConnection{} %>
             <%= submit "Create", class: "ui primary fluid button" %>

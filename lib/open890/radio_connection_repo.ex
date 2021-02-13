@@ -72,5 +72,4 @@ defmodule Open890.RadioConnectionRepo do
   def __delete(id) do
     @table_name |> :dets.delete(id)
   end
-
 end
