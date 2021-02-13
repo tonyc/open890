@@ -1,0 +1,40 @@
+<div class="ui container">
+  <div class="row">
+    <h1>Edit Connection</h1>
+    <h2><%= @radio_connection.name %></h2>
+
+    <%= form_for @conn, Routes.radio_connection_path(@conn, :update, @radio_connection), [as: :radio_connection, class: "ui form"], fn f -> %>
+      <div class="field">
+        <%= label f, :name, "Connection Name" %>
+        <%= text_input f, :name, value: @radio_connection.name %>
+      </div>
+
+      <div class="field">
+        <%= label f, :ip_address, "IP address" %>
+        <%= text_input f, :ip_address, value: @radio_connection.ip_address %>
+      </div>
+
+
+      <div class="two fields">
+        <div class="field">
+          <%= label f, :user_name, "KNS User" %>
+          <%= text_input f, :user_name, value: @radio_connection.user_name %>
+        </div>
+
+        <div class="field">
+          <%= label f, :user_pass, "KNS Password" %>
+          <%= password_input f, :user_name, value: @radio_connection.password %>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="ui checkbox">
+          <%= checkbox f, :user_is_admin, value: @radio_connection.user_is_admin, class: "hidden", tabindex: "0" %>
+          <%= label f, :user_is_admin, "User is admin" %>
+        </div>
+      </div>
+
+      <%= submit "Update", class: "ui button" %>
+    <% end %>
+  </div>
+</div>

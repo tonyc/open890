@@ -51,6 +51,27 @@ defmodule Open890.RadioConnectionRepo do
     :dets.open_file(@table_name, [type: :set])
   end
 
+  def insert(%{"radio_connection" => %{
+    "name" => name,
+    "ip_address" => ip_address,
+    "user_name" => user_name,
+    "password" => password,
+    "user_is_admin" => user_is_admin
+  }} = _params) do
+    %RadioConnection{
+      id: nil,
+      type: :tcp,
+      name: name,
+      ip_address: ip_address,
+      user_name: user_name,
+      password: password,
+      user_is_admin: user_is_admin
+    }
+    |> insert()
+
+  end
+
+
   def insert(%RadioConnection{id: nil} = conn) do
     id = UUID.uuid4()
     conn = %{conn | id: id}

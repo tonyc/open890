@@ -11,6 +11,52 @@ defmodule Open890Web.RadioConnectionController do
     |> render("index.html")
   end
 
+  def new(conn, _params) do
+    radio_connection = %RadioConnection{}
+    conn
+    |> assign(:radio_connection, radio_connection)
+    |> render("new.html")
+  end
+
+  def create(conn, params) do
+    params
+    |> RadioConnection.create()
+    |> case do
+      result ->
+        Logger.info("Connection create result: #{inspect(result)}")
+    end
+
+    conn |> redirect(to: Routes.radio_connection_path(conn, :index))
+  end
+
+  def edit(conn, %{"id" => id} = _params) do
+    RadioConnection.find(id)
+    |> case do
+      {:ok, radio_connection} ->
+        conn
+        |> assign(:radio_connection, radio_connection)
+        |> render("edit.html")
+      _ ->
+        conn
+        |> redirect(to: Routes.radio_connection_path(conn, :index))
+    end
+  end
+
+  def update(conn, %{"id" => id} = _params) do
+    id
+    |> RadioConnection.find()
+    |> case do
+      {:ok, radio_connection} ->
+        # try to update connection
+
+        conn |> redirect(to: Routes.radio_connection_path(conn, :edit, radio_connection))
+
+      _ ->
+        conn |> redirect(to: Routes.radio_connection_path(conn, :index))
+
+    end
+  end
+
   def start(conn, %{"id" => id} = _params) do
     result = id |> RadioConnection.start()
 

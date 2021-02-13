@@ -1,6 +1,11 @@
 <div class="ui container">
   <div class="row">
     <h1>Manage Radio Connections</h1>
+  </div>
+
+
+
+  <div class="row">
     <table class="ui very basic table">
       <thead>
         <tr>
@@ -14,7 +19,6 @@
       <tbody>
       <%= for connection <- @radio_connections do %>
         <tr>
-
           <td>
             <%= link(connection.name, to: Routes.radio_path(@conn, :index, connection), class: "ui ") %>
           </td>
@@ -45,17 +49,22 @@
           </td>
           <td class="right aligned">
             <%= if RadioConnection.process_exists?(connection) do %>
-              <%= button("Stop", to: Routes.radio_connection_path(@conn, :stop, connection), class: "ui basic primary button") %>
+              <%= button("Stop", to: Routes.radio_connection_path(@conn, :stop, connection), class: "ui button") %>
             <% else %>
-              <%= button("Start", to: Routes.radio_connection_path(@conn, :start, connection), class: "ui basic primary button") %>
+              <%= button("Start", to: Routes.radio_connection_path(@conn, :start, connection), class: "ui button") %>
             <% end %>
 
-            <button class="ui basic button">Edit</button>
+            <%= link("Edit", to: Routes.radio_connection_path(@conn, :edit, connection), class: "ui button") %>
             <button class="ui basic button">Delete</button>
           </td>
         </tr>
       <% end %>
       </tbody>
     </table>
+  </div>
+
+  <div class="row">
+    <%= link "New", to: Routes.radio_connection_path(@conn, :new), class: "ui button" %>
+  </div>
 
 </div>

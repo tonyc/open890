@@ -20,6 +20,11 @@ defmodule Open890Web.Router do
     get "/", PageController, :index
 
     get "/connections", RadioConnectionController, :index
+    get "/connections/new", RadioConnectionController, :new
+    post "/connections", RadioConnectionController, :create
+    get "/connections/:id/edit", RadioConnectionController, :edit
+    post "/connections/:id", RadioConnectionController, :update
+
     post "/connections/:id/start", RadioConnectionController, :start
     post "/connections/:id/stop", RadioConnectionController, :stop
 
