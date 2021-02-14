@@ -56,15 +56,16 @@
             <td>
               <%= connection_to_uri(connection) %>
             </td>
+
             <td class="right aligned">
               <%= if RadioConnection.process_exists?(connection) do %>
                 <%= button("Stop", to: Routes.radio_connection_path(@conn, :stop, connection), class: "ui button") %>
               <% else %>
-                <%= button("Start", to: Routes.radio_connection_path(@conn, :start, connection), class: "ui button") %>
+                <%= button("Delete", to: Routes.radio_connection_path(@conn, :delete, connection), method: :delete, data: [confirm: "Delete this connection?"], class: "ui button") %>
+                <%= link("Edit", to: Routes.radio_connection_path(@conn, :edit, connection), class: "ui button") %>
+                <%= button("Start", to: Routes.radio_connection_path(@conn, :start, connection), class: "ui primary button") %>
               <% end %>
 
-              <%= link("Edit", to: Routes.radio_connection_path(@conn, :edit, connection), class: "ui button") %>
-              <%= button("Delete", to: Routes.radio_connection_path(@conn, :delete, connection), method: :delete, data: [confirm: "Delete this connection?"], class: "ui button") %>
             </td>
           </tr>
         <% end %>
