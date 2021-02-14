@@ -1,13 +1,16 @@
-<div class="ui container grid">
+<div class="ui centered middle aligned grid">
   <div class="row">
-    <h1>Edit Radio Connection</h1>
+    <div class="six wide left aligned column">
+      <h1>Edit Radio Connection</h1>
+    </div>
   </div>
-
-  <div class="row">
-    <%= form_for @conn, Routes.radio_connection_path(@conn, :update, @radio_connection), [as: :radio_connection, method: :put, class: "ui form"], fn f -> %>
-      <%= render "_form.html", f: f, radio_connection: @radio_connection %>
-      <%= link "Cancel", to: Routes.radio_connection_path(@conn, :index), class: "ui left floated button" %>
-      <%= submit "Update", class: "ui primary button right floated" %>
-    <% end %>
+  <div class="ui grid row">
+    <div class="six wide column">
+      <%= form_for @conn, Routes.radio_connection_path(@conn, :update, @radio_connection), [as: :radio_connection, method: :put, class: "ui form"], fn f -> %>
+        <%= render "_form.html", f: f, radio_connection: @radio_connection %>
+        <%= link "Cancel", to: Routes.radio_connection_path(@conn, :index), class: "ui left floated button" %>
+        <%= submit "Update", class: "ui primary button right floated" %>
+      <% end %>
+    </div>
   </div>
 </div>

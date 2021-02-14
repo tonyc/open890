@@ -2,18 +2,18 @@
   <%= render "_empty_state.html", conn: @conn %>
 <% else %>
   <div class="ui container">
-    <div class="ui grid debug">
-    <div class="row debug">
-      <div class="left aligned eight wide column debug">
-        <h2>Radio Connections</h2>
+    <div class="ui grid column ">
+      <div class="row">
+        <div class="eight wide column left floated ">
+          <h2>Radio Connections</h2>
+        </div>
+        <div class="eight wide column right floated ">
+          <a href="<%= Routes.radio_connection_path(@conn, :new) %>" class="ui basic tiny icon button right floated">
+            <i class="ui icon plus"></i>
+            Add new connection
+          </a>
+        </div>
       </div>
-      <div class="right aligned eight wide column debug">
-        <a href="<%= Routes.radio_connection_path(@conn, :new) %>" class="ui basic tiny icon button">
-          <i class="ui icon plus"></i>
-          Add new connection
-        </a>
-      </div>
-    </div>
     <div class="row">
       <table class="ui very basic table">
         <thead>
@@ -71,9 +71,6 @@
         </tbody>
       </table>
     </div>
-
-  </div> <!--  grid -->
-
 
   </div> <!-- top-level ui container -->
 <% end %>
