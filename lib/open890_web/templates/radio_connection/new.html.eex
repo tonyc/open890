@@ -8,8 +8,8 @@
     <div class="six wide column">
       <%= form_for @conn, Routes.radio_connection_path(@conn, :create), [as: :radio_connection, class: "ui form"], fn f -> %>
         <%= render "_form.html", f: f, radio_connection: @radio_connection %>
-        <%= link "Cancel", to: Routes.radio_connection_path(@conn, :index), class: "ui button" %>
-        <%= submit "Create", class: "ui primary button" %>
+        <%= link "Cancel", to: Routes.radio_connection_path(@conn, :index), class: "ui large left floated button" %>
+        <%= submit "Create", class: "ui large right floated primary button" %>
       <% end %>
     </div>
   </div>

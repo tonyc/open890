@@ -1,17 +1,25 @@
-<div class="ui centered middle aligned grid">
+<div id="emptyState" class="ui centered middle aligned grid">
   <div class="row">
     <div class="six wide left aligned column">
-      <h1>Welcome to open890!</h1>
+      <h1 class="appear">Welcome to open890!</h1>
+    </div>
+  </div>
+  <div class="ui row">
+    <div class="six wide column">
+      <div class="appear">
+        <p>It looks like you don't have any radio connections set up yet.</p>
+        <p>Get started by setting one up!</p>
+      </div>
     </div>
   </div>
   <div class="ui grid row">
-    <div class="six wide column">
-      <p>It looks like you don't have any connections set up yet. Create one now!</p>
-      <div class="ui stacked segment">
-        <%= form_for @conn, Routes.radio_connection_path(@conn, :create), [as: :radio_connection, class: "ui form"], fn f -> %>
-          <%= render "_form.html", f: f, radio_connection: %RadioConnection{} %>
-          <%= submit "Create", class: "ui primary fluid button" %>
-        <% end %>
+      <div class="six wide column">
+        <div class="ui stacked padded segment appear">
+          <%= form_for @conn, Routes.radio_connection_path(@conn, :create), [as: :radio_connection, class: "ui form"], fn f -> %>
+            <%= render "_form.html", f: f, radio_connection: %RadioConnection{} %>
+            <%= submit "Create", class: "ui large primary fluid button" %>
+          <% end %>
+        </div>
       </div>
     </div>
   </div>

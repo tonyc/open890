@@ -1,22 +1,30 @@
 <div class="field">
-  <%= label @f, :name, "Connection Name" %>
-  <%= text_input @f, :name, value: @radio_connection.name, required: true %>
+  <%= label @f, :name, "Connection Name", class: "" %>
+  <div class="ui huge input">
+    <%= text_input @f, :name, value: @radio_connection.name, required: true %>
+  </div>
 </div>
 
 <div class="field">
   <%= label @f, :ip_address, "IP address" %>
-  <%= text_input @f, :ip_address, value: @radio_connection.ip_address, required: true %>
+  <div class="ui huge input">
+    <%= text_input @f, :ip_address, value: @radio_connection.ip_address, required: true %>
+  </div>
 </div>
 
 <div class="two fields">
   <div class="field">
     <%= label @f, :user_name, "User" %>
-    <%= text_input @f, :user_name, value: @radio_connection.user_name, required: true %>
+    <div class="ui huge input">
+      <%= text_input @f, :user_name, value: @radio_connection.user_name, required: true %>
+    </div>
   </div>
 
   <div class="field">
     <%= label @f, :user_pass, "Password" %>
-    <%= password_input @f, :password, value: @radio_connection.password, required: true %>
+    <div class="ui huge input">
+      <%= password_input @f, :password, value: @radio_connection.password, required: true %>
+    </div>
   </div>
 </div>
 
