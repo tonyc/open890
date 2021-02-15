@@ -34,19 +34,35 @@ defmodule Open890.RadioConnectionRepo do
   end
 
   def init do
-    Logger.debug("RadioConnectionRepo.init")
-    :dets.open_file(table_name(), type: :set)
+    Logger.debug("RadioConnectionRepo.init()")
+    {:ok, table} = :dets.open_file(table_name(), type: :set)
+    {:ok, table}
+  end
+
+  def close do
+    Logger.info("Closing dets table: #{table_name()}")
+    :ok = :dets.close(table_name())
+  end
+
+  def destroy_repo!(opts \\ []) do
+    forced = opts |> Keyword.get(:force, false)
+
+    if forced do
+      Logger.warn("Forcefully destroying database: #{table_name()}")
+      :ok = File.rm!(table_name() |> to_string())
+    else
+      Logger.info("destroy_repo!: force: true was not passed, not destroying table #{table_name()}")
+    end
+
   end
 
   def insert(
         %{
-          "radio_connection" => %{
-            "name" => name,
-            "ip_address" => ip_address,
-            "user_name" => user_name,
-            "password" => password,
-            "user_is_admin" => user_is_admin
-          }
+          "name" => name,
+          "ip_address" => ip_address,
+          "user_name" => user_name,
+          "password" => password,
+          "user_is_admin" => user_is_admin
         } = _params
       ) do
     %RadioConnection{

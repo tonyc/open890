@@ -19,8 +19,8 @@ defmodule Open890Web.RadioConnectionController do
     |> render("new.html")
   end
 
-  def create(conn, params) do
-    params
+  def create(conn, %{"radio_connection" => radio_connection_params}) do
+    radio_connection_params
     |> RadioConnection.create()
     |> case do
       result ->

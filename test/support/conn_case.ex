@@ -31,7 +31,17 @@ defmodule Open890Web.ConnCase do
     end
   end
 
-  setup tags do
+  setup _tags do
+    # IO.puts "Init dets repo"
+    # {:ok, dets_table} = Open890.RadioConnectionRepo.init()
+
+    # on_exit(fn ->
+    #   IO.puts "Deleting all objects from #{dets_table}"
+    #   dets_table |> :dets.delete_all_objects()
+    #   :ok = dets_table |> :dets.close()
+    # end)
+
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
+
 end

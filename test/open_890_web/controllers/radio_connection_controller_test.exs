@@ -26,5 +26,17 @@ defmodule Open890Web.RadioConnectionControllerTest do
 
       assert conn.assigns.radio_connections == []
     end
+
+    # test "lists connections when they exist", %{conn: conn} do
+    #   assert RadioConnection.count_connections() == 0
+
+    #   radio_connection = fixture(:radio_connection)
+
+    #   conn = get(conn, Routes.radio_connection_path(conn, :index))
+
+    #   assert conn |> html_response(200) =~ "Radio connections"
+    #   assert conn.assigns.radio_connections == [radio_connection]
+    # end
   end
+
 end
