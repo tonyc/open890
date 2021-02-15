@@ -1,5 +1,4 @@
 defmodule Open890.RadioConnectionRepo do
-  @table_name :"db/radio_connections.dets"
   @select_all [{:"$1", [], [:"$1"]}]
 
   require Logger
@@ -7,13 +6,13 @@ defmodule Open890.RadioConnectionRepo do
   alias Open890.RadioConnection
 
   def all do
-    @table_name
+    table_name()
     |> :dets.select(@select_all)
     |> Enum.map(fn {_id, conn} -> conn end)
   end
 
   def find(id) do
-    @table_name
+    table_name()
     |> :dets.lookup(id)
     |> case do
       [
@@ -30,13 +29,13 @@ defmodule Open890.RadioConnectionRepo do
   end
 
   def all_raw do
-    @table_name
+    table_name()
     |> :dets.select(@select_all)
   end
 
   def init do
     Logger.debug("RadioConnectionRepo.init")
-    :dets.open_file(@table_name, type: :set)
+    :dets.open_file(table_name(), type: :set)
   end
 
   def insert(
@@ -66,18 +65,30 @@ defmodule Open890.RadioConnectionRepo do
     id = UUID.uuid4()
     conn = %{conn | id: id}
 
-    @table_name |> :dets.insert_new({id, conn})
+    table_name() |> :dets.insert_new({id, conn})
   end
 
   def update(%RadioConnection{id: id} = conn) when not is_nil(id) do
-    @table_name |> :dets.insert({id, conn})
+    table_name() |> :dets.insert({id, conn})
   end
 
   def delete(%RadioConnection{id: id} = _conn) do
     id |> __delete()
   end
 
+  def count do
+    table_name()
+    |> :dets.info()
+    |> Keyword.get(:count) || 0
+  end
+
   def __delete(id) do
-    @table_name |> :dets.delete(id)
+    table_name() |> :dets.delete(id)
+  end
+
+  defp table_name do
+    :open890
+    |> Application.get_env(Open890.RadioConnectionRepo)
+    |> Keyword.fetch!(:database)
   end
 end

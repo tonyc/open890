@@ -74,6 +74,10 @@ defmodule Open890.RadioConnection do
     end
   end
 
+  def count_connections do
+    Repo.count()
+  end
+
   def stop(id) when is_integer(id) or is_binary(id) do
     with {:ok, conn} <- find(id) do
       conn |> stop()

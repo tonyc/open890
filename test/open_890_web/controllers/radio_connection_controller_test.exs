@@ -17,10 +17,12 @@ defmodule Open890Web.RadioConnectionControllerTest do
   end
 
   describe "index" do
-    test "lists all connections", %{conn: conn} do
+    test "shows the onboarding screen when no connections exist", %{conn: conn} do
+      assert RadioConnection.count_connections() == 0
+
       conn = get(conn, Routes.radio_connection_path(conn, :index))
 
-      assert html_response(conn, 200) =~ "Radio Connections"
+      assert html_response(conn, 200) =~ "It looks like you don't have any radio connections yet"
 
       assert conn.assigns.radio_connections == []
     end

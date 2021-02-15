@@ -28,6 +28,9 @@ config :logger, :console,
 config :phoenix, :json_library, Jason
 config :phoenix, :trim_on_html_eex_engine, false
 
+config :open890, Open890.RadioConnectionRepo,
+  database: :"db/radio_connections.dets"
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"
