@@ -3,6 +3,7 @@ defmodule Open890Web.PageControllerTest do
 
   test "GET /", %{conn: conn} do
     conn = get(conn, "/")
-    assert redirected_to(conn) == Routes.radio_connection_path(conn, :index)
+
+    assert conn |> redirected_to() == Routes.radio_connection_path(conn, :index)
   end
 end

@@ -52,11 +52,12 @@ defmodule Open890.MixProject do
     [
       {:bakeware, "~> 0.1.4"},
       {:credo, "~> 1.5", only: [:dev, :test]},
-      {:elixir_math, "~> 0.1.2"},
       {:ecto, "~> 3.5"},
+      {:elixir_math, "~> 0.1.2"},
       {:excoveralls, "~> 0.13.3", only: [:dev, :test]},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
+      {:mix_test_watch, "~> 1.0", only: [:dev], runtime: false},
       {:observer_cli, "~> 1.5"},
       {:phoenix, "~> 1.5"},
       {:phoenix_html, "~> 2.11"},

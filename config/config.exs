@@ -7,6 +7,10 @@
 # General application configuration
 use Mix.Config
 
+if Mix.env() == :dev do
+  config :mix_test_watch, clear: true
+end
+
 # Configures the endpoint
 config :open890, Open890Web.Endpoint,
   url: [host: "localhost"],
