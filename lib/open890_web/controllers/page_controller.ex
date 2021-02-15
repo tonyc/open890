@@ -5,7 +5,5 @@ defmodule Open890Web.PageController do
     conn
     |> redirect(to: "/connections")
     |> halt()
-
-    # conn |> render("index.html")
   end
 end
