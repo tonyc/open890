@@ -14,7 +14,7 @@ currently untested.
 
 ## Installation from source
 
-See [Installing From Source](Installing-From-Source)
+See [Installing From Source](https://github.com/tonyc/open890/wiki/Installing-From-Source)
 
 
 ## Binary releases
