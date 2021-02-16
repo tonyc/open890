@@ -45,11 +45,27 @@ to manage the various versions of the development dependencies.
 
   * The Erlang install will take a very long time on a Raspberry Pi. You may also see scary-looking messages during the Erlang install that says something like "fop is missing" or "documentation cannot be built" - this is OK.       
   * Once everything has installed, you should be able to run `elixir --version` and also `npm --version`
-  
   * Clone this repository
   
-  * Continue from [Config](#config)
+## Compile the app
 
+  * Install dependencies with `mix deps.get`. First-time users may need to answer `Y` to a couple of prompts
+  * Compile with `mix compile`
+  * Once that's finished, compile assets:
+
+        cd assets/
+        npm install
+        cd ..
+
+## Start your server:
+
+* Run `mix phx.server`
+
+Now you can visit [`http://localhost:4000`](http://localhost:4000) from your browser.
+
+## Stopping your server
+
+Type `^c^c` (aka: ctrl-c twice)
 
 ## Binary releases
 
@@ -67,18 +83,6 @@ If you encounter an error related to shared libraries, etc, they _may_ be solved
 although the correct packages may not be available in your OS distribution's package manager. 
 
 If all else fails, install from source.
-
-## Start your server:
-
-  * Install dependencies with `mix deps.get`. First-time users may need to answer `Y` to a couple prompts
-  * Install Node.js dependencies with `npm install` inside the `assets` directory
-  * Start Phoenix endpoint with `mix phx.server` from the main directory.
-
-Now you can visit [`http://localhost:4000`](http://localhost:4000) from your browser.
-
-## Stopping your server
-
-Type `^c^c` (aka: ctrl-c twice)
 
 ## Getting Help
 
