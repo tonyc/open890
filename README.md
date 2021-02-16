@@ -14,58 +14,8 @@ currently untested.
 
 ## Installation from source
 
-These instructions assume a basic knowledge of Linux/Unix and command-line tools.
+See [Installing From Source](Installing-From-Source)
 
-open890 is currently supported under Linux, or Linux-like operating systems. You can also run it
-in Windows 10 if you have [WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10) installed - much of this project was written under WSL.
-
-You will need Elixir (and thus, Erlang) and NodeJS installed, particularly if you are either
-developing features for open890, or using a non-binary (e.g. source) release.
-
-Using a tool like [asdf](https://asdf-vm.com/) is recommended
-to manage the various versions of the development dependencies.
-
-### Using asdf
-
-  * [Install asdf](https://asdf-vm.com/#/core-manage-asdf?id=install)
-  * Install erlang, elixir and nodeJS plugins
-
-        asdf plugin add erlang https://github.com/asdf-vm/asdf-erlang.git
-        asdf plugin-add elixir https://github.com/asdf-vm/asdf-elixir.git
-        asdf plugin-add nodejs https://github.com/asdf-vm/asdf-nodejs.git
-
-  * At this point, Raspberry Pi users may need to install the following packages:
-  
-        sudo apt -y install autoconf libssl-dev libncurses5-dev
-  
-  * Install the specific versions listed in the `.tool-versions` file:
- 
-        bash -c '${ASDF_DATA_DIR:=$HOME/.asdf}/plugins/nodejs/bin/import-release-team-keyring'
-        asdf install
-
-  * The Erlang install will take a very long time on a Raspberry Pi. You may also see scary-looking messages during the Erlang install that says something like "fop is missing" or "documentation cannot be built" - this is OK.       
-  * Once everything has installed, you should be able to run `elixir --version` and also `npm --version`
-  * Clone this repository
-  
-## Compile the app
-
-  * Install dependencies with `mix deps.get`. First-time users may need to answer `Y` to a couple of prompts
-  * Compile with `mix compile`
-  * Once that's finished, compile assets:
-
-        cd assets/
-        npm install
-        cd ..
-
-## Start your server:
-
-* Run `mix phx.server`
-
-Now you can visit [`http://localhost:4000`](http://localhost:4000) from your browser.
-
-## Stopping your server
-
-Type `^c^c` (aka: ctrl-c twice)
 
 ## Binary releases
 
