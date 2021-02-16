@@ -18,26 +18,7 @@
     </div>
   <% end %>
 
-  <div class="ui attached menu">
-    <div class="ui header item">open890</div>
-    <a class="item" phx-click="open_top_menu">
-      Menu
-    </a>
-    <div class="right menu">
-      <div class="ui simple dropdown icon item">
-        Theme
-        <i class="dropdown gear icon"></i>
-        <div class="menu">
-          <a class="item" phx-click="set_theme" phx-value-theme="kenwood">Kenwood</a>
-          <a class="item" phx-click="set_theme" phx-value-theme="hsl">Flex</a>
-          <a class="item" phx-click="set_theme" phx-value-theme="elecraft">Elecraft</a>
-          <a class="item" phx-click="set_theme" phx-value-theme="phosphor-green">Phosphor Green</a>
-          <a class="item" phx-click="set_theme" phx-value-theme="phosphor-red">Phosphor Red</a>
-        </div>
 
-      </div>
-    </div>
-  </div>
 
 
   <div id="radio" class="ui grid <%= @layout_wide %>">

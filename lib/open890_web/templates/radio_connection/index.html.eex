@@ -19,7 +19,6 @@
         <thead>
           <tr>
             <th class="four wide">Name</th>
-            <th class="two wide"></th>
             <th>Status</th>
             <th>Details</th>
             <th></th>
@@ -30,19 +29,6 @@
           <tr>
             <td>
               <h2><%= link(connection.name, to: Routes.radio_path(@conn, :index, connection), class: "ui ") %></h2>
-            </td>
-            <td>
-              <%= if RadioConnection.process_exists?(connection) do %>
-                <div class="ui tiny basic button">
-                  <i class="stop icon"></i>
-                  Stop
-                </div>
-              <% else %>
-                <div class="ui tiny basic button">
-                  <i class="play icon"></i>
-                  Start
-                </div>
-              <% end %>
             </td>
 
             <td>
