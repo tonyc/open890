@@ -17,7 +17,14 @@ defmodule Open890Web.Router do
   scope "/", Open890Web do
     pipe_through :browser
 
-    live "/", Live.RadioLive, :index
+    get "/", PageController, :index
+
+    resources "/connections", RadioConnectionController, except: [:show]
+
+    post "/connections/:id/start", RadioConnectionController, :start
+    post "/connections/:id/stop", RadioConnectionController, :stop
+
+    live "/connections/:id", Live.RadioLive, :index
   end
 
   # Other scopes may use custom stacks.

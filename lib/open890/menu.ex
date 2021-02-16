@@ -38,13 +38,13 @@ defmodule Open890.Menu do
           num: "5",
           title: "CW Configurations",
           info: "CW Keying, Repeat Interval, Miscellaneous",
-          menu_id: 142,
+          menu_id: 142
         },
         %{
           num: "6",
           title: "TX/RX Filters & Misc",
           info: "IF Fil, HC/LC, Rec. Time, TX Inhibit",
-          menu_id: 143,
+          menu_id: 143
         },
         %{
           num: "7",
@@ -78,5 +78,4 @@ defmodule Open890.Menu do
       menu -> {:ok, menu}
     end
   end
-
 end

@@ -1,0 +1,30 @@
+<div id="emptyState" class="ui centered middle aligned grid">
+  <div class="row">
+    <div class="six wide center aligned column">
+      <h1 class="appear">Welcome to open890!</h1>
+    </div>
+  </div>
+  <div class="ui row">
+    <div class="six wide center aligned column">
+      <div class="appear">
+        <p>
+          It looks like you don't have any radio connections yet.
+        </p>
+        <p>
+          Let's get started by setting one up!
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="ui grid row">
+      <div class="six wide column">
+        <div class="ui padded raised blue segment appear">
+          <%= form_for @conn, Routes.radio_connection_path(@conn, :create), [as: :radio_connection, class: "ui form"], fn f -> %>
+            <%= render "_form.html", f: f, radio_connection: %RadioConnection{} %>
+            <%= submit "Create", class: "ui large fluid primary button" %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,63 @@
+<%= if @radio_connections == [] do %>
+  <%= render "_empty_state.html", conn: @conn %>
+<% else %>
+  <div class="ui container">
+    <div class="ui grid column ">
+      <div class="row">
+        <div class="eight wide column left floated ">
+          <h2>Radio Connections</h2>
+        </div>
+        <div class="eight wide column right floated ">
+          <a href="<%= Routes.radio_connection_path(@conn, :new) %>" class="ui basic tiny icon button right floated">
+            <i class="ui icon plus"></i>
+            Add new connection
+          </a>
+        </div>
+      </div>
+    <div class="row">
+      <table class="ui table">
+        <thead>
+          <tr>
+            <th class="four wide">Name</th>
+            <th>Status</th>
+            <th>Details</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+        <%= for connection <- @radio_connections do %>
+          <tr>
+            <td>
+              <h2><%= link(connection.name, to: Routes.radio_path(@conn, :index, connection), class: "ui ") %></h2>
+            </td>
+
+            <td>
+              <%= if RadioConnection.process_exists?(connection) do %>
+                <div class="ui rounded center aligned green basic label">Running</div>
+              <% else %>
+                <div class="ui rounded center aligned basic basic label">Stopped</div>
+              <% end %>
+            </td>
+
+            <td>
+              <%= connection_to_uri(connection) %>
+            </td>
+
+            <td class="right aligned">
+              <%= if RadioConnection.process_exists?(connection) do %>
+                <%= button("Stop", to: Routes.radio_connection_path(@conn, :stop, connection), class: "ui primary button") %>
+              <% else %>
+                <%= button("Delete", to: Routes.radio_connection_path(@conn, :delete, connection), method: :delete, data: [confirm: "Delete this connection?"], class: "ui button") %>
+                <%= link("Edit", to: Routes.radio_connection_path(@conn, :edit, connection), class: "ui button") %>
+                <%= button("Start", to: Routes.radio_connection_path(@conn, :start, connection), class: "ui primary button") %>
+              <% end %>
+
+            </td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+
+  </div> <!-- top-level ui container -->
+<% end %>

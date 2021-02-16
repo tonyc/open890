@@ -7,6 +7,10 @@
 # General application configuration
 use Mix.Config
 
+if Mix.env() == :dev do
+  config :mix_test_watch, clear: true
+end
+
 # Configures the endpoint
 config :open890, Open890Web.Endpoint,
   url: [host: "localhost"],
@@ -23,6 +27,9 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 config :phoenix, :trim_on_html_eex_engine, false
+
+config :open890, Open890.RadioConnectionRepo,
+  database: :"db/radio_connections.dets"
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

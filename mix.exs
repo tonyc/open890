@@ -52,10 +52,12 @@ defmodule Open890.MixProject do
     [
       {:bakeware, "~> 0.1.4"},
       {:credo, "~> 1.5", only: [:dev, :test]},
+      {:ecto, "~> 3.5"},
       {:elixir_math, "~> 0.1.2"},
       {:excoveralls, "~> 0.13.3", only: [:dev, :test]},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
+      {:mix_test_watch, "~> 1.0", only: [:dev], runtime: false},
       {:observer_cli, "~> 1.5"},
       {:phoenix, "~> 1.5"},
       {:phoenix_html, "~> 2.11"},
@@ -65,7 +67,8 @@ defmodule Open890.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:sobelow, "~> 0.11", only: [:dev, :test]},
       {:telemetry_metrics, "~> 0.4"},
-      {:telemetry_poller, "~> 0.4"}
+      {:telemetry_poller, "~> 0.4"},
+      {:uuid, "~> 1.1.8 "}
     ]
   end
 
@@ -76,7 +79,6 @@ defmodule Open890.MixProject do
   #
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
-    [
-    ]
+    []
   end
 end

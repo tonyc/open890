@@ -5,13 +5,16 @@ defmodule Open890Web.Live.RadioLive do
   use Open890Web.Live.RadioLiveEventHandling
 
   alias Phoenix.Socket.Broadcast
-  alias Open890.TCPClient, as: Radio
+  alias Open890.RadioConnection
+  alias Open890.ConnectionCommands
 
   alias Open890Web.Live.Dispatch
 
   alias Open890Web.Live.{ButtonsComponent}
 
   @init_socket [
+    {:radio_connection, nil},
+    {:connection_state, nil},
     {:debug, false},
     {:active_frequency, ""},
     {:active_mode, :unknown},
@@ -32,6 +35,7 @@ defmodule Open890Web.Live.RadioLive do
     {:inactive_mode, :unknown},
     {:inactive_receiver, :b},
     {:alc_meter, 0},
+    {:layout_wide, "container"},
     {:swr_meter, 0},
     {:comp_meter, 0},
     {:id_meter, 0},
@@ -52,8 +56,8 @@ defmodule Open890Web.Live.RadioLive do
   ]
 
   @impl true
-  def mount(params, _session, socket) do
-    Logger.info("LiveView mount()")
+  def mount(%{"id" => connection_id} = params, _session, socket) do
+    Logger.info("LiveView mount: params: #{inspect(params)}")
 
     if connected?(socket) do
       Phoenix.PubSub.subscribe(Open890.PubSub, "radio:state")
@@ -61,22 +65,47 @@ defmodule Open890Web.Live.RadioLive do
       Phoenix.PubSub.subscribe(Open890.PubSub, "radio:band_scope")
     end
 
-    Radio.get_initial_state()
-
     socket = init_socket(socket)
 
     socket =
-      if params["debug"] do
-        socket |> assign(:debug, true)
-      else
-        socket
-      end
+      RadioConnection.find(connection_id)
+      |> case do
+        {:ok, %RadioConnection{} = connection} ->
+          Logger.info("Found connection: #{connection_id}")
 
-    socket =
-      if params["wide"] do
-        socket |> assign(:layout_wide, "")
-      else
-        socket |> assign(:layout_wide, "container")
+          socket = socket |> assign(:radio_connection, connection)
+
+          socket =
+            if params["debug"] do
+              socket |> assign(:debug, true)
+            else
+              socket
+            end
+
+          socket =
+            if params["wide"] do
+              socket |> assign(:layout_wide, "")
+            else
+              socket
+            end
+
+          socket =
+            connection
+            |> RadioConnection.process_exists?()
+            |> case do
+              true ->
+                connection |> ConnectionCommands.get_initial_state()
+                socket |> assign(:connection_state, :up)
+
+              _ ->
+                socket
+            end
+
+          socket
+
+        {:error, reason} ->
+          Logger.warn("Could not find radio connection id: #{connection_id}: #{inspect(reason)}")
+          socket
       end
 
     {:ok, socket}

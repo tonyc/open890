@@ -1,4 +1,6 @@
 defmodule Open890Web.Live.RadioLiveEventHandling do
+  alias Open890.ConnectionCommands, as: Radio
+
   @moduledoc """
   This module encapsulates any liveview-specific events, e.g. events
   originating from the user (clicks, etc)
@@ -9,9 +11,13 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
       alias Open890.TCPClient, as: Radio
       alias Open890.Menu
 
-      def handle_event("ref_level_changed", params, socket) do
+      def handle_event(
+            "ref_level_changed",
+            params,
+            %{assigns: %{radio_connection: connection}} = socket
+          ) do
         with {parsed_number, _extra} <- params["refLevel"] |> Float.parse() do
-          Radio.set_ref_level(parsed_number)
+          connection |> Radio.set_ref_level(parsed_number)
         else
           other ->
             Logger.info("Unable to parse ref level. Result: #{inspect(other)}")
@@ -21,34 +27,46 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
       end
 
       @impl true
-      def handle_event("mic_up", _params, socket) do
-        Radio.ch_up()
+      def handle_event("mic_up", _params, %{assigns: %{radio_connection: connection}} = socket) do
+        connection |> Radio.ch_up()
         {:noreply, socket}
       end
 
       @impl true
-      def handle_event("mic_dn", _params, socket) do
-        Radio.ch_down()
+      def handle_event("mic_dn", _params, %{assigns: %{radio_connection: connection}} = socket) do
+        connection |> Radio.ch_down()
         {:noreply, socket}
       end
 
       @impl true
-      def handle_event("multi_ch", %{"is_up" => true} = params, socket) do
-        Radio.freq_change(:up)
+      def handle_event(
+            "multi_ch",
+            %{"is_up" => true} = params,
+            %{assigns: %{radio_connection: connection}} = socket
+          ) do
+        connection |> Radio.freq_change(:up)
 
         {:noreply, socket}
       end
 
       @impl true
-      def handle_event("multi_ch", %{"is_up" => false} = params, socket) do
-        Radio.freq_change(:down)
+      def handle_event(
+            "multi_ch",
+            %{"is_up" => false} = params,
+            %{assigns: %{radio_connection: connection}} = socket
+          ) do
+        connection |> Radio.freq_change(:down)
 
         {:noreply, socket}
       end
 
       @impl true
-      def handle_event("cmd", %{"cmd" => cmd} = _params, socket) do
-        cmd |> Radio.cmd()
+      def handle_event(
+            "cmd",
+            %{"cmd" => cmd} = _params,
+            %{assigns: %{radio_connection: connection}} = socket
+          ) do
+        connection |> Radio.cmd(cmd)
         {:noreply, socket}
       end
 
@@ -70,16 +88,31 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
         {:noreply, socket |> set_screen_id(0)}
       end
 
-      def handle_event("scope_clicked", %{"x" => x} = _params, %{assigns: %{active_receiver: active_receiver, band_scope_edges: {scope_low, scope_high}}} = socket) do
-        new_frequency = x
-        |> screen_to_frequency({scope_low, scope_high})
-        |> to_string()
-        |> String.pad_leading(11, "0")
+      def handle_event(
+            "scope_clicked",
+            %{"x" => x} = _params,
+            %{
+              assigns: %{
+                radio_connection: connection,
+                active_receiver: active_receiver,
+                band_scope_edges: {scope_low, scope_high}
+              }
+            } = socket
+          ) do
+        new_frequency =
+          x
+          |> screen_to_frequency({scope_low, scope_high})
+          |> to_string()
+          |> String.pad_leading(11, "0")
 
         active_receiver
         |> case do
-          :a -> Radio.cmd("FA#{new_frequency}")
-          :b -> Radio.cmd("FB#{new_frequency}")
+          :a ->
+            connection |> Radio.cmd("FA#{new_frequency}")
+
+          :b ->
+            connection |> Radio.cmd("FB#{new_frequency}")
+
           vfo ->
             Logger.debug("Unknown vfo: #{vfo}")
         end
@@ -87,8 +120,8 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
         {:noreply, socket}
       end
 
-      def handle_event("cw_tune", _params, socket) do
-        Radio.cw_tune()
+      def handle_event("cw_tune", _params, %{assigns: %{radio_connection: connection}} = socket) do
+        connection |> Radio.cw_tune()
         {:noreply, socket}
       end
 
@@ -97,5 +130,4 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
       end
     end
   end
-
 end

@@ -15,6 +15,7 @@ defmodule Open890.DataCase do
   """
 
   use ExUnit.CaseTemplate
+  require Logger
 
   using do
     quote do
@@ -22,7 +23,16 @@ defmodule Open890.DataCase do
     end
   end
 
-  setup tags do
+  setup do
+    {:ok, dets_table} = Open890.RadioConnectionRepo.init()
+
+    on_exit(fn ->
+      IO.puts("Stopping dets and removing database: #{dets_table}")
+      :dets.stop()
+      File.rm!(dets_table |> to_string())
+
+    end)
+
     :ok
   end
 

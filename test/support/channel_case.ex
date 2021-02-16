@@ -28,7 +28,4 @@ defmodule Open890Web.ChannelCase do
     end
   end
 
-  setup tags do
-    :ok
-  end
 end

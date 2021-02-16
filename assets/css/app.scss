@@ -34,6 +34,11 @@
   margin: -1rem 0 2rem;
 }
 
+#contentWrapper {
+  margin-top: 1rem;
+}
+
+
 h1.title {
   padding-bottom: 2rem;
 }
@@ -64,6 +69,9 @@ $border-radius-small: 4px;
 
 // dark mode?
 body {
+}
+
+.dark {
   background-color: #222;
 }
 
@@ -72,16 +80,16 @@ body {
   color: #ccc;
 }
 
-.ui.basic.button {
+.ui.basic.radio.button {
   //background-color: $kenwood-grey !important;
   color: $kenwood-grey !important;
   border: 1px solid $kenwood-grey !important;
 }
 
-.ui.button {
-  background-color: #333;
-  color: #ccc;
-}
+// .ui.button {
+//   background-color: #333;
+//   color: #ccc;
+// }
 
 $meter-legend-font-size: 9px;
 
@@ -524,4 +532,9 @@ svg#bandScope {
 
 .hover-pointer:hover {
   cursor: pointer;
+}
+
+
+#emptyState .appear {
+  display: none;
 }

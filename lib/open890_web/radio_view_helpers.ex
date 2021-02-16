@@ -15,10 +15,11 @@ defmodule Open890Web.RadioViewHelpers do
 
     # icon_opts = opts |> Keyword.get(:icon)
 
-    final_opts = opts
-    |> Keyword.delete(:class)
-    |> Keyword.merge(class: "ui button #{class_opts}")
-    |> Keyword.merge([phx_click: "cmd", phx_value_cmd: cmd])
+    final_opts =
+      opts
+      |> Keyword.delete(:class)
+      |> Keyword.merge(class: "ui button #{class_opts}")
+      |> Keyword.merge(phx_click: "cmd", phx_value_cmd: cmd)
 
     content_tag(:button, name, final_opts)
   end
@@ -50,7 +51,7 @@ defmodule Open890Web.RadioViewHelpers do
 
   # converts the kenwood ref level (BSC) command number to a dB value from -20 to +10
   def format_ref_level(ref_level) do
-    (ref_level / 2.0) - 20
+    ref_level / 2.0 - 20
   end
 
   def format_band_scope_mode(mode) do
@@ -107,7 +108,7 @@ defmodule Open890Web.RadioViewHelpers do
 
     f_delta = high - low
 
-    low + coord_percentage * f_delta
+    (low + coord_percentage * f_delta)
     |> round()
   end
 
@@ -192,7 +193,6 @@ defmodule Open890Web.RadioViewHelpers do
     loc = project_to_bandscope_limits(active_frequency, band_scope_edges)
     tri_ofs = 10
 
-
     ~e{
       <line id="active_receiver_line" class="primaryCarrier" x1="<%= loc %>" y1="0" x2="<%= loc %>" y2="150" />
       <g id="rxTriangleGroup">
@@ -222,28 +222,36 @@ defmodule Open890Web.RadioViewHelpers do
     }
   end
 
-  def passband_polygon(mode, active_frequency, filter_lo_width, filter_hi_shift, scope_edges) when mode in [:lsb, :usb] do
-    filter_low = mode
-    |> offset_frequency(active_frequency, filter_lo_width)
-    |> project_to_bandscope_limits(scope_edges)
+  def passband_polygon(mode, active_frequency, filter_lo_width, filter_hi_shift, scope_edges)
+      when mode in [:lsb, :usb] do
+    filter_low =
+      mode
+      |> offset_frequency(active_frequency, filter_lo_width)
+      |> project_to_bandscope_limits(scope_edges)
 
-    filter_high = mode
-    |> offset_frequency(active_frequency, filter_hi_shift)
-    |> project_to_bandscope_limits(scope_edges)
+    filter_high =
+      mode
+      |> offset_frequency(active_frequency, filter_hi_shift)
+      |> project_to_bandscope_limits(scope_edges)
 
     ~e{<polygon id="passband" points="<%= filter_low %>,0 <%= filter_high %>,0 <%= filter_high %>,150 <%= filter_low %>,150" />}
   end
 
-  def passband_polygon(mode, active_frequency, filter_lo_width, filter_hi_shift, scope_edges) when mode in [:cw, :cw_r] do
-    half_width = filter_lo_width / 2 |> round()
+  def passband_polygon(mode, active_frequency, filter_lo_width, filter_hi_shift, scope_edges)
+      when mode in [:cw, :cw_r] do
+    half_width = (filter_lo_width / 2) |> round()
 
-    shift = case mode do
-      :cw_r -> -filter_hi_shift
-      _ -> filter_hi_shift
-    end
+    shift =
+      case mode do
+        :cw_r -> -filter_hi_shift
+        _ -> filter_hi_shift
+      end
 
-    filter_low = (active_frequency + half_width) + shift |> project_to_bandscope_limits(scope_edges)
-    filter_high = (active_frequency - half_width) + shift |> project_to_bandscope_limits(scope_edges)
+    filter_low =
+      (active_frequency + half_width + shift) |> project_to_bandscope_limits(scope_edges)
+
+    filter_high =
+      (active_frequency - half_width + shift) |> project_to_bandscope_limits(scope_edges)
 
     ~e{<polygon id="passband" points="<%= filter_low %>,0 <%= filter_high %>,0 <%= filter_high %>,150 <%= filter_low %>,150" />}
   end
@@ -254,29 +262,38 @@ defmodule Open890Web.RadioViewHelpers do
   end
 
   def project_to_audioscope_limits(value, width)
-    when is_integer(value) and is_integer(width) do
+      when is_integer(value) and is_integer(width) do
     percentage = value / width
     percentage * 212
   end
 
-  def audio_scope_filter_edges(mode, {filter_lo_width, filter_hi_shift}, active_roofing_filter, roofing_filter_data) when mode in [:cw, :cw_r] and is_integer(filter_lo_width) and is_integer(filter_hi_shift) and not is_nil(active_roofing_filter) do
-    half_width = (filter_lo_width / 2 |> round())
+  def audio_scope_filter_edges(
+        mode,
+        {filter_lo_width, filter_hi_shift},
+        active_roofing_filter,
+        roofing_filter_data
+      )
+      when mode in [:cw, :cw_r] and is_integer(filter_lo_width) and is_integer(filter_hi_shift) and
+             not is_nil(active_roofing_filter) do
+    half_width = (filter_lo_width / 2) |> round()
 
     roofing_width = roofing_filter_data |> Map.get(active_roofing_filter)
 
-    shift = case mode do
-      :cw_r -> filter_hi_shift
-      _ -> -filter_hi_shift
-    end
+    shift =
+      case mode do
+        :cw_r -> filter_hi_shift
+        _ -> -filter_hi_shift
+      end
 
-    distance = (half_width |> project_to_audioscope_limits(roofing_width)) / 2 |> round()
+    distance = ((half_width |> project_to_audioscope_limits(roofing_width)) / 2) |> round()
 
-    shift_projected = shift
-    |> project_to_audioscope_limits(roofing_width)
-    |> round()
+    shift_projected =
+      shift
+      |> project_to_audioscope_limits(roofing_width)
+      |> round()
 
-    low_val = (106 - distance) + shift_projected
-    high_val = (106 + distance) + shift_projected
+    low_val = 106 - distance + shift_projected
+    high_val = 106 + distance + shift_projected
 
     points = audio_scope_filter_points(low_val, high_val)
 
@@ -285,7 +302,13 @@ defmodule Open890Web.RadioViewHelpers do
     }
   end
 
-  def audio_scope_filter_edges(mode, {_filter_lo_width, _filter_hi_shift} = _filter_edges, _active_roofing_filter, _roofing_filter_data) when mode in [:usb, :lsb] do
+  def audio_scope_filter_edges(
+        mode,
+        {_filter_lo_width, _filter_hi_shift} = _filter_edges,
+        _active_roofing_filter,
+        _roofing_filter_data
+      )
+      when mode in [:usb, :lsb] do
     ""
   end
 
@@ -293,7 +316,6 @@ defmodule Open890Web.RadioViewHelpers do
     Logger.debug("Skipping audio scope filter edges because shift/width are not integers")
     ""
   end
-
 
   defp audio_scope_filter_points(low_val, high_val) do
     edge_offset = 7
@@ -352,11 +374,11 @@ defmodule Open890Web.RadioViewHelpers do
           </a>
           <% end %>
         }
+
       _ ->
         ~e{
           <a class="item">Unknown menu</a>
         }
     end
-
   end
 end

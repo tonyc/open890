@@ -68,22 +68,7 @@ although the correct packages may not be available in your OS distribution's pac
 
 If all else fails, install from source.
 
-## Config
-
-The following environment variables must be set in your shell environment. These will eventually be moved into a UI.
-
-  * `RADIO_IP_ADDRESS` - IP address of the TS-890
-  * `RADIO_USERNAME` - The KNS username
-  * `RADIO_PASSWORD` - The KNS password
-  * `RADIO_USER_IS_ADMIN` (true/false) - Whether the KNS user is an admin
-
-You will need to use a wrapper shell script, or add e.g. the following lines to your `.bash_profile` (or shell startup script of your choice):
-
-    export RADIO_IP_ADDRESS=w.x.y.z
-    export RADIO_USERNAME=whatever
-    # etc..
-        
-## To start your server:
+## Start your server:
 
   * Install dependencies with `mix deps.get`. First-time users may need to answer `Y` to a couple prompts
   * Install Node.js dependencies with `npm install` inside the `assets` directory

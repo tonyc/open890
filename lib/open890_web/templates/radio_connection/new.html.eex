@@ -1,0 +1,16 @@
+<div class="ui centered middle aligned grid">
+  <div class="row">
+    <div class="six wide left aligned column">
+      <h1>New Radio Connection</h1>
+    </div>
+  </div>
+  <div class="ui grid row">
+    <div class="six wide column">
+      <%= form_for @conn, Routes.radio_connection_path(@conn, :create), [as: :radio_connection, class: "ui form"], fn f -> %>
+        <%= render "_form.html", f: f, radio_connection: @radio_connection %>
+        <%= link "Cancel", to: Routes.radio_connection_path(@conn, :index), class: "ui large left floated button" %>
+        <%= submit "Create", class: "ui large right floated primary button" %>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -7,13 +7,41 @@
 
     <%= csrf_meta_tag() %>
     <%= live_title_tag "#{assigns[:page_title]}" %>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.20/c3.min.css" integrity="sha512-cznfNokevSG7QPA5dZepud8taylLdvgr0lDqw/FEZIhluFsSwyvS81CMnRdrNSKwbsmc43LtRd2/WMQV+Z85AQ==" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" integrity="sha512-8bHTC73gkZ7rZ7vpqUQThUDhqcNFyYi2xgDgPDHc+GXVGHXq+xPjynxIopALmOPqzo9JZj0k6OqqewdGO3EsrQ==" crossorigin="anonymous" />
     <link phx-track-static rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
     <script defer phx-track-static type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </head>
   <body>
-    <%= @inner_content %>
+    <div class="ui">
+
+      <div class="ui menu">
+        <div class="ui header item">
+          <%= link "open890", to: "/", class: "ui header" %>
+        </div>
+        <%= link "Connections", to: Routes.radio_connection_path(@conn, :index), class: "ui item" %>
+
+        <%= if assigns[:socket] do %>
+          <div class="ui secondary menu">
+            <div class="ui dropdown icon item">
+              Theme
+              <i class="dropdown gear icon"></i>
+              <div class="menu">
+                <a class="item" phx-click="set_theme" phx-value-theme="kenwood">Kenwood</a>
+                <a class="item" phx-click="set_theme" phx-value-theme="hsl">Flex</a>
+                <a class="item" phx-click="set_theme" phx-value-theme="elecraft">Elecraft</a>
+                <a class="item" phx-click="set_theme" phx-value-theme="phosphor-green">Phosphor Green</a>
+                <a class="item" phx-click="set_theme" phx-value-theme="phosphor-red">Phosphor Red</a>
+              </div>
+
+            </div>
+          </div>
+        <% end %>
+      </div> <!-- end menu -->
+
+      <div id="contentWrapper">
+        <%= @inner_content %>
+      </div>
+    </div> <!-- end main ui container wrapper -->
   </body>
 
   <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>

@@ -64,7 +64,17 @@ audioStreamChannel.on("audio_data", (data) => {
   }
 })
 
+$(document).ready(function() {
+  if (document.querySelector('#emptyState')) {
+    console.log("empty state detected")
+    $('#emptyState .appear').transition({
+      animation: 'fade',
+      duration: 500,
+      interval: 500
+    })
+  } else {
+    console.log("no empty state detected")
+  }
 
-window.testFunc = function(msg) {
-  console.log("testFunc:", msg);
-}
+})
+

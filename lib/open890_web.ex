@@ -19,6 +19,7 @@ defmodule Open890Web do
 
   def controller do
     quote do
+      require Logger
       use Phoenix.Controller, namespace: Open890Web
 
       import Plug.Conn
