@@ -22,6 +22,8 @@ See [Installing From Source](https://github.com/tonyc/open890/wiki/Installing-Fr
 Binary releases are available from [releases](https://github.com/tonyc/open890/releases/).
 They currently are only supported to run on 64-bit Ubuntu 20.04, although other modern Linux releases may work (or not).
 
+Prebuilt Windows binaries are soon planned, but not currently available.
+
 The binary is a self-contained ELF executable that expands itself into `~/.cache/bakeware`
 
 After downloading:
