@@ -13,11 +13,13 @@ defmodule Open890.ConnectionCommands do
     conn |> get_filter_state()
     conn |> get_band_scope_limits()
     conn |> get_band_scope_mode()
+    conn |> get_band_scope_avg()
     conn |> get_band_scope_att()
     conn |> get_display_screen()
     conn |> get_rf_pre_att()
     conn |> get_ref_level()
     conn |> monitor_meters()
+    conn |> get_data_speed()
   end
 
   def cw_tune(conn) do
@@ -106,6 +108,14 @@ defmodule Open890.ConnectionCommands do
 
   def get_band_scope_att(conn) do
     conn |> cmd("BS8")
+  end
+
+  def get_band_scope_avg(conn) do
+    conn |> cmd("BSA")
+  end
+
+  def get_data_speed(conn) do
+    conn |> cmd("DD0")
   end
 
   def get_roofing_filter_info(conn) do

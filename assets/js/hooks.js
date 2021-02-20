@@ -9,8 +9,8 @@ let Hooks = {
         event.preventDefault();
         console.log("ref level wheel", event)
 
-        //var isScrollUp = (event.deltaY < 0)
-        //this.pushEvent("adjust_ref_level", {is_up: isScrollUp})
+        var isScrollUp = (event.deltaY < 0)
+        this.pushEvent("adjust_ref_level", {is_up: isScrollUp})
       })
     }
   },
@@ -35,13 +35,15 @@ let Hooks = {
       pt.y = event.clientY;
 
       var cursorPt = pt.matrixTransform(svg.getScreenCTM().inverse());
-      this.pushEvent("scope_clicked", {x: cursorPt.x, y: cursorPt.y})
+      this.pushEvent("scope_clicked", {x: cursorPt.x, y: cursorPt.y, width: 640})
     },
     mounted() {
       this.el.addEventListener("wheel", event => {
-        event.preventDefault();
-        var isScrollUp = (event.deltaY < 0)
-        this.pushEvent("multi_ch", {is_up: isScrollUp})
+        if (event.shiftKey) {
+          event.preventDefault();
+          var isScrollUp = (event.deltaY < 0)
+          this.pushEvent("multi_ch", {is_up: isScrollUp})
+        }
       });
 
       this.el.addEventListener("mousemove", event => {
@@ -138,7 +140,7 @@ let Hooks = {
       let x = (event.clientX - rect.left) * scaleX;
       let y = (event.clientY - rect.top) * scaleY;
 
-      this.pushEvent("scope_clicked", {x, y})
+      this.pushEvent("scope_clicked", {x: x, y: y, width: 1280})
     },
 
     clearScope() {
@@ -155,13 +157,19 @@ let Hooks = {
 
       this.canvas = this.el
       this.ctx = this.canvas.getContext("2d")
+      // window.bandscope = this.ctx;
 
       // these items should be computed or passed in via data- attributes
       this.maxVal = 140
-      this.width = 640
+      this.width = 1280
       this.height = 200
 
-      this.multiplier = 1.25
+      this.ctx.imageSmoothingEnabled = false;
+      this.ctx.imageSmoothingQuality = 'high';
+      // this.ctx.globalCompositeOperation = 'color'
+      console.log("smoothing", this.ctx.imageSmoothingEnabled);
+
+      this.multiplier = 1.3
       this.theme = this.el.dataset.theme
       this.draw = true
 
@@ -172,9 +180,11 @@ let Hooks = {
       })
 
       this.el.addEventListener("wheel", event => {
-        event.preventDefault();
-        var isScrollUp = (event.deltaY < 0)
-        this.pushEvent("multi_ch", {is_up: isScrollUp})
+        if (event.shiftKey) {
+          event.preventDefault();
+          var isScrollUp = (event.deltaY < 0)
+          this.pushEvent("multi_ch", {is_up: isScrollUp})
+        }
       });
 
       this.el.addEventListener("mousemove", event => {
@@ -193,9 +203,10 @@ let Hooks = {
 
           this.ctx.drawImage(this.canvas, 0, 1)
 
-          let imgData = this.ctx.createImageData(data.length, 1)
+          let imgData = this.ctx.createImageData(data.length * 2, 1)
 
           let i = 0;
+
           for(i; i < data.length; i++) {
 
             // interpolate signal strength to 0..255
@@ -203,10 +214,21 @@ let Hooks = {
 
             const mappedColor = ColorMap.applyMap(val, this.theme)
 
-            imgData.data[4*i + 0] = mappedColor[0]
-            imgData.data[4*i + 1] = mappedColor[1]
-            imgData.data[4*i + 2] = mappedColor[2]
-            imgData.data[4*i + 3] = mappedColor[3]
+            imgData.data[8*i + 0] = mappedColor[0]
+            imgData.data[8*i + 1] = mappedColor[1]
+            imgData.data[8*i + 2] = mappedColor[2]
+            imgData.data[8*i + 3] = mappedColor[3]
+
+            imgData.data[8*i + 4] = mappedColor[0]
+            imgData.data[8*i + 5] = mappedColor[1]
+            imgData.data[8*i + 6] = mappedColor[2]
+            imgData.data[8*i + 7] = mappedColor[3]
+
+
+            // imgData.data[4*(i*2) + 0 + ] = mappedColor[0]
+            // imgData.data[4*(i*2) + 1 + ] = mappedColor[1]
+            // imgData.data[4*(i*2) + 2 + ] = mappedColor[2]
+            // imgData.data[4*(i*2) + 3 + ] = mappedColor[3]
 
           }
 

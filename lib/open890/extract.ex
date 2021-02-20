@@ -440,8 +440,16 @@ defmodule Open890.Extract do
     str |> trim_to_integer("PA")
   end
 
+  def band_scope_avg(str) when is_binary(str) do
+    str |> trim_to_integer("BSA")
+  end
+
   def band_scope_att(str) when is_binary(str) do
     str |> trim_to_integer("BS8")
+  end
+
+  def data_speed(str) when is_binary(str) do
+    str |> trim_to_integer("DD0")
   end
 
   defp calculate_cw_shift(passband_id)

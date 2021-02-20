@@ -12,36 +12,7 @@
     <script defer phx-track-static type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </head>
   <body>
-    <div class="ui">
-
-      <div class="ui menu">
-        <div class="ui header item">
-          <%= link "open890", to: "/", class: "ui header" %>
-        </div>
-        <%= link "Connections", to: Routes.radio_connection_path(@conn, :index), class: "ui item" %>
-
-        <%= if assigns[:socket] do %>
-          <div class="ui secondary menu">
-            <div class="ui dropdown icon item">
-              Theme
-              <i class="dropdown gear icon"></i>
-              <div class="menu">
-                <a class="item" phx-click="set_theme" phx-value-theme="kenwood">Kenwood</a>
-                <a class="item" phx-click="set_theme" phx-value-theme="hsl">Flex</a>
-                <a class="item" phx-click="set_theme" phx-value-theme="elecraft">Elecraft</a>
-                <a class="item" phx-click="set_theme" phx-value-theme="phosphor-green">Phosphor Green</a>
-                <a class="item" phx-click="set_theme" phx-value-theme="phosphor-red">Phosphor Red</a>
-              </div>
-
-            </div>
-          </div>
-        <% end %>
-      </div> <!-- end menu -->
-
-      <div id="contentWrapper">
-        <%= @inner_content %>
-      </div>
-    </div> <!-- end main ui container wrapper -->
+    <%= @inner_content %>
   </body>
 
   <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>

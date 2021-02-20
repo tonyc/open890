@@ -6,6 +6,17 @@ defmodule Open890Web.Live.Dispatch do
 
   import Phoenix.LiveView, only: [assign: 3, push_event: 3]
 
+  def dispatch("DD0" <> _rest = msg, socket) do
+    data_speed = msg |> Extract.data_speed()
+    |> IO.inspect(label: "extracted data speed")
+    socket |> assign(:data_speed, data_speed)
+  end
+
+  def dispatch("BSA" <> _rest = msg, socket) do
+    avg_level = msg |> Extract.band_scope_avg()
+    socket |> assign(:band_scope_avg, avg_level)
+  end
+
   def dispatch("BSC0" <> _rest = msg, socket) do
     ref_level = msg |> Extract.ref_level()
     socket |> assign(:ref_level, ref_level)

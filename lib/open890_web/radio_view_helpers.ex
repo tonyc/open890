@@ -24,6 +24,18 @@ defmodule Open890Web.RadioViewHelpers do
     content_tag(:button, name, final_opts)
   end
 
+  def cmd_label_button(name, cmd, opts \\ []) when is_binary(name) and is_binary(cmd) do
+    class_opts = opts |> Keyword.get(:class, "")
+
+    final_opts =
+      opts
+      |> Keyword.delete(:class)
+      |> Keyword.merge(class: "ui button #{class_opts}")
+      |> Keyword.merge(phx_click: "cmd", phx_value_cmd: cmd)
+
+    content_tag(:button, name, final_opts)
+  end
+
   # cycle_button("Scope Mode", @scope_mode, %{auto_scroll: "BS30", fixed: "BS32", center: "BS31"}
   def cycle_button(title, var, values, opts \\ []) when is_map(values) do
     values
@@ -32,6 +44,23 @@ defmodule Open890Web.RadioViewHelpers do
       nil -> ""
       cmd -> cmd_button(title, cmd, opts)
     end
+  end
+
+  def cycle_label_button(title, var, values, opts \\ []) when is_map(values) do
+    values
+    |> Map.get(var)
+    |> case do
+      nil -> ""
+      %{label: label, cmd: cmd} ->
+        cmd_label_button(title, label, cmd, opts)
+    end
+  end
+
+  def cmd_label_button(title, label, cmd, opts) do
+    class_opts = opts |> Keyword.get(:class, "")
+    button_classes = "ui button #{class_opts}"
+
+    content_tag(:button, "#{title}: #{label}", class: button_classes, phx_click: "cmd", phx_value_cmd: cmd)
   end
 
   def vfo_switch_button(vfo, opts \\ []) do
@@ -103,8 +132,8 @@ defmodule Open890Web.RadioViewHelpers do
     0
   end
 
-  def screen_to_frequency(scope_coord, {low, high}) do
-    coord_percentage = scope_coord / 640
+  def screen_to_frequency(scope_coord, {low, high}, width) do
+    coord_percentage = scope_coord / width
 
     f_delta = high - low
 

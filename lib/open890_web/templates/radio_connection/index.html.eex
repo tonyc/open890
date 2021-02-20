@@ -28,7 +28,9 @@
         <%= for connection <- @radio_connections do %>
           <tr>
             <td>
-              <h2><%= link(connection.name, to: Routes.radio_path(@conn, :index, connection), class: "ui ") %></h2>
+              <h2><%= connection.name %></h2>
+               <%= link("Bandscope", to: Routes.radio_bandscope_path(@conn, :bandscope, connection), class: "ui tiny button") %></h2>
+               <%= link("Buttons", to: Routes.radio_buttons_path(@conn, :buttons, connection), class: "ui tiny button") %></h2>
             </td>
 
             <td>

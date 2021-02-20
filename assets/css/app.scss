@@ -98,9 +98,11 @@ $meter-legend-font-size: 9px;
   border-style: dashed;
   border-color: red;
 
-  &.green { border-color: green; }
-  &.orange { border-color: orange; }
-  &.cyan { border-color: cyan; }
+  &.green { border-color: green !important; }
+  &.orange { border-color: orange !important; }
+  &.cyan { border-color: cyan !important; }
+  &.pink { border-color: pink !important;}
+  &.purple { border-color: purple !important;}
 }
 
 nav {
@@ -154,9 +156,9 @@ nav {
   color: black;
 
   text-align: center;
-  padding: 5px 5px;
-  width: 42px;
-  height: 36px;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
 
   &.receiver {
     margin-bottom: 15px;
@@ -168,6 +170,10 @@ nav {
   }
 }
 
+#sMeterWrapper, #audioScopeWrapper {
+  width: 100%;
+  max-width: 400px
+}
 
 #sMeterWrapper {
   padding: 0.25rem;
@@ -245,6 +251,7 @@ nav {
 }
 
 #audioScopeWrapper {
+  float: right;
   #audioScope {
     //border-radius: $border-radius-small;
     border-top: 2px solid $kenwood-grey;
@@ -294,13 +301,14 @@ nav {
     display: inline-block;
 
     &.active {
+      color: white;
       font-size: 4rem;
       text-align: right;
     }
 
     &.inactive {
       font-size: 3rem;
-      color: #555;
+      color: rgb(202, 203, 205);
       text-align: left;
       margin-left: 1em;
     }
@@ -353,7 +361,7 @@ svg#bandScope {
     fill: $kenwood-passband-fill;
   }
   .spectrum {
-    stroke-width: 0.75;
+    stroke-width: 1.1;
   }
 
   .primaryCarrier {
@@ -506,24 +514,28 @@ svg#bandScope {
   fill: none;
 }
 
+#bandScopeContainer {
+  // border: 1px dashed red;
+  height: 100% !important;
+
+}
+
 #bandScopeDetails {
   padding-bottom: 0;
 }
 
 #bandScopeWrapper {
   border: 2px solid $kenwood-grey;
+  // border: 1px dashed cyan;
   margin-bottom: 1rem;
   border-radius: 5px;
+  height: 100%;
 }
-
-#bandScopeContainer {
-  //padding-top: 0;
-}
-
 
 .waterfall {
   &.bandscope {
     width: 100%;
+    // height: 100px;
     margin-top: -5px;
     border-top: 2px solid $kenwood-grey;
   }
@@ -537,4 +549,43 @@ svg#bandScope {
 
 #emptyState .appear {
   display: none;
+}
+
+
+.uppercase {
+  text-transform: uppercase !important;
+}
+
+#RefLevelControl {
+  width: 200px;
+  // min-height: 1em;
+  vertical-align: baseline;
+
+  form#refLevel {
+    &:focus {
+      border: none;
+    }
+  }
+
+  #refLevelInput {
+    // margin-left: 1rem;
+    // margin-right: 0.5rem;
+    width: 3em;
+    padding: 0;
+    margin: 0 0.5em;
+    border: 0;
+    text-align: center;
+    font-weight: bold;
+    -moz-appearance: textfield;
+    border-radius: $border-radius-small;
+    cursor: default;
+
+    &:hover { cursor: pointer; }
+    &:focus { cursor: text; }
+    &:focus-visible { border: none; }
+  }
+}
+
+.scopeButtons button {
+  width: 200px;
 }

@@ -24,7 +24,10 @@ defmodule Open890Web.Router do
     post "/connections/:id/start", RadioConnectionController, :start
     post "/connections/:id/stop", RadioConnectionController, :stop
 
-    live "/connections/:id", Live.RadioLive, :index
+    live "/connections/:id/bandscope", Live.RadioLive.Bandscope, :bandscope
+    live "/connections/:id/buttons", Live.RadioLive.Buttons, :buttons
+    # live "/connections/:id/bandscope", Live.RadioLive.Bandscope
+    # live "/connections/:id/buttons", Live.RadioButtonsLive, :index
   end
 
   # Other scopes may use custom stacks.

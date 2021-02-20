@@ -176,11 +176,11 @@ defmodule Open890.TCPClient do
 
   # everything under here
 
-  # bandscope data speed high response
-  def handle_msg("DD01", state), do: state
+  # # bandscope data speed high response
+  # def handle_msg("DD01", state), do: state
 
-  # filter scope LAN/high cycle respnose
-  def handle_msg("DD11", state), do: state
+  # # filter scope LAN/high cycle respnose
+  # def handle_msg("DD11", state), do: state
 
   def handle_msg("PS0", state) do
     {:noreply, state}

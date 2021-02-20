@@ -1,4 +1,4 @@
-defmodule Open890Web.Live.RadioLive do
+defmodule Open890Web.Live.RadioLive.Bandscope do
   require Logger
 
   use Open890Web, :live_view
@@ -7,14 +7,12 @@ defmodule Open890Web.Live.RadioLive do
   alias Phoenix.Socket.Broadcast
   alias Open890.RadioConnection
   alias Open890.ConnectionCommands
-
   alias Open890Web.Live.Dispatch
-
-  alias Open890Web.Live.{ButtonsComponent}
 
   @init_socket [
     {:radio_connection, nil},
     {:connection_state, nil},
+    {:data_speed, nil},
     {:debug, false},
     {:active_frequency, ""},
     {:active_mode, :unknown},
@@ -22,6 +20,7 @@ defmodule Open890Web.Live.RadioLive do
     {:active_transmitter, :a},
     {:audio_scope_data, []},
     {:band_scope_att, nil},
+    {:band_scope_avg, nil},
     {:band_scope_data, []},
     {:band_scope_edges, nil},
     {:band_scope_mode, nil},
@@ -35,7 +34,6 @@ defmodule Open890Web.Live.RadioLive do
     {:inactive_mode, :unknown},
     {:inactive_receiver, :b},
     {:alc_meter, 0},
-    {:layout_wide, "container"},
     {:swr_meter, 0},
     {:comp_meter, 0},
     {:id_meter, 0},
@@ -54,6 +52,11 @@ defmodule Open890Web.Live.RadioLive do
     {:vfo_a_frequency, ""},
     {:vfo_b_frequency, ""}
   ]
+
+  @impl true
+  def render(assigns) do
+    Phoenix.View.render(Open890Web.RadioLiveView, "radio_live.html", assigns)
+  end
 
   @impl true
   def mount(%{"id" => connection_id} = params, _session, socket) do
@@ -78,13 +81,6 @@ defmodule Open890Web.Live.RadioLive do
           socket =
             if params["debug"] do
               socket |> assign(:debug, true)
-            else
-              socket
-            end
-
-          socket =
-            if params["wide"] do
-              socket |> assign(:layout_wide, "")
             else
               socket
             end

@@ -90,7 +90,7 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
 
       def handle_event(
             "scope_clicked",
-            %{"x" => x} = _params,
+            %{"x" => x, "width" => width} = _params,
             %{
               assigns: %{
                 radio_connection: connection,
@@ -101,7 +101,7 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
           ) do
         new_frequency =
           x
-          |> screen_to_frequency({scope_low, scope_high})
+          |> screen_to_frequency({scope_low, scope_high}, width)
           |> to_string()
           |> String.pad_leading(11, "0")
 
