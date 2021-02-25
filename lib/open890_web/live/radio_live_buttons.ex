@@ -39,6 +39,7 @@ defmodule Open890Web.Live.RadioLive.Buttons do
     {:temp_meter, 0},
     {:projected_active_receiver_location, ""},
     {:ref_level, 0},
+    {:rf_gain, 0},
     {:rf_pre, 0},
     {:rf_att, 0},
     {:active_if_filter, nil},

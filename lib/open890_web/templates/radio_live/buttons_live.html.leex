@@ -81,9 +81,14 @@
     </div>
 
     <div class="row">
-      <%= if @audio_gain do %>
-        <p>Audio Gain: <%= @audio_gain %> </p>
-      <% end %>
+      <div class="column">
+        <%= if @audio_gain do %>
+          <p>Audio Gain: <%= @audio_gain %> </p>
+        <% end %>
+        <%= if @rf_gain do %>
+          <p>RF Gain: <%= @rf_gain %> </p>
+        <% end %>
+      </div>
     </div>
 
     <div class="row">
