@@ -89,7 +89,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./_build/prod/rel/open890-linux-x64-${{ steps.vars.outputs.tag }}.tgz
-          asset_name: open890-linux-x64-${{ steps.vars.outputs.tag }}.tgz
+          asset_path: ./_build/prod/rel/open890-linux-x64-${{ steps.vars.outputs.tag }}.tar.gz
+          asset_name: open890-linux-x64-${{ steps.vars.outputs.tag }}.tar.gz
           asset_content_type: application/octet-stream
 
