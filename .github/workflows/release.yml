@@ -62,7 +62,7 @@ jobs:
           SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
       - name: package release
         run: |
-          tar zcvf _build/prod/rel/open890 open890-${{ steps.vars.outputs.tag }}.tgz
+          tar zcvf open890-${{ steps.vars.outputs.tag }}.tgz _build/prod/rel/open890/
       - name: Create Github Release
         id: create_release
         uses: actions/create-release@v1
