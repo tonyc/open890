@@ -12,6 +12,9 @@ jobs:
       - uses: actions/checkout@v2
         with:
           ref: ${{ github.head_ref }}
+      - name: Set output
+        id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
       - name: Install OTP and Elixir
         uses: actions/setup-elixir@v1
         with:
@@ -59,7 +62,7 @@ jobs:
           SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
       - name: package release
         run: |
-          tar zcvf _build/prod/rel/open890 open890-${{ github.event.release.tag_name }}.tgz
+          tar zcvf _build/prod/rel/open890 open890-${{ steps.vars.outputs.tag }}.tgz
       - name: Create Github Release
         id: create_release
         uses: actions/create-release@v1
@@ -77,7 +80,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./open890-${{ github.event.release.tag_name }}.tgz
+          asset_path: ./open890-${{ steps.cars.outputs.tag }}.tgz
           asset_name: open890
           asset_content_type: application/octet-stream
 
