@@ -57,6 +57,9 @@ jobs:
         env:
           MIX_ENV: prod
           SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
+      - name: package release
+        run: |
+          tar zcvf _build/prod/rel/open890 open890-${{ github.event.release.tag_name }}.tgz
       - name: Create Github Release
         id: create_release
         uses: actions/create-release@v1
@@ -74,7 +77,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./_build/prod/rel/bakeware/open890
+          asset_path: ./open890-${{ github.event.release.tag_name }}.tgz
           asset_name: open890
           asset_content_type: application/octet-stream
 

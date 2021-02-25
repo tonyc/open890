@@ -26,7 +26,6 @@ defmodule Open890.MixProject do
 
   defp release do
     [
-      steps: [:assemble, &Bakeware.assemble/1],
       strip_beams: Mix.env() == :prod
     ]
   end
@@ -50,7 +49,6 @@ defmodule Open890.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:bakeware, "~> 0.1.4"},
       {:credo, "~> 1.5", only: [:dev, :test]},
       {:ecto, "~> 3.5"},
       {:elixir_math, "~> 0.1.2"},
