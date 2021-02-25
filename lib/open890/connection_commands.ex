@@ -22,6 +22,11 @@ defmodule Open890.ConnectionCommands do
     conn |> get_data_speed()
     conn |> get_audio_gain()
     conn |> get_rf_gain()
+    conn |> get_power_level()
+  end
+
+  def get_power_level(conn) do
+    conn |> cmd("PC")
   end
 
   def cw_tune(conn) do

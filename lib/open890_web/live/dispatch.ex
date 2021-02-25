@@ -6,6 +6,11 @@ defmodule Open890Web.Live.Dispatch do
 
   import Phoenix.LiveView, only: [assign: 3, push_event: 3]
 
+  def dispatch("PC" <> _rest = msg, socket) do
+    value = msg |> Extract.power_level()
+    socket |> assign(:power_level, value)
+  end
+
   def dispatch("RG" <> _rest = msg, socket) do
     rf_gain = msg |> Extract.rf_gain()
     socket |> assign(:rf_gain, rf_gain)

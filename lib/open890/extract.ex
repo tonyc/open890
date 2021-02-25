@@ -234,6 +234,10 @@ defmodule Open890.Extract do
     "F" => :am_d
   }
 
+  def power_level(str) when is_binary(str) do
+    str |> trim_to_integer(["PC"])
+  end
+
   def audio_gain(str) when is_binary(str) do
     str |> trim_to_integer(["AG"])
   end
