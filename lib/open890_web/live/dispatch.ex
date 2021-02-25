@@ -6,9 +6,13 @@ defmodule Open890Web.Live.Dispatch do
 
   import Phoenix.LiveView, only: [assign: 3, push_event: 3]
 
+  def dispatch("AG" <> _rest = msg, socket) do
+    audio_gain = msg |> Extract.audio_gain()
+    socket |> assign(:audio_gain, audio_gain)
+  end
+
   def dispatch("DD0" <> _rest = msg, socket) do
     data_speed = msg |> Extract.data_speed()
-    |> IO.inspect(label: "extracted data speed")
     socket |> assign(:data_speed, data_speed)
   end
 

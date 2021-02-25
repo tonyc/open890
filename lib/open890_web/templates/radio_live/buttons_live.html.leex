@@ -80,8 +80,13 @@
       </div>
     </div>
 
-    <div class="two wide right aligned column"></div>
-    <div class="fourteen wide columns">
+    <div class="row">
+      <%= if @audio_gain do %>
+        <p>Audio Gain: <%= @audio_gain %> </p>
+      <% end %>
+    </div>
+
+    <div class="row">
       <%= cycle_button("PRE #{format_rf_pre(@rf_pre)}", @rf_pre, %{
         0 => "PA1",
         1 => "PA2",
@@ -98,9 +103,6 @@
       <button class="ui button">
         <span>ANT 1</span>
       </button>
-
-
-      <br /> <br />
 
     </div>
 

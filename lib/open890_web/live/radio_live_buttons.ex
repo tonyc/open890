@@ -17,6 +17,7 @@ defmodule Open890Web.Live.RadioLive.Buttons do
     {:active_mode, :unknown},
     {:active_receiver, :a},
     {:active_transmitter, :a},
+    {:audio_gain, nil},
     {:band_scope_att, nil},
     {:band_scope_edges, nil},
     {:band_scope_mode, nil},

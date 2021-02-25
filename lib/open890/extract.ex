@@ -234,6 +234,10 @@ defmodule Open890.Extract do
     "F" => :am_d
   }
 
+  def audio_gain(str) when is_binary(str) do
+    str |> trim_to_integer(["AG"])
+  end
+
   def operating_mode(str) when is_binary(str) do
     str
     |> String.trim_leading("OM0")

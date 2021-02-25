@@ -18,6 +18,7 @@ defmodule Open890Web.Live.RadioLive.Bandscope do
     {:active_mode, :unknown},
     {:active_receiver, :a},
     {:active_transmitter, :a},
+    {:audio_gain, nil},
     {:audio_scope_data, []},
     {:band_scope_att, nil},
     {:band_scope_avg, nil},

@@ -20,10 +20,15 @@ defmodule Open890.ConnectionCommands do
     conn |> get_ref_level()
     conn |> monitor_meters()
     conn |> get_data_speed()
+    conn |> get_audio_gain()
   end
 
   def cw_tune(conn) do
     conn |> cmd("CA1")
+  end
+
+  def get_audio_gain(conn) do
+    conn |> cmd("AG")
   end
 
   def esc(conn), do: conn |> cmd("DS3")
