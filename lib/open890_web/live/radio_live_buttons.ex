@@ -36,6 +36,8 @@ defmodule Open890Web.Live.RadioLive.Buttons do
     {:comp_meter, 0},
     {:id_meter, 0},
     {:vd_meter, 0},
+    {:notch_state, nil},
+    {:notch_filter, nil},
     {:temp_meter, 0},
     {:power_level, nil},
     {:projected_active_receiver_location, ""},

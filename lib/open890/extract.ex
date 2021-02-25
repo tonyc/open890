@@ -234,6 +234,19 @@ defmodule Open890.Extract do
     "F" => :am_d
   }
 
+  def notch_filter(str) when is_binary(str) do
+    str |> trim_to_integer(["BP"])
+  end
+
+  def notch_state(str) when is_binary(str) do
+    str
+    |> String.trim_leading("NT")
+    |> case do
+      "1" -> true
+      _ -> false
+    end
+  end
+
   def power_level(str) when is_binary(str) do
     str |> trim_to_integer(["PC"])
   end

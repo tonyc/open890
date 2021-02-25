@@ -40,6 +40,8 @@ defmodule Open890Web.Live.RadioLive.Bandscope do
     {:id_meter, 0},
     {:vd_meter, 0},
     {:temp_meter, 0},
+    {:notch_state, nil},
+    {:notch_filter, nil},
     {:power_level, nil},
     {:projected_active_receiver_location, ""},
     {:ref_level, 0},

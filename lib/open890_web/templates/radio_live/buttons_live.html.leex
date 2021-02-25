@@ -93,6 +93,15 @@
         <%= if @power_level do %>
           <p>Power Level: <%= @power_level %></p>
         <% end %>
+
+        <%= if ! is_nil(@notch_state) do %>
+          <p>Notch State: <%= @notch_state %></p>
+        <% end %>
+
+        <%= if @notch_filter do %>
+          <p>Notch Filter: <%= @notch_filter %></p>
+        <% end %>
+
       </div>
     </div>
 

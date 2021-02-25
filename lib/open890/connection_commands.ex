@@ -23,6 +23,12 @@ defmodule Open890.ConnectionCommands do
     conn |> get_audio_gain()
     conn |> get_rf_gain()
     conn |> get_power_level()
+    conn |> get_notch_states()
+  end
+
+  def get_notch_states(conn) do
+    conn |> cmd("NT")
+    conn |> cmd("BP")
   end
 
   def get_power_level(conn) do
