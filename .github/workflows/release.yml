@@ -63,7 +63,7 @@ jobs:
       - name: Compress files
         uses: master-atul/tar-action@v1.0.2
         with:
-          command: zcvf
+          command: c
           cwd: ./_build/prod/rel
           files: |
             ./open890
