@@ -8,52 +8,7 @@ defmodule Open890Web.Live.RadioLive.Buttons do
   alias Open890.RadioConnection
   alias Open890.ConnectionCommands
   alias Open890Web.Live.Dispatch
-
-  @init_socket [
-    {:radio_connection, nil},
-    {:connection_state, nil},
-    {:debug, false},
-    {:active_frequency, ""},
-    {:active_mode, :unknown},
-    {:active_receiver, :a},
-    {:active_transmitter, :a},
-    {:audio_gain, nil},
-    {:band_scope_att, nil},
-    {:band_scope_edges, nil},
-    {:band_scope_mode, nil},
-    {:band_scope_span, nil},
-    {:display_screen_id, 0},
-    {:filter_hi_shift, nil},
-    {:filter_high_freq, nil},
-    {:filter_lo_width, nil},
-    {:filter_low_freq, nil},
-    {:inactive_frequency, ""},
-    {:inactive_mode, :unknown},
-    {:inactive_receiver, :b},
-    {:alc_meter, 0},
-    {:layout_wide, "container"},
-    {:swr_meter, 0},
-    {:comp_meter, 0},
-    {:id_meter, 0},
-    {:vd_meter, 0},
-    {:notch_state, nil},
-    {:notch_filter, nil},
-    {:temp_meter, 0},
-    {:power_level, nil},
-    {:projected_active_receiver_location, ""},
-    {:ref_level, 0},
-    {:rf_gain, 0},
-    {:rf_pre, 0},
-    {:rf_att, 0},
-    {:active_if_filter, nil},
-    {:roofing_filter_data, %{a: nil, b: nil, c: nil}},
-    {:s_meter, 0},
-    {:ssb_data_filter_mode, nil},
-    {:ssb_filter_mode, nil},
-    {:theme, "kenwood"},
-    {:vfo_a_frequency, ""},
-    {:vfo_b_frequency, ""}
-  ]
+  alias Open890Web.Live.RadioSocketState
 
   @impl true
   def render(assigns) do
@@ -68,7 +23,7 @@ defmodule Open890Web.Live.RadioLive.Buttons do
       Phoenix.PubSub.subscribe(Open890.PubSub, "radio:state")
     end
 
-    socket = init_socket(socket)
+    socket = socket |> assign(RadioSocketState.initial_state())
 
     socket =
       RadioConnection.find(connection_id)
@@ -112,12 +67,6 @@ defmodule Open890Web.Live.RadioLive.Buttons do
       end
 
     {:ok, socket}
-  end
-
-  defp init_socket(socket) do
-    initial_state = @init_socket |> Enum.into(%{})
-
-    socket |> assign(initial_state)
   end
 
   @impl true
