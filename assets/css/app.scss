@@ -1,6 +1,7 @@
 // /* This file is for your main application css. */
 // @import "./phoenix.css";
 /* Alerts and form errors */
+
 .alert {
   padding: 15px;
   margin-bottom: 20px;
@@ -589,3 +590,35 @@ svg#bandScope {
 .scopeButtons button {
   width: 200px;
 }
+
+
+.sliderWrapper {
+  height: 30px;
+}
+
+#AudioGainSlider {
+  width: 300px;
+  height: 100%;
+}
+
+.noUi-target {
+    // padding: 0 17px;
+}
+.noUi-connects {
+    // margin: 0 -17px;
+    // width: calc(100% + 34px);
+}
+.noUi-handle { 
+  height: 15px;
+  border: 1px solid green;
+}
+.noUi-handle.noUi-handle-lower {
+  // background-color: blue;
+  height: 29px;
+  width: 30px;
+  margin-left: 30px;
+  &:hover {
+    cursor: pointer;
+  }
+}
+

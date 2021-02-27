@@ -10,10 +10,10 @@ defmodule Open890Web.Live.RadioLive.Bandscope do
   alias Open890Web.Live.Dispatch
   alias Open890Web.Live.RadioSocketState
 
-  @impl true
-  def render(assigns) do
-    Phoenix.View.render(Open890Web.RadioLiveView, "radio_live.html", assigns)
-  end
+  # @impl true
+  # def render(assigns) do
+  #   Phoenix.View.render(Open890Web.RadioLiveView, "radio_live.html", assigns)
+  # end
 
   @impl true
   def mount(%{"id" => connection_id} = params, _session, socket) do

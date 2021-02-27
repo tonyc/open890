@@ -10,10 +10,11 @@ defmodule Open890Web.Live.RadioLive.Buttons do
   alias Open890Web.Live.Dispatch
   alias Open890Web.Live.RadioSocketState
 
-  @impl true
-  def render(assigns) do
-    Phoenix.View.render(Open890Web.RadioLiveView, "buttons_live.html", assigns)
-  end
+  # @impl true
+  # def render(assigns) do
+  #   IO.puts("****** buttons render()")
+  #   Phoenix.View.render(Open890Web.RadioLiveView, "buttons_live.html", assigns)
+  # end
 
   @impl true
   def mount(%{"id" => connection_id} = params, _session, socket) do

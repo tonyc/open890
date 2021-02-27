@@ -26,6 +26,28 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
         {:noreply, socket}
       end
 
+      def handle_event("audio_gain_changed", params , %{assigns: %{radio_connection: connection}} = socket) do
+        with {value, _extra} <- params["audioGain"] |> Integer.parse() do
+          connection |> Radio.set_audio_gain(value)
+        else
+          other ->
+            Logger.info("Unable to parse audio gain: #{inspect(other)}")
+        end
+
+        {:noreply, socket}
+      end
+
+      def handle_event("rf_gain_changed", params , %{assigns: %{radio_connection: connection}} = socket) do
+        with {value, _extra} <- params["rfGain"] |> Integer.parse() do
+          connection |> Radio.set_rf_gain(value)
+        else
+          other ->
+            Logger.info("Unable to parse RF gain: #{inspect(other)}")
+        end
+
+        {:noreply, socket}
+      end
+
       @impl true
       def handle_event("mic_up", _params, %{assigns: %{radio_connection: connection}} = socket) do
         connection |> Radio.ch_up()
@@ -73,6 +95,7 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
       def handle_event("set_theme", %{"theme" => theme_name} = _params, socket) do
         {:noreply, socket |> assign(:theme, theme_name)}
       end
+
 
       def handle_event("open_menu_by_id", %{"id" => menu_id} = _params, socket) do
         menu_id = menu_id |> String.to_integer()

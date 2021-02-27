@@ -86,6 +86,16 @@ defmodule Open890.ConnectionCommands do
     conn |> cmd("BSC")
   end
 
+  def set_audio_gain(conn, value) when is_integer(value) do
+    value = value |> to_string() |> String.pad_leading(3, "0")
+    conn |> cmd("AG" <> value)
+  end
+
+  def set_rf_gain(conn, value) when is_integer(value) do
+    value = value |> to_string() |> String.pad_leading(3, "0")
+    conn |> cmd("RG" <> value)
+  end
+
   def set_ref_level(conn, db_value) when is_float(db_value) do
     cmd_value =
       ((db_value + 20) * 2)
