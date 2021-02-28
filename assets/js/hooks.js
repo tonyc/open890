@@ -15,62 +15,6 @@ let Hooks = {
     }
   },
 
-  //AudioGainControl: {
-  //  mounted() {
-  //    this.changing = false;
-  //    console.log("audioGainSlider mounted")
-  //    var el = document.getElementById('AudioGainSlider')
-  //    var value = this.el.dataset.value;
-
-  //    console.log("value:", value);
-  //    var me = this;
-  //    console.log("About to create nouislider")
-  //    this.slider = noUiSlider.create(el, {
-  //      step: 1,
-  //      start: el.dataset.value,
-  //      range: {
-  //        'min': [0],
-  //        'max': [255]
-  //      }
-  //    })
-  //    this.slider.set([128])
-  //    this.slider.on('start', function(values) {
-  //      this.changing = true;
-  //      console.log("start")
-  //    });
-  //    this.slider.on('change.end', function(values) {
-  //      setTimeout(function() {
-  //        console.log("timeout!")
-  //        this.changing = false;
-  //      }, 1000)
-  //    })
-  //    console.log("slider created")
-
-  //    this.slider.on('slide', function(values, handle) {
-  //      console.log('slider.on.update:', values)
-  //      if (!this.changing) {
-  //        console.log("on.update: we are not changing, do nothing")
-  //      } else {
-  //        console.log("on.update: we are changing, push event")
-  //        let value = parseInt(values[0])
-  //        me.pushEvent('set_audio_gain', {value: value})
-  //      }
-  //    })
-  //  },
-  //  updated() {
-  //    let value = this.el.dataset.value;
-
-  //    if (this.changing) {
-  //      console.log("changing, not setting slider state")
-  //    } else {
-  //      console.log("not changing, setting slider value")
-  //      this.el.noUiSlider.set([value])
-  //    }
-  //  },
-  //  clearFlag() {
-  //    this.changing = false;
-  //  }
-  //},
   MultiCH: {
     mounted() {
       this.el.addEventListener("wheel", event => {
@@ -81,6 +25,7 @@ let Hooks = {
       })
     }
   },
+
   BandScope: {
     tuneToClick(event) {
       event.preventDefault()
