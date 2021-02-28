@@ -35,34 +35,34 @@ let liveSocket = new LiveSocket("/live", Socket, {
 })
 liveSocket.connect()
 
-let audioScopeChannel = socket.channel("radio:audio_scope", {})
-audioScopeChannel.join()
-  .receive("ok", resp => { console.log("joined audio_scope channel", resp) })
-  .receive("error", resp => { console.log("error joining audio_scope channel", resp) })
+//let audioScopeChannel = socket.channel("radio:audio_scope", {})
+//audioScopeChannel.join()
+//  .receive("ok", resp => { console.log("joined audio_scope channel", resp) })
+//  .receive("error", resp => { console.log("error joining audio_scope channel", resp) })
 
 
-let audioStreamChannel = socket.channel("radio:audio_stream", {})
-audioStreamChannel.join()
-  .receive("ok", resp => { console.log("Joined audio STREAM successfully", resp) })
-  .receive("error", resp => { console.log("Unable to join", resp) })
+//let audioStreamChannel = socket.channel("radio:audio_stream", {})
+//audioStreamChannel.join()
+//  .receive("ok", resp => { console.log("Joined audio STREAM successfully", resp) })
+//  .receive("error", resp => { console.log("Unable to join", resp) })
 
-let audioCount = 0
+//let audioCount = 0
 
-audioStreamChannel.on("audio_data", (data) => {
-  let buffer = []
-  let decoded = atob(data.payload)
+//audioStreamChannel.on("audio_data", (data) => {
+//  let buffer = []
+//  let decoded = atob(data.payload)
 
-  for (var i = 0; i < decoded.length; i++) {
-    buffer.push(decoded.charCodeAt(i))
-  }
+//  for (var i = 0; i < decoded.length; i++) {
+//    buffer.push(decoded.charCodeAt(i))
+//  }
 
-  audioCount += 1
+//  audioCount += 1
 
-  if (audioCount % 500 == 0) {
-    console.log("Received", audioCount, "audio packets")
-    console.log("buffer", buffer);
-  }
-})
+//  if (audioCount % 500 == 0) {
+//    console.log("Received", audioCount, "audio packets")
+//    console.log("buffer", buffer);
+//  }
+//})
 
 $(document).ready(function() {
   if (document.querySelector('#emptyState')) {
