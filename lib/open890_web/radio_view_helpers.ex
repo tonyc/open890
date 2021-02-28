@@ -78,9 +78,26 @@ defmodule Open890Web.RadioViewHelpers do
     "A = B" |> cmd_button("VV", opts)
   end
 
+  def vfo_mem_switch_button(vfo_mem_state) do
+    "M / V" |> cmd_button(vfo_mem_switch_command(vfo_mem_state))
+  end
+
+  defp vfo_mem_switch_command(:vfo), do: "MV1"
+  defp vfo_mem_switch_command(:memory), do: "MV0"
+
   # converts the kenwood ref level (BSC) command number to a dB value from -20 to +10
   def format_ref_level(ref_level) do
     ref_level / 2.0 - 20
+  end
+
+  def format_vfo_memory_state(state) do
+    case state do
+      :vfo -> "VFO"
+      :memory -> "MEM"
+      _ ->
+        Logger.warn("Unknown vfo memory state: #{inspect(state)}")
+        "UNKNOWN"
+    end
   end
 
   def format_band_scope_mode(mode) do
@@ -387,6 +404,18 @@ defmodule Open890Web.RadioViewHelpers do
     |> Map.drop([:__changed__, :socket])
     |> Map.drop(opts |> Keyword.get(:except, []))
     |> inspect(pretty: true, limit: :infinity, charlists: :as_lists)
+  end
+
+  def vfo_mem_indicator(vfo_mem_state) do
+    ~e{
+      <span class="ui tiny grey inverted label"><%= format_vfo_memory_state(vfo_mem_state) %></span>
+    }
+  end
+
+  def mode_indicator(mode) do
+    ~e{
+      <span class="ui tiny grey label"><%= format_mode(mode) %></span>
+    }
   end
 
   def render_menu_items(id) do

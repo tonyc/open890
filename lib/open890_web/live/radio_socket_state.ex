@@ -45,7 +45,8 @@ defmodule Open890Web.Live.RadioSocketState do
     {:ssb_filter_mode, nil},
     {:theme, "kenwood"},
     {:vfo_a_frequency, ""},
-    {:vfo_b_frequency, ""}
+    {:vfo_b_frequency, ""},
+    {:vfo_memory_state, nil}
   ]
 
   def initial_state do

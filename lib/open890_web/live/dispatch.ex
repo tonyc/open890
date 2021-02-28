@@ -6,6 +6,11 @@ defmodule Open890Web.Live.Dispatch do
 
   import Phoenix.LiveView, only: [assign: 3, push_event: 3]
 
+  def dispatch("MV" <> _rest = msg, socket) do
+    value = msg |> Extract.vfo_memory_state()
+    socket |> assign(:vfo_memory_state, value)
+  end
+
   def dispatch("BP" <> _rest = msg, socket) do
     value = msg |> Extract.notch_filter()
     socket |> assign(:notch_filter, value)

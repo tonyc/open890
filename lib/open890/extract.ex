@@ -247,6 +247,15 @@ defmodule Open890.Extract do
     end
   end
 
+  def vfo_memory_state(str) when is_binary(str) do
+    str
+    |> String.trim_leading("MV")
+    |> case do
+      "0" -> :vfo
+      _ -> :memory
+    end
+  end
+
   def power_level(str) when is_binary(str) do
     str |> trim_to_integer(["PC"])
   end

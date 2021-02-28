@@ -19,12 +19,17 @@ defmodule Open890.ConnectionCommands do
     conn |> get_display_screen()
     conn |> get_rf_pre_att()
     conn |> get_ref_level()
+    conn |> get_vfo_memory_state()
     conn |> monitor_meters()
     conn |> get_data_speed()
     conn |> get_audio_gain()
     conn |> get_rf_gain()
     conn |> get_power_level()
     conn |> get_notch_states()
+  end
+
+  def get_vfo_memory_state(conn) do
+    conn |> cmd("MV")
   end
 
   def get_notch_states(conn) do

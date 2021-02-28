@@ -181,55 +181,50 @@
       <div class="eight wide column center aligned">
 
         <!-- VFO indicator -->
-        <div class="ui row">
-          <div id="vfos" class="eight column row">
-            <%= if @active_receiver == :a do %>
-              <span class="ui black label"><%= format_mode(@active_mode) %></span>
-              <div class="freq active"><%= @active_frequency |> format_raw_frequency() %></div>
-              <div class="bandIndicator">
-                <div class="receiver">
-                  <span class="bandPointer">◀</span>
-                  <span class="receiverIndicator active">A</span>
-                  <span class="bandPointer"> </span>
-                </div>
-                <div>
-                  <span class="bandPointer"></span>
-                  <span class="receiverIndicator">B</span>
-                  <span class="bandPointer">▶</span>
-                </div>
+        <div id="frequencyDisplay" class="ui row debug">
+          <%= if @vfo_memory_state == :vfo do %>
+            <div id="vfos" class="eight column row ">
+              <%= live_component @socket, Open890Web.Live.VFODisplayComponent, %{
+                active_receiver: @active_receiver,
+                vfo_memory_state: @vfo_memory_state,
+                active_mode: @active_mode,
+                active_frequency: @active_frequency,
+                inactive_mode: @inactive_mode,
+                inactive_frequency: @inactive_frequency
+              } %>
+            </div>
+          <% else %>
+            <div class="eight column row debug">
+              <div class="column">
+                <p>Memory display not implemented yet.</p>
               </div>
-              <span class="ui black label"><%= format_mode(@inactive_mode) %></span>
-              <div class="freq inactive"><%= @inactive_frequency |> format_raw_frequency() %></div>
-            <% else %>
-              <span class="ui black label"><%= format_mode(@active_mode) %></span>
-              <div class="freq active"><%= @active_frequency |> format_raw_frequency() %></div>
-              <div class="bandIndicator">
-                <div class="receiver">
-                  <span class="bandPointer"></span>
-                  <span class="receiverIndicator">A</span>
-                  <span class="bandPointer">▶</span>
-                </div>
-                <div>
-                  <span class="bandPointer">◀</span>
-                  <span class="receiverIndicator active">B</span>
-                  <span class="bandPointer"> </span>
-                </div>
-              </div>
-              <span class="ui black label"><%= format_mode(@inactive_mode) %></span>
-              <div class="freq inactive"><%= @inactive_frequency |> format_raw_frequency() %></div>
-            <% end %>
+            </div>
+          <% end %>
+
+
+
+
+        <div class="row debug">
+          <div class="wide column">
+            <div class="ui small black ">
+              <%= if @vfo_memory_state == :vfo do %>
+                <%= vfo_switch_button(@active_receiver) %>
+                <%= vfo_equalize_button() %>
+              <%= end %>
+
+              <%= if @vfo_memory_state do %>
+                <%= vfo_mem_switch_button(@vfo_memory_state) %>
+              <% end %>
+            </div>
           </div>
         </div>
 
+        <div class="row debug">
+          <p>stuff here</p>
+        </div>
 
-
-        <div class="row">
-          <div class="wide column">
-            <div class="controlButtons column">
-              <%= vfo_switch_button(@active_receiver, class: "") %>
-              <%= vfo_equalize_button(class: "") %>
-            </div>
-          </div>
+        <div class="row debug">
+          <p>more stuff here</p>
         </div>
 
       </div>
