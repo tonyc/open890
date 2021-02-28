@@ -302,8 +302,7 @@ defmodule Open890Web.RadioViewHelpers do
     ~e{<polygon id="passband" points="<%= filter_low %>,0 <%= filter_high %>,0 <%= filter_high %>,150 <%= filter_low %>,150" />}
   end
 
-  def passband_polygon(mode, _active_frequency, _filter_lo_width, _filter_hi_shift, _scope_edges) do
-    Logger.debug("passband_polygon: unknown mode: #{inspect(mode)}")
+  def passband_polygon(_mode, _active_frequency, _filter_lo_width, _filter_hi_shift, _scope_edges) do
     ""
   end
 
@@ -359,7 +358,6 @@ defmodule Open890Web.RadioViewHelpers do
   end
 
   def audio_scope_filter_edges(_mode, _edges, _active_roofing_filter, _roofing_filter_data) do
-    Logger.debug("Skipping audio scope filter edges because shift/width are not integers")
     ""
   end
 
