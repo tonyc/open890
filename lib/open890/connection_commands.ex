@@ -11,6 +11,7 @@ defmodule Open890.ConnectionCommands do
     conn |> get_modes()
     conn |> get_filter_modes()
     conn |> get_filter_state()
+    conn |> get_roofing_filter_info()
     conn |> get_band_scope_limits()
     conn |> get_band_scope_mode()
     conn |> get_band_scope_avg()
@@ -47,9 +48,7 @@ defmodule Open890.ConnectionCommands do
     conn |> cmd("RG")
   end
 
-
   def esc(conn), do: conn |> cmd("DS3")
-
   def ch_up(conn), do: conn |> cmd("CH0")
   def ch_down(conn), do: conn |> cmd("CH1")
 
