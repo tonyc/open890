@@ -78,8 +78,8 @@ defmodule Open890Web.RadioViewHelpers do
     "A = B" |> cmd_button("VV", opts)
   end
 
-  def vfo_mem_switch_button(vfo_mem_state) do
-    "M / V" |> cmd_button(vfo_mem_switch_command(vfo_mem_state))
+  def vfo_mem_switch_button(vfo_mem_state, opts \\ []) do
+    "M / V" |> cmd_button(vfo_mem_switch_command(vfo_mem_state), opts)
   end
 
   defp vfo_mem_switch_command(:vfo), do: "MV1"
