@@ -39,132 +39,118 @@
           <h1>Band Selector</h1>
         </div>
         <div class="content">
-          <div class="ui equal width grid stackable">
-            <div class="row">
-              <div class="column">
-                <%= cmd_button "1.8", "BU000", class: "huge fluid" %>
-              </div>
-              <div class="column">
-                <%= cmd_button "3.5", "BU001", class: "huge fluid" %>
-              </div>
-              <div class="column">
-                <%= cmd_button "7", "BU002", class: "huge fluid" %>
-              </div>
-            </div>
-            <div class="row">
-              <div class="column">
-                <%= cmd_button "10", "BU003", class: "huge fluid" %>
-              </div>
-              <div class="column">
-                <%= cmd_button "14", "BU004", class: "huge fluid" %>
-              </div>
-              <div class="column">
-                <%= cmd_button "18", "BU005", class: "huge fluid" %>
-              </div>
-            </div>
-            <div class="row">
-              <div class="column">
-                <%= cmd_button "21", "BU006", class: "huge fluid" %>
-              </div>
-              <div class="column">
-                <%= cmd_button "24", "BU007", class: "huge fluid" %>
-              </div>
-              <div class="column">
-                <%= cmd_button "28", "BU008", class: "huge fluid" %>
-              </div>
-            </div>
-            <div class="row">
-              <div class="column">
-                <%= cmd_button "50", "BU009", class: "huge fluid" %>
-              </div>
-              <div class="column">
-              </div>
-              <div class="column">
-                <%= cmd_button "GEN", "BU010", class: "huge fluid" %>
-              </div>
-            </div>
 
-          </div>
 
         </div>
       </div>
     </div>
 
-    <div class="row">
+    <div class="row debug">
       <div class="four wide column computer only tablet only">
-
         <div id="sMeterWrapper">
-          <%= live_component @socket, Open890Web.Live.DigitalMeterComponent, %{
-            s_meter: @s_meter,
-            alc_meter: @alc_meter,
-            swr_meter: @swr_meter
-          } %>
+          <%= live_component @socket, Open890Web.Live.DigitalMeterComponent,
+                                      s_meter: @s_meter,
+                                      alc_meter: @alc_meter,
+                                      swr_meter: @swr_meter %>
         </div>
 
       </div> <!-- column containing smeterWrapper -->
 
-      <div class="eight wide column center aligned">
+      <div class="eight wide column center aligned debug">
+        <div class="ui container">
+          <div class="ui grid sixteen wide">
+            <div id="frequencyDisplay" class="ui row debug">
 
-        <!-- VFO indicator -->
-        <div id="frequencyDisplay" class="ui row debug">
-          <%= case @vfo_memory_state do %>
-          <%= :vfo -> %>
-            <div id="vfos" class="eight column row ">
-              <%= live_component @socket, Open890Web.Live.VFODisplayComponent, %{
-                active_receiver: @active_receiver,
-                active_mode: @active_mode,
-                inactive_mode: @inactive_mode,
-                active_frequency: @active_frequency,
-                inactive_frequency: @inactive_frequency,
-                vfo_memory_state: @vfo_memory_state,
-              } %>
-            </div>
-          <%= :memory -> %>
-            <div id="memoryDisplay" class="eight column row debug">
-              <div class="column">
-                <p>Memory display not implemented yet.</p>
-              </div>
-            </div>
-          <% _ -> %>
-          <% end %>
-        </div>
+              <%= case @vfo_memory_state do %>
+              <%= :vfo -> %>
+                <div id="vfos" class="eight column row ">
+                  <%= live_component @socket, Open890Web.Live.VFODisplayComponent,
+                                              active_frequency: @active_frequency,
+                                              active_mode: @active_mode,
+                                              active_receiver: @active_receiver,
+                                              inactive_frequency: @inactive_frequency,
+                                              inactive_mode: @inactive_mode,
+                                              vfo_memory_state: @vfo_memory_state %>
+                </div>
+              <%= :memory -> %>
+                <div id="memoryDisplay" class="eight column row debug">
+                  <div class="column">
+                    <p>Memory display not implemented yet.</p>
+                  </div>
+                </div>
+              <% _ -> %>
+              <% end %>
+            </div> <!-- frequencyDisplay -->
 
-        <div class="row grid">
-          <div class="column">
-            <div class="">
-              <%= if @vfo_memory_state == :vfo do %>
-                <%= vfo_switch_button(@active_receiver, class: "ui small grey button") %>
-                <%= vfo_equalize_button(class: "ui small grey button") %>
-              <%= end %>
-
-              <%= if @vfo_memory_state do %>
-                <%= vfo_mem_switch_button(@vfo_memory_state, class: "ui small grey button") %>
+            <!-- left -->
+            <div class="four wide column debug">
+              <%= if @audio_gain do %>
+                <form id="AudioGain" phx-change="audio_gain_changed" style="">
+                  Audio Gain
+                  <input id="audioGainInput" name="audioGain" type="number" min="0" max="255" step="5" value="<%= @audio_gain %>"></input>
+                </form>
+              <% end %>
+              <%= if @rf_gain do %>
+                <form id="RFGain" phx-change="rf_gain_changed" style="">
+                  RF Gain
+                  <input id="rfGainInput" name="rfGain" type="number" min="0" max="255" step="5" value="<%= @rf_gain %>"></input>
+                </form>
               <% end %>
             </div>
+
+            <!-- middle -->
+            <div class="eight wide column ">
+              <div class="column ">
+                <%= if @vfo_memory_state == :vfo do %>
+                  <%= vfo_equalize_button(class: "ui small black button") %>
+                  <%= vfo_switch_button(@active_receiver, class: "ui small black button") %>
+                <% end %>
+                <%= if @vfo_memory_state do %>
+                  <%= vfo_mem_switch_button(@vfo_memory_state, class: "ui small black button") %>
+                <% end %>
+              </div>
+            </div>
+
+            <!-- right -->
+            <div class="four wide column debug">
+              <div class="ui container">
+                <%# <div class="ui three column grid">
+                  <div class="column">
+                    <button class="ui button small black ">Notch</button>
+                  </div>
+                  <div class="column">
+                    <button class="ui button small black ">NR</button>
+                  </div>
+                  <div class="column">
+                    <button class="ui button small black ">BC</button>
+                  </div>
+                  <div class="column">
+                    <button class="ui button small black ">NB1</button>
+                  </div>
+                  <div class="column">
+                    <button class="ui button small black ">NB2</button>
+                  </div>
+                  <div class="column">
+                    <button class="ui button small black ">AGC</button>
+                  </div>
+                </div> %>
+              </div>
+            </div>
           </div>
-        </div>
-
-        <div class="row debug">
-          <p>stuff here</p>
-        </div>
-
-        <div class="row debug">
-          <p>more stuff here</p>
-        </div>
+        </div> <!-- container -->
 
       </div>
 
       <div class="four wide right aligned column computer only tablet only ">
-        <%= live_component @socket, Open890Web.Live.AudioScopeComponent, %{
-          theme: @theme,
-          active_if_filter: @active_if_filter,
-          audio_scope_data: @audio_scope_data,
-          roofing_filter_data: @roofing_filter_data,
-          active_mode: @active_mode,
-          filter_lo_width: @filter_lo_width,
-          filter_hi_shift: @filter_hi_shift,
-          active_if_filter: @active_if_filter,
-        } %>
+        <%= live_component @socket, Open890Web.Live.AudioScopeComponent,
+                                    active_if_filter: @active_if_filter,
+                                    active_if_filter: @active_if_filter,
+                                    active_mode: @active_mode,
+                                    audio_scope_data: @audio_scope_data,
+                                    filter_hi_shift: @filter_hi_shift,
+                                    filter_lo_width: @filter_lo_width,
+                                    roofing_filter_data: @roofing_filter_data,
+                                    theme: @theme %>
       </div> <!-- column containing audioScopeWrapper -->
 
     </div> <!-- row -->
@@ -187,16 +173,16 @@
             <button class="ui black button">Range: (fixme)</button>
           <% else %>
             <%= cycle_label_button("Span", @band_scope_span,
-            %{
-              5 => %{label: "5 kHz", cmd: "BS41"},
-              10 => %{label: "10 kHz", cmd: "BS42"},
-              20 =>  %{label: "20 kHz", cmd: "BS43"},
-              30 =>  %{label: "30 kHz", cmd: "BS44"},
-              50 =>  %{label: "50 kHz", cmd: "BS45"},
-              100 => %{label: "100 kHz", cmd: "BS46"},
-              200 => %{label: "200 kHz", cmd: "BS47"},
-              500 => %{label: "500 kHz", cmd: "BS40"},
-            }, class: "black") %>
+              %{
+                5 => %{label: "5 kHz", cmd: "BS41"},
+                10 => %{label: "10 kHz", cmd: "BS42"},
+                20 =>  %{label: "20 kHz", cmd: "BS43"},
+                30 =>  %{label: "30 kHz", cmd: "BS44"},
+                50 =>  %{label: "50 kHz", cmd: "BS45"},
+                100 => %{label: "100 kHz", cmd: "BS46"},
+                200 => %{label: "200 kHz", cmd: "BS47"},
+                500 => %{label: "500 kHz", cmd: "BS40"},
+              }, class: "black") %>
           <% end %>
 
           <%= case @band_scope_mode do %>
@@ -244,22 +230,23 @@
                 3 => %{label: "3", cmd: "BSA0"},
               }, class: "black") %>
           <% end %>
+
         </div> <!-- ui buttons -->
+
       </div>
     </div>
 
     <div id="bandScopeContainer" class="row">
       <div class="wide column">
-        <%= live_component @socket, Open890Web.Live.BandScopeComponent, %{
-          band_scope_mode: @band_scope_mode,
-          band_scope_data: @band_scope_data,
-          band_scope_edges: @band_scope_edges,
-          filter_hi_shift: @filter_hi_shift,
-          filter_lo_width: @filter_lo_width,
-          active_mode: @active_mode,
-          active_frequency: @active_frequency,
-          theme: @theme
-        } %>
+        <%= live_component @socket, Open890Web.Live.BandScopeComponent,
+                                    active_frequency: @active_frequency,
+                                    active_mode: @active_mode,
+                                    band_scope_data: @band_scope_data,
+                                    band_scope_edges: @band_scope_edges,
+                                    band_scope_mode: @band_scope_mode,
+                                    filter_hi_shift: @filter_hi_shift,
+                                    filter_lo_width: @filter_lo_width,
+                                    theme: @theme %>
       </div>
   </div>
 
