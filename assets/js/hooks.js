@@ -2,6 +2,20 @@ import Interpolate from "./interpolate"
 import ColorMap from "./colormap"
 
 let Hooks = {
+  ActiveVFO: {
+    mounted() {
+      console.log("ActiveVFO mounted")
+      this.el.addEventListener("click", event => {
+        this.pushEvent("toggle_band_selector")
+      })
+
+      this.el.addEventListener("wheel", event => {
+        event.preventDefault()
+        console.log("VFO wheel", event)
+      })
+    }
+
+  },
   RefLevelControl: {
     mounted() {
       console.log("ref level mount")

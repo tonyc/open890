@@ -33,17 +33,24 @@
       </div>
     <% end %>
 
-    <div class="ui inactive dimmer">
-      <div id="utilityModal" class="ui inactive modal" style="">
-        <div class="header">
-          <h1>Band Selector</h1>
-        </div>
-        <div class="content">
-
-
+    <%= if @display_band_selector do %>
+      <div class="ui active top aligned page dimmer">
+        <div class="ui active modal">
+          <div class="header">
+            <h1>Band Selector</h1>
+          </div>
+          <div class="content">
+            <%= live_component @socket, BandButtonsComponent %>
+          </div>
+          <div class="actions">
+            <div class="ui icon button" phx-click="toggle_band_selector">
+              <i class="close icon"></i>
+              Close
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    <% end %>
 
     <div class="row _debug">
       <div class="four wide column computer only tablet only">
@@ -63,7 +70,7 @@
 
               <%= case @vfo_memory_state do %>
               <%= :vfo -> %>
-                <div id="" class="eight column row ">
+                <div class="eight column row">
                   <%= live_component @socket, Open890Web.Live.VFODisplayComponent,
                                               active_frequency: @active_frequency,
                                               active_mode: @active_mode,

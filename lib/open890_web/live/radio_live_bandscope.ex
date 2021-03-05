@@ -9,6 +9,7 @@ defmodule Open890Web.Live.RadioLive.Bandscope do
   alias Open890.ConnectionCommands
   alias Open890Web.Live.Dispatch
   alias Open890Web.Live.RadioSocketState
+  alias Open890Web.Live.BandButtonsComponent
 
   # @impl true
   # def render(assigns) do
@@ -91,6 +92,13 @@ defmodule Open890Web.Live.RadioLive.Bandscope do
   end
 
   def handle_info(%Broadcast{}, socket) do
+    {:noreply, socket}
+  end
+
+  def handle_event("toggle_band_selector", _params, socket) do
+    new_state = !socket.assigns.display_band_selector
+
+    socket = assign(socket, :display_band_selector, new_state)
     {:noreply, socket}
   end
 end

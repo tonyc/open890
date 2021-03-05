@@ -312,6 +312,11 @@ nav {
       color: white;
       font-size: 4rem;
       text-align: right;
+
+      &:hover {
+        cursor: pointer;
+        text-decoration: underline;
+      }
     }
 
     &.inactive {

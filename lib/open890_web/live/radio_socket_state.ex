@@ -1,5 +1,6 @@
 defmodule Open890Web.Live.RadioSocketState do
   @init_socket [
+    {:display_band_selector, false},
     {:radio_connection, nil},
     {:connection_state, nil},
     {:data_speed, nil},
