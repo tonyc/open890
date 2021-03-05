@@ -252,7 +252,11 @@ nav {
 }
 
 #audioScopeWrapper {
-  float: right;
+  // float: right;
+  #audioScope, #AudioScopeCanvas {
+    width: 100%;
+  }
+  
   #audioScope {
     //border-radius: $border-radius-small;
     border-top: 2px solid $kenwood-grey;
@@ -263,8 +267,7 @@ nav {
 
     background-color: black;
     fill: #999;
-    width: 75%;
-    float: right;
+    // float: right;
 
     #audioScopeFilter {
       fill: none;
@@ -296,10 +299,9 @@ nav {
     border-right: 2px solid $kenwood-grey;
     border-bottom-left-radius: $border-radius-small;
     border-bottom-right-radius: $border-radius-small;
-    width: 75%;
-    float: right;
+    // float: right;
     // this should be 0, not sure where it's coming from
-    margin-top: 1px
+    margin-top: -5px;
   }
 }
 

@@ -148,16 +148,28 @@
 
       </div>
 
-      <div class="four wide right aligned column computer only tablet only ">
-        <%= live_component @socket, Open890Web.Live.AudioScopeComponent,
-                                    active_if_filter: @active_if_filter,
-                                    active_if_filter: @active_if_filter,
-                                    active_mode: @active_mode,
-                                    audio_scope_data: @audio_scope_data,
-                                    filter_hi_shift: @filter_hi_shift,
-                                    filter_lo_width: @filter_lo_width,
-                                    roofing_filter_data: @roofing_filter_data,
-                                    theme: @theme %>
+      <div class="ui left floated computer only tablet only four wide column">
+        <div class="row ui grid">
+          <div class="four wide column right aligned">
+            <div class="ui vertical buttons">
+              <%= cmd_button "FIL A", "FL00", class: "ui tiny black button" %>
+              <%= cmd_button "FIL B", "FL01", class: "ui tiny black button" %>
+              <%= cmd_button "FIL C", "FL02", class: "ui tiny black button" %>
+            </div>
+          </div>
+
+          <div class="twelve wide right floated right aligned column">
+            <%= live_component @socket, Open890Web.Live.AudioScopeComponent,
+                                        active_if_filter: @active_if_filter,
+                                        active_if_filter: @active_if_filter,
+                                        active_mode: @active_mode,
+                                        audio_scope_data: @audio_scope_data,
+                                        filter_hi_shift: @filter_hi_shift,
+                                        filter_lo_width: @filter_lo_width,
+                                        roofing_filter_data: @roofing_filter_data,
+                                        theme: @theme %>
+          </div>
+        </div>
       </div> <!-- column containing audioScopeWrapper -->
 
     </div> <!-- row -->
