@@ -5,6 +5,7 @@ defmodule Open890.ConnectionCommands do
 
   def get_initial_state(%RadioConnection{} = conn) do
     conn |> get_active_receiver()
+    conn |> get_band_scope_limits()
     conn |> get_vfo_a_freq()
     conn |> get_vfo_b_freq()
     conn |> get_s_meter()
@@ -12,7 +13,6 @@ defmodule Open890.ConnectionCommands do
     conn |> get_filter_modes()
     conn |> get_filter_state()
     conn |> get_roofing_filter_info()
-    conn |> get_band_scope_limits()
     conn |> get_band_scope_mode()
     conn |> get_band_scope_avg()
     conn |> get_band_scope_att()
