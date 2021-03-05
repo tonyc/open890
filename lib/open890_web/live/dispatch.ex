@@ -109,6 +109,14 @@ defmodule Open890Web.Live.Dispatch do
         |> assign(:inactive_frequency, frequency)
       end
 
+    socket = if socket.assigns[:band_scope_mode] == :center && socket.assigns.active_receiver == :a do
+      band_scope_edges = calculate_center_mode_edges(socket.assigns.active_frequency, socket.assigns.band_scope_span)
+
+      socket |> assign(:band_scope_edges, band_scope_edges)
+    else
+      socket
+    end
+
     socket |> vfo_a_updated()
   end
 
@@ -126,6 +134,13 @@ defmodule Open890Web.Live.Dispatch do
         |> assign(:inactive_frequency, frequency)
       end
 
+    socket = if socket.assigns[:band_scope_mode] == :center && socket.assigns.active_receiver == :b do
+      band_scope_edges = calculate_center_mode_edges(socket.assigns.active_frequency, socket.assigns.band_scope_span)
+
+      socket |> assign(:band_scope_edges, band_scope_edges)
+    else
+      socket
+    end
     socket
   end
 
@@ -317,5 +332,15 @@ defmodule Open890Web.Live.Dispatch do
       :a -> socket.assigns.vfo_a_frequency
       :b -> socket.assigns.vfo_b_frequency
     end
+  end
+
+  defp calculate_center_mode_edges(freq, span_khz) do
+    span = span_khz * 1000
+    half_span = span |> div(2)
+
+    bs_low = freq - half_span
+    bs_high = freq + half_span
+
+    {bs_low, bs_high}
   end
 end
