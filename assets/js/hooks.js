@@ -9,10 +9,9 @@ let Hooks = {
         this.pushEvent("toggle_band_selector")
       })
 
-      this.el.addEventListener("wheel", event => {
-        event.preventDefault()
-        console.log("VFO wheel", event)
-      })
+      // this.el.addEventListener("wheel", event => {
+      //   event.preventDefault()
+      // })
     }
 
   },
@@ -55,11 +54,25 @@ let Hooks = {
     },
     mounted() {
       this.el.addEventListener("wheel", event => {
+        // This is duplicated in the BandScopeCanvas hook below
+        event.preventDefault();
+        console.log("VFO wheel", event)
+
+        var isScrollUp = (event.deltaY < 0);
+        var stepSize = 5;
+
         if (event.shiftKey) {
-          event.preventDefault();
-          var isScrollUp = (event.deltaY < 0)
-          this.pushEvent("multi_ch", {is_up: isScrollUp})
+          stepSize = 0
+        } else if(event.altKey) {
+          stepSize = 3
         }
+
+        if (isScrollUp) {
+          this.pushEvent("step_tune_up", {stepSize: stepSize})
+        } else {
+          this.pushEvent("step_tune_down", {stepSize: stepSize})
+        }
+
       });
 
       this.el.addEventListener("mousemove", event => {
@@ -196,10 +209,23 @@ let Hooks = {
       })
 
       this.el.addEventListener("wheel", event => {
+        // this is duplicated in the BandScope hooks above
+        event.preventDefault();
+        console.log("VFO wheel", event)
+
+        var isScrollUp = (event.deltaY < 0);
+        var stepSize = 5;
+
         if (event.shiftKey) {
-          event.preventDefault();
-          var isScrollUp = (event.deltaY < 0)
-          this.pushEvent("multi_ch", {is_up: isScrollUp})
+          stepSize = 0
+        } else if(event.altKey) {
+          stepSize = 3
+        }
+
+        if (isScrollUp) {
+          this.pushEvent("step_tune_up", {stepSize: stepSize})
+        } else {
+          this.pushEvent("step_tune_down", {stepSize: stepSize})
         }
       });
 
