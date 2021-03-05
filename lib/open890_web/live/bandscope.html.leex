@@ -34,10 +34,13 @@
     <% end %>
 
     <%= if @display_band_selector do %>
-      <div class="ui active top aligned page dimmer">
+      <div class="ui active page dimmer">
         <div class="ui active modal">
           <div class="header">
-            <h1>Band Selector</h1>
+            <h1 class="ui huge header activeFrequency tip">
+              <%= @active_frequency |> format_raw_frequency() %>
+              <div class="ui sub header activeMode tip"><%= @active_mode |> format_mode() %></div>
+            </h1>
           </div>
           <div class="content">
             <%= live_component @socket, BandButtonsComponent %>
