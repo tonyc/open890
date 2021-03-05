@@ -34,7 +34,7 @@
     <% end %>
 
     <%= if @display_band_selector do %>
-      <div class="ui active top aligned page dimmer">
+      <div class="ui active top aligned page dimmer" phx-click="dimmer_clicked">
         <div class="ui active modal">
           <div class="header">
             <h1>Band Selector</h1>

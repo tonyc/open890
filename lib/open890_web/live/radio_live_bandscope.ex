@@ -119,15 +119,26 @@ defmodule Open890Web.Live.RadioLive.Bandscope do
 
   # close any open modals
   def handle_event("window_keyup", %{"key" => "Escape"} = _params, socket) do
-    socket = socket |> assign(display_band_selector: false, display_screen_id: 0)
-
-    {:noreply, socket}
+    {:noreply, close_modals(socket)}
   end
 
   def handle_event("window_keyup", params, socket) do
     Logger.debug("window_keyup: #{inspect(params)}")
 
     {:noreply, socket}
+  end
+
+  def handle_event("dimmer_clicked", _params, socket) do
+    {:noreply, close_modals(socket)}
+  end
+
+  def handle_event(event, params, socket) do
+    Logger.warn("RadioLive.Bandscope: Unknown event: #{event}, params: #{inspect(params)}")
+    {:noreply, socket}
+  end
+
+  defp close_modals(socket) do
+    socket |> assign(display_band_selector: false, display_screen_id: 0)
   end
 
 end
