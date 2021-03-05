@@ -119,7 +119,7 @@ defmodule Open890Web.Live.RadioLive.Bandscope do
 
   # close any open modals
   def handle_event("window_keyup", %{"key" => "Escape"} = _params, socket) do
-    socket = socket |> assign(:display_band_selector, false)
+    socket = socket |> assign(display_band_selector: false, display_screen_id: 0)
 
     {:noreply, socket}
   end
