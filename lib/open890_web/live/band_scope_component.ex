@@ -31,17 +31,10 @@ defmodule Open890Web.Live.BandScopeComponent do
             </g>
           <% end %>
 
-          <%= if @band_scope_mode == :center do %>
-            <%= if @filter_hi_shift && @filter_lo_width do %>
-              <%= center_mode_passband_polygon(@active_mode, @active_frequency, @filter_lo_width, @filter_hi_shift, @band_scope_edges) %>
-              <%= center_carrier_line() %>
-            <% end %>
-          <% else %>
             <%= if @band_scope_edges && @filter_hi_shift && @filter_lo_width do %>
               <%= passband_polygon(@active_mode, @active_frequency, @filter_lo_width, @filter_hi_shift, @band_scope_edges) %>
               <%= carrier_line(@active_frequency, @band_scope_edges) %>
             <% end %>
-          <% end %>
 
           <rect id="bandscopeBackground" x="0" y="0" height="150" width="1280" pointer-events="visibleFill" phx-hook="BandScope" />
         </svg>
