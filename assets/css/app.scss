@@ -272,6 +272,13 @@ nav {
       stroke-width: 1px;
     }
 
+    .audioScopeLabel {
+      fill: rgba(202, 203, 205, 1.0);
+      font-size: $meter-legend-font-size;
+      font-weight: bold;
+      font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
+    }
+
   }
 
 
