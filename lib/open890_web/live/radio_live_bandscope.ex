@@ -102,8 +102,7 @@ defmodule Open890Web.Live.RadioLive.Bandscope do
     {:noreply, socket}
   end
 
-  def handle_event("step_tune_up", %{"stepSize" => step_size} = params, socket) do
-    Logger.debug("step_tune_up, params: #{inspect(params)}")
+  def handle_event("step_tune_up", %{"stepSize" => step_size} = _params, socket) do
     conn = socket.assigns.radio_connection
 
     conn |> ConnectionCommands.cmd("FC0#{step_size}")
@@ -111,9 +110,7 @@ defmodule Open890Web.Live.RadioLive.Bandscope do
     {:noreply, socket}
   end
 
-  def handle_event("step_tune_down", %{"stepSize" => step_size} = params, socket) do
-    Logger.debug("step_tune_down, params #{inspect(params)}")
-
+  def handle_event("step_tune_down", %{"stepSize" => step_size} = _params, socket) do
     conn = socket.assigns.radio_connection
 
     conn |> ConnectionCommands.cmd("FC1#{step_size}")
