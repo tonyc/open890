@@ -185,6 +185,20 @@ defmodule Open890Web.RadioViewHelpers do
     end
   end
 
+
+  def number_to_short(value) when is_integer(value) do
+    cond do
+      value == 15000 -> "15k"
+      value == 6000 -> "6k"
+      value == 2700 -> "2.7k"
+      true -> value |> to_string()
+    end
+  end
+
+  def number_to_short(_) do
+    ""
+  end
+
   def format_mode(mode) when is_atom(mode) or is_binary(mode) do
     mode
     |> to_string()
@@ -356,6 +370,7 @@ defmodule Open890Web.RadioViewHelpers do
       when mode in [:usb, :lsb] do
     ""
   end
+
 
   def audio_scope_filter_edges(_mode, _edges, _active_roofing_filter, _roofing_filter_data) do
     ""

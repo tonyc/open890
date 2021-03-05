@@ -33,7 +33,7 @@ defmodule Open890Web.Live.AudioScopeComponent do
               </text>
             </g>
 
-            <g transform="translate(170 0)">
+            <g transform="translate(160 0)">
               <text class="audioScopeLabel">
                 <%= if @active_mode in [:cw, :cw_r, :lsb, :lsb_d, :usb, :usb_d, :am, :fm] do %>
                   <%= filter_hi_shift_label(@active_mode) %>: <%= @filter_hi_shift %>
@@ -42,13 +42,18 @@ defmodule Open890Web.Live.AudioScopeComponent do
             </g>
           </g>
 
+          <g transform="translate(90 10)">
+            <text class="audioScopeLabel">
+              RFT: <%= @roofing_filter_data[@active_if_filter] |> number_to_short() %>
+            </text>
+          </g>
+
         </svg>
 
         <canvas phx-hook="AudioScopeCanvas" id="AudioScopeCanvas" data-theme="<%= @theme %>" class="waterfall" width="213" height="60"></canvas>
       </div>
     """
   end
-
 
   def filter_lo_width_label(mode) when mode in [:cw, :cw_r, :fsk, :fsk_r, :psk, :psk_r] do
     "WIDTH"

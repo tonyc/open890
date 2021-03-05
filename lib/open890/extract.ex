@@ -371,10 +371,11 @@ defmodule Open890.Extract do
         "2" -> :c
       end
 
-    filter_value =
-      raw_val
-      |> trim_to_integer(["0", "1", "2"])
-      |> Kernel.*(10)
+    filter_value = str
+    |> String.slice(-4..-1)
+    |> Integer.parse()
+    |> elem(0)
+    |> Kernel.*(10)
 
     {filter_id, filter_value}
   end
