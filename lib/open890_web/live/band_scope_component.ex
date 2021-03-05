@@ -34,8 +34,8 @@ defmodule Open890Web.Live.BandScopeComponent do
           <%= if @band_scope_mode == :center do %>
             <%= if @filter_hi_shift && @filter_lo_width do %>
               <%= center_mode_passband_polygon(@active_mode, @active_frequency, @filter_lo_width, @filter_hi_shift, @band_scope_edges) %>
+              <%= center_carrier_line() %>
             <% end %>
-            <%= center_carrier_line() %>
           <% else %>
             <%= if @band_scope_edges && @filter_hi_shift && @filter_lo_width do %>
               <%= passband_polygon(@active_mode, @active_frequency, @filter_lo_width, @filter_hi_shift, @band_scope_edges) %>

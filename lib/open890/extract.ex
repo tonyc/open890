@@ -484,6 +484,21 @@ defmodule Open890.Extract do
     str |> trim_to_integer("BS8")
   end
 
+  def band_scope_span(str) when is_binary(str) do
+    str
+    |> trim_to_integer("BS4")
+    |> case do
+      0 -> 5
+      1 -> 10
+      2 -> 20
+      3 -> 30
+      4 -> 50
+      5 -> 100
+      6 -> 200
+      7 -> 500
+    end
+  end
+
   def data_speed(str) when is_binary(str) do
     str |> trim_to_integer("DD0")
   end
