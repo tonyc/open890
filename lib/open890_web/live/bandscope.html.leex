@@ -45,7 +45,7 @@
       </div>
     </div>
 
-    <div class="row debug">
+    <div class="row _debug">
       <div class="four wide column computer only tablet only">
         <div id="sMeterWrapper">
           <%= live_component @socket, Open890Web.Live.DigitalMeterComponent,
@@ -56,10 +56,10 @@
 
       </div> <!-- column containing smeterWrapper -->
 
-      <div class="eight wide column center aligned debug">
+      <div class="eight wide column center aligned _debug">
         <div class="ui container">
           <div class="ui grid sixteen wide">
-            <div id="frequencyDisplay" class="ui row debug">
+            <div id="frequencyDisplay" class="ui row _debug">
 
               <%= case @vfo_memory_state do %>
               <%= :vfo -> %>
@@ -73,7 +73,7 @@
                                               vfo_memory_state: @vfo_memory_state %>
                 </div>
               <%= :memory -> %>
-                <div id="memoryDisplay" class="eight column row debug">
+                <div id="memoryDisplay" class="eight column row _debug">
                   <div class="column">
                     <p>Memory display not implemented yet.</p>
                   </div>
@@ -83,7 +83,7 @@
             </div> <!-- frequencyDisplay -->
 
             <!-- left -->
-            <div class="four wide column debug">
+            <div class="four wide column _debug">
               <%= if @audio_gain do %>
                 <form id="AudioGain" phx-change="audio_gain_changed" style="">
                   Audio Gain
@@ -112,7 +112,7 @@
             </div>
 
             <!-- right -->
-            <div class="four wide column debug">
+            <div class="four wide column _debug">
               <div class="ui container">
                 <%# <div class="ui three column grid">
                   <div class="column">
