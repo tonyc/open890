@@ -116,4 +116,18 @@ defmodule Open890Web.Live.RadioLive.Bandscope do
     conn |> ConnectionCommands.cmd("FC1#{step_size}")
     {:noreply, socket}
   end
+
+  # close any open modals
+  def handle_event("window_keyup", %{"key" => "Escape"} = _params, socket) do
+    socket = socket |> assign(:display_band_selector, false)
+
+    {:noreply, socket}
+  end
+
+  def handle_event("window_keyup", params, socket) do
+    Logger.debug("window_keyup: #{inspect(params)}")
+
+    {:noreply, socket}
+  end
+
 end

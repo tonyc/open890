@@ -18,7 +18,7 @@
     </div>
   <% end %>
 
-  <div id="radio" class="ui stackable doubling grid">
+  <div id="radio" class="ui stackable doubling grid" phx-window-keyup="window_keyup">
     <%= if @display_screen_id != 0 do %>
       <div id="menuModal" class="ui active modal">
         <div class="header">
