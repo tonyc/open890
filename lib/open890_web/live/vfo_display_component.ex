@@ -6,7 +6,7 @@ defmodule Open890Web.Live.VFODisplayComponent do
       <%= if @active_receiver == :a do %>
         <%= vfo_mem_indicator(@vfo_memory_state) %>
         <%= mode_indicator(@active_mode) %>
-        <div class="freq active"><%= @active_frequency |> format_raw_frequency() %></div>
+        <div id="ActiveVFO" class="freq active"><%= @active_frequency |> format_raw_frequency() %></div>
         <div class="bandIndicator">
           <div class="receiver">
             <span class="bandPointer">◀</span>
@@ -24,7 +24,7 @@ defmodule Open890Web.Live.VFODisplayComponent do
       <% else %>
         <%= vfo_mem_indicator(@vfo_memory_state) %>
         <%= mode_indicator(@active_mode) %>
-        <div class="freq active"><%= @active_frequency |> format_raw_frequency() %></div>
+        <div id="ActiveVFO" class="freq active"><%= @active_frequency |> format_raw_frequency() %></div>
         <div class="bandIndicator">
           <div class="receiver">
             <span class="bandPointer"></span>
