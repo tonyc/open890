@@ -92,13 +92,13 @@ defmodule Open890Web.Live.Dispatch do
 
     socket = socket |> assign(:band_scope_span, scope_span_khz)
 
-    # if scope_mode == :center do
+    if socket.assigns.band_scope_mode == :center do
       band_scope_edges = calculate_center_mode_edges(socket.assigns.active_frequency, socket.assigns.band_scope_span)
 
       socket |> assign(:band_scope_edges, band_scope_edges)
-    # else
-      # socket
-    # end
+    else
+      socket
+    end
   end
 
   def dispatch("BS8" <> _rest = msg, socket) do
