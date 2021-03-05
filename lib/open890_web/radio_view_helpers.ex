@@ -335,25 +335,27 @@ defmodule Open890Web.RadioViewHelpers do
       )
       when mode in [:cw, :cw_r] and is_integer(filter_lo_width) and is_integer(filter_hi_shift) and
              not is_nil(active_roofing_filter) do
+
     half_width = (filter_lo_width / 2) |> round()
 
     roofing_width = roofing_filter_data |> Map.get(active_roofing_filter)
 
-    shift =
+    half_shift =
       case mode do
         :cw_r -> filter_hi_shift
         _ -> -filter_hi_shift
       end
+      |> div(2)
 
     distance = ((half_width |> project_to_audioscope_limits(roofing_width)) / 2) |> round()
 
-    shift_projected =
-      shift
+    half_shift_projected =
+      half_shift
       |> project_to_audioscope_limits(roofing_width)
       |> round()
 
-    low_val = 106 - distance + shift_projected
-    high_val = 106 + distance + shift_projected
+    low_val = 106 - distance + half_shift_projected
+    high_val = 106 + distance + half_shift_projected
 
     points = audio_scope_filter_points(low_val, high_val)
 
