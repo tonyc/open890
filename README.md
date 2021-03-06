@@ -20,21 +20,35 @@ See [Installing From Source](https://github.com/tonyc/open890/wiki/Installing-Fr
 ## Binary releases
 
 Binary releases are available from [releases](https://github.com/tonyc/open890/releases/).
-They currently are only supported to run on 64-bit Ubuntu 20.04, although other modern Linux releases may work (or not).
 
-Prebuilt Windows binaries are soon planned, but not currently available.
+### Linux
 
-The binary is a self-contained ELF executable that expands itself into `~/.cache/bakeware`
+Linux binaries are supported to run on 64-bit Ubuntu 20.04, although other modern Linux releases may work (or not).
 
-After downloading:
+Download the release `.tar.gz`
 
-    chmod u+x open890
-    ./open890
+Then, decide where you want open890 to live, usually somewhere in your home directory.
+
+    cd <where you want it>
+    tar zxvf /path/to/open890-release.tar.gz
+    
+You will then get a subdirectory called `open890`.
+
+    cd open890
+    ./bin/open890 start
 
 If you encounter an error related to shared libraries, etc, they _may_ be solved by installing the correct version,
 although the correct packages may not be available in your OS distribution's package manager. 
 
 If all else fails, install from source.
+
+### Windows
+
+Download the Windows release .zip file, extract it somewhere, and run `open890.bat`
+
+You may receive a message from Windows about requesting firewall access. This is due to open890's client-server architecture, and it needs permission to open a port (4000) for the local webserver.
+
+You should allow the port to localhots be opened, but ensure you don't expose the server to the outside internet.
 
 ## Getting Help
 
