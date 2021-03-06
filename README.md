@@ -44,11 +44,28 @@ If all else fails, install from source.
 
 ### Windows
 
-Download the Windows release .zip file, extract it somewhere, and run `open890.bat`
+Download the Windows release .zip file, and extract it somewhere useful.
 
-You may receive a message from Windows about requesting firewall access. This is due to open890's client-server architecture, and it needs permission to open a port (4000) for the local webserver.
+Open a command prompt, `cd` to where you extracted the files, and run:
 
-You should allow the port to localhots be opened, but ensure you don't expose the server to the outside internet.
+    bin\open890.bat start
+
+#### "Windows Protected your PC"
+
+Since I haven't paid for a certificate to sign binaries, Windows will loudly complain about an unknown developer. 
+
+ * Click "More Info" and choose "Run anyway". 
+
+If you are concerned about the safety of the files, **only ever download direct from the Github releases page**, and additionally, compare the MD5 checksum from the release notes with the file you have. An internet search for "Windows MD5 tool" will yield several results if you are concerned.
+
+#### Windows Security Alert
+
+On first run, you will likely receive a warning from Windows stating, "Windows Defender Firewall has blocked some features of this app" - For one or more of the following files:
+
+ * erl.exe
+ * epmd.exe
+
+This is due to open890's client-server architecture, and it needs permission to open a port (4000) for the local webserver. Only choose the "private network" option for open890.
 
 ## Getting Help
 
