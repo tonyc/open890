@@ -37,6 +37,8 @@ You will then get a subdirectory called `open890`.
     cd open890
     ./bin/open890 start
 
+And then open a web browser to http://localhost:4000
+
 If you encounter an error related to shared libraries, etc, they _may_ be solved by installing the correct version,
 although the correct packages may not be available in your OS distribution's package manager. 
 
@@ -49,6 +51,8 @@ Download the Windows release .zip file, and extract it somewhere useful.
 Open a command prompt, `cd` to where you extracted the files, and run:
 
     bin\open890.bat start
+
+You will probably see several security warnings as described below. After getting through those, access the web interface at http://localhost:4000 with your favorite web browser.
 
 #### "Windows Protected your PC"
 
