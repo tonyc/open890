@@ -19,7 +19,8 @@
   <% end %>
 
   <div id="radio" class="ui stackable doubling grid" phx-window-keyup="window_keyup">
-    <%= if @display_screen_id != 0 do %>
+    <%#-- disabled --%>
+    <%= if false && @display_screen_id != 0 do %>
       <div id="menuModal" class="ui active modal">
         <div class="header">
           <a href="#"><i class="close window icon" phx-click="close_menu"></i></a>
