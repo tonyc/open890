@@ -93,23 +93,11 @@
             </div> <!-- frequencyDisplay -->
 
             <!-- left -->
-            <div class="four wide column _debug">
-              <%= if @audio_gain do %>
-                <form id="AudioGain" phx-change="audio_gain_changed" style="">
-                  Audio Gain
-                  <input id="audioGainInput" name="audioGain" type="number" min="0" max="255" step="5" value="<%= @audio_gain %>"></input>
-                </form>
-              <% end %>
-              <%= if @rf_gain do %>
-                <form id="RFGain" phx-change="rf_gain_changed" style="">
-                  RF Gain
-                  <input id="rfGainInput" name="rfGain" type="number" min="0" max="255" step="5" value="<%= @rf_gain %>"></input>
-                </form>
-              <% end %>
+            <div class="five wide column _debug">
             </div>
 
             <!-- middle -->
-            <div class="eight wide column ">
+            <div class="six wide column _debug ">
               <div class="column ">
                 <%= if @vfo_memory_state == :vfo do %>
                   <%= vfo_equalize_button(class: "ui small black button") %>
@@ -122,29 +110,30 @@
             </div>
 
             <!-- right -->
-            <div class="four wide column _debug">
-              <div class="ui container">
-                <%# <div class="ui three column grid">
-                  <div class="column">
-                    <button class="ui button small black ">Notch</button>
+            <div class="five wide column _debug">
+
+              <%= if @audio_gain do %>
+                <form id="AudioGain" phx-change="audio_gain_changed" class="ui inverted large form">
+                  <div class="inline fields">
+                    <div class="ten wide field">
+                      <label>AF</label>
+                      <input id="audioGainInput" name="audioGain" type="number" min="0" max="255" step="5" value="<%= @audio_gain %>"></input>
+                    </div>
                   </div>
-                  <div class="column">
-                    <button class="ui button small black ">NR</button>
+                </form>
+              <% end %>
+              <%= if @rf_gain do %>
+                <form id="RFGain" phx-change="rf_gain_changed" class="ui inverted large form">
+                  <div class="inline fields">
+                    <div class="ten wide field">
+                      <label>RF</label>
+                      <input id="rfGainInput" name="rfGain" type="number" min="0" max="255" step="5" value="<%= @rf_gain %>"></input>
+                    </div>
                   </div>
-                  <div class="column">
-                    <button class="ui button small black ">BC</button>
-                  </div>
-                  <div class="column">
-                    <button class="ui button small black ">NB1</button>
-                  </div>
-                  <div class="column">
-                    <button class="ui button small black ">NB2</button>
-                  </div>
-                  <div class="column">
-                    <button class="ui button small black ">AGC</button>
-                  </div>
-                </div> %>
-              </div>
+                </form>
+              <% end %>
+
+
             </div>
           </div>
         </div> <!-- container -->
