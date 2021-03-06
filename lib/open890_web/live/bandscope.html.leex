@@ -151,17 +151,17 @@
 
       </div>
 
-      <div class="ui left floated computer only tablet only four wide column">
-        <div class="row ui grid">
-          <div class="four wide column right aligned">
-            <div class="ui vertical buttons">
-              <%= cmd_button "FIL A", "FL00", class: "ui tiny black button" %>
-              <%= cmd_button "FIL B", "FL01", class: "ui tiny black button" %>
-              <%= cmd_button "FIL C", "FL02", class: "ui tiny black button" %>
-            </div>
-          </div>
+      <div class="ui computer only tablet only four wide column right aligned">
+        <div class="row">
 
-          <div class="twelve wide right floated right aligned column">
+          <div class="ui mini black buttons">
+            <%= cmd_button "FIL A", "FL00", class: "ui button" %>
+            <%= cmd_button "FIL B", "FL01", class: "ui button" %>
+            <%= cmd_button "FIL C", "FL02", class: "ui button" %>
+          </div>
+        </div>
+        <div class="row">
+          <div class="wide column " style="float: right;">
             <%= live_component @socket, Open890Web.Live.AudioScopeComponent,
                                         active_if_filter: @active_if_filter,
                                         active_if_filter: @active_if_filter,
