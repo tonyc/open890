@@ -71,6 +71,14 @@ On first run, you will likely receive a warning from Windows stating, "Windows D
 
 This is due to open890's client-server architecture, and it needs permission to open a port (4000) for the local webserver. Only choose the "private network" option for open890.
 
+## Network Safety/Security
+
+open890 runs a web server on port `4000` and binds to `0.0.0.0` (all interfaces) on the machine it runs on. If this is not acceptable, please do not run open890.
+
+Please note that the web interface **is not secured with a password**, and it assumes that you will run it on a trusted network. This is equivalent to running a computer with ARCP-890 left running. Again, if you are not OK with this, please do not run open890.
+
+Future releases may incorporate a basic level of authentication to access the web interface, or allow the IP address/port binding to be changed.
+
 ## Getting Help
 
 If you encounter a bug, please [open a discussion](https://github.com/tonyc/open890/discussions). Please do not directly email me for technical support!
