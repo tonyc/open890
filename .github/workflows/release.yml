@@ -72,6 +72,10 @@ jobs:
       #   run: |
       #     cd _build/prod/rel
       #     tar zcvf ./open890-${{ steps.vars.outputs.tag }}.tgz open890
+      - name: Output release checksum
+        run: |
+          echo "** Build created. Checksum:"
+          md5sum /tmp/open890-linux-x64-${{ steps.vars.outputs.tag }}.tar.gz
       - name: Create Github Release
         id: create_release
         uses: actions/create-release@v1
