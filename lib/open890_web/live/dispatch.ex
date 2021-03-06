@@ -125,8 +125,13 @@ defmodule Open890Web.Live.Dispatch do
 
     socket =
       if socket.assigns[:active_receiver] == :a do
+
+        formatted_frequency = frequency |> RadioViewHelpers.format_raw_frequency()
+        formatted_mode = socket.assigns[:active_mode] |> RadioViewHelpers.format_mode()
+        page_title = "#{formatted_frequency} - #{formatted_mode}"
+
         socket
-        |> assign(:page_title, frequency |> RadioViewHelpers.format_raw_frequency())
+        |> assign(:page_title, page_title)
         |> assign(:active_frequency, frequency)
       else
         socket
@@ -150,8 +155,13 @@ defmodule Open890Web.Live.Dispatch do
 
     socket =
       if socket.assigns[:active_receiver] == :b do
+        formatted_frequency = frequency |> RadioViewHelpers.format_raw_frequency()
+        formatted_mode = socket.assigns[:active_mode] |> RadioViewHelpers.format_mode()
+        page_title = "#{formatted_frequency} - #{formatted_mode}"
+
+
         socket
-        |> assign(:page_title, frequency |> RadioViewHelpers.format_raw_frequency())
+        |> assign(:page_title, page_title)
         |> assign(:active_frequency, frequency)
       else
         socket
@@ -200,7 +210,17 @@ defmodule Open890Web.Live.Dispatch do
   end
 
   def dispatch("OM0" <> _rest = msg, socket) do
-    socket |> assign(:active_mode, Extract.operating_mode(msg))
+    frequency = socket.assigns[:active_frequency]
+
+    mode = msg |> Extract.operating_mode()
+
+    formatted_frequency = frequency |> RadioViewHelpers.format_raw_frequency()
+    formatted_mode = mode |> RadioViewHelpers.format_mode()
+    page_title = "#{formatted_frequency} - #{formatted_mode}"
+
+    socket
+      |> assign(:active_mode, mode)
+      |> assign(:page_title, page_title)
   end
 
   def dispatch("OM1" <> _rest = msg, socket) do
