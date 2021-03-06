@@ -34,8 +34,8 @@
     <% end %>
 
     <%= if @display_band_selector do %>
-      <div class="ui active page dimmer">
-        <div class="ui active modal">
+      <div class="ui active page top aligned page dimmer" _phx-click="dimmer_clicked">
+        <div id="BandModal" class="ui active modal" phx-hook="BandModal">
           <div class="header">
             <h1 class="ui huge header activeFrequency tip">
               <%= @active_frequency |> format_raw_frequency() %>
@@ -46,7 +46,7 @@
             <%= live_component @socket, BandButtonsComponent %>
           </div>
           <div class="actions">
-            <div class="ui icon button" phx-click="toggle_band_selector">
+            <div id="BandModalClose" class="ui icon button" phx-click="toggle_band_selector">
               <i class="close icon"></i>
               Close
             </div>

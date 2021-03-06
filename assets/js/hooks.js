@@ -2,6 +2,22 @@ import Interpolate from "./interpolate"
 import ColorMap from "./colormap"
 
 let Hooks = {
+  BandModal: {
+    mounted() {
+      this.el.addEventListener("click", event => {
+        console.log("bandmodal clicked")
+        // if (this.el == event.target) {
+        //   event.stopPropagation();
+        // }
+      })
+
+      // window.document.querySelector("#BandModalClose").addEventLister("click", event => {
+      //   event.preventDefault()
+      //   console.log("BandModalClose click")
+      // })
+    }
+
+  },
   ActiveVFO: {
     mounted() {
       console.log("ActiveVFO mounted")
