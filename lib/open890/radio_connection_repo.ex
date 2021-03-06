@@ -35,6 +35,14 @@ defmodule Open890.RadioConnectionRepo do
 
   def init do
     Logger.debug("RadioConnectionRepo.init()")
+
+    if !File.exists?("db/") do
+      Logger.debug("db/ directory doesn't exist, creating")
+      File.mkdir!("db")
+    else
+      Logger.debug("db/ exists, skipping")
+    end
+
     {:ok, table} = :dets.open_file(table_name(), type: :set)
     {:ok, table}
   end
