@@ -103,7 +103,7 @@ jobs:
           $WebClient.DownloadFile($erlang_url, "${{ $env:TEMP }}"\erlang.exe)
 
           Write-Output "Installing Erlang"
-          $env:TEMP\erlang.exe /S /D=c:\erlang
+          ${{ $env:TEMP }}\erlang.exe /S /D=c:\erlang
 
           while (!(Test-Path "c:\erlang\bin\erl.exe")) { Start-Sleep 10 }
           Write-Output "Erlang installed"
