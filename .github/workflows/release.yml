@@ -6,7 +6,69 @@ on:
       - '*'
 
 jobs:
-  release:
+  create-release:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Create Github Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: ${{ endsWith(github.ref, '-pre') }}
+
+  release-windows:
+    needs: [create-release]
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Set output
+        id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+      - name: Install Erlang and Elixir
+        run: |
+          choco install elixir -y
+      - name: Install Dependencies
+        run: |
+          mix local.rebar --force
+          mix local.hex --force
+          mix deps.get --only prod
+      - name: Compile Web Assets
+        run: |
+          npm install --prefix .\assets
+          npm run deploy --prefix .\assets
+          mix phx.digest
+        env:
+          MIX_ENV: prod
+          SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
+      - name: mix release
+        run: |
+          mix release
+        env:
+          MIX_ENV: prod
+          SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
+      - name: Compress files
+        run: |
+          cd _build\prod\rel
+          7z a ..\..\..\open890-${{ steps.vars.outputs.tag }}-windows-x64.zip open890\
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: open890-${{ steps.vars.outputs.tag }}-windows-x64.zip
+          asset_name: open890-${{ steps.vars.outputs.tag }}-windows-x64.zip
+          asset_content_type: application/octet-stream
+
+  release-linux:
+    needs: [create-release]
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -25,22 +87,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 14.15.3
-      #- name: Retrieve Mix Dependencies Cache (uncompiled)
-      #  uses: actions/cache@v2
-      #  id: mix-cache # used to check if we can skip `mix deps.get`
-      #  with:
-      #    path: deps
-      #    key: ${{ runner.os }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
-      #    restore-keys: |
-      #      ${{ runner.os }}-mix-
-      #- name: Retrieve Build Cache (compiled)
-      #  uses: actions/cache@v2
-      #  with:
-      #    path: _build
-      #    key: ${{ runner.os }}-build-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
-      #    restore-keys: |
-      #      ${{ runner.os }}-build-
-      - name: Install Dependencies
+     - name: Install Dependencies
         if: steps.mix-cache.outputs.cache-hit != 'true'
         run: |
           mix local.rebar --force
@@ -68,20 +115,7 @@ jobs:
           files: |
             ./open890
           outPath: /tmp/open890-linux-x64-${{ steps.vars.outputs.tag }}.tar.gz
-      # - name: package release
-      #   run: |
-      #     cd _build/prod/rel
-      #     tar zcvf ./open890-${{ steps.vars.outputs.tag }}.tgz open890
-      - name: Create Github Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: ${{ endsWith(github.ref, '-pre') }}
+
       - name: Upload Release Asset
         id: upload-release-asset
         uses: actions/upload-release-asset@v1
