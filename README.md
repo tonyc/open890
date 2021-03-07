@@ -20,21 +20,64 @@ See [Installing From Source](https://github.com/tonyc/open890/wiki/Installing-Fr
 ## Binary releases
 
 Binary releases are available from [releases](https://github.com/tonyc/open890/releases/).
-They currently are only supported to run on 64-bit Ubuntu 20.04, although other modern Linux releases may work (or not).
 
-Prebuilt Windows binaries are soon planned, but not currently available.
+### Linux
 
-The binary is a self-contained ELF executable that expands itself into `~/.cache/bakeware`
+Linux binaries are supported to run on 64-bit Ubuntu 20.04, although other modern Linux releases may work (or not).
 
-After downloading:
+Download the release `.tar.gz`
 
-    chmod u+x open890
-    ./open890
+Then, decide where you want open890 to live, usually somewhere in your home directory.
+
+    cd <where you want it>
+    tar zxvf /path/to/open890-release.tar.gz
+    
+You will then get a subdirectory called `open890`.
+
+    cd open890
+    ./bin/open890 start
+
+And then open a web browser to http://localhost:4000
 
 If you encounter an error related to shared libraries, etc, they _may_ be solved by installing the correct version,
 although the correct packages may not be available in your OS distribution's package manager. 
 
 If all else fails, install from source.
+
+### Windows
+
+Download the Windows release .zip file, and extract it somewhere useful.
+
+Open a command prompt, `cd` to where you extracted the files, and run:
+
+    bin\open890.bat start
+
+You will probably see several security warnings as described below. After getting through those, access the web interface at http://localhost:4000 with your favorite web browser.
+
+#### "Windows Protected your PC"
+
+Since I haven't paid for a certificate to sign binaries, Windows will loudly complain about an unknown developer. 
+
+ * Click "More Info" and choose "Run anyway". 
+
+If you are concerned about the safety of the files, **only ever download direct from the Github releases page**, and additionally, compare the MD5 checksum from the release notes with the file you have. An internet search for "Windows MD5 tool" will yield several results if you are concerned.
+
+#### Windows Security Alert
+
+On first run, you will likely receive a warning from Windows stating, "Windows Defender Firewall has blocked some features of this app" - For one or more of the following files:
+
+ * erl.exe
+ * epmd.exe
+
+This is due to open890's client-server architecture, and it needs permission to open a port (4000) for the local webserver. Only choose the "private network" option for open890.
+
+## Network Safety/Security
+
+open890 runs a web server on port `4000` and binds to `0.0.0.0` (all interfaces) on the machine it runs on. If this is not acceptable, please do not run open890.
+
+Please note that the web interface **is not secured with a password**, and it assumes that you will run it on a trusted network. This is equivalent to running a computer with ARCP-890 left running. Again, if you are not OK with this, please do not run open890.
+
+Future releases may incorporate a basic level of authentication to access the web interface, or allow the IP address/port binding to be changed.
 
 ## Getting Help
 

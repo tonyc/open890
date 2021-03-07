@@ -115,7 +115,10 @@ jobs:
           files: |
             ./open890
           outPath: /tmp/open890-linux-x64-${{ steps.vars.outputs.tag }}.tar.gz
-
+      - name: Output release checksum
+        run: |
+          echo "** Build created. Checksum:"
+          md5sum /tmp/open890-linux-x64-${{ steps.vars.outputs.tag }}.tar.gz
       - name: Upload Release Asset
         id: upload-release-asset
         uses: actions/upload-release-asset@v1
