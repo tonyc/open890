@@ -94,9 +94,6 @@ jobs:
       - name: Set output
         id: vars
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
-      - name: Show choco cache location
-        run: |
-          choco config get cacheLocation
       - name: Install Erlang and Elixir
         run: |
           choco install elixir -y
