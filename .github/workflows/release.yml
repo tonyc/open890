@@ -87,7 +87,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 14.15.3
-     - name: Install Dependencies
+      - name: Install Dependencies
         if: steps.mix-cache.outputs.cache-hit != 'true'
         run: |
           mix local.rebar --force
