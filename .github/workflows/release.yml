@@ -22,53 +22,6 @@ jobs:
           draft: false
           prerelease: ${{ endsWith(github.ref, '-pre') }}
 
-  release-windows:
-    needs: [create_release]
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          ref: ${{ github.head_ref }}
-      - name: Set output
-        id: vars
-        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
-      - name: Install Erlang and Elixir
-        run: |
-          choco install elixir -y
-      - name: Install Dependencies
-        run: |
-          mix local.rebar --force
-          mix local.hex --force
-          mix deps.get --only prod
-      - name: Compile Web Assets
-        run: |
-          npm install --prefix .\assets
-          npm run deploy --prefix .\assets
-          mix phx.digest
-        env:
-          MIX_ENV: prod
-          SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
-      - name: mix release
-        run: |
-          mix release
-        env:
-          MIX_ENV: prod
-          SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
-      - name: Compress files
-        run: |
-          cd _build\prod\rel
-          7z a ..\..\..\open890-${{ steps.vars.outputs.tag }}-windows-x64.zip open890\
-      - name: Upload Release Asset
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_path: open890-${{ steps.vars.outputs.tag }}-windows-x64.zip
-          asset_name: open890-${{ steps.vars.outputs.tag }}-windows-x64.zip
-          asset_content_type: application/octet-stream
-
   release-linux:
     needs: [create_release]
     runs-on: ubuntu-20.04
@@ -123,12 +76,67 @@ jobs:
           md5sum /tmp/open890-linux-x64-${{ steps.vars.outputs.tag }}.tar.gz
       - name: Upload Release Asset
         id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: svenstaro/upload-release-action@v2
         with:
-          upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_path: /tmp/open890-linux-x64-${{ steps.vars.outputs.tag }}.tar.gz
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: /tmp/open890-linux-x64-${{ steps.vars.outputs.tag }}.tar.gz
           asset_name: open890-linux-x64-${{ steps.vars.outputs.tag }}.tar.gz
-          asset_content_type: application/octet-stream
+          tag: ${{ steps.vars.outputs.tag }}
+      # - name: Upload Release Asset
+      #   id: upload-release-asset
+      #   uses: actions/upload-release-asset@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     upload_url: ${{ needs.create_release.outputs.upload_url }}
+      #     asset_path: /tmp/open890-linux-x64-${{ steps.vars.outputs.tag }}.tar.gz
+      #     asset_name: open890-linux-x64-${{ steps.vars.outputs.tag }}.tar.gz
+      #     asset_content_type: application/octet-stream
 
+
+  # release-windows:
+  #   needs: [create_release]
+  #   runs-on: windows-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #       with:
+  #         ref: ${{ github.head_ref }}
+  #     - name: Set output
+  #       id: vars
+  #       run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+  #     - name: Install Erlang and Elixir
+  #       run: |
+  #         choco install elixir -y
+  #     - name: Install Dependencies
+  #       run: |
+  #         mix local.rebar --force
+  #         mix local.hex --force
+  #         mix deps.get --only prod
+  #     - name: Compile Web Assets
+  #       run: |
+  #         npm install --prefix .\assets
+  #         npm run deploy --prefix .\assets
+  #         mix phx.digest
+  #       env:
+  #         MIX_ENV: prod
+  #         SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
+  #     - name: mix release
+  #       run: |
+  #         mix release
+  #       env:
+  #         MIX_ENV: prod
+  #         SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
+  #     - name: Compress files
+  #       run: |
+  #         cd _build\prod\rel
+  #         7z a ..\..\..\open890-${{ steps.vars.outputs.tag }}-windows-x64.zip open890\
+  #     - name: Upload Release Asset
+  #       id: upload-release-asset
+  #       uses: actions/upload-release-asset@v1
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       with:
+  #         upload_url: ${{ needs.create_release.outputs.upload_url }}
+  #         asset_path: open890-${{ steps.vars.outputs.tag }}-windows-x64.zip
+  #         asset_name: open890-${{ steps.vars.outputs.tag }}-windows-x64.zip
+  #         asset_content_type: application/octet-stream
