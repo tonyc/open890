@@ -5,7 +5,7 @@ $erlang_url = "https://github.com/erlang/otp/releases/download/OTP-23.2.7/otp_wi
 $WebClient.DownloadFile($erlang_url, "$env:TEMP\erlang.exe")
 
 Write-Output "Installing Erlang"
-$env:TEMP\erlang.exe /S /D=c:\erlang
+Invoke-Expression "$env:TEMP\erlang.exe /S /D=c:\erlang"
 
 while (!(Test-Path "c:\erlang\bin\erl.exe")) { Start-Sleep 5 }
 
