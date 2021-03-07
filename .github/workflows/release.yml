@@ -134,6 +134,6 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: open890-windows-x64-${{ steps.vars.outputs.tag }}.zip
-          asset_name: open890-windows-x64-${{ steps.vars.outputs.tag }}.zip
+          file: open890-${{ steps.vars.outputs.tag }}-windows-x64.zip
+          asset_name: open890-${{ steps.vars.outputs.tag }}-windows-x64.zip
           tag: ${{ steps.vars.outputs.tag }}

@@ -7,6 +7,7 @@ $WebClient.DownloadFile($erlang_url, "$env:TEMP\erlang.exe")
 Write-Output "Installing Erlang"
 Invoke-Expression "$env:TEMP\erlang.exe /S /D=c:\erlang"
 
+Write-Output "Waiting for c:\erlang\bin\erl.exe..."
 while (!(Test-Path "c:\erlang\bin\erl.exe")) { Start-Sleep 5 }
 
 Write-Output "Downloading Elixir"
