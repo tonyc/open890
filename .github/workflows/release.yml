@@ -104,10 +104,16 @@ jobs:
           mix local.rebar --force
           mix local.hex --force
           mix deps.get --only prod
-      - name: Compile Web Assets
+      - name: Compile web assets
+        working-directory: assets
         run: |
-          npm install --prefix .\assets
-          npm run deploy --prefix .\assets
+          npm install
+          npm run deploy
+        env:
+          MIX_ENV: prod
+          SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
+      - name: Digest assets
+        run: |
           mix phx.digest
         env:
           MIX_ENV: prod
