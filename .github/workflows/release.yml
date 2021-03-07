@@ -6,8 +6,10 @@ on:
       - '*'
 
 jobs:
-  create-release:
+  create_release:
     runs-on: ubuntu-20.04
+    outputs:
+      upload_url: ${{ steps.create_release.upload_url }}
     steps:
       - name: Create Github Release
         id: create_release
@@ -21,7 +23,7 @@ jobs:
           prerelease: ${{ endsWith(github.ref, '-pre') }}
 
   release-windows:
-    needs: [create-release]
+    needs: [create_release]
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
@@ -62,13 +64,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
           asset_path: open890-${{ steps.vars.outputs.tag }}-windows-x64.zip
           asset_name: open890-${{ steps.vars.outputs.tag }}-windows-x64.zip
           asset_content_type: application/octet-stream
 
   release-linux:
-    needs: [create-release]
+    needs: [create_release]
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -125,7 +127,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
           asset_path: /tmp/open890-linux-x64-${{ steps.vars.outputs.tag }}.tar.gz
           asset_name: open890-linux-x64-${{ steps.vars.outputs.tag }}.tar.gz
           asset_content_type: application/octet-stream
