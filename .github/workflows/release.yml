@@ -92,6 +92,7 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
       - name: Set output
+        shell: bash
         id: vars
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
       - name: Install Erlang and Elixir
