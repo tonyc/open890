@@ -18,7 +18,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          release_name: ${{ github.ref }}
           draft: false
           prerelease: ${{ endsWith(github.ref, '-pre') }}
 
@@ -72,8 +72,7 @@ jobs:
           outPath: /tmp/open890-${{ steps.vars.outputs.tag }}-linux-x64.tar.gz
       - name: Output release checksum
         run: |
-          echo "** Build created. Checksum:"
-          md5sum /tmp/open890-${{ steps.vars.outputs.tag }}-linux-x64.tar.gz
+          echo "::set-output name=sha256_linux::$(sha256sum /tmp/open890-${{ steps.vars.outputs.tag }}-linux.x64.tar.gz)"
       - name: Upload Release Asset
         id: upload-release-asset
         uses: svenstaro/upload-release-action@v2
@@ -100,7 +99,7 @@ jobs:
           ERLANG_VERSION: 23.2.7
           ELIXIR_VERSION: 1.11.3
         run: |
-          build_scripts\install_elixir.ps1;
+          build_scripts\win64\install_elixir.ps1;
           echo "c:\erlang\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append;
           echo "c:\elixir\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append;
       - name: Install Dependencies
@@ -132,6 +131,8 @@ jobs:
         run: |
           cd _build\prod\rel
           7z a ..\..\..\open890-${{ steps.vars.outputs.tag }}-windows-x64.zip open890\
+          cd ..\..\..
+          echo "::set-output name=sha256_win64::$(Get-FileHash open890-${{ steps.vars.outputs.tag }}-windows-x64.zip).Hash"
       - name: Upload Release Asset
         id: upload-release-asset
         uses: svenstaro/upload-release-action@v2
