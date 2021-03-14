@@ -35,7 +35,7 @@ Then, decide where you want open890 to live, usually somewhere in your home dire
 You will then get a subdirectory called `open890`.
 
     cd open890
-    ./bin/open890 start
+    ./bin/open890.sh
 
 And then open a web browser to http://localhost:4000
 
@@ -49,14 +49,13 @@ If all else fails, install from source.
 Download the Windows release .zip file, and extract it somewhere useful.
 
 Open a command prompt, `cd` to where you extracted the files, and run:
-
-    bin\open890.bat start
+Navigate to where you expanded open890, and double click the `open890.bat` file in the main folder.
 
 You will probably see several security warnings as described below. After getting through those, access the web interface at http://localhost:4000 with your favorite web browser.
 
 #### "Windows Protected your PC"
 
-Since I haven't paid for a certificate to sign binaries, Windows will loudly complain about an unknown developer. 
+Since I haven't paid for a certificate to sign binaries, Windows will loudly complain about an unknown developer.
 
  * Click "More Info" and choose "Run anyway". 
 
@@ -67,7 +66,6 @@ If you are concerned about the safety of the files, **only ever download direct 
 On first run, you will likely receive a warning from Windows stating, "Windows Defender Firewall has blocked some features of this app" - For one or more of the following files:
 
  * erl.exe
- * epmd.exe
 
 This is due to open890's client-server architecture, and it needs permission to open a port (4000) for the local webserver. Only choose the "private network" option for open890.
 
