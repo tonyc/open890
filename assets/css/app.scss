@@ -604,3 +604,18 @@ svg#bandScope {
 .scopeButtons button {
   width: 200px;
 }
+
+.resize-both {
+  resize: both;
+  overflow: auto;
+}
+
+.resize-h {
+  resize: horizontal;
+  overflow: auto;
+}
+
+.resize-v {
+  resize: vertical;
+  overflow: auto;
+}
