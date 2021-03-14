@@ -35,7 +35,7 @@ Then, decide where you want open890 to live, usually somewhere in your home dire
 You will then get a subdirectory called `open890`.
 
     cd open890
-    ./bin/open890.sh
+    ./open890.sh
 
 And then open a web browser to http://localhost:4000
 
@@ -46,10 +46,9 @@ If all else fails, install from source.
 
 ### Windows
 
-Download the Windows release .zip file, and extract it somewhere useful.
-
-Open a command prompt, `cd` to where you extracted the files, and run:
-Navigate to where you expanded open890, and double click the `open890.bat` file in the main folder.
+  * Download the Windows release .zip file, and extract it somewhere useful.
+  * Navigate to where you expanded open890
+  * Double click the `open890.bat` file in the main folder.
 
 You will probably see several security warnings as described below. After getting through those, access the web interface at http://localhost:4000 with your favorite web browser.
 
