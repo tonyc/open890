@@ -60,7 +60,12 @@ defmodule Open890Web.RadioViewHelpers do
     class_opts = opts |> Keyword.get(:class, "")
     button_classes = "ui button #{class_opts}"
 
-    content_tag(:button, "#{title}: #{label}", class: button_classes, phx_click: "cmd", phx_value_cmd: cmd)
+    contents = case title do
+      blank when blank in ["", nil] -> label
+      str -> "#{str}: #{label}"
+    end
+
+    content_tag(:button, contents, class: button_classes, phx_click: "cmd", phx_value_cmd: cmd)
   end
 
   def vfo_switch_button(vfo, opts \\ []) do
