@@ -21,7 +21,7 @@ defmodule Open890Web.Live.BandScopeComponent do
 
           <%= band_scope_horizontal_grid() %>
 
-          <polygon id="spectrumBlur" filter="url(#blur)" points="<%= scope_data_to_svg(@band_scope_data, 150) %>" />
+          <!-- <polygon id="spectrumBlur" filter="url(#blur)" points="<%# scope_data_to_svg(@band_scope_data, 150) %>" /> -->
           <polygon id="bandSpectrum" class="spectrum" points="<%= scope_data_to_svg(@band_scope_data, 150) %>" vector-effect="non-scaling-stroke" />
 
           <%= if @band_scope_edges do %>
@@ -39,7 +39,7 @@ defmodule Open890Web.Live.BandScopeComponent do
           <rect id="bandscopeBackground" x="0" y="0" height="150" width="1280" pointer-events="visibleFill" phx-hook="BandScope" />
         </svg>
 
-        <canvas phx-hook="BandScopeCanvas" id="BandScopeCanvas" data-theme="<%= @theme %>" class="waterfall bandscope" width="1280" height="300"></canvas>
+        <canvas phx-hook="BandScopeCanvas" id="BandScopeCanvas" data-theme="<%= @theme %>" data-draw_interval="<%= @draw_interval %>" class="waterfall bandscope" width="1280" height="300"></canvas>
       </div>
 
     """

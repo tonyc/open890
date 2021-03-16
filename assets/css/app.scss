@@ -581,8 +581,9 @@ svg#bandScope {
       border: none;
     }
   }
+}
 
-  #refLevelInput {
+.miniTextInput {
     // margin-left: 1rem;
     // margin-right: 0.5rem;
     width: 3em;
@@ -598,7 +599,7 @@ svg#bandScope {
     &:hover { cursor: pointer; }
     &:focus { cursor: text; }
     &:focus-visible { border: none; }
-  }
+
 }
 
 .scopeButtons button {

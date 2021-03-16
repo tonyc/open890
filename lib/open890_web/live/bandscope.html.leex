@@ -209,8 +209,15 @@
           <div class="ui black button" id="RefLevelControl">
             <form class="" id="refLevel" phx-change="ref_level_changed">
               Ref Level
-              <input id="refLevelInput" name="refLevel" type="number" min="-20" max="10" step="0.5" value="<%= format_ref_level(@ref_level) %>"></input>
+              <input class="miniTextInput" name="refLevel" type="number" min="-20" max="10" step="0.5" value="<%= format_ref_level(@ref_level) %>"></input>
               dB
+            </form>
+          </div>
+
+          <div class="ui black button">
+            <form id="WaterfallSpeed" phx-change="wf_speed_changed" class="">
+              <label>WF Speed: 1 /</label>
+              <input class="miniTextInput" name="value" type="number" min="1" max="100" step="1" value="<%= @waterfall_draw_interval %>"></input>
             </form>
           </div>
 
@@ -225,7 +232,7 @@
           <% end %>
 
           <%= if @data_speed do %>
-            <%= cycle_label_button("Speed", @data_speed,
+            <%= cycle_label_button("Data Speed", @data_speed,
               %{
                 1 => %{label: "High", cmd: "DD03"},
                 2 => %{label: "Mid", cmd: "DD01"},
@@ -258,7 +265,9 @@
                                     band_scope_mode: @band_scope_mode,
                                     filter_hi_shift: @filter_hi_shift,
                                     filter_lo_width: @filter_lo_width,
-                                    theme: @theme %>
+                                    theme: @theme,
+                                    draw_interval: @waterfall_draw_interval
+                                    %>
       </div>
   </div>
 

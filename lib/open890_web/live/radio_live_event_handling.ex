@@ -26,6 +26,16 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
         {:noreply, socket}
       end
 
+      def handle_event("wf_speed_changed", params , %{assigns: %{radio_connection: connection}} = socket) do
+        with {value, _extra} <- params["value"] |> Integer.parse() do
+          {:noreply, socket |> assign(:waterfall_draw_interval, value)}
+        else
+          other ->
+            Logger.info("Unable to parse wf interval: #{inspect(other)}")
+            {:noreply, socket}
+        end
+      end
+
       def handle_event("audio_gain_changed", params , %{assigns: %{radio_connection: connection}} = socket) do
         with {value, _extra} <- params["audioGain"] |> Integer.parse() do
           connection |> Radio.set_audio_gain(value)

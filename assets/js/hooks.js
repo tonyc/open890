@@ -37,6 +37,7 @@ let Hooks = {
     }
 
   },
+
   RefLevelControl: {
     mounted() {
       console.log("ref level mount")
@@ -180,6 +181,7 @@ let Hooks = {
   BandScopeCanvas: {
     updated() {
       this.theme = this.el.dataset.theme
+      this.drawInterval = this.el.dataset.draw_interval;
     },
 
     tuneToClick(event) {
@@ -208,6 +210,7 @@ let Hooks = {
 
       this.canvas = this.el
       this.ctx = this.canvas.getContext("2d")
+      this.drawInterval = this.el.dataset.draw_interval
       // window.bandscope = this.ctx;
 
       // these items should be computed or passed in via data- attributes
@@ -223,6 +226,8 @@ let Hooks = {
       this.multiplier = 1.3
       this.theme = this.el.dataset.theme
       this.draw = true
+
+      this.packetCount = 0;
 
       this.clearScope()
 
@@ -262,7 +267,10 @@ let Hooks = {
       })
 
       this.handleEvent("band_scope_data", (event) => {
-        if (this.draw) {
+        this.packetCount += 1;
+
+        if (this.draw && (this.packetCount % this.drawInterval) == 0) {
+          this.packetCount = 0;
           let data = event.scope_data
 
           this.ctx.drawImage(this.canvas, 0, 1)
