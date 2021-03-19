@@ -38,7 +38,15 @@ defmodule Open890Web.Live.BandScopeComponent do
           <rect id="bandscopeBackground" x="0" y="0" height="150" width="1280" pointer-events="visibleFill" phx-hook="BandScope" />
         </svg>
 
-        <canvas phx-hook="BandScopeCanvas" id="BandScopeCanvas" data-theme="<%= @theme %>" data-draw_interval="<%= @draw_interval %>" class="waterfall bandscope" width="1280" height="300"></canvas>
+        <canvas
+          id="BandScopeCanvas"
+          class="waterfall bandscope"
+          phx-hook="BandScopeCanvas"
+          data-theme="<%= @theme %>"
+          data-draw-interval="<%= @draw_interval %>"
+          data-max-value="140"
+          width="1280"
+          height="300"></canvas>
       </div>
 
     """

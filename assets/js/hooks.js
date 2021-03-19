@@ -211,19 +211,15 @@ let Hooks = {
 
     mounted() {
       console.log("bandscope canvas mounted")
-
       this.canvas = this.el
       this.ctx = this.canvas.getContext("2d")
-      this.drawInterval = this.el.dataset.draw_interval
-      // window.bandscope = this.ctx;
+      this.drawInterval = this.el.dataset.drawInterval
+      this.maxVal = this.el.dataset.maxValue
+      this.width = this.el.getAttribute('width')
+      this.height = this.el.getAttribute('height')
 
-      // these items should be computed or passed in via data- attributes
-      this.maxVal = 140
-      this.width = 1280
-      this.height = 200
-
-      this.ctx.imageSmoothingEnabled = false;
-      this.ctx.imageSmoothingQuality = 'high';
+      this.ctx.imageSmoothingEnabled = false
+      this.ctx.imageSmoothingQuality = 'high'
       // this.ctx.globalCompositeOperation = 'color'
       console.log("smoothing", this.ctx.imageSmoothingEnabled);
 
