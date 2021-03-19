@@ -322,12 +322,11 @@ nav {
       color: white;
       font-size: 4rem;
       text-align: right;
-      text-decoration: underline;
-      text-decoration-thickness: 0.25rem;
 
       &:hover {
         cursor: pointer;
-        text-decoration: none;
+        text-decoration: underline;
+        text-decoration-thickness: 0.25rem;
       }
     }
 
