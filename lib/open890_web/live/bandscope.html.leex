@@ -235,7 +235,7 @@
           <% end %>
 
           <div class="ui black button">
-            <form id="WaterfallSpeed" phx-change="wf_speed_changed" class="">
+            <form id="WaterfallSpeed" phx-hook="WaterfallSpeedForm" _phx-change="wf_speed_changed" class="">
               WF Speed: 1 /
               <input class="miniTextInput" name="value" type="number" min="1" max="100" step="1" value="<%= @waterfall_draw_interval %>"></input>
             </form>

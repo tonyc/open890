@@ -309,5 +309,27 @@ let Hooks = {
       });
     }
   },
+  WaterfallSpeedForm: {
+    mounted() {
+      console.log("WF speed form mounted")
+
+      const key = 'bandscope.waterfall_speed'
+      let wfSpeed = localStorage.getItem(key)
+
+      if (!wfSpeed) {
+        localStorage.setItem(key, '1')
+      } else {
+        this.pushEvent('wf_speed_changed', {value: wfSpeed})
+      }
+
+      this.el.addEventListener('change', (event) => {
+        const val = event.target.value;
+
+        localStorage.setItem(key, val)
+        this.pushEvent('wf_speed_changed', {value: val})
+      })
+    }
+
+  },
 }
 export default Hooks
