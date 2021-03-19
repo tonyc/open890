@@ -185,7 +185,7 @@ let Hooks = {
   BandScopeCanvas: {
     updated() {
       this.theme = this.el.dataset.theme
-      this.drawInterval = this.el.dataset.draw_interval;
+      this.drawInterval = this.el.dataset.drawInterval;
     },
 
     tuneToClick(event) {
@@ -213,13 +213,14 @@ let Hooks = {
       console.log("bandscope canvas mounted")
       this.canvas = this.el
       this.ctx = this.canvas.getContext("2d")
-      this.drawInterval = this.el.dataset.drawInterval
-      this.maxVal = this.el.dataset.maxValue
+      this.drawInterval = this.el.dataset.drawInterval;
+
+      this.maxVal = this.el.dataset.maxValue;
       this.width = this.el.getAttribute('width')
       this.height = this.el.getAttribute('height')
 
-      this.ctx.imageSmoothingEnabled = false
-      this.ctx.imageSmoothingQuality = 'high'
+      this.ctx.imageSmoothingEnabled = false;
+      this.ctx.imageSmoothingQuality = 'high';
       // this.ctx.globalCompositeOperation = 'color'
       console.log("smoothing", this.ctx.imageSmoothingEnabled);
 
@@ -318,7 +319,7 @@ let Hooks = {
       let val = localStorage.getItem(key)
 
       if (!val) {
-        localStorage.setItem(key, '140')
+        localStorage.setItem(key, 1.0)
       } else {
         this.pushEvent('spectrum_scale_changed', {value: val})
       }
