@@ -235,9 +235,16 @@
           <% end %>
 
           <div class="ui black button">
-            <form id="WaterfallSpeed" phx-hook="WaterfallSpeedForm" _phx-change="wf_speed_changed" class="">
+            <form id="WaterfallSpeed" phx-hook="WaterfallSpeedForm">
               WF Speed: 1 /
               <input class="miniTextInput" name="value" type="number" min="1" max="100" step="1" value="<%= @waterfall_draw_interval %>"></input>
+            </form>
+          </div>
+
+          <div class="ui black button">
+            <form id="SpectrumScale" phx-hook="SpectrumScaleForm">
+              Spectrum Scale
+              <input class="miniTextInput" name="value" type="number" min="1" max="10" step="0.05" value="<%= @spectrum_scale %>"></input>
             </form>
           </div>
 
@@ -266,7 +273,8 @@
                                     filter_hi_shift: @filter_hi_shift,
                                     filter_lo_width: @filter_lo_width,
                                     theme: @theme,
-                                    draw_interval: @waterfall_draw_interval
+                                    draw_interval: @waterfall_draw_interval,
+                                    spectrum_scale: @spectrum_scale
                                     %>
       </div>
   </div>

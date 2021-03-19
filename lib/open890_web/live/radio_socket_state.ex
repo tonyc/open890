@@ -48,7 +48,8 @@ defmodule Open890Web.Live.RadioSocketState do
     {:vfo_a_frequency, ""},
     {:vfo_b_frequency, ""},
     {:vfo_memory_state, nil},
-    {:waterfall_draw_interval, 1}
+    {:waterfall_draw_interval, 1},
+    {:spectrum_scale, 1.0}
   ]
 
   def initial_state do

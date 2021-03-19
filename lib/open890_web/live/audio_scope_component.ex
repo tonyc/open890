@@ -13,7 +13,7 @@ defmodule Open890Web.Live.AudioScopeComponent do
           </defs>
 
           <g transform="translate(0 10)">
-            <polygon id="audioSpectrum" class="spectrum" points="<%= scope_data_to_svg(@audio_scope_data, 60) %>" vector-effect="non-scaling-stroke" />
+            <polygon id="audioSpectrum" class="spectrum" points="<%= scope_data_to_svg(@audio_scope_data, max_value: 60) %>" vector-effect="non-scaling-stroke" />
 
             <%= if @active_if_filter && @roofing_filter_data[@active_if_filter] do %>
               <%= audio_scope_filter_edges(@active_mode, {@filter_lo_width, @filter_hi_shift}, @active_if_filter, @roofing_filter_data) %>

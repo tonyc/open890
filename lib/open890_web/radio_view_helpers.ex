@@ -133,6 +133,11 @@ defmodule Open890Web.RadioViewHelpers do
     end
   end
 
+  def linear_interpolate(value, y_min, y_max, x_min, x_max) do
+    percent = (value - y_min) / (y_max - y_min)
+    percent * (x_max - x_min) + x_min
+  end
+
   def project_to_bandscope_limits(frequency, {low, high})
       when is_integer(frequency) and is_integer(low) and is_integer(high) do
     delta = high - low
@@ -210,7 +215,24 @@ defmodule Open890Web.RadioViewHelpers do
     "CW Tune" |> cmd_button("CA1", opts)
   end
 
-  def scope_data_to_svg(band_data, max_value) when is_list(band_data) do
+  def scope_data_to_svg(band_data, opts \\ []) when is_list(band_data) do
+    max_value = opts[:max_value]
+    scale_y = opts[:scale_y] || 1.0
+
+    scaled_max = max_value * scale_y
+
+    band_data = band_data |> Enum.map(fn v ->
+      # THIS WORKS
+      # v = linear_interpolate(v, 0, max_value, scaled_max, 0)
+      # v = v * scale_y
+      # linear_interpolate(v, scaled_max, 0, 0, max_value)
+
+      v
+      |> linear_interpolate(0, max_value, scaled_max, 0)
+      |> Kernel.*(scale_y)
+      |> linear_interpolate(scaled_max, 0, 0, max_value)
+    end)
+
     band_data = band_data ++ [max_value]
     length = band_data |> Enum.count()
 

@@ -3,7 +3,7 @@ defmodule Open890Web.Live.BandScopeComponent do
 
   def render(assigns) do
     ~L"""
-      <div id="bandScopeWrapper" class="hover-pointer">
+      <div id="bandScopeWrapper" class="hover-pointer" data-spectrum-scale="<%= @spectrum_scale %>">
         <svg id="bandScope" class="scope themed <%= @theme %>" viewbox="0 0 640 140">
           <defs>
             <filter id="blur" filterUnits="userSpaceOnUse" x="0" y="0" width="640" height="150">
@@ -21,8 +21,7 @@ defmodule Open890Web.Live.BandScopeComponent do
 
           <%= band_scope_horizontal_grid() %>
 
-          <!-- <polygon id="spectrumBlur" filter="url(#blur)" points="<%# scope_data_to_svg(@band_scope_data, 150) %>" /> -->
-          <polygon id="bandSpectrum" class="spectrum" points="<%= scope_data_to_svg(@band_scope_data, 150) %>" vector-effect="non-scaling-stroke" />
+          <polygon id="bandSpectrum" class="spectrum" points="<%= scope_data_to_svg(@band_scope_data, max_value: 140, scale_y: @spectrum_scale) %>" vector-effect="non-scaling-stroke" />
 
           <%= if @band_scope_edges do %>
             <g transform="translate(0 12)">

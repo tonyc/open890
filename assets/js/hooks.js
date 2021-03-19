@@ -75,7 +75,11 @@ let Hooks = {
       var cursorPt = pt.matrixTransform(svg.getScreenCTM().inverse());
       this.pushEvent("scope_clicked", {x: cursorPt.x, y: cursorPt.y, width: 640})
     },
+
     mounted() {
+      let scaleKey = 'bandscope.spectrum_scale'
+      this.spectrumScale = localStorage.getItem(scaleKey) || 140
+
       this.el.addEventListener("wheel", event => {
         // This is duplicated in the BandScopeCanvas hook below
         event.preventDefault();
@@ -309,6 +313,30 @@ let Hooks = {
       });
     }
   },
+
+  SpectrumScaleForm: {
+    mounted() {
+      console.log("spectrum scale form")
+
+      const key = 'bandscope.spectrum_scale'
+      let val = localStorage.getItem(key)
+
+      if (!val) {
+        localStorage.setItem(key, '140')
+      } else {
+        this.pushEvent('spectrum_scale_changed', {value: val})
+      }
+
+      this.el.addEventListener('change', (event) => {
+        const val = event.target.value;
+        console.log("scale changed", val)
+
+        localStorage.setItem(key, val)
+        this.pushEvent('spectrum_scale_changed', {value: val})
+      })
+    }
+  },
+
   WaterfallSpeedForm: {
     mounted() {
       console.log("WF speed form mounted")
@@ -329,7 +357,6 @@ let Hooks = {
         this.pushEvent('wf_speed_changed', {value: val})
       })
     }
-
   },
 }
 export default Hooks

@@ -26,6 +26,16 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
         {:noreply, socket}
       end
 
+      def handle_event("spectrum_scale_changed", params , %{assigns: %{radio_connection: connection}} = socket) do
+        with {value, _extra} <- params["value"] |> Float.parse() do
+          {:noreply, socket |> assign(:spectrum_scale, value)}
+        else
+          other ->
+            Logger.info("Unable to parse spectrum_scale: #{inspect(other)}")
+            {:noreply, socket}
+        end
+      end
+
       def handle_event("wf_speed_changed", params , %{assigns: %{radio_connection: connection}} = socket) do
         with {value, _extra} <- params["value"] |> Integer.parse() do
           {:noreply, socket |> assign(:waterfall_draw_interval, value)}
