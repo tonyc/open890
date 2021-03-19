@@ -69,8 +69,6 @@ $border-radius-medium: 10px;
 $border-radius-small: 4px;
 
 // dark mode?
-body {
-}
 
 .dark {
   background-color: #222;
@@ -79,6 +77,16 @@ body {
 #radio {
   background-color: #000;
   color: #ccc;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
 }
 
 .ui.basic.radio.button {
@@ -314,10 +322,12 @@ nav {
       color: white;
       font-size: 4rem;
       text-align: right;
+      text-decoration: underline;
+      text-decoration-thickness: 0.25rem;
 
       &:hover {
         cursor: pointer;
-        text-decoration: underline;
+        text-decoration: none;
       }
     }
 
@@ -495,6 +505,9 @@ svg#bandScope {
 
 }
 
+#scopeControls {
+}
+
 #bandScopeLimits {
   .scopeLimit {
     z-index: 101;
@@ -616,4 +629,21 @@ svg#bandScope {
 .resize-v {
   resize: vertical;
   overflow: auto;
+}
+
+.inline {
+  display: inline;
+}
+
+.vfoMemIndicator {
+  float: left;
+}
+
+.modeIndicator {
+  font-weight: semi-bold;
+
+  &.active {
+    font-size: 2rem;
+    margin-right: 2rem;
+  }
 }

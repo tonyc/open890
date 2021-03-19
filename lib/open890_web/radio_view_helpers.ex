@@ -95,15 +95,6 @@ defmodule Open890Web.RadioViewHelpers do
     ref_level / 2.0 - 20
   end
 
-  def format_vfo_memory_state(state) do
-    case state do
-      :vfo -> "VFO"
-      :memory -> "MEM"
-      _ ->
-        Logger.warn("Unknown vfo memory state: #{inspect(state)}")
-        "UNKNOWN"
-    end
-  end
 
   def format_band_scope_mode(mode) do
     mode
@@ -427,17 +418,6 @@ defmodule Open890Web.RadioViewHelpers do
     |> inspect(pretty: true, limit: :infinity, charlists: :as_lists)
   end
 
-  def vfo_mem_indicator(vfo_mem_state) do
-    ~e{
-      <span class="ui tiny grey inverted label"><%= format_vfo_memory_state(vfo_mem_state) %></span>
-    }
-  end
-
-  def mode_indicator(mode) do
-    ~e{
-      <span class="ui tiny grey label"><%= format_mode(mode) %></span>
-    }
-  end
 
   def render_menu_items(id) do
     Menu.get(id)
