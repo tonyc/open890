@@ -70,7 +70,7 @@
       <div class="eight wide column center aligned _debug">
         <div class="ui container">
           <div class="ui grid sixteen wide">
-            <div id="frequencyDisplay" class="ui row _debug">
+            <div id="frequencyDisplay" class="ui row">
 
               <%= case @vfo_memory_state do %>
               <%= :vfo -> %>
@@ -93,47 +93,67 @@
               <% end %>
             </div> <!-- frequencyDisplay -->
 
-            <!-- left -->
-            <div class="five wide column _debug">
-            </div>
+            <div class="row stackable grid">
 
-            <!-- middle -->
-            <div class="six wide column _debug ">
-              <div class="column ">
-                <%= if @vfo_memory_state == :vfo do %>
-                  <%= vfo_equalize_button(class: "ui small black button") %>
-                  <%= vfo_switch_button(@active_receiver, class: "ui small black button") %>
-                <% end %>
-                <%= if @vfo_memory_state do %>
-                  <%= vfo_mem_switch_button(@vfo_memory_state, class: "ui small black button") %>
-                <% end %>
+              <!-- middle -->
+              <div class="eight wide column">
+                <div class="ui small black buttons">
+                  <%= if @vfo_memory_state == :vfo do %>
+
+                    <%= vfo_equalize_button(class: "ui small black button") %>
+                    <%= vfo_switch_button(@active_receiver, class: "ui small black button") %>
+                  <% end %>
+                  <%= if @vfo_memory_state do %>
+                    <%= vfo_mem_switch_button(@vfo_memory_state, class: "ui small black button") %>
+                  <% end %>
+                </div>
+              </div>
+
+              <div class="eight wide column">
+                <div class="ui small black buttons">
+                  <%= cycle_button("PRE #{format_rf_pre(@rf_pre)}", @rf_pre, %{
+                    0 => "PA1",
+                    1 => "PA2",
+                    2 => "PA0"
+                  }, class: "button") %>
+
+                  <%= cycle_button("ATT #{format_rf_att(@rf_att)}", @rf_att, %{
+                    0 => "RA1",
+                    1 => "RA2",
+                    2 => "RA3",
+                    3 => "RA0"
+                  }, class: "button") %>
+
+                </div>
               </div>
             </div>
 
-            <!-- right -->
-            <div class="five wide column _debug">
+            <div class="row ">
 
-              <%= if @audio_gain do %>
-                <form id="AudioGain" phx-change="audio_gain_changed" class="ui inverted large form">
-                  <div class="inline fields">
-                    <div class="ten wide field">
-                      <label>AF</label>
-                      <input id="audioGainInput" name="audioGain" type="number" min="0" max="255" step="5" value="<%= @audio_gain %>"></input>
+              <div class="eight wide column computer only tablet only">
+                <%= if @audio_gain do %>
+                  <form id="AudioGain" phx-change="audio_gain_changed" class="ui inverted _form">
+                    <div class="inline fields">
+                      <div class="ten wide field">
+                        <label>AF</label>
+                        <input id="audioGainInput" name="audioGain" type="number" min="0" max="255" step="5" value="<%= @audio_gain %>"></input>
+                      </div>
                     </div>
-                  </div>
-                </form>
-              <% end %>
-              <%= if @rf_gain do %>
-                <form id="RFGain" phx-change="rf_gain_changed" class="ui inverted large form">
-                  <div class="inline fields">
-                    <div class="ten wide field">
-                      <label>RF</label>
-                      <input id="rfGainInput" name="rfGain" type="number" min="0" max="255" step="5" value="<%= @rf_gain %>"></input>
+                  </form>
+                <% end %>
+              </div>
+              <div class="eight wide column computer only tablet only">
+                <%= if @rf_gain do %>
+                  <form id="RFGain" phx-change="rf_gain_changed" class="ui inverted _form">
+                    <div class="inline fields">
+                      <div class="ten wide field">
+                        <label>RF</label>
+                        <input id="rfGainInput" name="rfGain" type="number" min="0" max="255" step="5" value="<%= @rf_gain %>"></input>
+                      </div>
                     </div>
-                  </div>
-                </form>
-              <% end %>
-
+                  </form>
+                <% end %>
+              </div>
 
             </div>
           </div>
@@ -169,7 +189,7 @@
 
 
     <div id="bandScopeDetails" class="row">
-      <div class="column left aligned">
+      <div class="column left aligned computer only tablet only">
         <div class="scopeButtons">
 
           <%= if @band_scope_mode do %>
@@ -178,13 +198,42 @@
                 auto_scroll: %{label: "Auto Scroll", cmd: "BS30"},
                 fixed: %{label: "Fixed", cmd: "BS32"},
                 center: %{label: "Center", cmd: "BS31"}
-              }, class: "black") %>
+              }, class: "small compact black") %>
           <% end %>
 
           <%= if @band_scope_mode == :fixed do %>
             <button class="ui black button">Range: (fixme)</button>
           <% else %>
-            <%= cycle_label_button("Span", @band_scope_span,
+            <div class="ui small compact labeled buttons">
+              <%= cycle_button("▼", @band_scope_span,
+                %{
+                  5 => "BS47",
+                  10 => "BS40",
+                  20 => "BS41",
+                  30 => "BS42",
+                  50 => "BS43",
+                  100 => "BS44",
+                  200 => "BS45",
+                  500 => "BS46"
+                }, class: "black") %>
+               %>
+               <div class="ui black button">
+                 Span: <%= @band_scope_span %> kHz
+               </div>
+               <%= cycle_button "▲", @band_scope_span,
+                %{
+                  5 => "BS41",
+                  10 => "BS42",
+                  20 => "BS43",
+                  30 => "BS44",
+                  50 => "BS45",
+                  100 => "BS46",
+                  200 => "BS47",
+                  500 => "BS40",
+                }, class: "black" %>
+            </div>
+
+            <%#= cycle_label_button("Span", @band_scope_span,
               %{
                 5 => %{label: "5 kHz", cmd: "BS41"},
                 10 => %{label: "10 kHz", cmd: "BS42"},
@@ -199,14 +248,14 @@
 
           <%= case @band_scope_mode do %>
             <%= :auto_scroll -> %>
-              <%= cmd_button "Shift", "BSE", class: "ui black button" %>
+              <%= cmd_button "Shift", "BSE", class: "ui small black compact button" %>
             <% :fixed -> %>
-              <%= cmd_button "MKR.CTR", "BSE", class: "ui black button" %>
+              <%= cmd_button "MKR.CTR", "BSE", class: "ui small compact black button" %>
             <% _ -> %>
               <%= "" %>
           <% end %>
 
-          <div class="ui black button" id="RefLevelControl">
+          <div class="ui small compact black button" id="RefLevelControl">
             <form class="" id="refLevel" phx-change="ref_level_changed">
               Ref Level
               <input class="miniTextInput" name="refLevel" type="number" min="-20" max="10" step="0.5" value="<%= format_ref_level(@ref_level) %>"></input>
@@ -215,33 +264,58 @@
           </div>
 
           <%= if @band_scope_att do %>
-            <%= cycle_label_button("Scope ATT", @band_scope_att,
-              %{
-                0 => %{label: "Off", cmd: "BS81"},
-                1 => %{label: "10 dB", cmd: "BS82"},
-                2 => %{label: "20 dB", cmd: "BS83"},
-                3 => %{label: "30 dB", cmd: "BS80"},
-              }, class: "black") %>
+            <div class="ui small compact black buttons">
+              <%= cycle_button "▼", @band_scope_att,
+                %{
+                  0 => "BS83",
+                  1 => "BS80",
+                  2 => "BS81",
+                  3 => "BS82",
+                } %>
+              <div class="ui button">
+                Scope ATT:
+                <%= format_band_scope_att(@band_scope_att) %>
+              </div>
+              <%= cycle_button "▲", @band_scope_att,
+                %{
+                  0 => "BS81",
+                  1 => "BS82",
+                  2 => "BS83",
+                  3 => "BS80",
+                } %>
+            </div>
           <% end %>
 
           <%= if @band_scope_avg do %>
-            <%= cycle_label_button("Scope Avg", @band_scope_avg,
-              %{
-                0 => %{label: "Off", cmd: "BSA1"},
-                1 => %{label: "1", cmd: "BSA2"},
-                2 => %{label: "2", cmd: "BSA3"},
-                3 => %{label: "3", cmd: "BSA0"},
-              }, class: "black") %>
+            <div class="ui small compact black buttons">
+              <%= cycle_button "▼", @band_scope_avg,
+                %{
+                  0 => "BSA3",
+                  1 => "BSA0",
+                  2 => "BSA1",
+                  3 => "BSA2",
+                } %>
+              <div class="ui button">
+                Scope Avg: <%= @band_scope_avg %>
+              </div>
+              <%= cycle_button "▲", @band_scope_avg,
+                %{
+                  0 => "BSA1",
+                  1 => "BSA2",
+                  2 => "BSA3",
+                  3 => "BSA0",
+                } %>
+            </div>
           <% end %>
 
-          <div class="ui black button">
+          <div class="ui small compact black button">
             <form id="WaterfallSpeed" phx-hook="WaterfallSpeedForm">
               WF Speed: 1 /
               <input class="miniTextInput" name="value" type="number" min="1" max="100" step="1" value="<%= @waterfall_draw_interval %>"></input>
             </form>
           </div>
 
-          <div class="ui black button">
+          <div class="ui small compact black button">
             <form id="SpectrumScale" phx-hook="SpectrumScaleForm">
               Spectrum Scale
               <input class="miniTextInput" name="value" type="number" min="1" max="10" step="0.1" value="<%= @spectrum_scale %>"></input>
@@ -254,7 +328,7 @@
                 1 => %{label: "High", cmd: "DD03"},
                 2 => %{label: "Mid", cmd: "DD01"},
                 3 => %{label: "Low", cmd: "DD02"},
-              }, class: "black") %>
+              }, class: "small compact black") %>
           <% end %>
 
         </div> <!-- ui buttons -->

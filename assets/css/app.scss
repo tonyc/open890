@@ -319,9 +319,10 @@ nav {
     display: inline-block;
 
     &.active {
+      font-size: 2.5vmax;
       color: white;
-      font-size: 4rem;
-      text-align: right;
+      // font-size: 4rem;
+      // text-align: right;
 
       &:hover {
         cursor: pointer;
@@ -331,12 +332,23 @@ nav {
     }
 
     &.inactive {
-      font-size: 3rem;
+      font-size: 2vw;
       color: rgb(202, 203, 205);
-      text-align: left;
-      margin-left: 1em;
+      // text-align: left;
+      // margin-left: 1em;
+    }
+
+  }
+
+  .modeIndicator {
+    font-weight: semi-bold;
+
+    &.active {
+      // font-size: 2rem;
+      // margin-right: 2rem;
     }
   }
+
 }
 
 #scopeDetails {
@@ -611,9 +623,9 @@ svg#bandScope {
 
 }
 
-.scopeButtons button {
-  width: 200px;
-}
+// .scopeButtons button {
+//   width: 200px;
+// }
 
 .resize-both {
   resize: both;
@@ -636,13 +648,4 @@ svg#bandScope {
 
 .vfoMemIndicator {
   float: left;
-}
-
-.modeIndicator {
-  font-weight: semi-bold;
-
-  &.active {
-    font-size: 2rem;
-    margin-right: 2rem;
-  }
 }
