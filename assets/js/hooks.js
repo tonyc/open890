@@ -311,6 +311,47 @@ let Hooks = {
     }
   },
 
+  Slider: {
+    mounted() {
+      console.log("slider mounted")
+      this.action = this.el.dataset.clickAction
+      this.wheelAction = this.el.dataset.wheelAction;
+
+      this.el.addEventListener('wheel', (event) => {
+        event.preventDefault();
+        var isScrollUp = (event.deltaY < 0)
+        this.pushEvent(this.wheelAction, {is_up: isScrollUp})
+      })
+
+      this.el.addEventListener('click', (event) => {
+        event.stopPropagation()
+        event.preventDefault()
+        
+        let coords = this.getClickCoords(event)
+        let x = Math.floor(coords.x)
+
+        this.pushEvent(this.action, {value: x})
+      })
+
+      this.el.addEventListener("mousemove", event => {
+        if (event.buttons && event.buttons == 1) {
+          let coords = this.getClickCoords(event)
+          let x = Math.floor(coords.x)
+          this.pushEvent(this.action, {value: x})
+        }
+      })
+    },
+
+    getClickCoords(event) {
+      let rect = event.target.getBoundingClientRect();
+      let x = event.clientX - rect.left; //x position within the element.
+      let y = event.clientY - rect.top;  //y position within the element.
+
+      return {x: x, y: y}
+    }
+
+  },
+
   SpectrumScaleForm: {
     mounted() {
       console.log("spectrum scale form")

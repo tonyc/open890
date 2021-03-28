@@ -98,8 +98,8 @@
               <!-- middle -->
               <div class="eight wide column">
                 <div class="ui small black buttons">
-                  <%= if @vfo_memory_state == :vfo do %>
 
+                  <%= if @vfo_memory_state == :vfo do %>
                     <%= vfo_equalize_button(class: "ui small black button") %>
                     <%= vfo_switch_button(@active_receiver, class: "ui small black button") %>
                   <% end %>
@@ -128,30 +128,31 @@
               </div>
             </div>
 
-            <div class="row ">
+            <div class="row">
 
               <div class="eight wide column computer only tablet only">
-                <%= if @audio_gain do %>
-                  <form id="AudioGain" phx-change="audio_gain_changed" class="ui inverted _form">
-                    <div class="inline fields">
-                      <div class="ten wide field">
-                        <label>AF</label>
-                        <input id="audioGainInput" name="audioGain" type="number" min="0" max="255" step="5" value="<%= @audio_gain %>"></input>
-                      </div>
-                    </div>
-                  </form>
-                <% end %>
+                <!-- nothing here yet -->
               </div>
-              <div class="eight wide column computer only tablet only">
-                <%= if @rf_gain do %>
-                  <form id="RFGain" phx-change="rf_gain_changed" class="ui inverted _form">
-                    <div class="inline fields">
-                      <div class="ten wide field">
-                        <label>RF</label>
-                        <input id="rfGainInput" name="rfGain" type="number" min="0" max="255" step="5" value="<%= @rf_gain %>"></input>
-                      </div>
+
+              <div class="eight wide column computer only tablet only right aligned">
+                <%= if @audio_gain do %>
+                  <div class="slider">
+                    <span class="label">AF</span>
+                    <div class="sliderWrapper" phx-hook="Slider" data-click-action="audio_gain_changed" data-wheel-action="adjust_audio_gain" id="AFSlider">
+                      <div class="indicator" style="width: <%= @audio_gain %>px;"></div>
                     </div>
-                  </form>
+                  </div>
+                <% end %>
+
+                <br /> <br/>
+
+                <%= if @rf_gain do %>
+                  <div class="slider">
+                    <span class="label">RF</span>
+                    <div class="sliderWrapper" phx-hook="Slider" data-click-action="rf_gain_changed" data-wheel-action="adjust_rf_gain" id="RFSlider">
+                      <div class="indicator" style="width: <%= @rf_gain %>px;"></div>
+                    </div>
+                  </div>
                 <% end %>
               </div>
 

@@ -649,3 +649,34 @@ svg#bandScope {
 .vfoMemIndicator {
   float: left;
 }
+
+
+.slider {
+  width: 280px;
+
+  .label {
+    float: left;
+  }
+}
+
+.sliderWrapper {
+  margin-top: 5px;
+  float: right;
+  width: 255px;
+  height: 12px;
+  background-color: $kenwood-grey;
+
+  cursor: pointer;
+
+  .indicator {
+    position: relative;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: $kenwood-cyan;
+
+    &.green {
+      background-color: $elecraft-green;
+    }
+  }
+}

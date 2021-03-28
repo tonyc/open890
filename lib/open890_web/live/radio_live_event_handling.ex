@@ -47,23 +47,52 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
       end
 
       def handle_event("audio_gain_changed", params , %{assigns: %{radio_connection: connection}} = socket) do
-        with {value, _extra} <- params["audioGain"] |> Integer.parse() do
-          connection |> Radio.set_audio_gain(value)
-        else
-          other ->
-            Logger.info("Unable to parse audio gain: #{inspect(other)}")
+        connection |> Radio.set_audio_gain(params["value"])
+        {:noreply, socket}
+      end
+
+      def handle_event("adjust_audio_gain", %{"is_up" => is_up} = params, socket) do
+        audio_gain = socket.assigns.audio_gain
+
+        step = case is_up do
+          true -> 5
+          false -> -5
         end
+
+        new_audio_gain = audio_gain + step
+
+        new_audio_gain = case is_up do
+          true -> min(new_audio_gain, 255)
+          false -> max(new_audio_gain, 0)
+        end
+
+        socket.assigns.radio_connection |> Radio.set_audio_gain(new_audio_gain)
+
+        {:noreply, socket}
+      end
+
+      def handle_event("adjust_rf_gain", %{"is_up" => is_up} = params, socket) do
+        rf_gain = socket.assigns.rf_gain
+
+        step = case is_up do
+          true -> 5
+          false -> -5
+        end
+
+        new_rf_gain = rf_gain + step
+
+        new_rf_gain = case is_up do
+          true -> min(new_rf_gain, 255)
+          false -> max(new_rf_gain, 0)
+        end
+
+        socket.assigns.radio_connection |> Radio.set_rf_gain(new_rf_gain)
 
         {:noreply, socket}
       end
 
       def handle_event("rf_gain_changed", params , %{assigns: %{radio_connection: connection}} = socket) do
-        with {value, _extra} <- params["rfGain"] |> Integer.parse() do
-          connection |> Radio.set_rf_gain(value)
-        else
-          other ->
-            Logger.info("Unable to parse RF gain: #{inspect(other)}")
-        end
+        connection |> Radio.set_rf_gain(params["value"])
 
         {:noreply, socket}
       end
