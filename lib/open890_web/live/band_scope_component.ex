@@ -15,10 +15,7 @@ defmodule Open890Web.Live.BandScopeComponent do
             </linearGradient>
           </defs>
 
-          <%= if @band_scope_mode == :auto_scroll do %>
-            <%= band_scope_vertical_grid() %>
-          <% end %>
-
+          <%= band_scope_vertical_grid(@band_scope_mode, freq: @active_frequency, span: @band_scope_span) %>
           <%= band_scope_horizontal_grid() %>
 
           <polygon id="bandSpectrum" class="spectrum" points="<%= scope_data_to_svg(@band_scope_data, max_value: 140, scale_y: @spectrum_scale) %>" vector-effect="non-scaling-stroke" />

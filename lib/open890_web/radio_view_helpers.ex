@@ -290,7 +290,7 @@ defmodule Open890Web.RadioViewHelpers do
     }
   end
 
-  def band_scope_vertical_grid do
+  def band_scope_vertical_grid(:auto_scroll, _) do
     offset = 64
 
     ~e{
@@ -299,6 +299,50 @@ defmodule Open890Web.RadioViewHelpers do
       <% end %>
     }
   end
+
+  def band_scope_vertical_grid(:center, opts) when is_list(opts) do
+    freq = opts |> Keyword.fetch!(:freq)
+    span = opts |> Keyword.fetch!(:span)
+
+    if is_nil(span) do
+      ""
+    else
+      span_hz = span * 1000
+      span_step_hz = div(span_hz, 10)
+      half_span = div(span_hz, 2)
+
+      low_edge = freq - half_span
+      high_edge = freq + half_span
+
+      first_marker = round_up_to_step(low_edge, span_step_hz)
+
+      values = (0..9)
+      |> Enum.map(fn i ->
+        first_marker + (i * span_step_hz)
+        # first_marker_projected + (i * grid_offset)
+      end)
+      |> Enum.map(fn f ->
+        project_to_bandscope_limits(f, {low_edge, high_edge})
+      end)
+
+      ~e{
+        <%= for i <- (0..9) do %>
+          <line class="bandscopeGrid vertical" x1="<%= Enum.at(values, i) %>" y1="0" x2="<%= Enum.at(values, i) %>" y2="640" />
+        <% end %>
+      }
+
+    end
+
+  end
+
+  def band_scope_vertical_grid(:fixed, _) do
+    ""
+  end
+
+  def band_scope_vertical_grid(_, _) do
+    ""
+  end
+
 
   def passband_polygon(mode, active_frequency, filter_lo_width, filter_hi_shift, scope_edges)
       when mode in [:lsb, :usb] do
@@ -496,5 +540,9 @@ defmodule Open890Web.RadioViewHelpers do
           <a class="item">Unknown menu</a>
         }
     end
+  end
+
+  def round_up_to_step(value, step) when is_integer(value) and is_integer(step) do
+    div(value, step) * step + step
   end
 end
