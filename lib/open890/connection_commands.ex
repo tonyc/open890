@@ -14,6 +14,7 @@ defmodule Open890.ConnectionCommands do
     conn |> get_filter_state()
     conn |> get_roofing_filter_info()
     conn |> get_band_scope_mode()
+    conn |> get_band_scope_span()
     conn |> get_band_scope_avg()
     conn |> get_band_scope_att()
     conn |> get_display_screen()
@@ -124,6 +125,10 @@ defmodule Open890.ConnectionCommands do
 
   def get_active_receiver(conn) do
     conn |> cmd("FR")
+  end
+
+  def get_band_scope_span(conn) do
+    conn |> cmd("BS4")
   end
 
   def get_band_scope_limits(conn) do

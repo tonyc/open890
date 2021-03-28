@@ -68,17 +68,33 @@ defmodule Open890Web.Live.Dispatch do
       |> String.trim_leading("0")
       |> String.to_integer()
 
-    socket
-    |> assign(:band_scope_edges, {bs_low, bs_high})
-    |> assign(:band_scope_span, span)
+
+    case socket.assigns.band_scope_mode do
+      :fixed ->
+        socket
+        |> assign(:band_scope_edges, {bs_low, bs_high})
+        |> assign(:band_scope_fixed_span, span)
+
+      :auto_scroll ->
+        socket
+        |> assign(:band_scope_edges, {bs_low, bs_high})
+
+      :center ->
+        socket
+
+      _ ->
+        socket
+
+    end
   end
 
+  # band_scope_mode
   def dispatch("BS3" <> _rest = msg, socket) do
     scope_mode = msg |> Extract.scope_mode()
 
     socket = socket |> assign(:band_scope_mode, scope_mode)
 
-    if scope_mode == :center do
+    if scope_mode == :center && !is_nil(socket.assigns.band_scope_span) do
       band_scope_edges = calculate_center_mode_edges(socket.assigns.active_frequency, socket.assigns.band_scope_span)
 
       socket |> assign(:band_scope_edges, band_scope_edges)
@@ -87,17 +103,19 @@ defmodule Open890Web.Live.Dispatch do
     end
   end
 
+  # band_scope_span
   def dispatch("BS4" <> _rest = msg, socket) do
     scope_span_khz = msg |> Extract.band_scope_span()
 
     socket = socket |> assign(:band_scope_span, scope_span_khz)
 
-    if socket.assigns.band_scope_mode == :center do
-      band_scope_edges = calculate_center_mode_edges(socket.assigns.active_frequency, socket.assigns.band_scope_span)
+    case socket.assigns.band_scope_mode do
+      mode when mode in [:center, :auto_scroll] ->
+        band_scope_edges = calculate_center_mode_edges(socket.assigns.active_frequency, socket.assigns.band_scope_span)
+        socket |> assign(:band_scope_edges, band_scope_edges)
 
-      socket |> assign(:band_scope_edges, band_scope_edges)
-    else
-      socket
+      _ ->
+        socket
     end
   end
 
@@ -378,7 +396,7 @@ defmodule Open890Web.Live.Dispatch do
     end
   end
 
-  defp calculate_center_mode_edges(freq, span_khz) do
+  defp calculate_center_mode_edges(freq, span_khz) when is_integer(freq) and is_integer(span_khz) do
     span = span_khz * 1000
     half_span = span |> div(2)
 

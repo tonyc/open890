@@ -17,6 +17,7 @@ defmodule Open890Web.Live.RadioSocketState do
     {:band_scope_edges, nil},
     {:band_scope_mode, nil},
     {:band_scope_span, nil},
+    {:band_scope_fixed_span, nil},
     {:display_screen_id, 0},
     {:filter_hi_shift, nil},
     {:filter_high_freq, nil},
