@@ -34,3 +34,10 @@
     <%= label @f, :user_is_admin, "User is admin" %>
   </div>
 </div>
+
+<div class="field">
+  <div class="ui checkbox">
+    <%= checkbox @f, :auto_start, value: @radio_connection.auto_start, class: "hidden", tabindex: "0" %>
+    <%= label @f, :auto_start, "Auto-Start" %>
+  </div>
+</div>

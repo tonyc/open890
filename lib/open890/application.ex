@@ -8,6 +8,7 @@ defmodule Open890.Application do
   use Application
 
   alias Open890.RadioConnectionRepo
+  alias Open890.RadioConnection
 
   @connection_registry :radio_connection_registry
 
@@ -29,7 +30,11 @@ defmodule Open890.Application do
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Open890.Supervisor]
-    Supervisor.start_link(children, opts)
+    res = Supervisor.start_link(children, opts)
+
+    auto_start_connections()
+
+    res
   end
 
   # Tell Phoenix to update the endpoint configuration
@@ -37,5 +42,16 @@ defmodule Open890.Application do
   def config_change(changed, _new, removed) do
     Open890Web.Endpoint.config_change(changed, removed)
     :ok
+  end
+
+  def auto_start_connections do
+    RadioConnection.all()
+    |> Enum.filter(fn conn ->
+      Map.get(conn, :auto_start, "false") == "true"
+    end)
+    |> Enum.each(fn conn ->
+      Logger.info("Auto-starting connection id #{conn.id}, \"#{conn.name}\"")
+      conn |> RadioConnection.start()
+    end)
   end
 end
