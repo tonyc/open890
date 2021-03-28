@@ -36,7 +36,7 @@ defmodule Open890Web.Live.RadioSocketState do
     {:notch_filter, nil},
     {:power_level, nil},
     {:projected_active_receiver_location, ""},
-    {:ref_level, 0},
+    {:ref_level, 40},
     {:rf_gain, nil},
     {:rf_pre, 0},
     {:rf_att, 0},
