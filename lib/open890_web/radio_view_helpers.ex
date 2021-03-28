@@ -388,7 +388,7 @@ defmodule Open890Web.RadioViewHelpers do
         _active_roofing_filter,
         _roofing_filter_data
       )
-      when mode in [:usb, :lsb] do
+      when mode in [:usb, :lsb, :fm] do
 
 
     total_width_hz = cond do
@@ -408,6 +408,23 @@ defmodule Open890Web.RadioViewHelpers do
     ~e{
       <polyline id="audioScopeFilter" points="<%= points %>" />
     }
+  end
+
+  def audio_scope_filter_edges(:am, {filter_lo_width, filter_hi_shift}, _active_roofing_filter, _roofing_filter_data) do
+
+    [projected_low, projected_hi] = [filter_lo_width, filter_hi_shift]
+    |> Enum.map(fn val ->
+      val
+      |> project_to_audioscope_limits(5000)
+      |> round()
+    end)
+
+    points = audio_scope_filter_points(projected_low, projected_hi)
+
+    ~e{
+      <polyline id="audioScopeFilter" points="<%= points %>" />
+    }
+
   end
 
 
