@@ -68,7 +68,6 @@ defmodule Open890Web.Live.Dispatch do
       |> String.trim_leading("0")
       |> String.to_integer()
 
-
     case socket.assigns.band_scope_mode do
       :fixed ->
         socket
@@ -84,7 +83,6 @@ defmodule Open890Web.Live.Dispatch do
 
       _ ->
         socket
-
     end
   end
 
@@ -95,7 +93,11 @@ defmodule Open890Web.Live.Dispatch do
     socket = socket |> assign(:band_scope_mode, scope_mode)
 
     if scope_mode == :center && !is_nil(socket.assigns.band_scope_span) do
-      band_scope_edges = calculate_center_mode_edges(socket.assigns.active_frequency, socket.assigns.band_scope_span)
+      band_scope_edges =
+        calculate_center_mode_edges(
+          socket.assigns.active_frequency,
+          socket.assigns.band_scope_span
+        )
 
       socket |> assign(:band_scope_edges, band_scope_edges)
     else
@@ -111,7 +113,12 @@ defmodule Open890Web.Live.Dispatch do
 
     case socket.assigns.band_scope_mode do
       mode when mode in [:center, :auto_scroll] ->
-        band_scope_edges = calculate_center_mode_edges(socket.assigns.active_frequency, socket.assigns.band_scope_span)
+        band_scope_edges =
+          calculate_center_mode_edges(
+            socket.assigns.active_frequency,
+            socket.assigns.band_scope_span
+          )
+
         socket |> assign(:band_scope_edges, band_scope_edges)
 
       _ ->
@@ -143,7 +150,6 @@ defmodule Open890Web.Live.Dispatch do
 
     socket =
       if socket.assigns[:active_receiver] == :a do
-
         formatted_frequency = frequency |> RadioViewHelpers.format_raw_frequency()
         formatted_mode = socket.assigns[:active_mode] |> RadioViewHelpers.format_mode()
         page_title = "#{formatted_frequency} - #{formatted_mode}"
@@ -156,13 +162,18 @@ defmodule Open890Web.Live.Dispatch do
         |> assign(:inactive_frequency, frequency)
       end
 
-    socket = if socket.assigns[:band_scope_mode] == :center && socket.assigns.active_receiver == :a do
-      band_scope_edges = calculate_center_mode_edges(socket.assigns.active_frequency, socket.assigns.band_scope_span)
+    socket =
+      if socket.assigns[:band_scope_mode] == :center && socket.assigns.active_receiver == :a do
+        band_scope_edges =
+          calculate_center_mode_edges(
+            socket.assigns.active_frequency,
+            socket.assigns.band_scope_span
+          )
 
-      socket |> assign(:band_scope_edges, band_scope_edges)
-    else
-      socket
-    end
+        socket |> assign(:band_scope_edges, band_scope_edges)
+      else
+        socket
+      end
 
     socket |> vfo_a_updated()
   end
@@ -177,7 +188,6 @@ defmodule Open890Web.Live.Dispatch do
         formatted_mode = socket.assigns[:active_mode] |> RadioViewHelpers.format_mode()
         page_title = "#{formatted_frequency} - #{formatted_mode}"
 
-
         socket
         |> assign(:page_title, page_title)
         |> assign(:active_frequency, frequency)
@@ -186,13 +196,19 @@ defmodule Open890Web.Live.Dispatch do
         |> assign(:inactive_frequency, frequency)
       end
 
-    socket = if socket.assigns[:band_scope_mode] == :center && socket.assigns.active_receiver == :b do
-      band_scope_edges = calculate_center_mode_edges(socket.assigns.active_frequency, socket.assigns.band_scope_span)
+    socket =
+      if socket.assigns[:band_scope_mode] == :center && socket.assigns.active_receiver == :b do
+        band_scope_edges =
+          calculate_center_mode_edges(
+            socket.assigns.active_frequency,
+            socket.assigns.band_scope_span
+          )
 
-      socket |> assign(:band_scope_edges, band_scope_edges)
-    else
-      socket
-    end
+        socket |> assign(:band_scope_edges, band_scope_edges)
+      else
+        socket
+      end
+
     socket
   end
 
@@ -237,8 +253,8 @@ defmodule Open890Web.Live.Dispatch do
     page_title = "#{formatted_frequency} - #{formatted_mode}"
 
     socket
-      |> assign(:active_mode, mode)
-      |> assign(:page_title, page_title)
+    |> assign(:active_mode, mode)
+    |> assign(:page_title, page_title)
   end
 
   def dispatch("OM1" <> _rest = msg, socket) do
@@ -396,7 +412,8 @@ defmodule Open890Web.Live.Dispatch do
     end
   end
 
-  defp calculate_center_mode_edges(freq, span_khz) when is_integer(freq) and is_integer(span_khz) do
+  defp calculate_center_mode_edges(freq, span_khz)
+       when is_integer(freq) and is_integer(span_khz) do
     span = span_khz * 1000
     half_span = span |> div(2)
 

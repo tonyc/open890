@@ -9,5 +9,4 @@ defmodule Open890Web.RadioViewHelpersTest do
       assert RadioViewHelpers.round_up_to_step(14_077_890, 3000) == 14_079_000
     end
   end
-
 end

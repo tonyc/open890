@@ -27,5 +27,4 @@ defmodule Open890Web.Live.VFODisplayComponent do
       _ -> "UNKNOWN"
     end
   end
-
 end

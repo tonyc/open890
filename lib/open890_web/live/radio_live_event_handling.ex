@@ -26,7 +26,11 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
         {:noreply, socket}
       end
 
-      def handle_event("spectrum_scale_changed", params , %{assigns: %{radio_connection: connection}} = socket) do
+      def handle_event(
+            "spectrum_scale_changed",
+            params,
+            %{assigns: %{radio_connection: connection}} = socket
+          ) do
         with {value, _extra} <- params["value"] |> Float.parse() do
           {:noreply, socket |> assign(:spectrum_scale, value)}
         else
@@ -36,7 +40,11 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
         end
       end
 
-      def handle_event("wf_speed_changed", params , %{assigns: %{radio_connection: connection}} = socket) do
+      def handle_event(
+            "wf_speed_changed",
+            params,
+            %{assigns: %{radio_connection: connection}} = socket
+          ) do
         with {value, _extra} <- params["value"] |> Integer.parse() do
           {:noreply, socket |> assign(:waterfall_draw_interval, value)}
         else
@@ -46,7 +54,11 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
         end
       end
 
-      def handle_event("audio_gain_changed", params , %{assigns: %{radio_connection: connection}} = socket) do
+      def handle_event(
+            "audio_gain_changed",
+            params,
+            %{assigns: %{radio_connection: connection}} = socket
+          ) do
         connection |> Radio.set_audio_gain(params["value"])
         {:noreply, socket}
       end
@@ -54,17 +66,19 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
       def handle_event("adjust_audio_gain", %{"is_up" => is_up} = params, socket) do
         audio_gain = socket.assigns.audio_gain
 
-        step = case is_up do
-          true -> 5
-          false -> -5
-        end
+        step =
+          case is_up do
+            true -> 5
+            false -> -5
+          end
 
         new_audio_gain = audio_gain + step
 
-        new_audio_gain = case is_up do
-          true -> min(new_audio_gain, 255)
-          false -> max(new_audio_gain, 0)
-        end
+        new_audio_gain =
+          case is_up do
+            true -> min(new_audio_gain, 255)
+            false -> max(new_audio_gain, 0)
+          end
 
         socket.assigns.radio_connection |> Radio.set_audio_gain(new_audio_gain)
 
@@ -74,24 +88,30 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
       def handle_event("adjust_rf_gain", %{"is_up" => is_up} = params, socket) do
         rf_gain = socket.assigns.rf_gain
 
-        step = case is_up do
-          true -> 5
-          false -> -5
-        end
+        step =
+          case is_up do
+            true -> 5
+            false -> -5
+          end
 
         new_rf_gain = rf_gain + step
 
-        new_rf_gain = case is_up do
-          true -> min(new_rf_gain, 255)
-          false -> max(new_rf_gain, 0)
-        end
+        new_rf_gain =
+          case is_up do
+            true -> min(new_rf_gain, 255)
+            false -> max(new_rf_gain, 0)
+          end
 
         socket.assigns.radio_connection |> Radio.set_rf_gain(new_rf_gain)
 
         {:noreply, socket}
       end
 
-      def handle_event("rf_gain_changed", params , %{assigns: %{radio_connection: connection}} = socket) do
+      def handle_event(
+            "rf_gain_changed",
+            params,
+            %{assigns: %{radio_connection: connection}} = socket
+          ) do
         connection |> Radio.set_rf_gain(params["value"])
 
         {:noreply, socket}
@@ -144,7 +164,6 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
       def handle_event("set_theme", %{"theme" => theme_name} = _params, socket) do
         {:noreply, socket |> assign(:theme, theme_name)}
       end
-
 
       def handle_event("open_menu_by_id", %{"id" => menu_id} = _params, socket) do
         menu_id = menu_id |> String.to_integer()

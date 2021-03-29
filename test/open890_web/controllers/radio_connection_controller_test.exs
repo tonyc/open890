@@ -38,5 +38,4 @@ defmodule Open890Web.RadioConnectionControllerTest do
     #   assert conn.assigns.radio_connections == [radio_connection]
     # end
   end
-
 end

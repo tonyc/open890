@@ -30,7 +30,6 @@ defmodule Open890.DataCase do
       IO.puts("Stopping dets and removing database: #{dets_table}")
       :dets.stop()
       File.rm!(dets_table |> to_string())
-
     end)
 
     :ok

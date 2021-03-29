@@ -27,5 +27,4 @@ defmodule Open890Web.ChannelCase do
       @endpoint Open890Web.Endpoint
     end
   end
-
 end

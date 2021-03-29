@@ -25,18 +25,19 @@ defmodule Open890Web.Live.RadioLive.Bandscope do
 
     socket = socket |> assign(RadioSocketState.initial_state())
 
-    socket = with {:ok, file} <- File.read("config/config.toml"),
-        {:ok, config} <- Toml.decode(file) do
-          macros = config
-          |> Map.get("ui", %{})
-          |> Map.get("macros", [])
+    socket =
+      with {:ok, file} <- File.read("config/config.toml"),
+           {:ok, config} <- Toml.decode(file) do
+        macros = config |> get_in(["ui", "macros"]) || []
+        socket |> assign(:__ui_macros, macros)
+      else
+        reason ->
+          Logger.warn(
+            "Could not load config/config.toml: #{inspect(reason)}. This is not currently an error."
+          )
 
-          socket |> assign(:__ui_macros, macros)
-        else
-          reason ->
-            Logger.warn("Could not load config/config.toml: #{inspect(reason)}. This is not currently an error.")
-            socket
-        end
+          socket
+      end
 
     socket =
       RadioConnection.find(connection_id)
@@ -154,41 +155,47 @@ defmodule Open890Web.Live.RadioLive.Bandscope do
   def handle_event("run_macro", %{"name" => macro_name} = _params, socket) do
     Logger.debug("Running macro: #{inspect(macro_name)}")
 
-    commands = socket.assigns.__ui_macros
-    |> Enum.find(fn x -> x["name"] == macro_name end)
-    |> case do
-      %{"commands" => commands} ->
-        commands
-      _ -> []
-    end
+    commands =
+      socket.assigns.__ui_macros
+      |> Enum.find(fn x -> x["name"] == macro_name end)
+      |> case do
+        %{"commands" => commands} ->
+          commands
 
+        _ ->
+          []
+      end
 
     case commands do
       [] ->
         :ok
+
       commands ->
         conn = socket.assigns.radio_connection
 
         Task.async(fn ->
-          commands |> Enum.each(fn command ->
+          commands
+          |> Enum.each(fn command ->
             Logger.debug("  Command: #{inspect(command)}")
 
             cond do
               command |> String.starts_with?("DE") ->
                 delay_ms = Extract.delay_msec(command)
-                Logger.debug("Processing special DELAY macro #{inspect(command)} for #{delay_ms} ms")
+
+                Logger.debug(
+                  "Processing special DELAY macro #{inspect(command)} for #{delay_ms} ms"
+                )
+
                 Process.sleep(delay_ms)
 
               true ->
                 conn |> ConnectionCommands.cmd(command)
                 Process.sleep(100)
             end
-
           end)
         end)
 
-      :ok
-
+        :ok
     end
 
     {:noreply, socket}
@@ -202,5 +209,4 @@ defmodule Open890Web.Live.RadioLive.Bandscope do
   defp close_modals(socket) do
     socket |> assign(display_band_selector: false, display_screen_id: 0)
   end
-
 end

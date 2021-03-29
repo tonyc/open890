@@ -84,5 +84,4 @@ defmodule Open890Web.Live.DigitalMeterComponent do
       </svg>
     """
   end
-
 end

@@ -59,9 +59,10 @@ defmodule Open890.RadioConnectionRepo do
       Logger.warn("Forcefully destroying database: #{table_name()}")
       :ok = File.rm!(table_name() |> to_string())
     else
-      Logger.info("destroy_repo!: force: true was not passed, not destroying table #{table_name()}")
+      Logger.info(
+        "destroy_repo!: force: true was not passed, not destroying table #{table_name()}"
+      )
     end
-
   end
 
   def insert(

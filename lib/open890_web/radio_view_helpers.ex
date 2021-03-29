@@ -50,7 +50,9 @@ defmodule Open890Web.RadioViewHelpers do
     values
     |> Map.get(var)
     |> case do
-      nil -> ""
+      nil ->
+        ""
+
       %{label: label, cmd: cmd} ->
         cmd_label_button(title, label, cmd, opts)
     end
@@ -60,10 +62,11 @@ defmodule Open890Web.RadioViewHelpers do
     class_opts = opts |> Keyword.get(:class, "")
     button_classes = "ui button #{class_opts}"
 
-    contents = case title do
-      blank when blank in ["", nil] -> label
-      str -> "#{str}: #{label}"
-    end
+    contents =
+      case title do
+        blank when blank in ["", nil] -> label
+        str -> "#{str}: #{label}"
+      end
 
     content_tag(:button, contents, class: button_classes, phx_click: "cmd", phx_value_cmd: cmd)
   end
@@ -94,7 +97,6 @@ defmodule Open890Web.RadioViewHelpers do
   def format_ref_level(ref_level) do
     ref_level / 2.0 - 20
   end
-
 
   def format_band_scope_mode(mode) do
     mode
@@ -186,7 +188,6 @@ defmodule Open890Web.RadioViewHelpers do
     end
   end
 
-
   def number_to_short(value) when is_integer(value) do
     cond do
       value == 15000 -> "15k"
@@ -221,17 +222,19 @@ defmodule Open890Web.RadioViewHelpers do
 
     scaled_max = max_value * scale_y
 
-    band_data = band_data |> Enum.map(fn v ->
-      # THIS WORKS
-      # v = linear_interpolate(v, 0, max_value, scaled_max, 0)
-      # v = v * scale_y
-      # linear_interpolate(v, scaled_max, 0, 0, max_value)
+    band_data =
+      band_data
+      |> Enum.map(fn v ->
+        # THIS WORKS
+        # v = linear_interpolate(v, 0, max_value, scaled_max, 0)
+        # v = v * scale_y
+        # linear_interpolate(v, scaled_max, 0, 0, max_value)
 
-      v
-      |> linear_interpolate(0, max_value, scaled_max, 0)
-      |> Kernel.*(scale_y)
-      |> linear_interpolate(scaled_max, 0, 0, max_value)
-    end)
+        v
+        |> linear_interpolate(0, max_value, scaled_max, 0)
+        |> Kernel.*(scale_y)
+        |> linear_interpolate(scaled_max, 0, 0, max_value)
+      end)
 
     band_data = band_data ++ [max_value]
     length = band_data |> Enum.count()
@@ -316,23 +319,22 @@ defmodule Open890Web.RadioViewHelpers do
 
       first_marker = round_up_to_step(low_edge, span_step_hz)
 
-      values = (0..9)
-      |> Enum.map(fn i ->
-        first_marker + (i * span_step_hz)
-        # first_marker_projected + (i * grid_offset)
-      end)
-      |> Enum.map(fn f ->
-        project_to_bandscope_limits(f, {low_edge, high_edge})
-      end)
+      values =
+        0..9
+        |> Enum.map(fn i ->
+          first_marker + i * span_step_hz
+          # first_marker_projected + (i * grid_offset)
+        end)
+        |> Enum.map(fn f ->
+          project_to_bandscope_limits(f, {low_edge, high_edge})
+        end)
 
       ~e{
         <%= for i <- (0..9) do %>
           <line class="bandscopeGrid vertical" x1="<%= Enum.at(values, i) %>" y1="0" x2="<%= Enum.at(values, i) %>" y2="640" />
         <% end %>
       }
-
     end
-
   end
 
   def band_scope_vertical_grid(:fixed, _) do
@@ -342,7 +344,6 @@ defmodule Open890Web.RadioViewHelpers do
   def band_scope_vertical_grid(_, _) do
     ""
   end
-
 
   def passband_polygon(mode, active_frequency, filter_lo_width, filter_hi_shift, scope_edges)
       when mode in [:lsb, :usb] do
@@ -382,7 +383,6 @@ defmodule Open890Web.RadioViewHelpers do
     ""
   end
 
-
   def project_to_audioscope_limits(value, width)
       when is_integer(value) and is_integer(width) do
     percentage = value / width
@@ -397,7 +397,6 @@ defmodule Open890Web.RadioViewHelpers do
       )
       when mode in [:cw, :cw_r] and is_integer(filter_lo_width) and is_integer(filter_hi_shift) and
              not is_nil(active_roofing_filter) do
-
     half_width = (filter_lo_width / 2) |> round()
 
     roofing_width = roofing_filter_data |> Map.get(active_roofing_filter)
@@ -433,19 +432,19 @@ defmodule Open890Web.RadioViewHelpers do
         _roofing_filter_data
       )
       when mode in [:usb, :lsb, :fm] do
+    total_width_hz =
+      cond do
+        filter_hi_shift >= 3400 -> 5000
+        true -> 3000
+      end
 
-
-    total_width_hz = cond do
-      filter_hi_shift >= 3400 -> 5000
-      true -> 3000
-    end
-
-    [projected_low, projected_hi] = [filter_lo_width, filter_hi_shift]
-    |> Enum.map(fn val ->
-      val
-      |> project_to_audioscope_limits(total_width_hz)
-      |> round()
-    end)
+    [projected_low, projected_hi] =
+      [filter_lo_width, filter_hi_shift]
+      |> Enum.map(fn val ->
+        val
+        |> project_to_audioscope_limits(total_width_hz)
+        |> round()
+      end)
 
     points = audio_scope_filter_points(projected_low, projected_hi)
 
@@ -454,23 +453,26 @@ defmodule Open890Web.RadioViewHelpers do
     }
   end
 
-  def audio_scope_filter_edges(:am, {filter_lo_width, filter_hi_shift}, _active_roofing_filter, _roofing_filter_data) do
-
-    [projected_low, projected_hi] = [filter_lo_width, filter_hi_shift]
-    |> Enum.map(fn val ->
-      val
-      |> project_to_audioscope_limits(5000)
-      |> round()
-    end)
+  def audio_scope_filter_edges(
+        :am,
+        {filter_lo_width, filter_hi_shift},
+        _active_roofing_filter,
+        _roofing_filter_data
+      ) do
+    [projected_low, projected_hi] =
+      [filter_lo_width, filter_hi_shift]
+      |> Enum.map(fn val ->
+        val
+        |> project_to_audioscope_limits(5000)
+        |> round()
+      end)
 
     points = audio_scope_filter_points(projected_low, projected_hi)
 
     ~e{
       <polyline id="audioScopeFilter" points="<%= points %>" />
     }
-
   end
-
 
   def audio_scope_filter_edges(_mode, _edges, _active_roofing_filter, _roofing_filter_data) do
     ""
@@ -518,7 +520,6 @@ defmodule Open890Web.RadioViewHelpers do
     |> Map.drop(opts |> Keyword.get(:except, []))
     |> inspect(pretty: true, limit: :infinity, charlists: :as_lists)
   end
-
 
   def render_menu_items(id) do
     Menu.get(id)

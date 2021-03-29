@@ -51,11 +51,10 @@ defmodule Open890Web.Live.RadioSocketState do
     {:vfo_memory_state, nil},
     {:waterfall_draw_interval, 1},
     {:spectrum_scale, 1.0},
-    {:__ui_macros, %{}},
+    {:__ui_macros, %{}}
   ]
 
   def initial_state do
     @init_socket |> Enum.into(%{})
   end
-
 end

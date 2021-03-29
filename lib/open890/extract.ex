@@ -268,7 +268,6 @@ defmodule Open890.Extract do
     str |> trim_to_integer(["RG"])
   end
 
-
   def operating_mode(str) when is_binary(str) do
     str
     |> String.trim_leading("OM0")
@@ -371,11 +370,12 @@ defmodule Open890.Extract do
         "2" -> :c
       end
 
-    filter_value = str
-    |> String.slice(-4..-1)
-    |> Integer.parse()
-    |> elem(0)
-    |> Kernel.*(10)
+    filter_value =
+      str
+      |> String.slice(-4..-1)
+      |> Integer.parse()
+      |> elem(0)
+      |> Kernel.*(10)
 
     {filter_id, filter_value}
   end
