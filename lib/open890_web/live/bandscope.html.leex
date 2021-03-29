@@ -73,7 +73,7 @@
             <div id="frequencyDisplay" class="ui row">
 
               <%= case @vfo_memory_state do %>
-              <%= :vfo -> %>
+              <% :vfo -> %>
                 <div class="eight column row">
                   <%= live_component @socket, Open890Web.Live.VFODisplayComponent,
                                               active_frequency: @active_frequency,
@@ -83,7 +83,7 @@
                                               inactive_mode: @inactive_mode,
                                               vfo_memory_state: @vfo_memory_state %>
                 </div>
-              <%= :memory -> %>
+              <% :memory -> %>
                 <div id="memoryDisplay" class="eight column row _debug">
                   <div class="column">
                     <p>Memory display not implemented yet.</p>
@@ -188,6 +188,13 @@
 
     </div> <!-- row -->
 
+    <div class="row">
+      <div class="column">
+        <%= for {name, _attrs} <- @__ui_macros do %>
+          <div class="ui black button" phx-click="run_macro" phx-value-name="<%= name %>"><%= name %></div>
+        <% end %>
+      </div>
+    </div>
 
     <div id="bandScopeDetails" class="row">
       <div class="column left aligned computer only tablet only">

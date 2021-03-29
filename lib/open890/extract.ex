@@ -499,6 +499,16 @@ defmodule Open890.Extract do
     end
   end
 
+  def delay_msec(str) when is_binary(str) do
+    delay = str |> trim_to_integer("DE")
+
+    delay = max(min(delay, 255), 0)
+
+    delay_ms = delay * 10
+
+    delay_ms
+  end
+
   def data_speed(str) when is_binary(str) do
     str |> trim_to_integer("DD0")
   end
