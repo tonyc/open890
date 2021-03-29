@@ -157,7 +157,7 @@ defmodule Open890Web.Live.RadioLive.Bandscope do
 
     commands =
       socket.assigns.__ui_macros
-      |> Enum.find(fn x -> x["name"] == macro_name end)
+      |> Enum.find(fn x -> x["label"] == macro_name end)
       |> case do
         %{"commands" => commands} ->
           commands
