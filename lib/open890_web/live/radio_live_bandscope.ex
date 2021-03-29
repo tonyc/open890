@@ -25,11 +25,18 @@ defmodule Open890Web.Live.RadioLive.Bandscope do
 
     socket = socket |> assign(RadioSocketState.initial_state())
 
-    config = "config/config.toml"
-    |> File.read!()
-    |> Toml.decode!()
+    socket = with {:ok, file} <- File.read("config/config.toml"),
+        {:ok, config} <- Toml.decode(file) do
+          macros = config
+          |> Map.get("ui", %{})
+          |> Map.get("macros", [])
 
-    socket = socket |> assign(:__ui_macros, config["ui"]["macros"])
+          socket |> assign(:__ui_macros, macros)
+        else
+          reason ->
+            Logger.warn("Could not load config/config.toml: #{inspect(reason)}. This is not currently an error.")
+            socket
+        end
 
     socket =
       RadioConnection.find(connection_id)
@@ -145,11 +152,16 @@ defmodule Open890Web.Live.RadioLive.Bandscope do
   end
 
   def handle_event("run_macro", %{"name" => macro_name} = _params, socket) do
-    commands = socket.assigns.__ui_macros
-    |> Map.get(macro_name, %{})
-    |> Map.get("commands", [])
-
     Logger.debug("Running macro: #{inspect(macro_name)}")
+
+    commands = socket.assigns.__ui_macros
+    |> Enum.find(fn x -> x["name"] == macro_name end)
+    |> case do
+      %{"commands" => commands} ->
+        commands
+      _ -> []
+    end
+
 
     case commands do
       [] ->
@@ -169,7 +181,7 @@ defmodule Open890Web.Live.RadioLive.Bandscope do
 
               true ->
                 conn |> ConnectionCommands.cmd(command)
-                Process.sleep(50)
+                Process.sleep(100)
             end
 
           end)

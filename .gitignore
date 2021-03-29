@@ -38,3 +38,5 @@ npm-debug.log
 .iex.exs
 
 *.dets
+
+config.toml
