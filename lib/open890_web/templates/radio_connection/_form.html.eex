@@ -37,7 +37,7 @@
 
 <div class="field">
   <div class="ui checkbox">
-    <%= checkbox @f, :auto_start, value: @radio_connection.auto_start, class: "hidden", tabindex: "0" %>
+    <%= checkbox @f, :auto_start, value: @radio_connection |> Map.get(:auto_start, false), class: "hidden", tabindex: "0" %>
     <%= label @f, :auto_start, "Auto-Start" %>
   </div>
 </div>

@@ -48,9 +48,8 @@ defmodule Open890.RadioConnection do
         ip_address: params["ip_address"],
         user_name: params["user_name"],
         password: params["password"],
-        user_is_admin: params["user_is_admin"],
-        auto_start: params["auto_start"]
-    }
+        user_is_admin: params["user_is_admin"]
+    } |> Map.put("auto_start", params["auto_start"])
 
     new_connection |> Repo.update()
   end
