@@ -19,7 +19,7 @@ See [Installing From Source](https://github.com/tonyc/open890/wiki/Installing-Fr
 
 ## Binary releases
 
-Binary releases are available from [releases](https://github.com/tonyc/open890/releases/).
+Binary releases are available from [releases](https://github.com/tonyc/open890/releases/latest).
 
 ### Linux
 
