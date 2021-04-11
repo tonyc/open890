@@ -1,5 +1,10 @@
 # open890 Changelog
 
+## 0.0.7 - (Unreleased)
+
+* Fixed connection auto-starting on app startup.
+* Auto-start newly created connections when auto-start is checked.
+
 ## 0.0.6 - 2021-04-11
 
 * Added config/example.config.toml to binary releases to make it apparent how to configure macro buttons.
