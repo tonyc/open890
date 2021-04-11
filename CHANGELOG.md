@@ -1,5 +1,9 @@
 # open890 Changelog
 
+## 0.0.6 - 2021-04-11
+
+* Added config/example.config.toml to binary releases to make it apparent how to configure macro buttons.
+
 ## 0.0.5 - 2021-04-10
 
 * Adds spectrum Y-axis scaling
