@@ -138,7 +138,7 @@ defmodule Open890.TCPClient do
 
   # connection allowed response
   def handle_msg("##CN1", %{socket: socket, kns_user: kns_user} = state) do
-    login = User.to_login(kns_user)
+    login = kns_user |> User.to_login()
 
     socket |> send_command("##ID" <> login)
     state
@@ -148,15 +148,8 @@ defmodule Open890.TCPClient do
   def handle_msg("##ID1", state) do
     Logger.info("signed in, scheduling first ping")
     schedule_ping()
-    state
-  end
 
-  # Sent at the very end of the login sequence,
-  # Finally OK to enable VOIP
-  def handle_msg("##TI1", %{socket: _socket} = state) do
-    Logger.info("received TI1")
     # send(self(), :enable_voip)
-
     if @enable_audio_scope, do: send(self(), :enable_audioscope)
     if @enable_band_scope, do: send(self(), :enable_bandscope)
     send(self(), :enable_auto_info)

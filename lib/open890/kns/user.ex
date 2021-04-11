@@ -34,6 +34,7 @@ defmodule Open890.KNS.User do
     admin_code(user) <> user_length <> pass_length <> user.username <> user.password
   end
 
+  defp admin_code(%User{is_admin: "true"} = _user), do: "0"
   defp admin_code(%User{is_admin: true} = _user), do: "0"
   defp admin_code(%User{} = _user), do: "1"
 end
