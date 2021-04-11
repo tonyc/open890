@@ -2,6 +2,7 @@
 
 ## 0.0.7 - (Unreleased)
 
+* Allow top-level KNS admin users to connect
 * Fixed connection auto-starting on app startup.
 * Auto-start newly created connections when auto-start is checked.
 
