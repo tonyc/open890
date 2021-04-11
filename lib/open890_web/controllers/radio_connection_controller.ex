@@ -23,8 +23,11 @@ defmodule Open890Web.RadioConnectionController do
     radio_connection_params
     |> RadioConnection.create()
     |> case do
-      result ->
-        Logger.info("Connection create result: #{inspect(result)}")
+      {:ok, %RadioConnection{auto_start: true} = connection} ->
+        connection |> RadioConnection.start()
+
+      other ->
+        Logger.info("Connection create result: #{inspect(other)}")
     end
 
     conn |> redirect(to: Routes.radio_connection_path(conn, :index))

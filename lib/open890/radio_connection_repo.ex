@@ -90,7 +90,13 @@ defmodule Open890.RadioConnectionRepo do
     id = UUID.uuid4()
     conn = %{conn | id: id}
 
-    table_name() |> :dets.insert_new({id, conn})
+    table_name()
+    |> :dets.insert_new({id, conn})
+    |> case do
+      true -> {:ok, conn}
+      _ -> {:error, :dets_key_exists}
+    end
+
   end
 
   def update(%RadioConnection{id: id} = conn) when not is_nil(id) do
