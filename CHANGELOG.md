@@ -1,6 +1,6 @@
 # open890 Changelog
 
-## 0.0.7 - (Unreleased)
+## 0.0.7 - 2021-06-04
 
 * Allow top-level KNS admin users to connect
 * Fixed connection auto-starting on app startup.
