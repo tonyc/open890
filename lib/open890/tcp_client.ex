@@ -221,7 +221,7 @@ defmodule Open890.TCPClient do
       true ->
         # otherwise, we just braodcast everything to the liveview to let it deal with it
         if !(msg |> String.starts_with?("SM0")) do
-          Logger.info("▼ #{inspect(msg)}")
+          Logger.info("[DN] #{inspect(msg)}")
         end
 
         msg |> broadcast()
@@ -256,7 +256,7 @@ defmodule Open890.TCPClient do
   defp send_command(socket, msg) when is_binary(msg) do
     cmd = msg <> ";"
 
-    if cmd != "PS;", do: Logger.info("▲ #{inspect(cmd)}")
+    if cmd != "PS;", do: Logger.info("[UP] #{inspect(cmd)}")
 
     socket |> :gen_tcp.send(cmd)
 

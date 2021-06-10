@@ -4,6 +4,8 @@
 
 * Allow the configuration of the TCP port on connections.
 * Display some basic error messages when unable to start connections.
+* Fix new connections that had auto-start off being incorrectly started.
+* Altered debug messages to use "UP" and "DN" to denote traffic to and from the radio.
 
 ## 0.0.7 - 2021-06-04
 
