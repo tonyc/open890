@@ -4,10 +4,12 @@ defmodule Open890.RadioConnection do
   """
 
   @derive {Inspect, except: [:password]}
+  @default_tcp_port 60000
 
   defstruct id: nil,
             name: nil,
             ip_address: nil,
+            tcp_port: @default_tcp_port,
             user_name: nil,
             password: nil,
             user_is_admin: false,
@@ -19,6 +21,12 @@ defmodule Open890.RadioConnection do
   alias Open890.RadioConnectionSupervisor
   alias Open890.RadioConnectionRepo, as: Repo
   alias Open890.RadioConnection
+
+  def tcp_port(%__MODULE__{} = connection) do
+    connection
+    |> Map.get(:tcp_port, @default_tcp_port)
+    |> String.to_integer()
+  end
 
   def find(id) do
     id |> Repo.find()
@@ -42,15 +50,16 @@ defmodule Open890.RadioConnection do
 
   def update_connection(%RadioConnection{} = conn, params) when is_map(params) do
     # TODO: this should use a changeset
-    new_connection = %{
-      conn
-      | name: params["name"],
-        ip_address: params["ip_address"],
-        user_name: params["user_name"],
-        password: params["password"],
-        user_is_admin: params["user_is_admin"],
-        auto_start: params["auto_start"]
-    }
+    new_connection = conn
+    |> Map.merge(%{
+      name: params["name"],
+      ip_address: params["ip_address"],
+      tcp_port: params["tcp_port"],
+      user_name: params["user_name"],
+      password: params["password"],
+      user_is_admin: params["user_is_admin"],
+      auto_start: params["auto_start"]
+    })
 
     new_connection |> Repo.update()
   end

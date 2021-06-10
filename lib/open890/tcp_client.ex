@@ -23,7 +23,6 @@ defmodule Open890.TCPClient do
 
   @impl true
   def init(%RadioConnection{} = connection) do
-    radio_ip_address = connection.ip_address |> String.to_charlist()
     radio_username = connection.user_name
     radio_password = connection.password
     radio_user_is_admin = connection.user_is_admin
@@ -38,7 +37,7 @@ defmodule Open890.TCPClient do
 
     {:ok,
      %{
-       radio_ip_address: radio_ip_address,
+       connection: connection,
        kns_user: kns_user
      }}
   end
@@ -72,8 +71,12 @@ defmodule Open890.TCPClient do
   end
 
   def handle_info(:connect_socket, state) do
+    ip_address = state.connection.ip_address |> String.to_charlist()
+    tcp_port = RadioConnection.tcp_port(state.connection)
+
     {:ok, socket} =
-      :gen_tcp.connect(state.radio_ip_address, @port, @socket_opts, @connect_timeout_ms)
+
+      :gen_tcp.connect(ip_address, tcp_port, @socket_opts, @connect_timeout_ms)
 
     Logger.info("Established TCP socket with radio on port #{@port}")
 

@@ -12,6 +12,13 @@
   </div>
 </div>
 
+<div class="field">
+  <%= label @f, :tcp_port, "TCP Port" %>
+  <div class="ui huge input">
+    <%= text_input @f, :tcp_port, value: RadioConnection.tcp_port(@radio_connection), required: true %>
+  </div>
+</div>
+
 <div class="two fields">
   <div class="field">
     <%= label @f, :user_name, "User" %>
