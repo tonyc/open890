@@ -4,7 +4,7 @@ defmodule Open890.RadioConnection do
   """
 
   @derive {Inspect, except: [:password]}
-  @default_tcp_port 60000
+  @default_tcp_port "60000"
 
   defstruct id: nil,
             name: nil,
