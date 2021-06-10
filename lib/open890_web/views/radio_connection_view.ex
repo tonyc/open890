@@ -7,5 +7,4 @@ defmodule Open890Web.RadioConnectionView do
 
     "#{c.type}://#{c.user_name}@#{c.ip_address}:#{tcp_port}"
   end
-
 end

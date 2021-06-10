@@ -50,16 +50,17 @@ defmodule Open890.RadioConnection do
 
   def update_connection(%RadioConnection{} = conn, params) when is_map(params) do
     # TODO: this should use a changeset
-    new_connection = conn
-    |> Map.merge(%{
-      name: params["name"],
-      ip_address: params["ip_address"],
-      tcp_port: params["tcp_port"],
-      user_name: params["user_name"],
-      password: params["password"],
-      user_is_admin: params["user_is_admin"],
-      auto_start: params["auto_start"]
-    })
+    new_connection =
+      conn
+      |> Map.merge(%{
+        name: params["name"],
+        ip_address: params["ip_address"],
+        tcp_port: params["tcp_port"],
+        user_name: params["user_name"],
+        password: params["password"],
+        user_is_admin: params["user_is_admin"],
+        auto_start: params["auto_start"]
+      })
 
     new_connection |> Repo.update()
   end

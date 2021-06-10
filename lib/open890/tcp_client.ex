@@ -36,16 +36,17 @@ defmodule Open890.TCPClient do
     ip_address = connection.ip_address |> String.to_charlist()
     tcp_port = RadioConnection.tcp_port(connection)
 
-    with {:ok, socket} <- :gen_tcp.connect(ip_address, tcp_port, @socket_opts, @connect_timeout_ms) do
+    with {:ok, socket} <-
+           :gen_tcp.connect(ip_address, tcp_port, @socket_opts, @connect_timeout_ms) do
       Logger.info("Established TCP socket with radio on port #{@port}")
       self() |> send(:login_radio)
 
       {:ok,
-      %{
-        socket: socket,
-        connection: connection,
-        kns_user: kns_user
-      }}
+       %{
+         socket: socket,
+         connection: connection,
+         kns_user: kns_user
+       }}
     end
   end
 
@@ -82,9 +83,7 @@ defmodule Open890.TCPClient do
     ip_address = state.connection.ip_address |> String.to_charlist()
     tcp_port = RadioConnection.tcp_port(state.connection)
 
-    {:ok, socket} =
-
-      :gen_tcp.connect(ip_address, tcp_port, @socket_opts, @connect_timeout_ms)
+    {:ok, socket} = :gen_tcp.connect(ip_address, tcp_port, @socket_opts, @connect_timeout_ms)
 
     Logger.info("Established TCP socket with radio on port #{@port}")
 
@@ -234,9 +233,7 @@ defmodule Open890.TCPClient do
     ip_address = state.connection.ip_address |> String.to_charlist()
     tcp_port = RadioConnection.tcp_port(state.connection)
 
-    {:ok, socket} =
-
-      :gen_tcp.connect(ip_address, tcp_port, @socket_opts, @connect_timeout_ms)
+    {:ok, socket} = :gen_tcp.connect(ip_address, tcp_port, @socket_opts, @connect_timeout_ms)
 
     Logger.info("Established TCP socket with radio on port #{@port}")
 

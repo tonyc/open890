@@ -96,7 +96,6 @@ defmodule Open890.RadioConnectionRepo do
       true -> {:ok, conn}
       _ -> {:error, :dets_key_exists}
     end
-
   end
 
   def update(%RadioConnection{id: id} = conn) when not is_nil(id) do

@@ -99,29 +99,31 @@ defmodule Open890Web.RadioConnectionController do
         {:error, reason} ->
           Logger.debug("Could not start connection #{id}: #{inspect(reason)}")
 
-          pretty_error = case reason do
-            {:bad_return_value, result} ->
-              case result do
-                {:error, :ehostunreach} ->
-                  "Host unreachable"
-                {:error, :econnrefused} ->
-                  "Connection refused"
-                {:error, err} ->
-                  "Other error: #{inspect(err)}"
-                err ->
-                  "Unknown error: #{inspect(err)}"
-              end
+          pretty_error =
+            case reason do
+              {:bad_return_value, result} ->
+                case result do
+                  {:error, :ehostunreach} ->
+                    "Host unreachable"
 
+                  {:error, :econnrefused} ->
+                    "Connection refused"
 
-            other ->
-              Logger.warn("Unmatched error starting connection: #{inspect(other)}")
-              inspect(other)
-          end
+                  {:error, err} ->
+                    "Other error: #{inspect(err)}"
+
+                  err ->
+                    "Unknown error: #{inspect(err)}"
+                end
+
+              other ->
+                Logger.warn("Unmatched error starting connection: #{inspect(other)}")
+                inspect(other)
+            end
 
           conn
           |> put_flash(:error, "Error starting connection to radio: #{pretty_error}")
           |> redirect(to: Routes.radio_connection_path(conn, :index))
-
       end
 
     conn
