@@ -1,5 +1,10 @@
 # open890 Changelog
 
+## Unreleased
+
+* Allow the configuration of the TCP port on connections.
+* Display some basic error messages when unable to start connections.
+
 ## 0.0.7 - 2021-06-04
 
 * Allow top-level KNS admin users to connect
