@@ -25,7 +25,10 @@ defmodule Open890.RadioConnection do
   def tcp_port(%__MODULE__{} = connection) do
     connection
     |> Map.get(:tcp_port, @default_tcp_port)
-    |> String.to_integer()
+    |> case do
+      "" -> @default_tcp_port
+      str when is_binary(str) -> String.to_integer(str)
+    end
   end
 
   def find(id) do

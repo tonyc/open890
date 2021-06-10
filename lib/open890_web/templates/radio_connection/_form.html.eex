@@ -5,17 +5,20 @@
   </div>
 </div>
 
-<div class="field">
-  <%= label @f, :ip_address, "IP address" %>
-  <div class="ui huge input">
-    <%= text_input @f, :ip_address, value: @radio_connection.ip_address, required: true %>
-  </div>
-</div>
 
-<div class="field">
-  <%= label @f, :tcp_port, "TCP Port" %>
-  <div class="ui huge input">
-    <%= text_input @f, :tcp_port, value: RadioConnection.tcp_port(@radio_connection), required: true %>
+<div class="two fields">
+  <div class="field">
+    <%= label @f, :ip_address, "IP Address" %>
+    <div class="ui huge input">
+      <%= text_input @f, :ip_address, value: @radio_connection.ip_address, required: true %>
+    </div>
+  </div>
+
+  <div class="field">
+    <%= label @f, :tcp_port, "TCP Port" %>
+    <div class="ui huge input">
+      <%= text_input @f, :tcp_port, value: RadioConnection.tcp_port(@radio_connection), required: true %>
+    </div>
   </div>
 </div>
 

@@ -69,8 +69,10 @@ defmodule Open890.RadioConnectionRepo do
         %{
           "name" => name,
           "ip_address" => ip_address,
+          "tcp_port" => tcp_port,
           "user_name" => user_name,
           "password" => password,
+          "auto_start" => auto_start,
           "user_is_admin" => user_is_admin
         } = _params
       ) do
@@ -79,6 +81,8 @@ defmodule Open890.RadioConnectionRepo do
       type: :tcp,
       name: name,
       ip_address: ip_address,
+      tcp_port: tcp_port,
+      auto_start: auto_start,
       user_name: user_name,
       password: password,
       user_is_admin: user_is_admin
