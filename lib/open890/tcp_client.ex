@@ -2,7 +2,7 @@ defmodule Open890.TCPClient do
   use GenServer
   require Logger
 
-  @socket_opts [:binary, active: true]
+  @socket_opts [:binary, active: true, exit_on_close: true, send_timeout: 1000, send_timeout_close: true]
   @connect_timeout_ms 5000
 
   @port 60000
@@ -10,7 +10,7 @@ defmodule Open890.TCPClient do
   @enable_audio_scope true
   @enable_band_scope true
 
-  alias Open890.RadioConnection
+  alias Open890.{ConnectionCommands, RadioConnection}
   alias Open890.KNS.User
 
   def start_link(%RadioConnection{id: id} = args) do
@@ -33,21 +33,13 @@ defmodule Open890.TCPClient do
       |> User.password(radio_password)
       |> User.is_admin(radio_user_is_admin)
 
-    ip_address = connection.ip_address |> String.to_charlist()
-    tcp_port = RadioConnection.tcp_port(connection)
+    send(self(), :connect_socket)
 
-    with {:ok, socket} <-
-           :gen_tcp.connect(ip_address, tcp_port, @socket_opts, @connect_timeout_ms) do
-      Logger.info("Established TCP socket with radio on port #{@port}")
-      self() |> send(:login_radio)
-
-      {:ok,
-       %{
-         socket: socket,
-         connection: connection,
-         kns_user: kns_user
-       }}
-    end
+    {:ok,
+      %{
+        connection: connection,
+        kns_user: kns_user
+      }}
   end
 
   # Server API
@@ -55,6 +47,11 @@ defmodule Open890.TCPClient do
   def handle_cast({:send_command, cmd}, state) do
     state.socket |> send_command(cmd)
     {:noreply, state}
+  end
+
+  def handle_info({:tcp, _socket, _msg, {:noreply, state}}) do
+    Logger.warn("Got TCP :noreply")
+    {:DOWN, state}
   end
 
   # networking
@@ -73,23 +70,27 @@ defmodule Open890.TCPClient do
 
   def handle_info({:tcp_closed, _socket}, state) do
     Logger.warn("TCP socket closed. State: #{inspect(state)}")
-    {:noreply, state}
+    {:DOWN, state}
 
     # {:stop, :normal, state}
   end
 
   def handle_info(:connect_socket, state) do
-    connect_socket(state)
     ip_address = state.connection.ip_address |> String.to_charlist()
     tcp_port = RadioConnection.tcp_port(state.connection)
 
-    {:ok, socket} = :gen_tcp.connect(ip_address, tcp_port, @socket_opts, @connect_timeout_ms)
+    :gen_tcp.connect(ip_address, tcp_port, @socket_opts, @connect_timeout_ms)
+    |> case do
+      {:ok, socket} ->
+        Logger.info("Established TCP socket with radio on port #{@port}")
+        self() |> send(:login_radio)
+        {:noreply, state |> Map.put(:socket, socket)}
 
-    Logger.info("Established TCP socket with radio on port #{@port}")
+      {:error, reason} ->
+        Logger.info("Unable to connect to radio: #{inspect(reason)}. Connection: #{inspect(state.connection)}")
+        {:stop, :shutdown, state}
+    end
 
-    self() |> send(:login_radio)
-
-    {:noreply, state |> Map.put(:socket, socket)}
   end
 
   def handle_info(:login_radio, %{socket: socket} = state) do
@@ -133,6 +134,11 @@ defmodule Open890.TCPClient do
     {:noreply, state}
   end
 
+  def handle_info(:get_initial_state, %{connection: connection} = state) do
+    connection |> ConnectionCommands.get_initial_state()
+    {:noreply, state}
+  end
+
   def handle_info(:enable_auto_info, state) do
     state.socket |> send_command("AI2")
     {:noreply, state}
@@ -162,8 +168,10 @@ defmodule Open890.TCPClient do
     # send(self(), :enable_voip)
     if @enable_audio_scope, do: send(self(), :enable_audioscope)
     if @enable_band_scope, do: send(self(), :enable_bandscope)
+
     send(self(), :enable_auto_info)
     send(self(), :query_active_receiver)
+    send(self(), :get_initial_state)
 
     state
   end
@@ -227,22 +235,6 @@ defmodule Open890.TCPClient do
         msg |> broadcast()
         state
     end
-  end
-
-  def connect_socket(state) do
-    ip_address = state.connection.ip_address |> String.to_charlist()
-    tcp_port = RadioConnection.tcp_port(state.connection)
-
-    {:ok, socket} = :gen_tcp.connect(ip_address, tcp_port, @socket_opts, @connect_timeout_ms)
-
-    Logger.info("Established TCP socket with radio on port #{@port}")
-
-    self() |> send(:login_radio)
-
-    {:ok, socket}
-
-    state |> Map.put(:socket, socket)
-    # {:noreply, state |> Map.put(:socket, socket)}
   end
 
   defp broadcast(msg) do
