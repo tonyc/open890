@@ -5,8 +5,6 @@ defmodule Open890.TCPClient do
   @socket_opts [:binary, active: true, exit_on_close: true, send_timeout: 1000, send_timeout_close: true]
   @connect_timeout_ms 5000
 
-  @port 60000
-
   @enable_audio_scope true
   @enable_band_scope true
 
@@ -82,7 +80,7 @@ defmodule Open890.TCPClient do
     :gen_tcp.connect(ip_address, tcp_port, @socket_opts, @connect_timeout_ms)
     |> case do
       {:ok, socket} ->
-        Logger.info("Established TCP socket with radio on port #{@port}")
+        Logger.info("Established TCP socket with radio on port #{tcp_port}")
         self() |> send(:login_radio)
         {:noreply, state |> Map.put(:socket, socket)}
 
