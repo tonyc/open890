@@ -47,9 +47,9 @@ defmodule Open890.TCPClient do
     {:noreply, state}
   end
 
-  def handle_info({:tcp, _socket, _msg, {:noreply, state}}) do
-    Logger.warn("Got TCP :noreply")
-    {:DOWN, state}
+  def handle_info({:tcp, _socket, _msg}, {:noreply, state}) do
+    Logger.info("Got TCP :noreply")
+    {:stop, :shutdown, state}
   end
 
   # networking
@@ -68,9 +68,7 @@ defmodule Open890.TCPClient do
 
   def handle_info({:tcp_closed, _socket}, state) do
     Logger.warn("TCP socket closed. State: #{inspect(state)}")
-    {:DOWN, state}
-
-    # {:stop, :normal, state}
+    {:stop, :tcp_closed, state}
   end
 
   def handle_info(:connect_socket, state) do
