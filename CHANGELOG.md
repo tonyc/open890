@@ -1,6 +1,6 @@
 # open890 Changelog
 
-## Unreleased
+## 0.0.8 - 2021-06-27
 
 * Track transverter state & offset, apply offset to VFO display (#81)
 * Allow the configuration of the TCP port on connections.
