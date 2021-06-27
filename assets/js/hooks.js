@@ -94,10 +94,21 @@ let Hooks = {
           stepSize = 3
         }
 
+
         if (isScrollUp) {
-          this.pushEvent("step_tune_up", {stepSize: stepSize})
+          if (event.shiftKey) {
+            this.pushEvent("step_tune_up", {stepSize: stepSize})
+          } else {
+            this.pushEvent("multi_ch", {is_up: true})
+
+          }
         } else {
-          this.pushEvent("step_tune_down", {stepSize: stepSize})
+
+          if (event.shiftKey) {
+            this.pushEvent("step_tune_down", {stepSize: stepSize})
+          } else {
+            this.pushEvent("multi_ch", {is_up: false})
+          }
         }
 
       });
