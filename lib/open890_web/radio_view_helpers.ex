@@ -553,4 +553,12 @@ defmodule Open890Web.RadioViewHelpers do
     |> format_raw_frequency()
   end
 
+  def str_if(condition, true_str, false_str \\ "") when is_boolean(condition) and is_binary(true_str) and is_binary(false_str) do
+    if condition do
+      true_str
+    else
+      false_str
+    end
+  end
+
 end

@@ -5,13 +5,9 @@ defmodule Open890Web.Live.VFODisplayComponent do
 
   def render(assigns) do
     ~L"""
-      <div class="vfos ui stackable grid debug">
+      <div class="vfos ui stackable grid">
         <div class="row">
-          <%= if @transverter_state.enabled do %>
-            <div class="column">
-              <span class="xvtrIndicator">XVTR</span>
-            </div>
-          <% end %>
+    <div class="xvtrIndicator <%= str_if(@transverter_state.enabled, "enabled", "disabled") %>">XVTR</div>
         </div>
         <div class="row">
           <div class="eight wide column _debug">

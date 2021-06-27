@@ -680,3 +680,15 @@ svg#bandScope {
     }
   }
 }
+
+.xvtrIndicator {
+  background-color: white;
+  color: black;
+  border-radius: 3px;
+  font-weight: bold;
+  padding: 0.1rem 0.5rem;
+
+  &.disabled {
+    visibility: hidden;
+  }
+}
