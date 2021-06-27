@@ -209,7 +209,15 @@ let Hooks = {
       }
     },
 
+    resumeDrawing(ctx) {
+      ctx.packetCount = 0;
+      ctx.draw = true;
+    },
+
     mounted() {
+      let me = this;
+
+      this.resumeDrawtimer = null;
       console.log("bandscope canvas mounted")
       this.canvas = this.el
       this.ctx = this.canvas.getContext("2d")
@@ -227,7 +235,6 @@ let Hooks = {
       this.multiplier = 1.3
       this.theme = this.el.dataset.theme
       this.draw = true
-
       this.packetCount = 0;
 
       this.clearScope()
@@ -266,6 +273,42 @@ let Hooks = {
       this.el.addEventListener("mousedown", event => {
         this.tuneToClick(event);
       })
+
+      this.handleEvent("freq_delta", (event) => {
+        console.log("freq_delta", event)
+        // interpolate delta event.bs.low ... event.bs.high to the scope size
+        this.draw = false
+
+        if (this.resumeDrawTimer) {
+          clearTimeout(this.resumeDrawTimer)
+        }
+
+        this.resumeDrawTimer = setTimeout(this.resumeDrawing, 200, this);
+
+        let rect = this.canvas.getBoundingClientRect()
+        let scaleX = this.canvas.width / rect.width
+
+        let bs_delta = event.bs.high - event.bs.low
+
+        let widthScale = bs_delta / this.canvas.width
+
+        let canvasDelta = event.delta / widthScale
+        let width = Math.abs(canvasDelta)
+
+        console.log("canvasDelta:", canvasDelta)
+
+        this.ctx.drawImage(this.canvas, -canvasDelta, 0)
+
+        if (canvasDelta < 0) {
+          // left side
+          this.ctx.fillStyle = '#000'
+          this.ctx.fillRect(0, 0, width, this.canvas.height)
+        } else if (canvasDelta > 0) {
+          // right side
+          this.ctx.fillStyle = '#000'
+          this.ctx.fillRect(this.canvas.width - width, 0, width, this.canvas.height)
+        }
+      }).bind(this)
 
       this.handleEvent("band_scope_data", (event) => {
         this.packetCount += 1;

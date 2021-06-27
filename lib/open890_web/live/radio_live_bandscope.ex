@@ -102,7 +102,9 @@ defmodule Open890Web.Live.RadioLive.Bandscope do
     {:noreply, socket}
   end
 
-  def handle_info(%Broadcast{}, socket) do
+  def handle_info(%Broadcast{} = bc, socket) do
+    Logger.warn("Unknown broadcast: #{inspect(bc)}")
+
     {:noreply, socket}
   end
 

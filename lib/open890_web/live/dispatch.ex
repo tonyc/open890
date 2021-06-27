@@ -175,6 +175,8 @@ defmodule Open890Web.Live.Dispatch do
   def dispatch("FA" <> _rest = msg, socket) do
     frequency = msg |> Extract.frequency()
     socket = socket |> assign(:vfo_a_frequency, frequency)
+    previous_active_frequency = socket.assigns[:active_frequency] || 0
+    delta = frequency - previous_active_frequency
 
     socket =
       if socket.assigns[:active_receiver] == :a do
@@ -185,6 +187,7 @@ defmodule Open890Web.Live.Dispatch do
         socket
         |> assign(:page_title, page_title)
         |> assign(:active_frequency, frequency)
+        |> assign(:active_frequency_delta, delta)
       else
         socket
         |> assign(:inactive_frequency, frequency)
@@ -198,7 +201,11 @@ defmodule Open890Web.Live.Dispatch do
             socket.assigns.band_scope_span
           )
 
-        socket |> assign(:band_scope_edges, band_scope_edges)
+        {low, high} = band_scope_edges
+
+        socket
+        |> assign(:band_scope_edges, band_scope_edges)
+        |> push_event("freq_delta", %{delta: delta, vfo: "a", bs: %{low: low, high: high}})
       else
         socket
       end
@@ -210,6 +217,9 @@ defmodule Open890Web.Live.Dispatch do
     frequency = msg |> Extract.frequency()
     socket = socket |> assign(:vfo_b_frequency, frequency)
 
+    previous_active_frequency = socket.assigns[:active_frequency] || 0
+    delta = frequency - previous_active_frequency
+
     socket =
       if socket.assigns[:active_receiver] == :b do
         formatted_frequency = frequency |> RadioViewHelpers.format_raw_frequency()
@@ -219,6 +229,7 @@ defmodule Open890Web.Live.Dispatch do
         socket
         |> assign(:page_title, page_title)
         |> assign(:active_frequency, frequency)
+        |> assign(:active_frequency_delta, delta)
       else
         socket
         |> assign(:inactive_frequency, frequency)
@@ -232,7 +243,12 @@ defmodule Open890Web.Live.Dispatch do
             socket.assigns.band_scope_span
           )
 
-        socket |> assign(:band_scope_edges, band_scope_edges)
+        {low, high} = band_scope_edges
+
+        socket
+        |> assign(:band_scope_edges, band_scope_edges)
+        |> push_event("freq_delta", %{delta: delta, vfo: "b", bs: %{low: low, high: high}})
+
       else
         socket
       end
