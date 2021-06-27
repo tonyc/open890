@@ -1,4 +1,6 @@
 defmodule Open890Web.Live.RadioSocketState do
+  alias Open890.TransverterState
+
   @init_socket [
     {:display_band_selector, false},
     {:radio_connection, nil},
@@ -46,6 +48,7 @@ defmodule Open890Web.Live.RadioSocketState do
     {:ssb_data_filter_mode, nil},
     {:ssb_filter_mode, nil},
     {:theme, "kenwood"},
+    {:transverter_state, %TransverterState{}},
     {:vfo_a_frequency, ""},
     {:vfo_b_frequency, ""},
     {:vfo_memory_state, nil},

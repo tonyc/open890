@@ -1,10 +1,38 @@
 defmodule Open890Web.Live.Dispatch do
   require Logger
 
-  alias Open890.Extract
+  alias Open890.{Extract, TransverterState}
   alias Open890Web.RadioViewHelpers
 
   import Phoenix.LiveView, only: [assign: 3, push_event: 3]
+
+  def dispatch("XV" <> _rest = msg, socket) do
+    value = msg |> Extract.transverter_enabled()
+
+    xv_state = socket.assigns[:transverter_state]
+    |> case do
+      %TransverterState{} = state ->
+        %{state | enabled: value}
+      _ ->
+        %TransverterState{enabled: value}
+    end
+
+    socket |> assign(:transverter_state, xv_state)
+  end
+
+  def dispatch("XO" <> _rest = msg, socket) do
+    value = msg |> Extract.transverter_offset()
+
+    xv_state = socket.assigns[:transverter_state]
+    |> case do
+      %TransverterState{} = state ->
+        %{state | offset: value}
+      _ ->
+        %TransverterState{offset: value}
+    end
+
+    socket |> assign(:transverter_state, xv_state)
+  end
 
   def dispatch("MV" <> _rest = msg, socket) do
     value = msg |> Extract.vfo_memory_state()

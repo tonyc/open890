@@ -6,6 +6,11 @@ defmodule Open890Web.Live.VFODisplayComponent do
   def render(assigns) do
     ~L"""
       <div class="vfos ui stackable grid ">
+        <div class="wide column">
+          <%= if @transverter_state.enabled do %>
+            <div>XVTR</div>
+          <% end %>
+        </div>
         <div class="eight wide column _debug">
           <span class="vfoMemIndicator"><%= format_vfo_memory_state(@vfo_memory_state) %></span>
           <span class="modeIndicator active"><%= format_mode(@active_mode) %></span>

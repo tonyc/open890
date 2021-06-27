@@ -234,6 +234,26 @@ defmodule Open890.Extract do
     "F" => :am_d
   }
 
+  def transverter_enabled(str) when is_binary(str) do
+    str
+    |> String.trim_leading("XV")
+    |> case do
+      "1" -> true
+      _ -> false
+    end
+  end
+
+  def transverter_offset(str) when is_binary(str) do
+    str
+    |> String.trim_leading("XO")
+    |> case do
+      "0" <> offset ->
+        offset |> String.to_integer()
+      "1" <> offset ->
+        -(String.to_integer(offset))
+    end
+  end
+
   def notch_filter(str) when is_binary(str) do
     str |> trim_to_integer(["BP"])
   end

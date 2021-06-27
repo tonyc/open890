@@ -27,6 +27,11 @@ defmodule Open890.ConnectionCommands do
     conn |> get_rf_gain()
     conn |> get_power_level()
     conn |> get_notch_states()
+    conn |> get_transverter_states()
+  end
+
+  def get_transverter_states(conn) do
+    conn |> run_commands(["XV", "XO"])
   end
 
   def get_vfo_memory_state(conn) do
