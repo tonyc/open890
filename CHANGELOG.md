@@ -1,5 +1,9 @@
 # open890 Changelog
 
+## Unreleased
+
+* Implement center mode's "straight waterfall" functionality.
+
 ## 0.0.8 - 2021-06-27
 
 * Track transverter state & offset, apply offset to VFO display (#81)
