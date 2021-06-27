@@ -275,7 +275,7 @@ let Hooks = {
       })
 
       this.handleEvent("freq_delta", (event) => {
-        console.log("freq_delta", event)
+        //console.log("freq_delta", event)
         // interpolate delta event.bs.low ... event.bs.high to the scope size
         this.draw = false
 
@@ -295,7 +295,7 @@ let Hooks = {
         let canvasDelta = event.delta / widthScale
         let width = Math.abs(canvasDelta)
 
-        console.log("canvasDelta:", canvasDelta)
+        //console.log("canvasDelta:", canvasDelta)
 
         this.ctx.drawImage(this.canvas, -canvasDelta, 0)
 
@@ -369,7 +369,7 @@ let Hooks = {
       this.el.addEventListener('click', (event) => {
         event.stopPropagation()
         event.preventDefault()
-        
+
         let coords = this.getClickCoords(event)
         let x = Math.floor(coords.x)
 
