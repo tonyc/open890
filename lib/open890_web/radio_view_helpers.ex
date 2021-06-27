@@ -4,7 +4,7 @@ defmodule Open890Web.RadioViewHelpers do
   import Phoenix.HTML
   import Phoenix.HTML.Tag
 
-  alias Open890.Menu
+  alias Open890.{Menu, TransverterState}
 
   def selected_theme?(theme, name) do
     if theme == name, do: "selected"
@@ -546,4 +546,11 @@ defmodule Open890Web.RadioViewHelpers do
   def round_up_to_step(value, step) when is_integer(value) and is_integer(step) do
     div(value, step) * step + step
   end
+
+  def vfo_display_frequency(freq, %TransverterState{} = state) do
+    state
+    |> TransverterState.apply_offset(freq)
+    |> format_raw_frequency()
+  end
+
 end
