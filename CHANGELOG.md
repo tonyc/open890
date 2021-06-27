@@ -3,6 +3,7 @@
 ## Unreleased
 
 * Implement center mode's "straight waterfall" functionality.
+* Mousewheel (w/o shift held) while hovered over bandscope performs MULTI/CH
 
 ## 0.0.8 - 2021-06-27
 
