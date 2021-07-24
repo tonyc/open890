@@ -78,7 +78,7 @@ Future releases may incorporate a basic level of authentication to access the we
 
 ## Getting Help
 
-If you encounter a bug, please [open a discussion](https://github.com/tonyc/open890/discussions). Please do not directly email me for technical support!
+If you encounter a bug, please [open a discussion](https://groups.io/g/open890). Please do not directly email me for technical support!
 
 ## Contributing
 
