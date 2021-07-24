@@ -48,7 +48,7 @@ defmodule Open890.TCPClient do
   end
 
   def handle_info({:tcp, _socket, _msg}, {:noreply, state}) do
-    Logger.info("Got TCP :noreply")
+    Logger.error("Got TCP :noreply")
     {:stop, :shutdown, state}
   end
 
@@ -83,7 +83,7 @@ defmodule Open890.TCPClient do
         {:noreply, state |> Map.put(:socket, socket)}
 
       {:error, reason} ->
-        Logger.info("Unable to connect to radio: #{inspect(reason)}. Connection: #{inspect(state.connection)}")
+        Logger.error("Unable to connect to radio: #{inspect(reason)}. Connection: #{inspect(state.connection)}")
         {:stop, :shutdown, state}
     end
 
