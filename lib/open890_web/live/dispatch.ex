@@ -1,10 +1,16 @@
 defmodule Open890Web.Live.Dispatch do
   require Logger
 
-  alias Open890.{Extract, TransverterState}
+  alias Open890.{AntennaState, Extract, TransverterState}
   alias Open890Web.RadioViewHelpers
 
   import Phoenix.LiveView, only: [assign: 3, push_event: 3]
+
+  def dispatch("AN" <> _rest = msg, socket) do
+    %AntennaState{} = antenna_state = Extract.antenna_state(msg)
+
+    socket |> assign(:antenna_state, antenna_state)
+  end
 
   def dispatch("XV" <> _rest = msg, socket) do
     value = msg |> Extract.transverter_enabled()

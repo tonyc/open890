@@ -1,5 +1,5 @@
 defmodule Open890Web.Live.RadioSocketState do
-  alias Open890.TransverterState
+  alias Open890.{AntennaState, TransverterState}
 
   @init_socket [
     {:display_band_selector, false},
@@ -12,6 +12,7 @@ defmodule Open890Web.Live.RadioSocketState do
     {:active_mode, :unknown},
     {:active_receiver, :a},
     {:active_transmitter, :a},
+    {:antenna_state, %AntennaState{}},
     {:audio_gain, nil},
     {:audio_scope_data, []},
     {:band_scope_att, nil},

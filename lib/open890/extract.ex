@@ -1,6 +1,8 @@
 defmodule Open890.Extract do
   require Logger
 
+  alias Open890.{AntennaState}
+
   @scope_modes %{
     "0" => :center,
     "1" => :fixed,
@@ -531,6 +533,10 @@ defmodule Open890.Extract do
 
   def data_speed(str) when is_binary(str) do
     str |> trim_to_integer("DD0")
+  end
+
+  def antenna_state(str) when is_binary(str) do
+    AntennaState.extract(str)
   end
 
   defp calculate_cw_shift(passband_id)

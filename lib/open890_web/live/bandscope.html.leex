@@ -58,6 +58,12 @@
 
     <div class="row _debug">
       <div class="four wide column computer only tablet only">
+        <div id="antennaIndicator">
+          <%= @antenna_state.active_ant |> to_string() |> String.upcase() %>
+          <%= if @antenna_state.rx_ant_enabled, do: "RX" %>
+          <%= if @antenna_state.drv_enabled, do: "DRV" %>
+          <%= if @antenna_state.ant_out_enabled, do: "ANT OUT" %>
+        </div>
         <div id="sMeterWrapper">
           <%= live_component @socket, Open890Web.Live.DigitalMeterComponent,
                                       s_meter: @s_meter,

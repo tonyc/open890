@@ -4,30 +4,36 @@ defmodule Open890.ConnectionCommands do
   alias Open890.RadioConnection
 
   def get_initial_state(%RadioConnection{} = conn) do
-    conn |> get_active_receiver()
-    conn |> get_vfo_a_freq()
-    conn |> get_vfo_b_freq()
-    conn |> get_s_meter()
-    conn |> get_modes()
-    conn |> get_filter_modes()
-    conn |> get_filter_state()
-    conn |> get_roofing_filter_info()
-    conn |> get_band_scope_mode()
-    conn |> get_band_scope_span()
-    conn |> get_band_scope_limits() # This needs to happen in this spot otherwise stuff breaks
-    conn |> get_band_scope_avg()
-    conn |> get_band_scope_att()
-    conn |> get_display_screen()
-    conn |> get_rf_pre_att()
-    conn |> get_ref_level()
-    conn |> get_vfo_memory_state()
-    conn |> monitor_meters()
-    conn |> get_data_speed()
-    conn |> get_audio_gain()
-    conn |> get_rf_gain()
-    conn |> get_power_level()
-    conn |> get_notch_states()
-    conn |> get_transverter_states()
+    conn
+    |> get_active_receiver()
+    |> get_vfo_a_freq()
+    |> get_vfo_b_freq()
+    |> get_s_meter()
+    |> get_modes()
+    |> get_filter_modes()
+    |> get_filter_state()
+    |> get_roofing_filter_info()
+    |> get_band_scope_mode()
+    |> get_band_scope_span()
+    |> get_band_scope_limits() # This needs to happen in this spot otherwise stuff breaks
+    |> get_band_scope_avg()
+    |> get_band_scope_att()
+    |> get_display_screen()
+    |> get_rf_pre_att()
+    |> get_ref_level()
+    |> get_vfo_memory_state()
+    |> monitor_meters()
+    |> get_data_speed()
+    |> get_audio_gain()
+    |> get_rf_gain()
+    |> get_power_level()
+    |> get_notch_states()
+    |> get_transverter_states()
+    |> get_antenna_state()
+  end
+
+  def get_antenna_state(conn) do
+    conn |> cmd("AN")
   end
 
   def get_transverter_states(conn) do
@@ -211,6 +217,7 @@ defmodule Open890.ConnectionCommands do
     |> Enum.each(fn c ->
       conn |> cmd(c)
     end)
+    conn
   end
 
   @doc """

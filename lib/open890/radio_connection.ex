@@ -124,6 +124,8 @@ defmodule Open890.RadioConnection do
           "Unable to send command to connection #{inspect(connection)}, pid not found. Is the connection up?"
         )
     end
+
+    connection
   end
 
   defp cast_cmd(pid, command) when is_pid(pid) and is_binary(command) do
