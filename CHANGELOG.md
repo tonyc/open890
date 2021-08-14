@@ -1,6 +1,6 @@
 # open890 Changelog
 
-## Unreleased
+## 0.0.9 - 2021-08-14
 
 * Implemented center mode's "straight waterfall" functionality.
 * Added ANT1/2, RX ANT, ANT OUT, and DRV indicators above s-meter
