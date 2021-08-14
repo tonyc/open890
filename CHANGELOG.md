@@ -3,6 +3,7 @@
 ## Unreleased
 
 * Implemented center mode's "straight waterfall" functionality.
+* Added ANT1/2, RX ANT, ANT OUT, and DRV indicators above s-meter
 * Mousewheel (w/o shift held) while hovered over bandscope performs MULTI/CH
 * Increased log level to :error for TCP socket connection errors
 
