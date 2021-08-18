@@ -1,15 +1,16 @@
-<%= if @connection_state != :up do %>
+<%= if false do %>
   <p>Radio connection not up.</p>
 <% else %>
-  <%= if @debug do %>
+
+  <%= if false && @debug do %>
     <div id="debugger" class="ui wide sidebar vertical menu left visible">
       <h2 class="header item">Debug Vars</h3>
 
-      <table class="ui small very basic collapsing table item">
+      <table class="ui small very basic collapsing very compact table item">
         <tbody>
           <%= for k <- assigns |> Map.drop([:__changed__, :socket, :live_module, :live_action, :band_scope_data, :audio_scope_data]) |> Map.keys() |> Enum.sort() do %>
             <tr>
-              <td class="right aligned"><span class="ui basic label"><%= k %></span></td>
+              <td class="right aligned"><%= k %></td>
               <td><span class="mono"><%= inspect(assigns[k]) %></span></td>
             </tr>
           <% end %>
@@ -18,7 +19,8 @@
     </div>
   <% end %>
 
-  <div id="radio" class="noselect ui stackable doubling grid" phx-window-keyup="window_keyup">
+  <div id="radio" class="noselect ui stackable doubling grid <%= if @debug, do: "debug" %>" phx-window-keyup="window_keyup">
+
     <%#-- disabled --%>
     <%= if false && @display_screen_id != 0 do %>
       <div id="menuModal" class="ui active modal">
@@ -56,26 +58,64 @@
       </div>
     <% end %>
 
-    <div class="row _debug">
-      <div class="four wide column computer only tablet only">
-        <div id="antennaIndicator" class="ui grid _debug">
-          <div class="row">
-            <div class="four wide column _debug"><%= @antenna_state.active_ant |> to_string() |> String.upcase() %></div>
-            <div class="four wide column _debug"><%= if @antenna_state.rx_ant_enabled, do: "RX ANT" %></div>
-            <div class="four wide column _debug"><%= if @antenna_state.ant_out_enabled, do: "ANT OUT" %></div>
-            <div class="four wide column _debug"><%= if @antenna_state.drv_enabled, do: "DRV" %></div>
+    <div class="computer only tablet only row">
+      <div class="four wide column">
+        <div class="ui grid">
+          <div class="four wide column"><%= @antenna_state.active_ant |> to_string() |> String.upcase() %></div>
+          <div class="four wide column"><%= if @antenna_state.rx_ant_enabled, do: "RX ANT" %></div>
+          <div class="four wide column"><%= if @antenna_state.ant_out_enabled, do: "ANT OUT" %></div>
+          <div class="four wide column"><%= if @antenna_state.drv_enabled, do: "DRV" %></div>
+        </div>
+      </div>
+
+      <div class="eight wide column">
+        <div class="ui grid">
+          <div class="four wide column">
+          </div>
+
+          <div class="eight wide center aligned column">
+            <div id="flash" class="flash">
+              <%= if live_flash(@flash, :info) do %>
+                <span><%= live_flash(@flash, :info) %></span>
+              <% end %>
+
+              <%= if live_flash(@flash, :error) do %>
+                <span><%= live_flash(@flash, :error) %></span>
+              <% end %>
+            </div>
+          </div>
+          <div class="four wide right aligned column">
+            <%= if @power_level do %>
+              <%= @power_level %><%= if @antenna_state.drv_enabled do %>%<% else %>W<% end %>
+            <% end %>
           </div>
         </div>
-        <div id="sMeterWrapper">
-          <%= live_component @socket, Open890Web.Live.DigitalMeterComponent,
-                                      s_meter: @s_meter,
-                                      alc_meter: @alc_meter,
-                                      swr_meter: @swr_meter %>
+      </div>
+
+      <div class="four wide column">
+        <div class="ui grid">
+          <div class="eight wide column right aligned">
+            <%= if @active_mode in [:cw, :cw_r] && @cw_key_speed do %>
+              <%= @cw_key_speed %>WPM
+            <% end %>
+          </div>
+          <div class="eight wide column right aligned">
+            <%= if @active_mode in [:cw, :cw_r] && @cw_delay do %>
+              <%= if @cw_delay == 0, do: "FULL-BK", else: "DELAY: #{@cw_delay}" %>
+            <% end %>
+          </div>
+
+
         </div>
+      </div>
+    </div>
 
-      </div> <!-- column containing smeterWrapper -->
+    <div class="row">
+      <div id="sMeterWrapper" class="four wide column">
+        <%= live_component @socket, Open890Web.Live.DigitalMeterComponent, s_meter: @s_meter, alc_meter: @alc_meter, swr_meter: @swr_meter %>
+      </div>
 
-      <div class="eight wide column center aligned _debug">
+      <div class="eight wide column center aligned">
         <div class="ui container">
           <div class="ui grid sixteen wide">
             <div id="frequencyDisplay" class="ui row">
@@ -93,7 +133,7 @@
                                               vfo_memory_state: @vfo_memory_state %>
                 </div>
               <% :memory -> %>
-                <div id="memoryDisplay" class="eight column row _debug">
+                <div id="memoryDisplay" class="eight column row">
                   <div class="column">
                     <p>Memory display not implemented yet.</p>
                   </div>
@@ -194,16 +234,17 @@
           </div>
         </div>
       </div> <!-- column containing audioScopeWrapper -->
-
     </div> <!-- row -->
 
-    <div class="row">
-      <div class="column">
-        <%= for %{"label" => name} <- @__ui_macros do %>
-          <div class="ui black button" phx-click="run_macro" phx-value-name="<%= name %>"><%= name %></div>
-        <% end %>
+    <%= if @__ui_macros != %{} do %>
+      <div class="row">
+        <div class="column">
+          <%= for %{"label" => name} <- @__ui_macros do %>
+            <div class="ui black button" phx-click="run_macro" phx-value-name="<%= name %>"><%= name %></div>
+          <% end %>
+        </div>
       </div>
-    </div>
+    <% end %>
 
     <div id="bandScopeDetails" class="row">
       <div class="column left aligned computer only tablet only">

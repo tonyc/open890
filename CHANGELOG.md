@@ -1,5 +1,10 @@
 # open890 Changelog
 
+## Unreleased
+
+* Display connection error message on main bandscope screen.
+* Display power level, key speed, delay in top bar.
+
 ## 0.0.9 - 2021-08-14
 
 * Implemented center mode's "straight waterfall" functionality.

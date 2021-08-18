@@ -32,6 +32,7 @@ defmodule Open890.Application do
     opts = [strategy: :one_for_one, name: Open890.Supervisor]
     res = Supervisor.start_link(children, opts)
 
+    display_banner()
     auto_start_connections()
 
     res
@@ -53,5 +54,18 @@ defmodule Open890.Application do
       Logger.info("Auto-starting connection id #{conn.id}, \"#{conn.name}\"")
       conn |> RadioConnection.start()
     end)
+  end
+
+  def display_banner do
+    IO.puts              """
+                       ___ ___  ___
+   ___  ___  ___ ___  ( _ ) _ \\/ _ \\
+  / _ \\/ _ \\/ -_) _ \\/ _  \\_, / // /
+  \\___/ .__/\\__/_//_/\\___/___/\\___/
+     /_/
+
+  open890 is now running.
+  Access the web interface at http://localhost:4000
+"""
   end
 end

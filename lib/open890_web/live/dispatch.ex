@@ -6,6 +6,16 @@ defmodule Open890Web.Live.Dispatch do
 
   import Phoenix.LiveView, only: [assign: 3, push_event: 3]
 
+  def dispatch("SD" <> _ = msg, socket) do
+    cw_delay = Extract.cw_delay(msg)
+    socket |> assign(:cw_delay, cw_delay)
+  end
+
+  def dispatch("KS" <> _ = msg, socket) do
+    key_speed = Extract.key_speed(msg)
+    socket |> assign(:cw_key_speed, key_speed)
+  end
+
   def dispatch("AN" <> _rest = msg, socket) do
     %AntennaState{} = antenna_state = Extract.antenna_state(msg)
 

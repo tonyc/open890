@@ -282,6 +282,17 @@ defmodule Open890.Extract do
     str |> trim_to_integer(["PC"])
   end
 
+  def key_speed(str) when is_binary(str) do
+    str |> trim_to_integer(["KS"])
+  end
+
+  def cw_delay(str) when is_binary(str) do
+    delay_ms = str
+    |> trim_to_integer(["SD"])
+
+    div(delay_ms, 50)
+  end
+
   def audio_gain(str) when is_binary(str) do
     str |> trim_to_integer(["AG"])
   end

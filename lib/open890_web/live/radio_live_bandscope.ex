@@ -21,6 +21,7 @@ defmodule Open890Web.Live.RadioLive.Bandscope do
       Phoenix.PubSub.subscribe(Open890.PubSub, "radio:state")
       Phoenix.PubSub.subscribe(Open890.PubSub, "radio:audio_scope")
       Phoenix.PubSub.subscribe(Open890.PubSub, "radio:band_scope")
+      Phoenix.PubSub.subscribe(Open890.PubSub, "radio:info:#{connection_id}")
     end
 
     socket = socket |> assign(RadioSocketState.initial_state())
@@ -100,6 +101,25 @@ defmodule Open890Web.Live.RadioLive.Bandscope do
     socket = Dispatch.dispatch(msg, socket)
 
     {:noreply, socket}
+  end
+
+  def handle_info(%Broadcast{event: "radio_info", payload: %{msg: :connection_up}}, socket) do
+    Logger.info("******* radio_info: connection up")
+
+    # clear previous flash messages
+    {:noreply, clear_flash(socket, :error)}
+  end
+
+  def handle_info(%Broadcast{event: "radio_info", payload: %{level: level, msg: :connection_down}}, socket) do
+    Logger.info("******* radio_info: connection DOWN")
+
+    # clear previous flash messages
+    {:noreply, put_flash(socket, :error, "Connection down")}
+  end
+
+  def handle_info(%Broadcast{event: "radio_info", payload: %{level: level, msg: msg}}, socket) do
+    Logger.info("***** radio_info: [#{level}] msg: #{inspect(msg)}")
+    {:noreply, put_flash(socket, level, msg)}
   end
 
   def handle_info(%Broadcast{} = bc, socket) do

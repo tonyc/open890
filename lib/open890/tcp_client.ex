@@ -49,6 +49,8 @@ defmodule Open890.TCPClient do
 
   def handle_info({:tcp, _socket, _msg}, {:noreply, state}) do
     Logger.error("Got TCP :noreply")
+
+    broadcast_info(state.connection.id, :error, :connection_down)
     {:stop, :shutdown, state}
   end
 
@@ -68,6 +70,9 @@ defmodule Open890.TCPClient do
 
   def handle_info({:tcp_closed, _socket}, state) do
     Logger.warn("TCP socket closed. State: #{inspect(state)}")
+
+    broadcast_info(state.connection.id, :error, "connection_down")
+
     {:stop, :tcp_closed, state}
   end
 
@@ -79,11 +84,20 @@ defmodule Open890.TCPClient do
     |> case do
       {:ok, socket} ->
         Logger.info("Established TCP socket with radio on port #{tcp_port}")
+        broadcast_info(state.connection.id, :info, :connection_up)
         self() |> send(:login_radio)
         {:noreply, state |> Map.put(:socket, socket)}
 
       {:error, reason} ->
+        msg = case reason do
+          :ehostunreach -> "no route to host"
+          :timeout -> "connection timeout"
+          other -> other
+        end
+
+        broadcast_info(state.connection.id, :error, "Unable to connect to radio: #{msg}")
         Logger.error("Unable to connect to radio: #{inspect(reason)}. Connection: #{inspect(state.connection)}")
+
         {:stop, :shutdown, state}
     end
 
@@ -235,6 +249,10 @@ defmodule Open890.TCPClient do
 
   defp broadcast(msg) do
     Open890Web.Endpoint.broadcast("radio:state", "radio_state_data", %{msg: msg})
+  end
+
+  def broadcast_info(connection_id, level, msg) do
+    Open890Web.Endpoint.broadcast("radio:info:#{connection_id}", "radio_info", %{level: level, msg: msg})
   end
 
   defp schedule_ping do

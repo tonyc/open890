@@ -3,10 +3,16 @@
 /* Alerts and form errors */
 
 .alert {
+  position: absolute;
+  z-index: 9999;
   padding: 15px;
-  margin-bottom: 20px;
+  //margin-top: 5rem;
   border: 1px solid transparent;
-  border-radius: 4px;
+  font-size: larger;
+  //width: 100%;
+  //text-align: center;
+  font-weight: bold;
+  //border-radius: 4px;
 }
 .alert-info {
   color: #31708f;
@@ -103,15 +109,19 @@ $border-radius-small: 4px;
 $meter-legend-font-size: 9px;
 
 .debug {
-  border-width: 1px;
-  border-style: dashed;
-  border-color: red;
+  //border-width: 1px;
+  //border-style: dashed;
+  //border-color: red;
 
   &.green { border-color: green !important; }
   &.orange { border-color: orange !important; }
   &.cyan { border-color: cyan !important; }
   &.pink { border-color: pink !important;}
   &.purple { border-color: purple !important;}
+
+  .column {
+    border: 1px dotted red;
+  }
 }
 
 nav {

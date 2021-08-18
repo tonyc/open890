@@ -30,6 +30,13 @@ defmodule Open890.ConnectionCommands do
     |> get_notch_states()
     |> get_transverter_states()
     |> get_antenna_state()
+    |> get_cw_key_data()
+  end
+
+  def get_cw_key_data(conn) do
+    conn
+    |> cmd("KS")
+    |> cmd("SD")
   end
 
   def get_antenna_state(conn) do

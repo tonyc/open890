@@ -103,8 +103,8 @@ defmodule Open890.RadioConnection do
     Registry.lookup(:radio_connection_registry, id)
     |> case do
       [{pid, _}] ->
-        RadioConnectionSupervisor
-        |> DynamicSupervisor.terminate_child(pid)
+        DynamicSupervisor.terminate_child(RadioConnectionSupervisor, pid)
+        Open890Web.Endpoint.broadcast("radio:info:#{id}", "radio_info", %{level: :error, msg: :connection_down})
 
       _ ->
         Logger.debug("Unable to find process for connection id #{id}")
