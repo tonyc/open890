@@ -2,8 +2,9 @@
 
 ## Unreleased
 
-* Display connection error message on main bandscope screen.
-* Display power level, key speed, delay in top bar.
+* Show power level, key speed, delay
+* Display connection status and error messages in top bar.
+* Display a useful startup banner in the console.
 
 ## 0.0.9 - 2021-08-14
 

@@ -120,7 +120,7 @@ $meter-legend-font-size: 9px;
   &.purple { border-color: purple !important;}
 
   .column {
-    border: 1px dotted red;
+    border: 1px dashed red;
   }
 }
 
@@ -270,7 +270,7 @@ nav {
 }
 
 #audioScopeWrapper {
-  // float: right;
+  float: right;
   #audioScope, #AudioScopeCanvas {
     width: 100%;
   }
