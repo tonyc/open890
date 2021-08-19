@@ -6,6 +6,26 @@ defmodule Open890Web.Live.Dispatch do
 
   import Phoenix.LiveView, only: [assign: 3, push_event: 3]
 
+  def dispatch("GC" <> _rest = msg, socket) do
+    socket |> assign(:agc, Extract.agc(msg))
+  end
+
+  def dispatch("TX0", socket) do
+    socket |> assign(:tx_state, :send)
+  end
+
+  def dispatch("TX1", socket) do
+    socket |> assign(:tx_state, :data_send)
+  end
+
+  def dispatch("TX2", socket) do
+    socket |> assign(:tx_state, :tx_tune)
+  end
+
+  def dispatch("RX" = _msg, socket) do
+    socket |> assign(:tx_state, :off)
+  end
+
   def dispatch("SD" <> _ = msg, socket) do
     cw_delay = Extract.cw_delay(msg)
     socket |> assign(:cw_delay, cw_delay)

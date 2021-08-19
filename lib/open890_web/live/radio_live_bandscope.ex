@@ -159,9 +159,50 @@ defmodule Open890Web.Live.RadioLive.Bandscope do
     {:noreply, socket}
   end
 
+
+  def handle_event("window_keydown", %{"key" => key} = params, socket) do
+    Logger.debug("window_keydown: #{inspect(params)}")
+
+    conn = socket.assigns.radio_connection
+
+    case key do
+      "]" ->
+        conn |> ConnectionCommands.freq_change(:up)
+
+      "[" ->
+        conn |> ConnectionCommands.freq_change(:down)
+
+      _ -> :ok
+
+    end
+
+    {:noreply, socket}
+  end
+
+  def handle_event("window_keydown", params, socket) do
+    Logger.debug("window_keydown: #{inspect(params)}")
+
+    {:noreply, socket}
+  end
+
   # close any open modals
   def handle_event("window_keyup", %{"key" => "Escape"} = _params, socket) do
     {:noreply, close_modals(socket)}
+  end
+
+  def handle_event("window_keyup", %{"key" => key} = params, socket) do
+    Logger.debug("window_keyup: #{inspect(params)}")
+
+    conn = socket.assigns.radio_connection
+
+    case key do
+      "s" ->
+        conn |> ConnectionCommands.band_scope_shift()
+
+      _ -> :ok
+    end
+
+    {:noreply, socket}
   end
 
   def handle_event("window_keyup", params, socket) do

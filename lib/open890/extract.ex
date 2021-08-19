@@ -236,6 +236,18 @@ defmodule Open890.Extract do
     "F" => :am_d
   }
 
+  def agc(str) when is_binary(str) do
+    str
+    |> String.trim_leading("GC")
+    |> case do
+      "0" -> :off
+      "1" -> :slow
+      "2" -> :med
+      "3" -> :fast
+      _ -> :unknown
+    end
+  end
+
   def transverter_enabled(str) when is_binary(str) do
     str
     |> String.trim_leading("XV")

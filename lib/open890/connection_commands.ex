@@ -31,12 +31,18 @@ defmodule Open890.ConnectionCommands do
     |> get_transverter_states()
     |> get_antenna_state()
     |> get_cw_key_data()
+    |> get_agc()
   end
 
   def get_cw_key_data(conn) do
     conn
     |> cmd("KS")
     |> cmd("SD")
+  end
+
+  def get_agc(conn) do
+    conn
+    |> cmd("GC")
   end
 
   def get_antenna_state(conn) do
@@ -225,6 +231,10 @@ defmodule Open890.ConnectionCommands do
       conn |> cmd(c)
     end)
     conn
+  end
+
+  def band_scope_shift(conn) do
+    conn |> cmd("BSE")
   end
 
   @doc """

@@ -561,4 +561,14 @@ defmodule Open890Web.RadioViewHelpers do
     end
   end
 
+  def format_agc(agc) when is_atom(agc) do
+    case agc do
+      :off -> "OFF"
+      :slow -> "-S"
+      :med -> "-M"
+      :fast -> "-F"
+      _ -> ""
+    end
+  end
+
 end

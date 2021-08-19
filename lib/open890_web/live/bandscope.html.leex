@@ -19,7 +19,10 @@
     </div>
   <% end %>
 
-  <div id="radio" class="noselect ui stackable doubling grid <%= if @debug, do: "debug" %>" phx-window-keyup="window_keyup">
+  <div id="radio"
+    class="noselect ui stackable doubling grid <%= if @debug, do: "debug" %>"
+    phx-window-keydown="window_keydown"
+    phx-window-keyup="window_keyup">
 
     <%#-- disabled --%>
     <%= if false && @display_screen_id != 0 do %>
@@ -65,13 +68,25 @@
           <div class="four wide column"><%= @antenna_state.active_ant |> to_string() |> String.upcase() %></div>
           <div class="four wide column"><%= if @antenna_state.rx_ant_enabled, do: "RX ANT" %></div>
           <div class="four wide column"><%= if @antenna_state.ant_out_enabled, do: "ANT OUT" %></div>
-          <div class="four wide column"><%= if @antenna_state.drv_enabled, do: "DRV" %></div>
+          <div class="four wide column">
+            <%= if @agc do %>
+              AGC<%= @agc |> format_agc() %>
+            <% end %>
+          </div>
         </div>
       </div>
 
       <div class="eight wide column">
         <div class="ui grid">
-          <div class="four wide column">
+          <div class="two wide column">
+
+          </div>
+
+          <div class="two wide column center aligned">
+            <%= if @tx_state == :tx_tune do %>
+              <div class="txTune">TX TUNE</div>
+            <% end %>
+
           </div>
 
           <div class="eight wide center aligned column">
@@ -85,7 +100,11 @@
               <% end %>
             </div>
           </div>
-          <div class="four wide right aligned column">
+          <div class="two wide column">
+          </div>
+          <div class="two wide right aligned column">
+            <%= if @antenna_state.drv_enabled, do: "DRV" %>
+
             <%= if @power_level do %>
               <%= @power_level %><%= if @antenna_state.drv_enabled do %>%<% else %>W<% end %>
             <% end %>

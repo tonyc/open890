@@ -2,9 +2,11 @@
 
 ## Unreleased
 
-* Show power level, key speed, delay
+* Show power level, key speed, delay, AGC status in top bar
 * Display connection status and error messages in top bar.
 * Display a useful startup banner in the console.
+* Added TX TUNE indicator
+* Added experimental keyboard shortcuts: 's' to shift bandscope, ] and [ to MULTI/CH up/down
 
 ## 0.0.9 - 2021-08-14
 

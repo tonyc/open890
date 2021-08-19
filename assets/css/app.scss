@@ -702,3 +702,35 @@ svg#bandScope {
     visibility: hidden;
   }
 }
+
+.txTune {
+  color: white;
+  animation: blink 0.25s infinite;
+}
+
+.txIndicator {
+  width: 100%;
+  position: relative;
+  padding: 0.25rem 0.5rem;
+  text-align: center;
+  border-radius: 3px;
+
+  &.send {
+    background-color: red;
+    color: white;
+  }
+
+  &.rx {
+    background-color: #0F0;
+    color: white;
+  }
+}
+
+
+@keyframes blink {
+  0% { color: white; }
+  50% { color: black; }
+  100% { color: white; }
+}
+
+
