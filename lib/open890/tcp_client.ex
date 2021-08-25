@@ -69,7 +69,7 @@ defmodule Open890.TCPClient do
   end
 
   def handle_info({:tcp_closed, _socket}, state) do
-    Logger.warn("TCP socket closed. State: #{inspect(state)}")
+    Logger.warn("TCP socket closed.")
 
     broadcast_info(state.connection.id, :error, "connection_down")
 
