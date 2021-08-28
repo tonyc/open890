@@ -587,4 +587,16 @@ defmodule Open890Web.RadioViewHelpers do
     end
   end
 
+  def connection_status_icon(connection_state) do
+    case connection_state do
+      :up ->
+        ~e{<i class="linkify icon"></i>}
+      :stopped ->
+        ~e{<i class="unlink icon"></i>}
+      {:down, _} ->
+        ~e{}
+      _ -> ""
+    end
+  end
+
 end

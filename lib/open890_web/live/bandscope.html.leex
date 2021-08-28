@@ -84,26 +84,22 @@
           </div>
 
           <div class="two wide column center aligned">
-            <%= if @connection_state == :up do %>
-              <span class="ui icon hover-pointer" phx-click="stop_connection" data-tooltip="Stop connection" data-position="bottom center">
-                <i class="big stop circle outline icon"></i>
-              </span>
-            <% else %>
+            <%= if @connection_state == :stopped do %>
               <span class="ui icon hover-pointer" phx-click="start_connection" data-tooltip="Start connection" data-position="bottom center">
                 <i class="big play circle outline icon"></i>
+              </span>
+            <% else %>
+              <span class="ui icon hover-pointer" phx-click="stop_connection" data-tooltip="Stop connection" data-position="bottom center">
+                <i class="big stop circle outline icon"></i>
               </span>
             <% end %>
           </div>
 
           <!-- connection status -->
           <div class="eight wide center aligned column">
-            <%= if @connection_state == :up do %>
-              <i class="linkify icon"></i>
-            <% end %>
-
-            <%= if @connection_state == :stopped do %>
-              <i class="unlink icon"></i>
-            <% end %>
+            <span class="ui icon rotating">
+              <%= connection_status_icon(@connection_state) %>
+            </span>
 
             <%= format_connection_state(@connection_state) %>
           </div>
