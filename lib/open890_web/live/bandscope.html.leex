@@ -79,10 +79,12 @@
         <div class="ui grid">
           <div class="two wide column center aligned">
             <%= if @tx_state == :tx_tune do %>
-              <div class="txTune">TX TUNE</div>
+              <span class="txTune">TX TUNE</span>
+            <% else %>
+              <%= if @transverter_state.enabled do %>
+                <span class="xvtrIndicator <%= str_if(@transverter_state.enabled, "enabled", "disabled") %>">XVTR</span>
+              <% end %>
             <% end %>
-
-            <div class="xvtrIndicator <%= str_if(@transverter_state.enabled, "enabled", "disabled") %>">XVTR</div>
           </div>
 
           <div class="two wide column center aligned">
