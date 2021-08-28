@@ -50,7 +50,7 @@ defmodule Open890.TCPClient do
   def handle_info({:tcp, _socket, _msg}, {:noreply, state}) do
     Logger.error("Got TCP :noreply")
 
-    broadcast_info(state.connection.id, :error, :connection_down)
+    broadcast_connection_state(state.connection, {:down, :tcp_noreply})
     {:stop, :shutdown, state}
   end
 
@@ -71,9 +71,9 @@ defmodule Open890.TCPClient do
   def handle_info({:tcp_closed, _socket}, state) do
     Logger.warn("TCP socket closed.")
 
-    broadcast_info(state.connection.id, :error, "connection_down")
+    broadcast_connection_state(state.connection, {:down, :tcp_closed})
 
-    {:stop, :tcp_closed, state}
+    {:stop, :shutdown, state}
   end
 
   def handle_info(:connect_socket, state) do
@@ -84,18 +84,12 @@ defmodule Open890.TCPClient do
     |> case do
       {:ok, socket} ->
         Logger.info("Established TCP socket with radio on port #{tcp_port}")
-        broadcast_info(state.connection.id, :info, :connection_up)
+        broadcast_connection_state(state.connection, :up)
         self() |> send(:login_radio)
         {:noreply, state |> Map.put(:socket, socket)}
 
       {:error, reason} ->
-        msg = case reason do
-          :ehostunreach -> "no route to host"
-          :timeout -> "connection timeout"
-          other -> other
-        end
-
-        broadcast_info(state.connection.id, :error, "Unable to connect to radio: #{msg}")
+        broadcast_connection_state(state.connection, {:down, reason})
         Logger.error("Unable to connect to radio: #{inspect(reason)}. Connection: #{inspect(state.connection)}")
 
         {:stop, :shutdown, state}
@@ -162,6 +156,15 @@ defmodule Open890.TCPClient do
     {:noreply, state}
   end
 
+  def handle_msg("##CN0", %{socket: socket} = state) do
+    msg = "Unable to connect to radio: The KNS connection may already be in use by another application"
+
+    Logger.warn(msg)
+    broadcast_connection_state(state.connection, {:down, :kns_in_use})
+
+    {:noreply, socket}
+  end
+
   # connection allowed response
   def handle_msg("##CN1", %{socket: socket, kns_user: kns_user} = state) do
     login = kns_user |> User.to_login()
@@ -184,6 +187,14 @@ defmodule Open890.TCPClient do
     send(self(), :get_initial_state)
 
     state
+  end
+
+  # Incorrect username/password
+  def handle_msg("##ID0", %{connection: connection} = state) do
+    Logger.warn("Error connecting to radio: Incorrect username or password")
+    RadioConnection.broadcast_state(connection, {:down, :bad_credentials})
+
+    {:stop, :shutdown, state}
   end
 
   # power status respnose
@@ -251,8 +262,8 @@ defmodule Open890.TCPClient do
     Open890Web.Endpoint.broadcast("radio:state", "radio_state_data", %{msg: msg})
   end
 
-  def broadcast_info(connection_id, level, msg) do
-    Open890Web.Endpoint.broadcast("radio:info:#{connection_id}", "radio_info", %{level: level, msg: msg})
+  def broadcast_connection_state(%RadioConnection{} = connection, state) do
+    RadioConnection.broadcast_state(connection, state)
   end
 
   defp schedule_ping do

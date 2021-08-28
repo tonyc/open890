@@ -21,7 +21,7 @@ defmodule Open890Web.Live.RadioLive.Bandscope do
       Phoenix.PubSub.subscribe(Open890.PubSub, "radio:state")
       Phoenix.PubSub.subscribe(Open890.PubSub, "radio:audio_scope")
       Phoenix.PubSub.subscribe(Open890.PubSub, "radio:band_scope")
-      Phoenix.PubSub.subscribe(Open890.PubSub, "radio:info:#{connection_id}")
+      Phoenix.PubSub.subscribe(Open890.PubSub, "connection:#{connection_id}")
     end
 
     socket = socket |> assign(RadioSocketState.initial_state())
@@ -103,24 +103,17 @@ defmodule Open890Web.Live.RadioLive.Bandscope do
     {:noreply, socket}
   end
 
-  def handle_info(%Broadcast{event: "radio_info", payload: %{msg: :connection_up}}, socket) do
-    Logger.info("******* radio_info: connection up")
+  # Connection state messages
+  def handle_info(%Broadcast{event: "connection_state", payload: payload}, socket) do
+    Logger.debug("Bandscope LV: RX connection_state: #{inspect(payload)}")
 
-    # clear previous flash messages
-    {:noreply, clear_flash(socket, :error)}
+    {:noreply, assign(socket, :connection_state, payload)}
   end
 
-  def handle_info(%Broadcast{event: "radio_info", payload: %{level: level, msg: :connection_down}}, socket) do
-    Logger.info("******* radio_info: connection DOWN")
-
-    # clear previous flash messages
-    {:noreply, put_flash(socket, :error, "Connection down")}
-  end
-
-  def handle_info(%Broadcast{event: "radio_info", payload: %{level: level, msg: msg}}, socket) do
-    Logger.info("***** radio_info: [#{level}] msg: #{inspect(msg)}")
-    {:noreply, put_flash(socket, level, msg)}
-  end
+  # def handle_info(%Broadcast{event: "radio_info", payload: %{level: level, msg: msg}}, socket) do
+  #   Logger.info("***** radio_info: [#{level}] msg: #{inspect(msg)}")
+  #   {:noreply, put_flash(socket, level, msg)}
+  # end
 
   def handle_info(%Broadcast{} = bc, socket) do
     Logger.warn("Unknown broadcast: #{inspect(bc)}")
@@ -207,6 +200,18 @@ defmodule Open890Web.Live.RadioLive.Bandscope do
 
   def handle_event("window_keyup", params, socket) do
     Logger.debug("window_keyup: #{inspect(params)}")
+
+    {:noreply, socket}
+  end
+
+  def handle_event("start_connection", _params, socket) do
+    RadioConnection.start(socket.assigns.radio_connection)
+
+    {:noreply, socket}
+  end
+
+  def handle_event("stop_connection", _params, socket) do
+    RadioConnection.stop(socket.assigns.radio_connection)
 
     {:noreply, socket}
   end

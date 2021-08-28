@@ -571,4 +571,20 @@ defmodule Open890Web.RadioViewHelpers do
     end
   end
 
+  def format_connection_state(state) do
+    case state do
+      :up -> "Connected"
+      :stopped -> "Disconnected"
+      :starting -> "Connecting"
+      {:down, :econnrefused} -> "Connection Refused"
+      {:down, :tcp_closed} -> "TCP Connection Closed"
+      {:down, :tcp_noreply} -> "TCP Noreply"
+      {:down, :ehostunreach} -> "Host Unreachable"
+      {:down, :timeout} -> "Connection Timeout"
+      {:down, :kns_in_use} -> "KNS Connection Already In Use"
+      {:down, :bad_credentials} -> "Incorrect username or password"
+      other -> inspect(other)
+    end
+  end
+
 end

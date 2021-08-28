@@ -60,6 +60,7 @@ defmodule Open890Web.Live.RadioSocketState do
     {:vfo_memory_state, nil},
     {:waterfall_draw_interval, 1},
     {:spectrum_scale, 1.0},
+    {:connection_state, :stopped},
     {:__ui_macros, %{}}
   ]
 

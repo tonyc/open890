@@ -2,8 +2,9 @@
 
 ## Unreleased
 
-* Show power level, key speed, delay, AGC status in top bar
-* Display connection status and error messages in top bar.
+* Added power level, key speed, delay, AGC status in top bar
+* Added start/stop connection button in top bar.
+* Display connection status and error messages in top bar, including "Connection already in use" and "Incorrect username/password"
 * Display a useful startup banner in the console.
 * Added TX TUNE indicator
 * Added experimental keyboard shortcuts: 's' to shift bandscope, ] and [ to MULTI/CH up/down

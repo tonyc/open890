@@ -20,7 +20,6 @@ defmodule Open890.RadioConnection do
 
   alias Open890.RadioConnectionSupervisor
   alias Open890.RadioConnectionRepo, as: Repo
-  alias Open890.RadioConnection
 
   def tcp_port(%__MODULE__{} = connection) do
     connection
@@ -43,7 +42,7 @@ defmodule Open890.RadioConnection do
     params |> Repo.insert()
   end
 
-  def delete_connection(%RadioConnection{id: id}) when is_integer(id) do
+  def delete_connection(%__MODULE__{id: id}) when is_integer(id) do
     id |> String.to_integer() |> delete_connection()
   end
 
@@ -51,7 +50,7 @@ defmodule Open890.RadioConnection do
     id |> Repo.delete()
   end
 
-  def update_connection(%RadioConnection{} = conn, params) when is_map(params) do
+  def update_connection(%__MODULE__{} = conn, params) when is_map(params) do
     # TODO: this should use a changeset
     new_connection =
       conn
@@ -68,6 +67,10 @@ defmodule Open890.RadioConnection do
     new_connection |> Repo.update()
   end
 
+  def count_connections do
+    Repo.count()
+  end
+
   def start(id) when is_integer(id) or is_binary(id) do
     with {:ok, conn} <- find(id) do
       conn |> start()
@@ -75,6 +78,8 @@ defmodule Open890.RadioConnection do
   end
 
   def start(%__MODULE__{} = connection) do
+    broadcast_state(connection, :starting)
+
     connection
     |> RadioConnectionSupervisor.start_connection()
     |> case do
@@ -89,22 +94,18 @@ defmodule Open890.RadioConnection do
     end
   end
 
-  def count_connections do
-    Repo.count()
-  end
-
   def stop(id) when is_integer(id) or is_binary(id) do
     with {:ok, conn} <- find(id) do
       conn |> stop()
     end
   end
 
-  def stop(%__MODULE__{id: id}) do
+  def stop(%__MODULE__{id: id} = connection) do
     Registry.lookup(:radio_connection_registry, id)
     |> case do
       [{pid, _}] ->
         DynamicSupervisor.terminate_child(RadioConnectionSupervisor, pid)
-        Open890Web.Endpoint.broadcast("radio:info:#{id}", "radio_info", %{level: :error, msg: :connection_down})
+        broadcast_state(connection, :stopped)
 
       _ ->
         Logger.debug("Unable to find process for connection id #{id}")
@@ -139,6 +140,10 @@ defmodule Open890.RadioConnection do
       {:ok, _} -> true
       _ -> false
     end
+  end
+
+  def broadcast_state(%__MODULE__{id: id}, state) do
+    Open890Web.Endpoint.broadcast("connection:#{id}", "connection_state", state)
   end
 
   defp get_connection_pid(%__MODULE__{id: id}) do

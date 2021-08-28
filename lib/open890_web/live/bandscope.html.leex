@@ -60,7 +60,6 @@
         </div>
       </div>
     <% end %>
-
     <!-- top bar -->
     <div class="computer only tablet only row">
       <div class="four wide column">
@@ -78,30 +77,40 @@
 
       <div class="eight wide column">
         <div class="ui grid">
-          <div class="two wide column">
-
-          </div>
-
           <div class="two wide column center aligned">
             <%= if @tx_state == :tx_tune do %>
               <div class="txTune">TX TUNE</div>
             <% end %>
-
           </div>
 
+          <div class="two wide column center aligned">
+            <%= if @connection_state == :up do %>
+              <span class="ui icon hover-pointer" phx-click="stop_connection" data-tooltip="Stop connection" data-position="bottom center">
+                <i class="big stop circle outline icon"></i>
+              </span>
+            <% else %>
+              <span class="ui icon hover-pointer" phx-click="start_connection" data-tooltip="Start connection" data-position="bottom center">
+                <i class="big play circle outline icon"></i>
+              </span>
+            <% end %>
+          </div>
+
+          <!-- connection status -->
           <div class="eight wide center aligned column">
-            <div id="flash" class="flash">
-              <%= if live_flash(@flash, :info) do %>
-                <span><%= live_flash(@flash, :info) %></span>
-              <% end %>
+            <%= if @connection_state == :up do %>
+              <i class="linkify icon"></i>
+            <% end %>
 
-              <%= if live_flash(@flash, :error) do %>
-                <span><%= live_flash(@flash, :error) %></span>
-              <% end %>
-            </div>
+            <%= if @connection_state == :stopped do %>
+              <i class="unlink icon"></i>
+            <% end %>
+
+            <%= format_connection_state(@connection_state) %>
           </div>
-          <div class="two wide column">
+
+          <div class="two wide center aligned column">
           </div>
+
           <div class="two wide right aligned column">
             <%= if @antenna_state.drv_enabled, do: "DRV" %>
 
@@ -109,6 +118,7 @@
               <%= @power_level %><%= if @antenna_state.drv_enabled do %>%<% else %>W<% end %>
             <% end %>
           </div>
+
         </div>
       </div>
 
