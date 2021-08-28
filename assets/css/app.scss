@@ -734,6 +734,17 @@ svg#bandScope {
 }
 
 
+.topBar {
+  font-weight: 600;
+  color: white;
+  font-size: larger;
+}
+
+.connectionStatus {
+  color: #A0A0A0;
+  // color: $kenwood-grey;
+}
+
 .rotating {
   line-height: 1;
   height: 1rem;

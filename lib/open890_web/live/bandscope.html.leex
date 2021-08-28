@@ -61,7 +61,7 @@
       </div>
     <% end %>
     <!-- top bar -->
-    <div class="computer only tablet only row">
+    <div class="computer only tablet only row topBar">
       <div class="four wide column">
         <div class="ui grid">
           <div class="four wide column"><%= @antenna_state.active_ant |> to_string() |> String.upcase() %></div>
@@ -101,11 +101,13 @@
 
           <!-- connection status -->
           <div class="eight wide center aligned column">
-            <span class="ui icon rotating">
-              <%= connection_status_icon(@connection_state) %>
-            </span>
+            <span class="connectionStatus">
+              <span class="ui icon rotating">
+                <%= connection_status_icon(@connection_state) %>
+              </span>
 
-            <%= format_connection_state(@connection_state) %>
+              <%= format_connection_state(@connection_state) %>
+            </span>
           </div>
 
           <div class="two wide center aligned column">
