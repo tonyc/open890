@@ -7,9 +7,6 @@ defmodule Open890Web.Live.VFODisplayComponent do
     ~L"""
       <div class="vfos ui stackable grid">
         <div class="row">
-    <div class="xvtrIndicator <%= str_if(@transverter_state.enabled, "enabled", "disabled") %>">XVTR</div>
-        </div>
-        <div class="row">
           <div class="eight wide column _debug">
             <span class="vfoMemIndicator"><%= format_vfo_memory_state(@vfo_memory_state) %></span>
             <span class="modeIndicator active"><%= format_mode(@active_mode) %></span>

@@ -81,6 +81,8 @@
             <%= if @tx_state == :tx_tune do %>
               <div class="txTune">TX TUNE</div>
             <% end %>
+
+            <div class="xvtrIndicator <%= str_if(@transverter_state.enabled, "enabled", "disabled") %>">XVTR</div>
           </div>
 
           <div class="two wide column center aligned">
