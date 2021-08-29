@@ -16,6 +16,19 @@ currently untested.
 
 See [Installing From Source](https://github.com/tonyc/open890/wiki/Installing-From-Source)
 
+## Docker
+
+If you are knowledgeable in Docker, you can use the supplied Dockerfile to run open890:
+
+Build the image:
+
+    docker build -t open890 .
+
+Start a container using the image, exposing the internal server to your host:
+
+    docker run -p 4000:4000 -it --rm open890:latest
+
+You should now be able to access http://localhost:4000
 
 ## Binary releases
 
@@ -31,7 +44,7 @@ Then, decide where you want open890 to live, usually somewhere in your home dire
 
     cd <where you want it>
     tar zxvf /path/to/open890-release.tar.gz
-    
+
 You will then get a subdirectory called `open890`.
 
     cd open890
