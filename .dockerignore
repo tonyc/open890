@@ -1,0 +1,9 @@
+.git
+.github
+docs
+test
+deps
+erl_crash.dump
+Dockerfile
+_build
+assets/node_modules
