@@ -48,6 +48,8 @@ defmodule Open890Web do
       use Phoenix.LiveView,
         layout: {Open890Web.LayoutView, "live.html"}
 
+      alias Open890Web.Components
+
       unquote(view_helpers())
     end
   end

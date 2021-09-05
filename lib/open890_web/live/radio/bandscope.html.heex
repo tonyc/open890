@@ -4,7 +4,7 @@
 
   <%= if false && @debug do %>
     <div id="debugger" class="ui wide sidebar vertical menu left visible">
-      <h2 class="header item">Debug Vars</h3>
+      <h2 class="header item">Debug Vars</h2>
 
       <table class="ui small very basic collapsing very compact table item">
         <tbody>
@@ -19,10 +19,7 @@
     </div>
   <% end %>
 
-  <div id="radio"
-    class="noselect ui stackable doubling grid <%= if @debug, do: "debug" %>"
-    phx-window-keydown="window_keydown"
-    phx-window-keyup="window_keyup">
+  <div id="radio" class="noselect ui stackable doubling grid {debug: @debug}" phx-window-keydown="window_keydown" phx-window-keyup="window_keyup">
 
     <%#-- disabled --%>
     <%= if false && @display_screen_id != 0 do %>
@@ -31,7 +28,7 @@
           <a href="#"><i class="close window icon" phx-click="close_menu"></i></a>
         </div>
         <div class="content">
-          <h2 class="header">Menu #<%= @display_screen_id %></h3>
+          <h2 class="header">Menu #<%= @display_screen_id %></h2>
           <div class="ui vertical stackable attached fluid menu">
             <%= render_menu_items(@display_screen_id) %>
           </div>
@@ -82,7 +79,9 @@
               <span class="txTune">TX TUNE</span>
             <% else %>
               <%= if @transverter_state.enabled do %>
-                <span class="xvtrIndicator <%= str_if(@transverter_state.enabled, "enabled", "disabled") %>">XVTR</span>
+                <span class="xvtrIndicator enabled">XVTR</span>
+              <% else %>
+                <span class="xvtrIndicator disabled">XVTR</span>
               <% end %>
             <% end %>
           </div>
@@ -222,7 +221,7 @@
                   <div class="slider">
                     <span class="label">AF</span>
                     <div class="sliderWrapper" phx-hook="Slider" data-click-action="audio_gain_changed" data-wheel-action="adjust_audio_gain" id="AFSlider">
-                      <div class="indicator" style="width: <%= @audio_gain %>px;"></div>
+                      <Components.SliderComponent.slider value={@audio_gain} />
                     </div>
                   </div>
                 <% end %>
@@ -233,7 +232,7 @@
                   <div class="slider">
                     <span class="label">RF</span>
                     <div class="sliderWrapper" phx-hook="Slider" data-click-action="rf_gain_changed" data-wheel-action="adjust_rf_gain" id="RFSlider">
-                      <div class="indicator" style="width: <%= @rf_gain %>px;"></div>
+                      <Components.SliderComponent.slider value={@rf_gain} />
                     </div>
                   </div>
                 <% end %>
@@ -269,7 +268,7 @@
       <div class="row">
         <div class="column">
           <%= for %{"label" => name} <- @__ui_macros do %>
-            <div class="ui black button" phx-click="run_macro" phx-value-name="<%= name %>"><%= name %></div>
+            <div class="ui black button" phx-click="run_macro" phx-value-name="{name}"><%= name %></div>
           <% end %>
         </div>
       </div>
@@ -345,7 +344,7 @@
           <div class="ui small compact black button" id="RefLevelControl">
             <form class="" id="refLevel" phx-change="ref_level_changed">
               Ref Level
-              <input class="miniTextInput" name="refLevel" type="number" min="-20" max="10" step="0.5" value="<%= format_ref_level(@ref_level) %>"></input>
+              <input class="miniTextInput" name="refLevel" type="number" min="-20" max="10" step="0.5" value={format_ref_level(@ref_level)} />
               dB
             </form>
           </div>
@@ -398,14 +397,14 @@
           <div class="ui small compact black button">
             <form id="WaterfallSpeed" phx-hook="WaterfallSpeedForm">
               WF Speed: 1 /
-              <input class="miniTextInput" name="value" type="number" min="1" max="100" step="1" value="<%= @waterfall_draw_interval %>"></input>
+              <input class="miniTextInput" name="value" type="number" min="1" max="100" step="1" value={@waterfall_draw_interval} />
             </form>
           </div>
 
           <div class="ui small compact black button">
             <form id="SpectrumScale" phx-hook="SpectrumScaleForm">
               Spectrum Scale
-              <input class="miniTextInput" name="value" type="number" min="1" max="10" step="0.1" value="<%= @spectrum_scale %>"></input>
+              <input class="miniTextInput" name="value" type="number" min="1" max="10" step="0.1" value={@spectrum_scale} />
             </form>
           </div>
 

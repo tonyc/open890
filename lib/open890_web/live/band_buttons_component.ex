@@ -2,7 +2,7 @@ defmodule Open890Web.Live.BandButtonsComponent do
   use Open890Web, :live_component
 
   def render(assigns) do
-    ~L"""
+    ~H"""
       <div class="ui grid">
         <div class="row">
           <div class="four wide column center aligned aligned">
