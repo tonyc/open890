@@ -192,7 +192,7 @@ defmodule Open890.TCPClient do
   # Incorrect username/password
   def handle_msg("##ID0", %{connection: connection} = state) do
     Logger.warn("Error connecting to radio: Incorrect username or password")
-    RadioConnection.broadcast_state(connection, {:down, :bad_credentials})
+    broadcast_connection_state(connection, {:down, :bad_credentials})
 
     {:stop, :shutdown, state}
   end
@@ -219,7 +219,7 @@ defmodule Open890.TCPClient do
     # {:stop, :normal, state}
   end
 
-  def handle_msg(msg, %{socket: _socket} = state) when is_binary(msg) do
+  def handle_msg(msg, %{socket: _socket, connection: connection} = state) when is_binary(msg) do
     cond do
       # high speed filter/audio scope response
       msg |> String.starts_with?("##DD3") ->
@@ -228,9 +228,7 @@ defmodule Open890.TCPClient do
           |> String.trim_leading("##DD3")
           |> parse_scope_data()
 
-        Open890Web.Endpoint.broadcast("radio:audio_scope", "scope_data", %{
-          payload: audio_scope_data
-        })
+        RadioConnection.broadcast_audio_scope(connection, audio_scope_data)
 
         state
 
@@ -241,9 +239,7 @@ defmodule Open890.TCPClient do
           |> String.trim_leading("##DD2")
           |> parse_scope_data()
 
-        Open890Web.Endpoint.broadcast("radio:band_scope", "band_scope_data", %{
-          payload: band_scope_data
-        })
+        RadioConnection.broadcast_band_scope(connection, band_scope_data)
 
         state
 
@@ -253,17 +249,13 @@ defmodule Open890.TCPClient do
           Logger.info("[DN] #{inspect(msg)}")
         end
 
-        msg |> broadcast()
+        RadioConnection.broadcast_message(connection,  msg)
         state
     end
   end
 
-  defp broadcast(msg) do
-    Open890Web.Endpoint.broadcast("radio:state", "radio_state_data", %{msg: msg})
-  end
-
   def broadcast_connection_state(%RadioConnection{} = connection, state) do
-    RadioConnection.broadcast_state(connection, state)
+    RadioConnection.broadcast_connection_state(connection, state)
   end
 
   defp schedule_ping do

@@ -18,10 +18,7 @@ defmodule Open890Web.Live.RadioLive.Bandscope do
     Logger.info("LiveView mount: params: #{inspect(params)}")
 
     if connected?(socket) do
-      Phoenix.PubSub.subscribe(Open890.PubSub, "radio:state")
-      Phoenix.PubSub.subscribe(Open890.PubSub, "radio:audio_scope")
-      Phoenix.PubSub.subscribe(Open890.PubSub, "radio:band_scope")
-      Phoenix.PubSub.subscribe(Open890.PubSub, "connection:#{connection_id}")
+      RadioConnection.subscribe(Open890.PubSub, connection_id)
     end
 
     socket = socket |> assign(RadioSocketState.initial_state())

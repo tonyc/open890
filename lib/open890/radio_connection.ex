@@ -78,7 +78,7 @@ defmodule Open890.RadioConnection do
   end
 
   def start(%__MODULE__{} = connection) do
-    broadcast_state(connection, :starting)
+    broadcast_connection_state(connection, :starting)
 
     connection
     |> RadioConnectionSupervisor.start_connection()
@@ -105,7 +105,7 @@ defmodule Open890.RadioConnection do
     |> case do
       [{pid, _}] ->
         DynamicSupervisor.terminate_child(RadioConnectionSupervisor, pid)
-        broadcast_state(connection, :stopped)
+        broadcast_connection_state(connection, :stopped)
 
       _ ->
         Logger.debug("Unable to find process for connection id #{id}")
@@ -142,8 +142,30 @@ defmodule Open890.RadioConnection do
     end
   end
 
-  def broadcast_state(%__MODULE__{id: id}, state) do
+  def broadcast_connection_state(%__MODULE__{id: id}, state) do
     Open890Web.Endpoint.broadcast("connection:#{id}", "connection_state", state)
+  end
+
+  def broadcast_band_scope(%__MODULE__{id: connection_id}, band_scope_data) do
+    Open890Web.Endpoint.broadcast("radio:band_scope:#{connection_id}", "band_scope_data", %{
+      payload: band_scope_data
+    })
+  end
+
+  def broadcast_audio_scope(%__MODULE__{id: connection_id}, audio_scope_data) do
+    Open890Web.Endpoint.broadcast("radio:audio_scope:#{connection_id}", "scope_data", %{payload: audio_scope_data})
+  end
+
+  def broadcast_message(%__MODULE__{id: connection_id}, msg) do
+    Open890Web.Endpoint.broadcast("radio:state:#{connection_id}", "radio_state_data", %{msg: msg})
+  end
+
+  # bundles up all the knowledge of which topics to subscribe a topic to
+  def subscribe(target, connection_id) do
+    Phoenix.PubSub.subscribe(target, "radio:state:#{connection_id}")
+    Phoenix.PubSub.subscribe(target, "radio:audio_scope:#{connection_id}")
+    Phoenix.PubSub.subscribe(target, "radio:band_scope:#{connection_id}")
+    Phoenix.PubSub.subscribe(target, "connection:#{connection_id}")
   end
 
   defp get_connection_pid(%__MODULE__{id: id}) do
