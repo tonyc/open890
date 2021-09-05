@@ -8,6 +8,8 @@
 * Display a useful startup banner in the console.
 * Added TX TUNE indicator
 * Added experimental keyboard shortcuts: 's' to shift bandscope, ] and [ to MULTI/CH up/down
+* [Dev] Upgraded to Elixir 1.12, Erlang/OTP 23.3.4.6
+* [Dev] Removed various unused dependencies, replaced UUID library with Uniq.UUID
 
 ## 0.0.9 - 2021-08-14
 

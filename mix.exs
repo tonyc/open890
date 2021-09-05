@@ -36,7 +36,7 @@ defmodule Open890.MixProject do
   def application do
     [
       mod: {Open890.Application, []},
-      extra_applications: [:logger, :runtime_tools, :crypto]
+      extra_applications: [:logger, :runtime_tools]
     ]
   end
 
@@ -49,14 +49,11 @@ defmodule Open890.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:credo, "~> 1.5", only: [:dev, :test]},
       {:ecto, "~> 3.5"},
       {:elixir_math, "~> 0.1.2"},
-      {:excoveralls, "~> 0.13.3", only: [:dev, :test]},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:mix_test_watch, "~> 1.0", only: [:dev], runtime: false},
-      {:observer_cli, "~> 1.5"},
       {:phoenix, "~> 1.5"},
       {:phoenix_html, "~> 2.11"},
       {:phoenix_live_dashboard, "~> 0.4.0"},
@@ -67,7 +64,7 @@ defmodule Open890.MixProject do
       {:telemetry_metrics, "~> 0.4"},
       {:telemetry_poller, "~> 0.4"},
       {:toml, "~> 0.6.2"},
-      {:uuid, "~> 1.1.8 "}
+      {:uniq, "~> 0.4.1"}
     ]
   end
 
