@@ -2,7 +2,7 @@ defmodule Open890Web.Live.BandIndicatorComponent do
   use Open890Web, :live_component
 
   def render(assigns) do
-    ~L"""
+    ~H"""
       <div class="bandIndicator">
         <%= if @active_receiver == :a do %>
           <div>
