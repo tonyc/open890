@@ -12,7 +12,7 @@ import "../css/app.scss"
 import { Socket } from "phoenix"
 import socket from "./socket"
 import "phoenix_html"
-import LiveSocket from "phoenix_live_view"
+import {LiveSocket} from "phoenix_live_view"
 
 import Hooks from "./hooks"
 
