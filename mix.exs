@@ -36,7 +36,7 @@ defmodule Open890.MixProject do
   def application do
     [
       mod: {Open890.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :crypto]
     ]
   end
 
