@@ -8,6 +8,8 @@ defmodule Open890Web.Live.Radio.Bandscope do
   alias Open890.{ConnectionCommands, Extract, RadioConnection}
   alias Open890Web.Live.{BandButtonsComponent, Dispatch, RadioSocketState}
 
+  alias Open890Web.Components.Slider
+
   # @impl true
   # def render(assigns) do
   #   Phoenix.View.render(Open890Web.RadioLiveView, "radio_live.html", assigns)

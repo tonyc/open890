@@ -218,23 +218,13 @@
 
               <div class="eight wide column computer only tablet only right aligned">
                 <%= if @audio_gain do %>
-                  <div class="slider">
-                    <span class="label">AF</span>
-                    <div class="sliderWrapper" phx-hook="Slider" data-click-action="audio_gain_changed" data-wheel-action="adjust_audio_gain" id="AFSlider">
-                      <Components.SliderComponent.slider value={@audio_gain} />
-                    </div>
-                  </div>
+                  <Slider.slider label="AF" value={@audio_gain} click="audio_gain_changed" wheel="adjust_audio_gain" />
                 <% end %>
 
                 <br /> <br/>
 
                 <%= if @rf_gain do %>
-                  <div class="slider">
-                    <span class="label">RF</span>
-                    <div class="sliderWrapper" phx-hook="Slider" data-click-action="rf_gain_changed" data-wheel-action="adjust_rf_gain" id="RFSlider">
-                      <Components.SliderComponent.slider value={@rf_gain} />
-                    </div>
-                  </div>
+                  <Slider.slider label="RF" value={@rf_gain} click="rf_gain_changed" wheel="adjust_rf_gain" />
                 <% end %>
               </div>
 
