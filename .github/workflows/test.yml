@@ -46,9 +46,3 @@ jobs:
           mix compile
         env:
           MIX_ENV: test
-      - name: Credo
-        run: |
-          mix credo suggest --mute-exit-status
-        env:
-          MIX_ENV: test
-      #  mix sobelow --ignore Config.CSP,Config.HTTPS
