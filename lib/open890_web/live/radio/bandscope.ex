@@ -1,4 +1,4 @@
-defmodule Open890Web.Live.RadioLive.Bandscope do
+defmodule Open890Web.Live.Radio.Bandscope do
   require Logger
 
   use Open890Web, :live_view
