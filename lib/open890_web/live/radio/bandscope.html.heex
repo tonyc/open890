@@ -231,15 +231,15 @@
     </div>
 
     <div class="four wide column right aligned">
-      <Open890Web.Live.AudioScopeComponent.audio_scope
+      <AudioScope.audio_scope
         active_if_filter={@active_if_filter}
         active_mode={@active_mode}
         audio_scope_data={@audio_scope_data}
         filter_hi_shift={@filter_hi_shift}
         filter_lo_width={@filter_lo_width}
         roofing_filter_data={@roofing_filter_data}
-        theme={@theme}
-      />
+        theme={@theme} />
+
       <div class="ui mini black buttons">
         <%= cmd_button "FIL A", "FL00", class: "ui button" %>
         <%= cmd_button "FIL B", "FL01", class: "ui button" %>
@@ -409,7 +409,7 @@
 
   <div id="bandScopeContainer" class="row">
     <div class="wide column">
-      <Open890Web.Live.BandScopeComponent.bandscope 
+      <BandScope.bandscope 
         active_frequency={@active_frequency}
         active_mode={@active_mode}
         band_scope_mode={@band_scope_mode}

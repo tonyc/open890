@@ -1,4 +1,4 @@
-defmodule Open890Web.Live.AudioScopeComponent do
+defmodule Open890Web.Components.AudioScope do
   use Phoenix.Component
   import Phoenix.HTML
 
