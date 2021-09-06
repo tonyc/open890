@@ -303,22 +303,10 @@
                 500 => "BS40",
               }, class: "black" %>
           </div>
-
-          <%#= cycle_label_button("Span", @band_scope_span,
-            %{
-              5 => %{label: "5 kHz", cmd: "BS41"},
-              10 => %{label: "10 kHz", cmd: "BS42"},
-              20 =>  %{label: "20 kHz", cmd: "BS43"},
-              30 =>  %{label: "30 kHz", cmd: "BS44"},
-              50 =>  %{label: "50 kHz", cmd: "BS45"},
-              100 => %{label: "100 kHz", cmd: "BS46"},
-              200 => %{label: "200 kHz", cmd: "BS47"},
-              500 => %{label: "500 kHz", cmd: "BS40"},
-            }, class: "black") %>
         <% end %>
 
         <%= case @band_scope_mode do %>
-          <%= :auto_scroll -> %>
+          <% :auto_scroll -> %>
             <%= cmd_button "Shift", "BSE", class: "ui small black compact button" %>
           <% :fixed -> %>
             <%= cmd_button "MKR.CTR", "BSE", class: "ui small compact black button" %>
