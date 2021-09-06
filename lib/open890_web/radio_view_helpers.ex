@@ -140,18 +140,6 @@ defmodule Open890Web.RadioViewHelpers do
     percent * (x_max - x_min) + x_min
   end
 
-  def project_to_bandscope_limits(frequency, {low, high})
-      when is_integer(frequency) and is_integer(low) and is_integer(high) do
-    delta = high - low
-    freq_delta = frequency - low
-    percentage = freq_delta / delta
-    percentage * 640
-  end
-
-  def project_to_bandscope_limits(_, _edges) do
-    0
-  end
-
   def screen_to_frequency(scope_coord, {low, high}, width) do
     coord_percentage = scope_coord / width
 
@@ -250,14 +238,6 @@ defmodule Open890Web.RadioViewHelpers do
     end
   end
 
-  def format_band_scope_low({low, _high}) do
-    low |> format_raw_frequency()
-  end
-
-  def format_band_scope_high({_low, high}) do
-    high |> format_raw_frequency()
-  end
-
   def center_carrier_line do
     tri_ofs = 10
 
@@ -268,220 +248,6 @@ defmodule Open890Web.RadioViewHelpers do
         <text class="rx triangleText" x="<%= 320 - 3 %>" y="7">R</text>
       </g>
     }
-  end
-
-  def carrier_line(active_frequency, band_scope_edges) do
-    loc = project_to_bandscope_limits(active_frequency, band_scope_edges)
-    tri_ofs = 10
-
-    ~e{
-      <line id="active_receiver_line" class="primaryCarrier" x1="<%= loc %>" y1="0" x2="<%= loc %>" y2="150" />
-      <g id="rxTriangleGroup">
-        <polygon class="rx triangle" points="<%= loc %>,<%= tri_ofs %> <%= loc - tri_ofs %>,0 <%= loc + tri_ofs %>,0" />
-        <text class="rx triangleText" x="<%= loc - 3 %>" y="7">R</text>
-      </g>
-    }
-  end
-
-  def band_scope_horizontal_grid do
-    offset = 140 / 8
-
-    ~e{
-      <%= for i <- (1..7) do %>
-        <line class="bandscopeGrid horizontal" x1="0" y1="<%= i * offset %>" x2="640" y2="<%= i * offset %>" />
-      <% end %>
-    }
-  end
-
-  def band_scope_vertical_grid(:auto_scroll, _) do
-    offset = 64
-
-    ~e{
-      <%= for i <- (1..9) do %>
-        <line class="bandscopeGrid vertical" x1="<%= i * offset %>" y1="0" x2="<%= i * offset %>" y2="640" />
-      <% end %>
-    }
-  end
-
-  def band_scope_vertical_grid(:center, opts) when is_list(opts) do
-    freq = opts |> Keyword.fetch!(:freq)
-    span = opts |> Keyword.fetch!(:span)
-
-    if is_nil(span) do
-      ""
-    else
-      span_hz = span * 1000
-      span_step_hz = div(span_hz, 10)
-      half_span = div(span_hz, 2)
-
-      low_edge = freq - half_span
-      high_edge = freq + half_span
-
-      first_marker = round_up_to_step(low_edge, span_step_hz)
-
-      values =
-        0..9
-        |> Enum.map(fn i ->
-          first_marker + i * span_step_hz
-          # first_marker_projected + (i * grid_offset)
-        end)
-        |> Enum.map(fn f ->
-          project_to_bandscope_limits(f, {low_edge, high_edge})
-        end)
-
-      ~e{
-        <%= for i <- (0..9) do %>
-          <line class="bandscopeGrid vertical" x1="<%= Enum.at(values, i) %>" y1="0" x2="<%= Enum.at(values, i) %>" y2="640" />
-        <% end %>
-      }
-    end
-  end
-
-  def band_scope_vertical_grid(:fixed, _) do
-    ""
-  end
-
-  def band_scope_vertical_grid(_, _) do
-    ""
-  end
-
-  def passband_polygon(mode, active_frequency, filter_lo_width, filter_hi_shift, scope_edges)
-      when mode in [:lsb, :usb] do
-    filter_low =
-      mode
-      |> offset_frequency(active_frequency, filter_lo_width)
-      |> project_to_bandscope_limits(scope_edges)
-
-    filter_high =
-      mode
-      |> offset_frequency(active_frequency, filter_hi_shift)
-      |> project_to_bandscope_limits(scope_edges)
-
-    ~e{<polygon id="passband" points="<%= filter_low %>,0 <%= filter_high %>,0 <%= filter_high %>,150 <%= filter_low %>,150" />}
-  end
-
-  def passband_polygon(mode, active_frequency, filter_lo_width, filter_hi_shift, scope_edges)
-      when mode in [:cw, :cw_r] do
-    half_width = (filter_lo_width / 2) |> round()
-
-    shift =
-      case mode do
-        :cw_r -> -filter_hi_shift
-        _ -> filter_hi_shift
-      end
-
-    filter_low =
-      (active_frequency + half_width + shift) |> project_to_bandscope_limits(scope_edges)
-
-    filter_high =
-      (active_frequency - half_width + shift) |> project_to_bandscope_limits(scope_edges)
-
-    ~e{<polygon id="passband" points="<%= filter_low %>,0 <%= filter_high %>,0 <%= filter_high %>,150 <%= filter_low %>,150" />}
-  end
-
-  def passband_polygon(_mode, _active_frequency, _filter_lo_width, _filter_hi_shift, _scope_edges) do
-    ""
-  end
-
-  def project_to_audioscope_limits(value, width)
-      when is_integer(value) and is_integer(width) do
-    percentage = value / width
-    percentage * 212
-  end
-
-  def audio_scope_filter_edges(
-        mode,
-        {filter_lo_width, filter_hi_shift},
-        active_roofing_filter,
-        roofing_filter_data
-      )
-      when mode in [:cw, :cw_r] and is_integer(filter_lo_width) and is_integer(filter_hi_shift) and
-             not is_nil(active_roofing_filter) do
-    half_width = (filter_lo_width / 2) |> round()
-
-    roofing_width = roofing_filter_data |> Map.get(active_roofing_filter)
-
-    half_shift =
-      case mode do
-        :cw_r -> filter_hi_shift
-        _ -> -filter_hi_shift
-      end
-      |> div(2)
-
-    distance = ((half_width |> project_to_audioscope_limits(roofing_width)) / 2) |> round()
-
-    half_shift_projected =
-      half_shift
-      |> project_to_audioscope_limits(roofing_width)
-      |> round()
-
-    low_val = 106 - distance + half_shift_projected
-    high_val = 106 + distance + half_shift_projected
-
-    points = audio_scope_filter_points(low_val, high_val)
-
-    ~e{
-      <polyline id="audioScopeFilter" points="<%= points %>" />
-    }
-  end
-
-  def audio_scope_filter_edges(
-        mode,
-        {filter_lo_width, filter_hi_shift} = _filter_edges,
-        _active_roofing_filter,
-        _roofing_filter_data
-      )
-      when mode in [:usb, :lsb, :fm] do
-    total_width_hz =
-      cond do
-        filter_hi_shift >= 3400 -> 5000
-        true -> 3000
-      end
-
-    [projected_low, projected_hi] =
-      [filter_lo_width, filter_hi_shift]
-      |> Enum.map(fn val ->
-        val
-        |> project_to_audioscope_limits(total_width_hz)
-        |> round()
-      end)
-
-    points = audio_scope_filter_points(projected_low, projected_hi)
-
-    ~e{
-      <polyline id="audioScopeFilter" points="<%= points %>" />
-    }
-  end
-
-  def audio_scope_filter_edges(
-        :am,
-        {filter_lo_width, filter_hi_shift},
-        _active_roofing_filter,
-        _roofing_filter_data
-      ) do
-    [projected_low, projected_hi] =
-      [filter_lo_width, filter_hi_shift]
-      |> Enum.map(fn val ->
-        val
-        |> project_to_audioscope_limits(5000)
-        |> round()
-      end)
-
-    points = audio_scope_filter_points(projected_low, projected_hi)
-
-    ~e{
-      <polyline id="audioScopeFilter" points="<%= points %>" />
-    }
-  end
-
-  def audio_scope_filter_edges(_mode, _edges, _active_roofing_filter, _roofing_filter_data) do
-    ""
-  end
-
-  defp audio_scope_filter_points(low_val, high_val) do
-    edge_offset = 7
-
-    "#{low_val - edge_offset},50 #{low_val},5 #{high_val},5 #{high_val + edge_offset},50"
   end
 
   @doc """
@@ -543,9 +309,6 @@ defmodule Open890Web.RadioViewHelpers do
     end
   end
 
-  def round_up_to_step(value, step) when is_integer(value) and is_integer(step) do
-    div(value, step) * step + step
-  end
 
   def vfo_display_frequency(freq, %TransverterState{} = state) do
     state

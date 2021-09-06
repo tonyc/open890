@@ -1,433 +1,428 @@
-<%= if false do %>
-  <p>Radio connection not up.</p>
-<% else %>
+<%= if false && @debug do %>
+  <div id="debugger" class="ui wide sidebar vertical menu left visible">
+    <h2 class="header item">Debug Vars</h2>
 
-  <%= if false && @debug do %>
-    <div id="debugger" class="ui wide sidebar vertical menu left visible">
-      <h2 class="header item">Debug Vars</h2>
+    <table class="ui small very basic collapsing very compact table item">
+      <tbody>
+        <%= for k <- assigns |> Map.drop([:__changed__, :socket, :live_module, :live_action, :band_scope_data, :audio_scope_data]) |> Map.keys() |> Enum.sort() do %>
+          <tr>
+            <td class="right aligned"><%= k %></td>
+            <td><span class="mono"><%= inspect(assigns[k]) %></span></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>
 
-      <table class="ui small very basic collapsing very compact table item">
-        <tbody>
-          <%= for k <- assigns |> Map.drop([:__changed__, :socket, :live_module, :live_action, :band_scope_data, :audio_scope_data]) |> Map.keys() |> Enum.sort() do %>
-            <tr>
-              <td class="right aligned"><%= k %></td>
-              <td><span class="mono"><%= inspect(assigns[k]) %></span></td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
+<div id="radio" class="noselect ui stackable doubling grid" class={@debug} phx-window-keydown="window_keydown" phx-window-keyup="window_keyup">
+
+  <%#-- disabled --%>
+  <%= if false && @display_screen_id != 0 do %>
+    <div id="menuModal" class="ui active modal">
+      <div class="header">
+        <a href="#"><i class="close window icon" phx-click="close_menu"></i></a>
+      </div>
+      <div class="content">
+        <h2 class="header">Menu #<%= @display_screen_id %></h2>
+        <div class="ui vertical stackable attached fluid menu">
+          <%= render_menu_items(@display_screen_id) %>
+        </div>
+      </div>
     </div>
   <% end %>
 
-  <div id="radio" class="noselect ui stackable doubling grid {debug: @debug}" phx-window-keydown="window_keydown" phx-window-keyup="window_keyup">
-
-    <%#-- disabled --%>
-    <%= if false && @display_screen_id != 0 do %>
-      <div id="menuModal" class="ui active modal">
+  <%= if @display_band_selector do %>
+    <div class="ui active page top aligned page dimmer" _phx-click="dimmer_clicked">
+      <div id="BandModal" class="ui active modal" phx-hook="BandModal">
         <div class="header">
-          <a href="#"><i class="close window icon" phx-click="close_menu"></i></a>
+          <h1 class="ui huge header activeFrequency tip">
+            <%= @active_frequency |> format_raw_frequency() %>
+            <div class="ui sub header activeMode tip"><%= @active_mode |> format_mode() %></div>
+          </h1>
         </div>
         <div class="content">
-          <h2 class="header">Menu #<%= @display_screen_id %></h2>
-          <div class="ui vertical stackable attached fluid menu">
-            <%= render_menu_items(@display_screen_id) %>
+          <%= live_component @socket, BandButtonsComponent %>
+        </div>
+        <div class="actions">
+          <div id="BandModalClose" class="ui icon button" phx-click="toggle_band_selector">
+            <i class="close icon"></i>
+            Close
           </div>
         </div>
       </div>
-    <% end %>
-
-    <%= if @display_band_selector do %>
-      <div class="ui active page top aligned page dimmer" _phx-click="dimmer_clicked">
-        <div id="BandModal" class="ui active modal" phx-hook="BandModal">
-          <div class="header">
-            <h1 class="ui huge header activeFrequency tip">
-              <%= @active_frequency |> format_raw_frequency() %>
-              <div class="ui sub header activeMode tip"><%= @active_mode |> format_mode() %></div>
-            </h1>
-          </div>
-          <div class="content">
-            <%= live_component @socket, BandButtonsComponent %>
-          </div>
-          <div class="actions">
-            <div id="BandModalClose" class="ui icon button" phx-click="toggle_band_selector">
-              <i class="close icon"></i>
-              Close
-            </div>
-          </div>
-        </div>
-      </div>
-    <% end %>
-    <!-- top bar -->
-    <div class="computer only tablet only row topBar">
-      <div class="four wide column">
-        <div class="ui grid">
-          <div class="four wide column"><%= @antenna_state.active_ant |> to_string() |> String.upcase() %></div>
-          <div class="four wide column"><%= if @antenna_state.rx_ant_enabled, do: "RX ANT" %></div>
-          <div class="four wide column"><%= if @antenna_state.ant_out_enabled, do: "ANT OUT" %></div>
-          <div class="four wide column">
-            <%= if @agc do %>
-              AGC<%= @agc |> format_agc() %>
-            <% end %>
-          </div>
-        </div>
-      </div>
-
-      <div class="eight wide column">
-        <div class="ui grid">
-          <div class="two wide column center aligned">
-            <%= if @tx_state == :tx_tune do %>
-              <span class="txTune">TX TUNE</span>
-            <% else %>
-              <%= if @transverter_state.enabled do %>
-                <span class="xvtrIndicator enabled">XVTR</span>
-              <% else %>
-                <span class="xvtrIndicator disabled">XVTR</span>
-              <% end %>
-            <% end %>
-          </div>
-
-          <div class="two wide column center aligned">
-            <%= if @connection_state == :stopped do %>
-              <span class="ui icon hover-pointer" phx-click="start_connection" data-tooltip="Start connection" data-position="bottom center">
-                <i class="large play circle outline icon"></i>
-              </span>
-            <% else %>
-              <span class="ui icon hover-pointer" phx-click="stop_connection" data-tooltip="Stop connection" data-position="bottom center">
-                <i class="large stop circle outline icon"></i>
-              </span>
-            <% end %>
-          </div>
-
-          <!-- connection status -->
-          <div class="eight wide center aligned column">
-            <span class="connectionStatus">
-              <span class="ui icon rotating">
-                <%= connection_status_icon(@connection_state) %>
-              </span>
-
-              <%= format_connection_state(@connection_state) %>
-            </span>
-          </div>
-
-          <div class="two wide center aligned column">
-          </div>
-
-          <div class="two wide right aligned column">
-            <%= if @antenna_state.drv_enabled, do: "DRV" %>
-
-            <%= if @power_level do %>
-              <%= @power_level %><%= if @antenna_state.drv_enabled do %>%<% else %>W<% end %>
-            <% end %>
-          </div>
-
-        </div>
-      </div>
-
-      <div class="four wide column">
-        <div class="ui grid">
-          <div class="eight wide column right aligned">
-            <%= if @active_mode in [:cw, :cw_r] && @cw_key_speed do %>
-              <%= @cw_key_speed %>WPM
-            <% end %>
-          </div>
-          <div class="eight wide column right aligned">
-            <%= if @active_mode in [:cw, :cw_r] && @cw_delay do %>
-              <%= if @cw_delay == 0, do: "FULL-BK", else: "DELAY: #{@cw_delay}" %>
-            <% end %>
-          </div>
-
-
+    </div>
+  <% end %>
+  <!-- top bar -->
+  <div class="computer only tablet only row topBar">
+    <div class="four wide column">
+      <div class="ui grid">
+        <div class="four wide column"><%= @antenna_state.active_ant |> to_string() |> String.upcase() %></div>
+        <div class="four wide column"><%= if @antenna_state.rx_ant_enabled, do: "RX ANT" %></div>
+        <div class="four wide column"><%= if @antenna_state.ant_out_enabled, do: "ANT OUT" %></div>
+        <div class="four wide column">
+          <%= if @agc do %>
+            AGC<%= @agc |> format_agc() %>
+          <% end %>
         </div>
       </div>
     </div>
 
-    <div class="computer only tablet only row">
-      <div class="four wide column">
-        <div id="sMeterWrapper">
-          <%= live_component @socket, Open890Web.Live.DigitalMeterComponent, s_meter: @s_meter, alc_meter: @alc_meter, swr_meter: @swr_meter %>
-        </div>
-      </div>
-
-      <div class="eight wide column center aligned">
-        <div class="ui _container">
-          <div class="ui grid sixteen wide">
-            <div id="frequencyDisplay" class="ui row">
-
-              <%= case @vfo_memory_state do %>
-              <% :vfo -> %>
-                <div class="eight column row">
-                  <%= live_component @socket, Open890Web.Live.VFODisplayComponent,
-                                              active_frequency: @active_frequency,
-                                              active_mode: @active_mode,
-                                              active_receiver: @active_receiver,
-                                              inactive_frequency: @inactive_frequency,
-                                              inactive_mode: @inactive_mode,
-                                              transverter_state: @transverter_state,
-                                              vfo_memory_state: @vfo_memory_state %>
-                </div>
-              <% :memory -> %>
-                <div id="memoryDisplay" class="eight column row">
-                  <div class="column">
-                    <p>Memory display not implemented yet.</p>
-                  </div>
-                </div>
-              <% _ -> %>
-              <% end %>
-            </div> <!-- frequencyDisplay -->
-
-            <div class="row stackable grid">
-
-              <!-- middle -->
-              <div class="eight wide column">
-                <div class="ui small black buttons">
-
-                  <%= if @vfo_memory_state == :vfo do %>
-                    <%= vfo_equalize_button(class: "ui small black button") %>
-                    <%= vfo_switch_button(@active_receiver, class: "ui small black button") %>
-                  <% end %>
-                  <%= if @vfo_memory_state do %>
-                    <%= vfo_mem_switch_button(@vfo_memory_state, class: "ui small black button") %>
-                  <% end %>
-                </div>
-              </div>
-
-              <div class="eight wide column">
-                <div class="ui small black buttons">
-                  <%= cycle_button("PRE #{format_rf_pre(@rf_pre)}", @rf_pre, %{
-                    0 => "PA1",
-                    1 => "PA2",
-                    2 => "PA0"
-                  }, class: "button") %>
-
-                  <%= cycle_button("ATT #{format_rf_att(@rf_att)}", @rf_att, %{
-                    0 => "RA1",
-                    1 => "RA2",
-                    2 => "RA3",
-                    3 => "RA0"
-                  }, class: "button") %>
-
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-
-              <div class="eight wide column computer only tablet only">
-                <!-- nothing here yet -->
-              </div>
-
-              <div class="eight wide column computer only tablet only right aligned">
-                <%= if @audio_gain do %>
-                  <Slider.slider label="AF" value={@audio_gain} click="audio_gain_changed" wheel="adjust_audio_gain" />
-                <% end %>
-
-                <br /> <br/>
-
-                <%= if @rf_gain do %>
-                  <Slider.slider label="RF" value={@rf_gain} click="rf_gain_changed" wheel="adjust_rf_gain" />
-                <% end %>
-              </div>
-
-            </div>
-          </div>
-        </div> <!-- container -->
-
-      </div>
-
-      <div class="four wide column right aligned">
-          <%= live_component @socket, Open890Web.Live.AudioScopeComponent,
-                                      active_if_filter: @active_if_filter,
-                                      active_if_filter: @active_if_filter,
-                                      active_mode: @active_mode,
-                                      audio_scope_data: @audio_scope_data,
-                                      filter_hi_shift: @filter_hi_shift,
-                                      filter_lo_width: @filter_lo_width,
-                                      roofing_filter_data: @roofing_filter_data,
-                                      theme: @theme %>
-
-          <div class="ui mini black buttons">
-            <%= cmd_button "FIL A", "FL00", class: "ui button" %>
-            <%= cmd_button "FIL B", "FL01", class: "ui button" %>
-            <%= cmd_button "FIL C", "FL02", class: "ui button" %>
-          </div>
-
-      </div>
-    </div> <!-- row -->
-
-    <%= if @__ui_macros != %{} do %>
-      <div class="row">
-        <div class="column">
-          <%= for %{"label" => name} <- @__ui_macros do %>
-            <div class="ui black button" phx-click="run_macro" phx-value-name="{name}"><%= name %></div>
-          <% end %>
-        </div>
-      </div>
-    <% end %>
-
-    <div id="bandScopeDetails" class="row">
-      <div class="column left aligned computer only tablet only">
-        <div class="scopeButtons">
-
-          <%= if @band_scope_mode do %>
-            <%= cycle_label_button("", @band_scope_mode,
-              %{
-                auto_scroll: %{label: "Auto Scroll", cmd: "BS30"},
-                fixed: %{label: "Fixed", cmd: "BS32"},
-                center: %{label: "Center", cmd: "BS31"}
-              }, class: "small compact black") %>
-          <% end %>
-
-          <%= if @band_scope_mode == :fixed do %>
-            <button class="ui black button">Range: (fixme)</button>
+    <div class="eight wide column">
+      <div class="ui grid">
+        <div class="two wide column center aligned">
+          <%= if @tx_state == :tx_tune do %>
+            <span class="txTune">TX TUNE</span>
           <% else %>
-            <div class="ui small compact labeled buttons">
-              <%= cycle_button("▼", @band_scope_span,
-                %{
-                  5 => "BS47",
-                  10 => "BS40",
-                  20 => "BS41",
-                  30 => "BS42",
-                  50 => "BS43",
-                  100 => "BS44",
-                  200 => "BS45",
-                  500 => "BS46"
-                }, class: "black") %>
-               %>
-               <div class="ui black button">
-                 Span: <%= @band_scope_span %> kHz
-               </div>
-               <%= cycle_button "▲", @band_scope_span,
-                %{
-                  5 => "BS41",
-                  10 => "BS42",
-                  20 => "BS43",
-                  30 => "BS44",
-                  50 => "BS45",
-                  100 => "BS46",
-                  200 => "BS47",
-                  500 => "BS40",
-                }, class: "black" %>
-            </div>
-
-            <%#= cycle_label_button("Span", @band_scope_span,
-              %{
-                5 => %{label: "5 kHz", cmd: "BS41"},
-                10 => %{label: "10 kHz", cmd: "BS42"},
-                20 =>  %{label: "20 kHz", cmd: "BS43"},
-                30 =>  %{label: "30 kHz", cmd: "BS44"},
-                50 =>  %{label: "50 kHz", cmd: "BS45"},
-                100 => %{label: "100 kHz", cmd: "BS46"},
-                200 => %{label: "200 kHz", cmd: "BS47"},
-                500 => %{label: "500 kHz", cmd: "BS40"},
-              }, class: "black") %>
+            <%= if @transverter_state.enabled do %>
+              <span class="xvtrIndicator enabled">XVTR</span>
+            <% else %>
+              <span class="xvtrIndicator disabled">XVTR</span>
+            <% end %>
           <% end %>
+        </div>
 
-          <%= case @band_scope_mode do %>
-            <%= :auto_scroll -> %>
-              <%= cmd_button "Shift", "BSE", class: "ui small black compact button" %>
-            <% :fixed -> %>
-              <%= cmd_button "MKR.CTR", "BSE", class: "ui small compact black button" %>
-            <% _ -> %>
-              <%= "" %>
+        <div class="two wide column center aligned">
+          <%= if @connection_state == :stopped do %>
+            <span class="ui icon hover-pointer" phx-click="start_connection" data-tooltip="Start connection" data-position="bottom center">
+              <i class="large play circle outline icon"></i>
+            </span>
+          <% else %>
+            <span class="ui icon hover-pointer" phx-click="stop_connection" data-tooltip="Stop connection" data-position="bottom center">
+              <i class="large stop circle outline icon"></i>
+            </span>
           <% end %>
+        </div>
 
-          <div class="ui small compact black button" id="RefLevelControl">
-            <form class="" id="refLevel" phx-change="ref_level_changed">
-              Ref Level
-              <input class="miniTextInput" name="refLevel" type="number" min="-20" max="10" step="0.5" value={format_ref_level(@ref_level)} />
-              dB
-            </form>
-          </div>
+        <!-- connection status -->
+        <div class="eight wide center aligned column">
+          <span class="connectionStatus">
+            <span class="ui icon rotating">
+              <%= connection_status_icon(@connection_state) %>
+            </span>
 
-          <%= if @band_scope_att do %>
-            <div class="ui small compact black buttons">
-              <%= cycle_button "▼", @band_scope_att,
-                %{
-                  0 => "BS83",
-                  1 => "BS80",
-                  2 => "BS81",
-                  3 => "BS82",
-                } %>
-              <div class="ui button">
-                Scope ATT:
-                <%= format_band_scope_att(@band_scope_att) %>
-              </div>
-              <%= cycle_button "▲", @band_scope_att,
-                %{
-                  0 => "BS81",
-                  1 => "BS82",
-                  2 => "BS83",
-                  3 => "BS80",
-                } %>
-            </div>
+            <%= format_connection_state(@connection_state) %>
+          </span>
+        </div>
+
+        <div class="two wide center aligned column">
+        </div>
+
+        <div class="two wide right aligned column">
+          <%= if @antenna_state.drv_enabled, do: "DRV" %>
+
+          <%= if @power_level do %>
+            <%= @power_level %><%= if @antenna_state.drv_enabled do %>%<% else %>W<% end %>
           <% end %>
-
-          <%= if @band_scope_avg do %>
-            <div class="ui small compact black buttons">
-              <%= cycle_button "▼", @band_scope_avg,
-                %{
-                  0 => "BSA3",
-                  1 => "BSA0",
-                  2 => "BSA1",
-                  3 => "BSA2",
-                } %>
-              <div class="ui button">
-                Scope Avg: <%= @band_scope_avg %>
-              </div>
-              <%= cycle_button "▲", @band_scope_avg,
-                %{
-                  0 => "BSA1",
-                  1 => "BSA2",
-                  2 => "BSA3",
-                  3 => "BSA0",
-                } %>
-            </div>
-          <% end %>
-
-          <div class="ui small compact black button">
-            <form id="WaterfallSpeed" phx-hook="WaterfallSpeedForm">
-              WF Speed: 1 /
-              <input class="miniTextInput" name="value" type="number" min="1" max="100" step="1" value={@waterfall_draw_interval} />
-            </form>
-          </div>
-
-          <div class="ui small compact black button">
-            <form id="SpectrumScale" phx-hook="SpectrumScaleForm">
-              Spectrum Scale
-              <input class="miniTextInput" name="value" type="number" min="1" max="10" step="0.1" value={@spectrum_scale} />
-            </form>
-          </div>
-
-          <%= if @data_speed do %>
-            <%= cycle_label_button("Data Speed", @data_speed,
-              %{
-                1 => %{label: "High", cmd: "DD03"},
-                2 => %{label: "Mid", cmd: "DD01"},
-                3 => %{label: "Low", cmd: "DD02"},
-              }, class: "small compact black") %>
-          <% end %>
-
-        </div> <!-- ui buttons -->
+        </div>
 
       </div>
     </div>
 
-    <div id="bandScopeContainer" class="row">
-      <div class="wide column">
-        <%= live_component @socket, Open890Web.Live.BandScopeComponent,
-                                    active_frequency: @active_frequency,
-                                    active_mode: @active_mode,
-                                    band_scope_data: @band_scope_data,
-                                    band_scope_edges: @band_scope_edges,
-                                    band_scope_mode: @band_scope_mode,
-                                    band_scope_span: @band_scope_span,
-                                    filter_hi_shift: @filter_hi_shift,
-                                    filter_lo_width: @filter_lo_width,
-                                    theme: @theme,
-                                    draw_interval: @waterfall_draw_interval,
-                                    spectrum_scale: @spectrum_scale
-                                    %>
+    <div class="four wide column">
+      <div class="ui grid">
+        <div class="eight wide column right aligned">
+          <%= if @active_mode in [:cw, :cw_r] && @cw_key_speed do %>
+            <%= @cw_key_speed %>WPM
+          <% end %>
+        </div>
+        <div class="eight wide column right aligned">
+          <%= if @active_mode in [:cw, :cw_r] && @cw_delay do %>
+            <%= if @cw_delay == 0, do: "FULL-BK", else: "DELAY: #{@cw_delay}" %>
+          <% end %>
+        </div>
+
+
       </div>
+    </div>
   </div>
 
-<% end %>
+  <div class="computer only tablet only row">
+    <div class="four wide column">
+      <div id="sMeterWrapper">
+        <%= live_component @socket, Open890Web.Live.DigitalMeterComponent, s_meter: @s_meter, alc_meter: @alc_meter, swr_meter: @swr_meter %>
+      </div>
+    </div>
+
+    <div class="eight wide column center aligned">
+      <div class="ui _container">
+        <div class="ui grid sixteen wide">
+          <div id="frequencyDisplay" class="ui row">
+
+            <%= case @vfo_memory_state do %>
+            <% :vfo -> %>
+              <div class="eight column row">
+                <%= live_component @socket, Open890Web.Live.VFODisplayComponent,
+                                            active_frequency: @active_frequency,
+                                            active_mode: @active_mode,
+                                            active_receiver: @active_receiver,
+                                            inactive_frequency: @inactive_frequency,
+                                            inactive_mode: @inactive_mode,
+                                            transverter_state: @transverter_state,
+                                            vfo_memory_state: @vfo_memory_state %>
+              </div>
+            <% :memory -> %>
+              <div id="memoryDisplay" class="eight column row">
+                <div class="column">
+                  <p>Memory display not implemented yet.</p>
+                </div>
+              </div>
+            <% _ -> %>
+            <% end %>
+          </div> <!-- frequencyDisplay -->
+
+          <div class="row stackable grid">
+
+            <!-- middle -->
+            <div class="eight wide column">
+              <div class="ui small black buttons">
+
+                <%= if @vfo_memory_state == :vfo do %>
+                  <%= vfo_equalize_button(class: "ui small black button") %>
+                  <%= vfo_switch_button(@active_receiver, class: "ui small black button") %>
+                <% end %>
+                <%= if @vfo_memory_state do %>
+                  <%= vfo_mem_switch_button(@vfo_memory_state, class: "ui small black button") %>
+                <% end %>
+              </div>
+            </div>
+
+            <div class="eight wide column">
+              <div class="ui small black buttons">
+                <%= cycle_button("PRE #{format_rf_pre(@rf_pre)}", @rf_pre, %{
+                  0 => "PA1",
+                  1 => "PA2",
+                  2 => "PA0"
+                }, class: "button") %>
+
+                <%= cycle_button("ATT #{format_rf_att(@rf_att)}", @rf_att, %{
+                  0 => "RA1",
+                  1 => "RA2",
+                  2 => "RA3",
+                  3 => "RA0"
+                }, class: "button") %>
+
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+
+            <div class="eight wide column computer only tablet only">
+              <!-- nothing here yet -->
+            </div>
+
+            <div class="eight wide column computer only tablet only right aligned">
+              <%= if @audio_gain do %>
+                <Slider.slider label="AF" value={@audio_gain} click="audio_gain_changed" wheel="adjust_audio_gain" />
+              <% end %>
+
+              <br /> <br/>
+
+              <%= if @rf_gain do %>
+                <Slider.slider label="RF" value={@rf_gain} click="rf_gain_changed" wheel="adjust_rf_gain" />
+              <% end %>
+            </div>
+
+          </div>
+        </div>
+      </div> <!-- container -->
+
+    </div>
+
+    <div class="four wide column right aligned">
+      <Open890Web.Live.AudioScopeComponent.audio_scope
+        active_if_filter={@active_if_filter}
+        active_mode={@active_mode}
+        audio_scope_data={@audio_scope_data}
+        filter_hi_shift={@filter_hi_shift}
+        filter_lo_width={@filter_lo_width}
+        roofing_filter_data={@roofing_filter_data}
+        theme={@theme}
+      />
+      <div class="ui mini black buttons">
+        <%= cmd_button "FIL A", "FL00", class: "ui button" %>
+        <%= cmd_button "FIL B", "FL01", class: "ui button" %>
+        <%= cmd_button "FIL C", "FL02", class: "ui button" %>
+      </div>
+
+    </div>
+  </div> <!-- row -->
+
+  <%= if @__ui_macros != %{} do %>
+    <div class="row">
+      <div class="column">
+        <%= for %{"label" => name} <- @__ui_macros do %>
+          <div class="ui black button" phx-click="run_macro" phx-value-name="{name}"><%= name %></div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <div id="bandScopeDetails" class="row">
+    <div class="column left aligned computer only tablet only">
+      <div class="scopeButtons">
+
+        <%= if @band_scope_mode do %>
+          <%= cycle_label_button("", @band_scope_mode,
+            %{
+              auto_scroll: %{label: "Auto Scroll", cmd: "BS30"},
+              fixed: %{label: "Fixed", cmd: "BS32"},
+              center: %{label: "Center", cmd: "BS31"}
+            }, class: "small compact black") %>
+        <% end %>
+
+        <%= if @band_scope_mode == :fixed do %>
+          <button class="ui black button">Range: (fixme)</button>
+        <% else %>
+          <div class="ui small compact labeled buttons">
+            <%= cycle_button("▼", @band_scope_span,
+              %{
+                5 => "BS47",
+                10 => "BS40",
+                20 => "BS41",
+                30 => "BS42",
+                50 => "BS43",
+                100 => "BS44",
+                200 => "BS45",
+                500 => "BS46"
+              }, class: "black") %>
+              %>
+              <div class="ui black button">
+                Span: <%= @band_scope_span %> kHz
+              </div>
+              <%= cycle_button "▲", @band_scope_span,
+              %{
+                5 => "BS41",
+                10 => "BS42",
+                20 => "BS43",
+                30 => "BS44",
+                50 => "BS45",
+                100 => "BS46",
+                200 => "BS47",
+                500 => "BS40",
+              }, class: "black" %>
+          </div>
+
+          <%#= cycle_label_button("Span", @band_scope_span,
+            %{
+              5 => %{label: "5 kHz", cmd: "BS41"},
+              10 => %{label: "10 kHz", cmd: "BS42"},
+              20 =>  %{label: "20 kHz", cmd: "BS43"},
+              30 =>  %{label: "30 kHz", cmd: "BS44"},
+              50 =>  %{label: "50 kHz", cmd: "BS45"},
+              100 => %{label: "100 kHz", cmd: "BS46"},
+              200 => %{label: "200 kHz", cmd: "BS47"},
+              500 => %{label: "500 kHz", cmd: "BS40"},
+            }, class: "black") %>
+        <% end %>
+
+        <%= case @band_scope_mode do %>
+          <%= :auto_scroll -> %>
+            <%= cmd_button "Shift", "BSE", class: "ui small black compact button" %>
+          <% :fixed -> %>
+            <%= cmd_button "MKR.CTR", "BSE", class: "ui small compact black button" %>
+          <% _ -> %>
+            <%= "" %>
+        <% end %>
+
+        <div class="ui small compact black button" id="RefLevelControl">
+          <form class="" id="refLevel" phx-change="ref_level_changed">
+            Ref Level
+            <input class="miniTextInput" name="refLevel" type="number" min="-20" max="10" step="0.5" value={format_ref_level(@ref_level)} />
+            dB
+          </form>
+        </div>
+
+        <%= if @band_scope_att do %>
+          <div class="ui small compact black buttons">
+            <%= cycle_button "▼", @band_scope_att,
+              %{
+                0 => "BS83",
+                1 => "BS80",
+                2 => "BS81",
+                3 => "BS82",
+              } %>
+            <div class="ui button">
+              Scope ATT:
+              <%= format_band_scope_att(@band_scope_att) %>
+            </div>
+            <%= cycle_button "▲", @band_scope_att,
+              %{
+                0 => "BS81",
+                1 => "BS82",
+                2 => "BS83",
+                3 => "BS80",
+              } %>
+          </div>
+        <% end %>
+
+        <%= if @band_scope_avg do %>
+          <div class="ui small compact black buttons">
+            <%= cycle_button "▼", @band_scope_avg,
+              %{
+                0 => "BSA3",
+                1 => "BSA0",
+                2 => "BSA1",
+                3 => "BSA2",
+              } %>
+            <div class="ui button">
+              Scope Avg: <%= @band_scope_avg %>
+            </div>
+            <%= cycle_button "▲", @band_scope_avg,
+              %{
+                0 => "BSA1",
+                1 => "BSA2",
+                2 => "BSA3",
+                3 => "BSA0",
+              } %>
+          </div>
+        <% end %>
+
+        <div class="ui small compact black button">
+          <form id="WaterfallSpeed" phx-hook="WaterfallSpeedForm">
+            WF Speed: 1 /
+            <input class="miniTextInput" name="value" type="number" min="1" max="100" step="1" value={@waterfall_draw_interval} />
+          </form>
+        </div>
+
+        <div class="ui small compact black button">
+          <form id="SpectrumScale" phx-hook="SpectrumScaleForm">
+            Spectrum Scale
+            <input class="miniTextInput" name="value" type="number" min="1" max="10" step="0.1" value={@spectrum_scale} />
+          </form>
+        </div>
+
+        <%= if @data_speed do %>
+          <%= cycle_label_button("Data Speed", @data_speed,
+            %{
+              1 => %{label: "High", cmd: "DD03"},
+              2 => %{label: "Mid", cmd: "DD01"},
+              3 => %{label: "Low", cmd: "DD02"},
+            }, class: "small compact black") %>
+        <% end %>
+
+      </div> <!-- ui buttons -->
+
+    </div>
+  </div>
+
+  <div id="bandScopeContainer" class="row">
+    <div class="wide column">
+      <Open890Web.Live.BandScopeComponent.bandscope 
+        active_frequency={@active_frequency}
+        active_mode={@active_mode}
+        band_scope_mode={@band_scope_mode}
+        band_scope_data={@band_scope_data}
+        band_scope_edges={@band_scope_edges}
+        band_scope_span={@band_scope_span}
+        filter_hi_shift={@filter_hi_shift}
+        filter_lo_width={@filter_lo_width}
+        theme={@theme}
+        draw_interval={@waterfall_draw_interval}
+        spectrum_scale={@spectrum_scale}
+      />
+    </div>
+  </div>
+
+</div>

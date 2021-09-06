@@ -1,19 +1,22 @@
 defmodule Open890Web.Live.AudioScopeComponent do
-  use Open890Web, :live_component
+  use Phoenix.Component
+  import Phoenix.HTML
 
-  def render(assigns) do
+  alias Open890Web.RadioViewHelpers
+
+  def audio_scope(assigns) do
     ~H"""
       <div id="audioScopeWrapper" class="hover-pointer _debug">
-        <svg id="audioScope" class="scope themed kenwood" viewbox="0 0 212 60" phx-hook="AudioScope">
+        <svg id="audioScope" class="scope themed" viewbox="0 0 212 60" phx-hook="AudioScope">
           <defs>
-            <lineargradient id="kenwood" gradienttransform="rotate(90)">
-              <stop offset="0" stop-color="white" />
-              <stop offset="50" stop-color="#0c0c5c" />
+            <lineargradient id="kenwoodAudioScope" x1="0" y1="60" x2="0" y2="0" gradientunits="userSpaceOnUse">
+              <stop offset="15%" stop-color="#030356" />
+              <stop offset="75%" stop-color="white" />
             </lineargradient>
           </defs>
 
           <g transform="translate(0 10)">
-            <polygon id="audioSpectrum" class="spectrum" points={scope_data_to_svg(@audio_scope_data, max_value: 60)} vector-effect="non-scaling-stroke" />
+            <polygon id="audioSpectrum" class="spectrum" points={RadioViewHelpers.scope_data_to_svg(@audio_scope_data, max_value: 60)} vector-effect="non-scaling-stroke" />
 
             <%= if @active_if_filter && @roofing_filter_data[@active_if_filter] do %>
               <%= audio_scope_filter_edges(@active_mode, {@filter_lo_width, @filter_hi_shift}, @active_if_filter, @roofing_filter_data) %>
@@ -44,7 +47,7 @@ defmodule Open890Web.Live.AudioScopeComponent do
 
           <g transform="translate(90 10)">
             <text class="audioScopeLabel">
-              RFT: <%= @roofing_filter_data[@active_if_filter] |> number_to_short() %>
+              RFT: <%= @roofing_filter_data[@active_if_filter] |> RadioViewHelpers.number_to_short() %>
             </text>
           </g>
 
@@ -54,6 +57,109 @@ defmodule Open890Web.Live.AudioScopeComponent do
       </div>
     """
   end
+
+  def audio_scope_filter_edges(
+        mode,
+        {filter_lo_width, filter_hi_shift},
+        active_roofing_filter,
+        roofing_filter_data
+      )
+      when mode in [:cw, :cw_r] and is_integer(filter_lo_width) and is_integer(filter_hi_shift) and
+             not is_nil(active_roofing_filter) do
+    half_width = (filter_lo_width / 2) |> round()
+
+    roofing_width = roofing_filter_data |> Map.get(active_roofing_filter)
+
+    half_shift =
+      case mode do
+        :cw_r -> filter_hi_shift
+        _ -> -filter_hi_shift
+      end
+      |> div(2)
+
+    distance = ((half_width |> project_to_audioscope_limits(roofing_width)) / 2) |> round()
+
+    half_shift_projected =
+      half_shift
+      |> project_to_audioscope_limits(roofing_width)
+      |> round()
+
+    low_val = 106 - distance + half_shift_projected
+    high_val = 106 + distance + half_shift_projected
+
+    points = audio_scope_filter_points(low_val, high_val)
+
+    ~e{
+      <polyline id="audioScopeFilter" points="<%= points %>" />
+    }
+  end
+
+  def audio_scope_filter_edges(
+        mode,
+        {filter_lo_width, filter_hi_shift} = _filter_edges,
+        _active_roofing_filter,
+        _roofing_filter_data
+      )
+      when mode in [:usb, :lsb, :fm] do
+    total_width_hz =
+      cond do
+        filter_hi_shift >= 3400 -> 5000
+        true -> 3000
+      end
+
+    [projected_low, projected_hi] =
+      [filter_lo_width, filter_hi_shift]
+      |> Enum.map(fn val ->
+        val
+        |> project_to_audioscope_limits(total_width_hz)
+        |> round()
+      end)
+
+    points = audio_scope_filter_points(projected_low, projected_hi)
+
+    ~e{
+      <polyline id="audioScopeFilter" points="<%= points %>" />
+    }
+  end
+
+  def audio_scope_filter_edges(
+        :am,
+        {filter_lo_width, filter_hi_shift},
+        _active_roofing_filter,
+        _roofing_filter_data
+      ) do
+    [projected_low, projected_hi] =
+      [filter_lo_width, filter_hi_shift]
+      |> Enum.map(fn val ->
+        val
+        |> project_to_audioscope_limits(5000)
+        |> round()
+      end)
+
+    points = audio_scope_filter_points(projected_low, projected_hi)
+
+    ~e{
+      <polyline id="audioScopeFilter" points="<%= points %>" />
+    }
+  end
+
+  def audio_scope_filter_edges(_mode, _edges, _active_roofing_filter, _roofing_filter_data) do
+    ""
+  end
+
+  defp audio_scope_filter_points(low_val, high_val) do
+    edge_offset = 7
+
+    "#{low_val - edge_offset},50 #{low_val},5 #{high_val},5 #{high_val + edge_offset},50"
+  end
+
+  def project_to_audioscope_limits(value, width)
+      when is_integer(value) and is_integer(width) do
+    percentage = value / width
+    percentage * 212
+  end
+
+
 
   def filter_lo_width_label(mode) when mode in [:cw, :cw_r, :fsk, :fsk_r, :psk, :psk_r] do
     "WIDTH"

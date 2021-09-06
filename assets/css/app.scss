@@ -61,7 +61,7 @@ $kenwood-carrier-stroke: rgba(230, 230, 230, 1.0);
 $kenwood-passband-fill: rgba(255, 255, 255, 0.25);
 // $kenwood-passband-stroke: rgba(50, 50, 50, 1.0);
 // $kenwood-grey: rgba(120, 120, 120, 1.0);
-$kenwood-gradient-dark: rgba(3, 3, 86, 1.0);
+$kenwood-gradient-dark: rgba(3, 3, 86, 1.0); // #030356
 $kenwood-gradient-light: rgba(242, 242, 242, 1.0);
 $kenwood-button-bg: rgba(42, 42, 42, 1.0);
 
@@ -300,16 +300,14 @@ nav {
       font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
     }
 
+    .spectrum {
+      stroke-width: 1.1;
+      fill: url(#kenwoodAudioScope);
+      stroke: rgba(192, 207, 204, 1.0);
+
+    }
+
   }
-
-
-    //#audioScopeLowFilter {
-    //  stroke: 1px solid red;
-    //}
-
-    //#audioScopeHighFilter {
-    //  stroke: 1px solid green;
-    //}
 
   #AudioScopeCanvas {
     border-bottom: 2px solid $kenwood-grey;
@@ -394,20 +392,28 @@ svg#bandScope {
     }
   }
 
-}
+  #carrier {
+    stroke: rgba(255, 255, 255, 1.0);
+    stroke-dasharray: 3 5;
+    stroke-width: 0.5pt;
+  }
 
-#bandScope #carrier {
-  stroke: rgba(255, 255, 255, 1.0);
-  stroke-dasharray: 3 5;
-  stroke-width: 0.5pt;
+  .spectrum {
+
+    // themeish specific
+    // background: linear-gradient($kenwood-gradient-light, $kenwood-gradient-dark);
+    // fill: rgba(0, 0, 0, 1.0);
+    // fill: url(#plasma);
+    stroke-width: 1.1;
+    fill: url(#kenwoodBandScope);
+    stroke: rgba(192, 207, 204, 1.0);
+  }
+
 }
 
 .scope.themed {
   #passband {
     fill: $kenwood-passband-fill;
-  }
-  .spectrum {
-    stroke-width: 1.1;
   }
 
   .primaryCarrier {
@@ -455,10 +461,6 @@ svg#bandScope {
     }
 
     .spectrum {
-      // background: linear-gradient($kenwood-gradient-light, $kenwood-gradient-dark);
-      // fill: rgba(0, 0, 0, 1.0);
-      fill: url(#kenwood);
-      stroke: rgba(192, 207, 204, 1.0);
 
     }
   }
@@ -523,10 +525,6 @@ svg#bandScope {
 
   }
 
-
-}
-
-#scopeControls {
 }
 
 #bandScopeLimits {
