@@ -9,8 +9,10 @@
 * Added TX TUNE indicator
 * Added experimental keyboard shortcuts: 's' to shift bandscope, ] and [ to MULTI/CH up/down
 * Fixed multiple connections broadcasting to the same topic. All connection-specific data is now only broadcast to the bandscope for that connection.
+* Fixed a bug where the connection wasn't startable from the bandscope on incorrect username/password.
 * [Dev] Upgraded to Elixir 1.12, Erlang/OTP 23.3.4.6
 * [Dev] Removed various unused dependencies, replaced UUID library with Uniq.UUID
+* [Dev] Added an experimental Dockerfile
 
 ## 0.0.9 - 2021-08-14
 

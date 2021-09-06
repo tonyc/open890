@@ -204,13 +204,13 @@ defmodule Open890Web.Live.Radio.Bandscope do
   end
 
   def handle_event("start_connection", _params, socket) do
-    RadioConnection.start(socket.assigns.radio_connection)
+    RadioConnection.start(socket.assigns.radio_connection.id)
 
     {:noreply, socket}
   end
 
   def handle_event("stop_connection", _params, socket) do
-    RadioConnection.stop(socket.assigns.radio_connection)
+    RadioConnection.stop(socket.assigns.radio_connection.id)
 
     {:noreply, socket}
   end

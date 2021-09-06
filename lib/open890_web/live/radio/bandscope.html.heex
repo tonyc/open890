@@ -83,7 +83,7 @@
         </div>
 
         <div class="two wide column center aligned">
-          <%= if @connection_state == :stopped do %>
+          <%= if connection_startable?(@connection_state) do %>
             <span class="ui icon hover-pointer" phx-click="start_connection" data-tooltip="Start connection" data-position="bottom center">
               <i class="large play circle outline icon"></i>
             </span>

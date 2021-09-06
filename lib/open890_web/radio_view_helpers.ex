@@ -350,6 +350,14 @@ defmodule Open890Web.RadioViewHelpers do
     end
   end
 
+  def connection_startable?(connection_state) do
+    case connection_state do
+      :stopped -> true
+      {:down, _} -> true
+      _ -> false
+    end
+  end
+
   def connection_status_icon(connection_state) do
     case connection_state do
       :up ->
