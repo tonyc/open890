@@ -50,6 +50,8 @@ h1.title {
   padding-bottom: 2rem;
 }
 
+$secondary-color: rgb(202, 203, 205);
+
 // theme variables
 $kenwood-cyan: rgba(0, 205, 238, 1.0);
 $kenwood-red: rgba(204, 0, 0, 1.0);
@@ -341,7 +343,7 @@ nav {
 
     &.inactive {
       font-size: 2vw;
-      color: rgb(202, 203, 205);
+      color: $secondary-color;
       // text-align: left;
       // margin-left: 1em;
     }
@@ -741,6 +743,28 @@ svg#bandScope {
 .connectionStatus {
   color: #A0A0A0;
   // color: $kenwood-grey;
+}
+
+.bandRegister {
+  font-weight: bold;
+  font-size: medium;
+
+  &.inactive {
+    font-size: medium;
+    color: $secondary-color;
+
+    .register {
+      background-color: $secondary-color;
+    }
+  }
+
+  .register {
+    background-color: white;
+    color: black;
+    padding: 0rem 0.5rem;
+    margin-left: 0.5rem;
+
+  }
 }
 
 .rotating {
