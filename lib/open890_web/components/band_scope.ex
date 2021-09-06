@@ -44,8 +44,8 @@ defmodule Open890Web.Components.BandScope do
           <% end %>
 
             <%= if @band_scope_edges && @filter_hi_shift && @filter_lo_width do %>
-              <%= passband_polygon(@active_mode, @active_frequency, @filter_lo_width, @filter_hi_shift, @band_scope_edges) %>
-              <%= carrier_line(@active_frequency, @band_scope_edges) %>
+              <.passband_polygon mode={@active_mode} active_frequency={@active_frequency} filter_lo_width={@filter_lo_width} filter_hi_shift={@filter_hi_shift} scope_edges={@band_scope_edges} />
+              <.carrier_line frequency={@active_frequency} band_scope_edges={@band_scope_edges} />
             <% end %>
 
           <rect id="bandscopeBackground" x="0" y="0" height="150" width="1280" pointer-events="visibleFill" phx-hook="BandScope" />
@@ -128,8 +128,14 @@ defmodule Open890Web.Components.BandScope do
     }
   end
 
-  def passband_polygon(mode, active_frequency, filter_lo_width, filter_hi_shift, scope_edges)
-      when mode in [:lsb, :usb] do
+  def passband_polygon(%{
+    mode: mode,
+    active_frequency: active_frequency,
+    filter_lo_width: filter_lo_width,
+    filter_hi_shift: filter_hi_shift,
+    scope_edges: scope_edges
+    } = assigns) when mode in [:lsb, :usb] do
+
     filter_low =
       mode
       |> RadioViewHelpers.offset_frequency(active_frequency, filter_lo_width)
@@ -140,11 +146,22 @@ defmodule Open890Web.Components.BandScope do
       |> RadioViewHelpers.offset_frequency(active_frequency, filter_hi_shift)
       |> project_to_bandscope_limits(scope_edges)
 
-    ~e{<polygon id="passband" points="<%= filter_low %>,0 <%= filter_high %>,0 <%= filter_high %>,150 <%= filter_low %>,150" />}
+
+    points = "#{filter_low},0 #{filter_high},0 #{filter_high},150 #{filter_low},150"
+
+    ~H"""
+      <polygon id="passband" points={points} />
+    """
   end
 
-  def passband_polygon(mode, active_frequency, filter_lo_width, filter_hi_shift, scope_edges)
-      when mode in [:cw, :cw_r] do
+  def passband_polygon(%{
+    mode: mode,
+    active_frequency: active_frequency,
+    filter_lo_width: filter_lo_width,
+    filter_hi_shift: filter_hi_shift,
+    scope_edges: scope_edges
+    } = assigns) when mode in [:cw, :cw_r] do
+
     half_width = (filter_lo_width / 2) |> round()
 
     shift =
@@ -159,10 +176,15 @@ defmodule Open890Web.Components.BandScope do
     filter_high =
       (active_frequency - half_width + shift) |> project_to_bandscope_limits(scope_edges)
 
-    ~e{<polygon id="passband" points="<%= filter_low %>,0 <%= filter_high %>,0 <%= filter_high %>,150 <%= filter_low %>,150" />}
+    points = "#{filter_low},0 #{filter_high},0 #{filter_high},150 #{filter_low},150"
+
+    ~H"""
+      <polygon id="passband" points={points} />
+    """
+
   end
 
-  def passband_polygon(_mode, _active_frequency, _filter_lo_width, _filter_hi_shift, _scope_edges) do
+  def passband_polygon(_) do
     ""
   end
 
@@ -178,17 +200,21 @@ defmodule Open890Web.Components.BandScope do
     0
   end
 
-  def carrier_line(active_frequency, band_scope_edges) do
-    loc = project_to_bandscope_limits(active_frequency, band_scope_edges)
-    tri_ofs = 10
+  def carrier_line(%{frequency: frequency, band_scope_edges: band_scope_edges} = assigns) do
+    loc = project_to_bandscope_limits(frequency, band_scope_edges)
 
-    ~e{
-      <line id="active_receiver_line" class="primaryCarrier" x1="<%= loc %>" y1="0" x2="<%= loc %>" y2="150" />
+    tri_ofs = 10
+    tri_text_x = loc - 3
+
+    rx_triangle_points = "#{loc},#{tri_ofs} #{loc - tri_ofs},0 #{loc + tri_ofs},0"
+
+    ~H"""
+      <line id="active_receiver_line" class="primaryCarrier" x1={loc} y1="0" x2={loc} y2="150" />
       <g id="rxTriangleGroup">
-        <polygon class="rx triangle" points="<%= loc %>,<%= tri_ofs %> <%= loc - tri_ofs %>,0 <%= loc + tri_ofs %>,0" />
-        <text class="rx triangleText" x="<%= loc - 3 %>" y="7">R</text>
+        <polygon class="rx triangle" points={rx_triangle_points} />
+        <text class="rx triangleText" x={tri_text_x} y="7">R</text>
       </g>
-    }
+    """
   end
 
   def round_up_to_step(value, step) when is_integer(value) and is_integer(step) do
