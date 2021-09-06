@@ -180,8 +180,8 @@
               <div class="ui small black buttons">
 
                 <%= if @vfo_memory_state == :vfo do %>
-                  <%= vfo_equalize_button(class: "ui small black button") %>
                   <%= vfo_switch_button(@active_receiver, class: "ui small black button") %>
+                  <%= vfo_equalize_button(class: "ui small black button") %>
                 <% end %>
                 <%= if @vfo_memory_state do %>
                   <%= vfo_mem_switch_button(@vfo_memory_state, class: "ui small black button") %>

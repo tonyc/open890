@@ -12,24 +12,17 @@ defmodule Open890Web.Live.VFODisplayComponent do
           <div class="seven wide right aligned column">
             <span class="vfoMemIndicator"><%= format_vfo_memory_state(@vfo_memory_state) %></span>
             <span class="modeIndicator active"><%= format_mode(@active_mode) %></span>
-            <span class="freq active" phx-hook="ActiveVFO" id="ActiveVFO">
+            <div class="freq active" phx-hook="ActiveVFO" id="ActiveVFO">
               <%= vfo_display_frequency(@active_frequency, @transverter_state) %>
-            </span>
+            </div>
+            <div class="bandRegister">BAND <span class="register"><%= band_for(@band_register_state, @active_receiver) %></span></div>
           </div>
           <div class="two wide center aligned column">
             <%= live_component @socket, BandIndicatorComponent, active_receiver: @active_receiver %>
           </div>
-          <div class="left aligned seven wide column computer only tablet only">
+          <div class="seven wide left aligned column computer only tablet only">
             <span><%= format_mode(@inactive_mode) %></span>
             <div class="freq inactive"><%= vfo_display_frequency(@inactive_frequency, @transverter_state) %></div>
-          </div>
-        </div>
-        <div class="row ">
-          <div class="seven wide right aligned column">
-            <div class="bandRegister">BAND <span class="register"><%= band_for(@band_register_state, @active_receiver) %></span></div>
-          </div>
-          <div class="two wide column"> </div>
-          <div class="seven wide column">
             <div class="bandRegister inactive">BAND <span class="register"><%= band_for(@band_register_state, @inactive_receiver) %></span></div>
           </div>
         </div>
