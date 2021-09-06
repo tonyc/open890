@@ -184,8 +184,9 @@ defmodule Open890Web.Components.BandScope do
 
   end
 
-  def passband_polygon(_) do
-    ""
+  def passband_polygon(assigns) do
+    ~H"""
+    """
   end
 
   def project_to_bandscope_limits(frequency, {low, high})
