@@ -70,12 +70,7 @@ defmodule Open890Web.Components.AudioScope do
 
     roofing_width = roofing_filter_data |> Map.get(active_roofing_filter)
 
-    half_shift =
-      case mode do
-        :cw_r -> filter_hi_shift
-        _ -> -filter_hi_shift
-      end
-      |> div(2)
+    half_shift = filter_hi_shift |> div(2)
 
     distance = ((half_width |> project_to_audioscope_limits(roofing_width)) / 2) |> round()
 
