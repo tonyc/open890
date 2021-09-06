@@ -20,6 +20,12 @@ defmodule Open890Web.Live.VFODisplayComponent do
             <div class="freq inactive"><%= vfo_display_frequency(@inactive_frequency, @transverter_state) %></div>
           </div>
         </div>
+        <div class="row">
+          <div class="column debug">
+            <p>VFO A Band: <%= @band_register_state.vfo_a_band %></p>
+            <p>VFO B Band: <%= @band_register_state.vfo_b_band %></p>
+          </div>
+        </div>
       </div>
     """
   end

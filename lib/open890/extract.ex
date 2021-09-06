@@ -248,6 +248,10 @@ defmodule Open890.Extract do
     end
   end
 
+  def band_register(str) when is_binary(str) do
+    str |> trim_to_integer(["BU0", "BU1"])
+  end
+
   def transverter_enabled(str) when is_binary(str) do
     str
     |> String.trim_leading("XV")

@@ -1,5 +1,5 @@
 defmodule Open890Web.Live.RadioSocketState do
-  alias Open890.{AntennaState, FilterState, TransverterState}
+  alias Open890.{AntennaState, BandRegisterState, FilterState, TransverterState}
 
   @init_socket [
     {:display_band_selector, false},
@@ -56,6 +56,7 @@ defmodule Open890Web.Live.RadioSocketState do
     {:transverter_state, %TransverterState{}},
     {:vfo_a_frequency, nil},
     {:vfo_b_frequency, nil},
+    {:band_register_state, %BandRegisterState{}},
     {:vfo_memory_state, nil},
     {:waterfall_draw_interval, 1},
     {:spectrum_scale, 1.0},

@@ -194,6 +194,20 @@ defmodule Open890Web.Live.Dispatch do
     socket |> assign(:band_scope_att, Extract.band_scope_att(msg))
   end
 
+  # VFO A band register
+  def dispatch("BU0" <> _rest = msg, socket) do
+    band_register = Extract.band_register(msg)
+    band_register_state = %{socket.assigns.band_register_state | vfo_a_band: band_register}
+    socket |> assign(:band_register_state, band_register_state)
+  end
+
+  # VFO B band register
+  def dispatch("BU1" <> _rest = msg, socket) do
+    band_register = Extract.band_register(msg)
+    band_register_state = %{socket.assigns.band_register_state | vfo_b_band: band_register}
+    socket |> assign(:band_register_state, band_register_state)
+  end
+
   def dispatch("DS1" <> _rest = msg, socket) do
     socket |> assign(:display_screen_id, Extract.display_screen_id(msg))
   end

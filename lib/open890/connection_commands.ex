@@ -8,6 +8,7 @@ defmodule Open890.ConnectionCommands do
     |> get_active_receiver()
     |> get_vfo_a_freq()
     |> get_vfo_b_freq()
+    |> get_band_register_state()
     |> get_s_meter()
     |> get_modes()
     |> get_filter_modes()
@@ -47,6 +48,12 @@ defmodule Open890.ConnectionCommands do
 
   def get_antenna_state(conn) do
     conn |> cmd("AN")
+  end
+
+  def get_band_register_state(conn) do
+    conn
+    |> cmd("BU0")
+    |> cmd("BU1")
   end
 
   def get_transverter_states(conn) do
