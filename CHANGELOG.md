@@ -8,6 +8,7 @@
 * Display a useful startup banner in the console.
 * Added TX TUNE indicator
 * Added experimental keyboard shortcuts: 's' to shift bandscope, ] and [ to MULTI/CH up/down
+* Changed spectrum scope gradient fill behavior to much more closely resembles the spectrum fill on the TS-890.
 * Fixed multiple connections broadcasting to the same topic. All connection-specific data is now only broadcast to the bandscope for that connection.
 * Fixed a bug where the connection wasn't startable from the bandscope on incorrect username/password.
 * Fixed audio scope filter edges shifting the wrong direction in CW mode (#75)
