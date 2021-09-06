@@ -43,8 +43,8 @@ defmodule Open890Web.Components.BandScope do
             </g>
           <% end %>
 
-            <%= if @band_scope_edges && @filter_hi_shift && @filter_lo_width do %>
-              <.passband_polygon mode={@active_mode} active_frequency={@active_frequency} filter_lo_width={@filter_lo_width} filter_hi_shift={@filter_hi_shift} scope_edges={@band_scope_edges} />
+            <%= if @band_scope_edges && @filter_state do %>
+              <.passband_polygon mode={@active_mode} active_frequency={@active_frequency} filter_state={@filter_state} scope_edges={@band_scope_edges} />
               <.carrier_line frequency={@active_frequency} band_scope_edges={@band_scope_edges} />
             <% end %>
 
@@ -131,19 +131,18 @@ defmodule Open890Web.Components.BandScope do
   def passband_polygon(%{
     mode: mode,
     active_frequency: active_frequency,
-    filter_lo_width: filter_lo_width,
-    filter_hi_shift: filter_hi_shift,
+    filter_state: filter_state,
     scope_edges: scope_edges
     } = assigns) when mode in [:lsb, :usb] do
 
     filter_low =
       mode
-      |> RadioViewHelpers.offset_frequency(active_frequency, filter_lo_width)
+      |> RadioViewHelpers.offset_frequency(active_frequency, filter_state.lo_width)
       |> project_to_bandscope_limits(scope_edges)
 
     filter_high =
       mode
-      |> RadioViewHelpers.offset_frequency(active_frequency, filter_hi_shift)
+      |> RadioViewHelpers.offset_frequency(active_frequency, filter_state.hi_shift)
       |> project_to_bandscope_limits(scope_edges)
 
 
@@ -157,17 +156,16 @@ defmodule Open890Web.Components.BandScope do
   def passband_polygon(%{
     mode: mode,
     active_frequency: active_frequency,
-    filter_lo_width: filter_lo_width,
-    filter_hi_shift: filter_hi_shift,
+    filter_state: filter_state,
     scope_edges: scope_edges
     } = assigns) when mode in [:cw, :cw_r] do
 
-    half_width = (filter_lo_width / 2) |> round()
+    half_width = (filter_state.lo_width / 2) |> round()
 
     shift =
       case mode do
-        :cw_r -> -filter_hi_shift
-        _ -> filter_hi_shift
+        :cw_r -> -filter_state.hi_shift
+        _ -> filter_state.hi_shift
       end
 
     filter_low =

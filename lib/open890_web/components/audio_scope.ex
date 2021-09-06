@@ -3,6 +3,7 @@ defmodule Open890Web.Components.AudioScope do
   import Phoenix.HTML
 
   alias Open890Web.RadioViewHelpers
+  alias Open890.FilterState
 
   def audio_scope(assigns) do
     ~H"""
@@ -19,7 +20,7 @@ defmodule Open890Web.Components.AudioScope do
             <polygon id="audioSpectrum" class="spectrum" points={RadioViewHelpers.scope_data_to_svg(@audio_scope_data, max_value: 60)} vector-effect="non-scaling-stroke" />
 
             <%= if @active_if_filter && @roofing_filter_data[@active_if_filter] do %>
-              <%= audio_scope_filter_edges(@active_mode, {@filter_lo_width, @filter_hi_shift}, @active_if_filter, @roofing_filter_data) %>
+              <%= audio_scope_filter_edges(@active_mode, @filter_state, @active_if_filter, @roofing_filter_data) %>
             <% end %>
 
             <line id="audioScopeTuneIndicator" class="primaryCarrier" x1="106" y1="5" x2="106" y2="60" />
@@ -32,14 +33,14 @@ defmodule Open890Web.Components.AudioScope do
 
             <g transform="translate(20 0)">
               <text class="audioScopeLabel">
-                <%= filter_lo_width_label(@active_mode) %>: <%= @filter_lo_width %>
+                <%= filter_lo_width_label(@active_mode) %>: <%= @filter_state.lo_width %>
               </text>
             </g>
 
             <g transform="translate(160 0)">
               <text class="audioScopeLabel">
                 <%= if @active_mode in [:cw, :cw_r, :lsb, :lsb_d, :usb, :usb_d, :am, :fm] do %>
-                  <%= filter_hi_shift_label(@active_mode) %>: <%= @filter_hi_shift %>
+                  <%= filter_hi_shift_label(@active_mode) %>: <%= @filter_state.hi_shift %>
                 <% end %>
               </text>
             </g>
@@ -60,17 +61,17 @@ defmodule Open890Web.Components.AudioScope do
 
   def audio_scope_filter_edges(
         mode,
-        {filter_lo_width, filter_hi_shift},
+        %FilterState{} = filter_state,
         active_roofing_filter,
         roofing_filter_data
       )
-      when mode in [:cw, :cw_r] and is_integer(filter_lo_width) and is_integer(filter_hi_shift) and
-             not is_nil(active_roofing_filter) do
-    half_width = (filter_lo_width / 2) |> round()
+      when mode in [:cw, :cw_r] and not is_nil(active_roofing_filter) do
+
+    half_width = (filter_state.lo_width / 2) |> round()
 
     roofing_width = roofing_filter_data |> Map.get(active_roofing_filter)
 
-    half_shift = filter_hi_shift |> div(2)
+    half_shift = filter_state.hi_shift |> div(2)
 
     distance = ((half_width |> project_to_audioscope_limits(roofing_width)) / 2) |> round()
 
@@ -91,19 +92,19 @@ defmodule Open890Web.Components.AudioScope do
 
   def audio_scope_filter_edges(
         mode,
-        {filter_lo_width, filter_hi_shift} = _filter_edges,
+        %FilterState{} = filter_state,
         _active_roofing_filter,
         _roofing_filter_data
       )
       when mode in [:usb, :lsb, :fm] do
     total_width_hz =
       cond do
-        filter_hi_shift >= 3400 -> 5000
+        filter_state.hi_shift >= 3400 -> 5000
         true -> 3000
       end
 
     [projected_low, projected_hi] =
-      [filter_lo_width, filter_hi_shift]
+      [filter_state.lo_width, filter_state.hi_shift]
       |> Enum.map(fn val ->
         val
         |> project_to_audioscope_limits(total_width_hz)
@@ -119,12 +120,12 @@ defmodule Open890Web.Components.AudioScope do
 
   def audio_scope_filter_edges(
         :am,
-        {filter_lo_width, filter_hi_shift},
+        %FilterState{} = filter_state,
         _active_roofing_filter,
         _roofing_filter_data
       ) do
     [projected_low, projected_hi] =
-      [filter_lo_width, filter_hi_shift]
+      [filter_state.lo_width, filter_state.hi_shift]
       |> Enum.map(fn val ->
         val
         |> project_to_audioscope_limits(5000)
@@ -138,7 +139,7 @@ defmodule Open890Web.Components.AudioScope do
     }
   end
 
-  def audio_scope_filter_edges(_mode, _edges, _active_roofing_filter, _roofing_filter_data) do
+  def audio_scope_filter_edges(_mode, %FilterState{} = _filter_state, _active_roofing_filter, _roofing_filter_data) do
     ""
   end
 
@@ -153,8 +154,6 @@ defmodule Open890Web.Components.AudioScope do
     percentage = value / width
     percentage * 212
   end
-
-
 
   def filter_lo_width_label(mode) when mode in [:cw, :cw_r, :fsk, :fsk_r, :psk, :psk_r] do
     "WIDTH"

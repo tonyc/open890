@@ -383,7 +383,8 @@ defmodule Open890Web.Live.Dispatch do
   def dispatch("SH0" <> _rest = msg, socket) do
     %{
       active_mode: current_mode,
-      ssb_filter_mode: filter_mode
+      ssb_filter_mode: filter_mode,
+      filter_state: filter_state
     } = socket.assigns
 
     filter_hi_shift =
@@ -391,15 +392,18 @@ defmodule Open890Web.Live.Dispatch do
       |> Extract.passband_id()
       |> Extract.filter_hi_shift(filter_mode, current_mode)
 
+    filter_state = %{filter_state | hi_shift: filter_hi_shift}
+
     socket
-    |> assign(:filter_hi_shift, filter_hi_shift)
+    |> assign(:filter_state, filter_state)
     |> update_filter_hi_edge()
   end
 
   def dispatch("SL0" <> _rest = msg, socket) do
     %{
       active_mode: current_mode,
-      ssb_filter_mode: filter_mode
+      ssb_filter_mode: filter_mode,
+      filter_state: filter_state
     } = socket.assigns
 
     filter_lo_width =
@@ -407,8 +411,10 @@ defmodule Open890Web.Live.Dispatch do
       |> Extract.passband_id()
       |> Extract.filter_lo_width(filter_mode, current_mode)
 
+    filter_state = %{filter_state | lo_width: filter_lo_width}
+
     socket
-    |> assign(:filter_lo_width, filter_lo_width)
+    |> assign(:filter_state, filter_state)
     |> update_filter_lo_edge()
   end
 
@@ -437,7 +443,7 @@ defmodule Open890Web.Live.Dispatch do
       active_mode: active_mode,
       ssb_filter_mode: _ssb_filter_mode,
       ssb_data_filter_mode: _ssb_data_filter_mode,
-      filter_hi_shift: filter_hi_shift
+      filter_state: filter_state
     } = socket.assigns
 
     active_frequency = socket |> get_active_receiver_frequency()
@@ -447,7 +453,7 @@ defmodule Open890Web.Live.Dispatch do
         socket
         |> assign(
           :filter_high_freq,
-          RadioViewHelpers.offset_frequency(mode, active_frequency, filter_hi_shift)
+          RadioViewHelpers.offset_frequency(mode, active_frequency, filter_state.hi_shift)
         )
 
       _ ->
@@ -460,7 +466,7 @@ defmodule Open890Web.Live.Dispatch do
       active_mode: active_mode,
       ssb_filter_mode: _ssb_filter_mode,
       ssb_data_filter_mode: _ssb_data_filter_mode,
-      filter_lo_width: filter_lo_width
+      filter_state: filter_state
     } = socket.assigns
 
     active_frequency = socket |> get_active_receiver_frequency()
@@ -470,7 +476,7 @@ defmodule Open890Web.Live.Dispatch do
         socket
         |> assign(
           :filter_low_freq,
-          RadioViewHelpers.offset_frequency_reverse(mode, active_frequency, filter_lo_width)
+          RadioViewHelpers.offset_frequency_reverse(mode, active_frequency, filter_state.lo_width)
         )
 
       _ ->
