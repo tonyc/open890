@@ -10,6 +10,7 @@
 * Added experimental keyboard shortcuts: 's' to shift bandscope, ] and [ to MULTI/CH up/down
 * Fixed multiple connections broadcasting to the same topic. All connection-specific data is now only broadcast to the bandscope for that connection.
 * Fixed a bug where the connection wasn't startable from the bandscope on incorrect username/password.
+* Fixed audio scope filter edges shifting the wrong direction in CW mode (#75)
 * [Dev] Upgraded to Elixir 1.12, Erlang/OTP 23.3.4.6
 * [Dev] Removed various unused dependencies, replaced UUID library with Uniq.UUID
 * [Dev] Added an experimental Dockerfile
