@@ -4,6 +4,7 @@
 
 * Added power level, key speed, delay, AGC status in top bar
 * Added start/stop connection button in top bar.
+* Added band stack register display
 * Display connection status and error messages in top bar, including "Connection already in use" and "Incorrect username/password"
 * Display a useful startup banner in the console.
 * Added TX TUNE indicator
