@@ -1,5 +1,5 @@
 defmodule Open890Web.Live.RadioSocketState do
-  alias Open890.{AntennaState, BandRegisterState, FilterState, TransverterState}
+  alias Open890.{AntennaState, BandRegisterState, FilterState, NotchState, TransverterState}
 
   @init_socket [
     {:display_band_selector, false},
@@ -39,8 +39,7 @@ defmodule Open890Web.Live.RadioSocketState do
     {:vd_meter, 0},
     {:temp_meter, 0},
     {:tx_state, :off},
-    {:notch_state, nil},
-    {:notch_filter, nil},
+    {:notch_state, %NotchState{}},
     {:power_level, nil},
     {:projected_active_receiver_location, ""},
     {:ref_level, 40},

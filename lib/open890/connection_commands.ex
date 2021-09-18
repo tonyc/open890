@@ -65,8 +65,10 @@ defmodule Open890.ConnectionCommands do
   end
 
   def get_notch_states(conn) do
-    conn |> cmd("NT")
-    conn |> cmd("BP")
+    conn
+    |> cmd("NT")
+    |> cmd("NW")
+    |> cmd("BP")
   end
 
   def get_power_level(conn) do

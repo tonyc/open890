@@ -1,7 +1,7 @@
 defmodule Open890Web.Live.Dispatch do
   require Logger
 
-  alias Open890.{AntennaState, Extract, TransverterState}
+  alias Open890.{AntennaState, Extract, NotchState, TransverterState}
   alias Open890Web.RadioViewHelpers
 
   import Phoenix.LiveView, only: [assign: 3, push_event: 3]
@@ -75,14 +75,52 @@ defmodule Open890Web.Live.Dispatch do
     socket |> assign(:vfo_memory_state, value)
   end
 
-  def dispatch("BP" <> _rest = msg, socket) do
-    value = msg |> Extract.notch_filter()
-    socket |> assign(:notch_filter, value)
+
+  # Notch on/off
+  def dispatch("NT" <> _rest = msg, socket) do
+    notch_enabled = msg |> Extract.notch_state()
+
+    notch_state = socket.assigns[:notch_state]
+    |> case do
+      %NotchState{} = state ->
+        %{state | enabled: notch_enabled}
+
+      _ ->
+        %NotchState{enabled: notch_enabled}
+    end
+
+    socket |> assign(:notch_state, notch_state)
   end
 
-  def dispatch("NT" <> _rest = msg, socket) do
-    value = msg |> Extract.notch_state()
-    socket |> assign(:notch_state, value)
+  # notch frequency
+  def dispatch("BP" <> _rest = msg, socket) do
+    notch_frequency = Extract.notch_filter(msg)
+
+    notch_state = socket.assigns[:notch_state]
+    |> case do
+      %NotchState{} = state ->
+        %{state | frequency: notch_frequency}
+      _ ->
+        %NotchState{frequency: notch_frequency}
+    end
+
+    socket |> assign(:notch_state, notch_state)
+  end
+
+  # notch width
+  def dispatch("NW" <> _rest = msg, socket) do
+    notch_width = Extract.notch_width(msg)
+
+
+    notch_state = socket.assigns[:notch_state]
+    |> case do
+      %NotchState{} = state ->
+        %{state | width: notch_width}
+      _ ->
+        %NotchState{width: notch_width}
+    end
+
+    socket |> assign(:notch_state, notch_state)
   end
 
   def dispatch("PC" <> _rest = msg, socket) do

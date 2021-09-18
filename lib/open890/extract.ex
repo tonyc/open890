@@ -1,7 +1,7 @@
 defmodule Open890.Extract do
   require Logger
 
-  alias Open890.{AntennaState}
+  alias Open890.{AntennaState, NotchState}
 
   @scope_modes %{
     "0" => :center,
@@ -282,6 +282,16 @@ defmodule Open890.Extract do
     |> case do
       "1" -> true
       _ -> false
+    end
+  end
+
+  def notch_width(str) when is_binary(str) do
+    str
+    |> String.trim_leading("NW")
+    |> case do
+      "0" -> :narrow
+      "1" -> :mid
+      "2" -> :wide
     end
   end
 
