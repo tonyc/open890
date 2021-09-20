@@ -311,6 +311,11 @@ nav {
 
   }
 
+  #notchLocationIndicator {
+    stroke-width: 1.1;
+    stroke: rgba(192, 207, 204, 1.0);
+  }
+
   #AudioScopeCanvas {
     border-bottom: 2px solid $kenwood-grey;
     border-left: 2px solid $kenwood-grey;
@@ -745,6 +750,11 @@ svg#bandScope {
   // color: $kenwood-grey;
 }
 
+.notchIndicator {
+  font-weight: bold;
+  font-size: medium;
+}
+
 .bandRegister {
   font-weight: bold;
   font-size: medium;
@@ -760,12 +770,19 @@ svg#bandScope {
   }
 
   .register {
-    background-color: white;
-    color: black;
-    padding: 0rem 0.5rem;
-    margin-left: 0.5rem;
+    // background-color: white;
+    // color: black;
+    // padding: 0rem 0.5rem;
+    // margin-left: 0.5rem;
 
   }
+}
+
+.inverted {
+  background-color: white;
+  color: black;
+  padding: 0rem 0.5rem;
+  margin-left: 0.5rem;
 }
 
 .rotating {

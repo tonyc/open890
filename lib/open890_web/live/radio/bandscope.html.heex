@@ -161,6 +161,7 @@
                                             inactive_mode: @inactive_mode,
                                             transverter_state: @transverter_state,
                                             vfo_memory_state: @vfo_memory_state,
+                                            notch_state: @notch_state,
                                             band_register_state: @band_register_state %>
               </div>
             <% :memory -> %>
@@ -239,6 +240,7 @@
         audio_scope_data={@audio_scope_data}
         filter_state={@filter_state}
         roofing_filter_data={@roofing_filter_data}
+        notch_state={@notch_state}
         theme={@theme} />
 
       <div class="ui mini black buttons">

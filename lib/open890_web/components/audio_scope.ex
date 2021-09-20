@@ -1,9 +1,10 @@
 defmodule Open890Web.Components.AudioScope do
+  require Logger
   use Phoenix.Component
   import Phoenix.HTML
 
   alias Open890Web.RadioViewHelpers
-  alias Open890.FilterState
+  alias Open890.{FilterState, NotchState}
 
   def audio_scope(assigns) do
     ~H"""
@@ -24,6 +25,12 @@ defmodule Open890Web.Components.AudioScope do
             <% end %>
 
             <line id="audioScopeTuneIndicator" class="primaryCarrier" x1="106" y1="5" x2="106" y2="60" />
+
+            <%= if @notch_state.enabled do %>
+              <g id="notchIndicatorGroup" transform={notch_transform(@notch_state)}>
+                <line id="notchLocationIndicator" class="" x1="0" y1="5" x2="0" y2="45" />
+              </g>
+            <% end %>
           </g>
 
           <g transform="translate(3 10)">
@@ -57,6 +64,18 @@ defmodule Open890Web.Components.AudioScope do
         <canvas phx-hook="AudioScopeCanvas" id="AudioScopeCanvas" data-theme={@theme} class="waterfall" width="213" height="60"></canvas>
       </div>
     """
+  end
+
+  def notch_transform(%NotchState{frequency: nil}) do
+    "translate(0 0)"
+  end
+
+  def notch_transform(%NotchState{frequency: frequency}) when not is_nil(frequency) do
+    Logger.info("notch freq: #{frequency}")
+    percentage = frequency / 255
+    scaled_percentage = percentage * 212
+
+    "translate(#{scaled_percentage} 0)"
   end
 
   def audio_scope_filter_edges(
