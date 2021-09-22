@@ -21,15 +21,13 @@ defmodule Open890Web.Components.AudioScope do
             <polygon id="audioSpectrum" class="spectrum" points={RadioViewHelpers.scope_data_to_svg(@audio_scope_data, max_value: 60)} vector-effect="non-scaling-stroke" />
 
             <%= if @active_if_filter && @roofing_filter_data[@active_if_filter] do %>
-              <%= audio_scope_filter_edges(@active_mode, @filter_state, @active_if_filter, @roofing_filter_data) %>
+              <%= audio_scope_filter_edges(@active_mode, @filter_state) %>
             <% end %>
 
             <line id="audioScopeTuneIndicator" class="primaryCarrier" x1="106" y1="5" x2="106" y2="60" />
 
             <%= if @notch_state.enabled do %>
-              <g id="notchIndicatorGroup" transform={notch_transform(@notch_state)}>
-                <line id="notchLocationIndicator" class="" x1="0" y1="5" x2="0" y2="45" />
-              </g>
+              <.notch_indicator notch_state={@notch_state} active_mode={@active_mode} filter_state={@filter_state} />
             <% end %>
           </g>
 
@@ -66,37 +64,62 @@ defmodule Open890Web.Components.AudioScope do
     """
   end
 
-  def notch_transform(%NotchState{frequency: nil}) do
+  def notch_indicator(assigns) do
+    ~H"""
+      <g id="notchIndicatorGroup" transform={notch_transform(@active_mode, @filter_state, @notch_state)}>
+        <line id="notchLocationIndicator" class="" x1="0" y1="5" x2="0" y2="45" />
+      </g>
+    """
+  end
+
+  def notch_transform(_mode, _filter_state, %NotchState{frequency: nil}) do
     "translate(0 0)"
   end
 
-  def notch_transform(%NotchState{frequency: frequency}) when not is_nil(frequency) do
-    Logger.info("notch freq: #{frequency}")
-    percentage = frequency / 255
-    scaled_percentage = percentage * 212
+  def notch_transform(mode, filter_state, %NotchState{frequency: frequency}) when mode in [:cw, :cw_r] do
+    x_position = cond do
+      FilterState.width(filter_state) < 700 ->
+        cw_notch_transform_with_width(:narrow, frequency)
+      true ->
+        cw_notch_transform_with_width(:wide, frequency)
+    end
 
-    "translate(#{scaled_percentage} 0)"
+    "translate(#{x_position} 0)"
   end
 
-  def audio_scope_filter_edges(
-        mode,
-        %FilterState{} = filter_state,
-        active_roofing_filter,
-        roofing_filter_data
-      )
-      when mode in [:cw, :cw_r] and not is_nil(active_roofing_filter) do
+  def notch_transform(mode, _filter_state, %NotchState{frequency: _frequency}) when mode in [:usb, :lsb, :usb_d, :lsb_d] do
+    "translate(0, 0)"
+  end
 
-    half_width = (filter_state.lo_width / 2) |> round()
+  def cw_notch_transform_with_width(:narrow, frequency) do
+    frequency / 255 * 212
+  end
 
-    roofing_width = roofing_filter_data |> Map.get(active_roofing_filter)
+  def cw_notch_transform_with_width(:wide, frequency) do
+    (frequency / 255)
+    |> Kernel.*(212) # scale to total percentage of scope width
+    |> Kernel./(3)   # middle 1/3 of the screen - there are six segments in wide mode
+    |> Kernel.+(70)  # a magic number I don't know where it comes from, but seems to look right
+  end
+
+  def audio_scope_filter_edges(mode, %FilterState{} = filter_state) when mode in [:cw, :cw_r] do
+
+    filter_width = FilterState.width(filter_state)
+
+    half_width = (filter_width / 2) |> round()
+
+    scope_width = cond do
+      filter_width < 700 -> 500
+      true -> 1500
+    end
 
     half_shift = filter_state.hi_shift |> div(2)
 
-    distance = ((half_width |> project_to_audioscope_limits(roofing_width)) / 2) |> round()
+    distance = ((half_width |> project_to_audioscope_limits(scope_width)) / 2) |> round()
 
     half_shift_projected =
       half_shift
-      |> project_to_audioscope_limits(roofing_width)
+      |> project_to_audioscope_limits(scope_width)
       |> round()
 
     low_val = 106 - distance + half_shift_projected
@@ -112,8 +135,6 @@ defmodule Open890Web.Components.AudioScope do
   def audio_scope_filter_edges(
         mode,
         %FilterState{} = filter_state,
-        _active_roofing_filter,
-        _roofing_filter_data
       )
       when mode in [:usb, :lsb, :fm] do
     total_width_hz =
@@ -140,8 +161,6 @@ defmodule Open890Web.Components.AudioScope do
   def audio_scope_filter_edges(
         :am,
         %FilterState{} = filter_state,
-        _active_roofing_filter,
-        _roofing_filter_data
       ) do
     [projected_low, projected_hi] =
       [filter_state.lo_width, filter_state.hi_shift]
@@ -158,7 +177,7 @@ defmodule Open890Web.Components.AudioScope do
     }
   end
 
-  def audio_scope_filter_edges(_mode, %FilterState{} = _filter_state, _active_roofing_filter, _roofing_filter_data) do
+  def audio_scope_filter_edges(_mode, %FilterState{} = _filter_state) do
     ""
   end
 
