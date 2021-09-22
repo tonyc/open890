@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+* Added notch indicator
 * Added power level, key speed, delay, AGC status in top bar
 * Added start/stop connection button in top bar.
 * Added band stack register display
@@ -14,6 +15,7 @@
 * Fixed multiple connections broadcasting to the same topic. All connection-specific data is now only broadcast to the bandscope for that connection.
 * Fixed a bug where the connection wasn't startable from the bandscope on incorrect username/password.
 * Fixed audio scope filter edges shifting the wrong direction in CW mode (#75)
+* Fixed incorrectly displayed audio scope filter edges in CW mode when the filter width is above 700 Hz
 * [Dev] Upgraded to Elixir 1.12, Erlang/OTP 23.3.4.6, Phoenix 1.16-rc.0
 * [Dev] Removed various unused dependencies, replaced UUID library with Uniq.UUID
 * [Dev] Added an experimental Dockerfile

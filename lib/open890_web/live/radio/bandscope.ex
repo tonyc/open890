@@ -276,4 +276,14 @@ defmodule Open890Web.Live.Radio.Bandscope do
   defp close_modals(socket) do
     socket |> assign(display_band_selector: false, display_screen_id: 0)
   end
+
+  def radio_classes(debug \\ false) do
+    classes = "noselect ui stackable doubling grid"
+
+    if debug do
+      classes <> " debug"
+    else
+      classes
+    end
+  end
 end

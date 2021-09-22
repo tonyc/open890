@@ -15,7 +15,7 @@
   </div>
 <% end %>
 
-<div id="radio" class="noselect ui stackable doubling grid" class={@debug} phx-window-keydown="window_keydown" phx-window-keyup="window_keyup">
+<div id="radio" class={radio_classes(@debug)} phx-window-keydown="window_keydown" phx-window-keyup="window_keyup">
 
   <%#-- disabled --%>
   <%= if false && @display_screen_id != 0 do %>
