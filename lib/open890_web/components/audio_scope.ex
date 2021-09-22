@@ -103,7 +103,6 @@ defmodule Open890Web.Components.AudioScope do
   end
 
   def audio_scope_filter_edges(mode, %FilterState{} = filter_state) when mode in [:cw, :cw_r] do
-
     filter_width = FilterState.width(filter_state)
 
     half_width = (filter_width / 2) |> round()
@@ -132,11 +131,7 @@ defmodule Open890Web.Components.AudioScope do
     }
   end
 
-  def audio_scope_filter_edges(
-        mode,
-        %FilterState{} = filter_state,
-      )
-      when mode in [:usb, :lsb, :fm] do
+  def audio_scope_filter_edges(mode, %FilterState{} = filter_state) when mode in [:usb, :lsb, :fm] do
     total_width_hz =
       cond do
         filter_state.hi_shift >= 3400 -> 5000
@@ -158,10 +153,7 @@ defmodule Open890Web.Components.AudioScope do
     }
   end
 
-  def audio_scope_filter_edges(
-        :am,
-        %FilterState{} = filter_state,
-      ) do
+  def audio_scope_filter_edges(:am, %FilterState{} = filter_state) do
     [projected_low, projected_hi] =
       [filter_state.lo_width, filter_state.hi_shift]
       |> Enum.map(fn val ->
