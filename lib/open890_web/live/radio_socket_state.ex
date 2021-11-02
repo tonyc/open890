@@ -1,5 +1,5 @@
 defmodule Open890Web.Live.RadioSocketState do
-  alias Open890.{AntennaState, BandRegisterState, FilterState, NotchState, TransverterState}
+  alias Open890.{AntennaState, BandRegisterState, FilterState, NoiseBlankState, NotchState, TransverterState}
 
   @init_socket [
     {:display_band_selector, false},
@@ -31,6 +31,7 @@ defmodule Open890Web.Live.RadioSocketState do
     {:inactive_mode, :unknown},
     {:inactive_receiver, :b},
     {:mic_gain, nil},
+    {:nr, nil},
     {:cw_key_speed, nil},
     {:cw_delay, nil},
     {:alc_meter, 0},
@@ -41,6 +42,7 @@ defmodule Open890Web.Live.RadioSocketState do
     {:temp_meter, 0},
     {:tx_state, :off},
     {:notch_state, %NotchState{}},
+    {:noise_blank_state, %NoiseBlankState{}},
     {:power_level, nil},
     {:projected_active_receiver_location, ""},
     {:ref_level, 40},

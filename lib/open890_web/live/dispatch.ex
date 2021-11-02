@@ -1,13 +1,17 @@
 defmodule Open890Web.Live.Dispatch do
   require Logger
 
-  alias Open890.{AntennaState, Extract, NotchState, TransverterState}
+  alias Open890.{AntennaState, Extract, NoiseBlankState, NotchState, TransverterState}
   alias Open890Web.RadioViewHelpers
 
   import Phoenix.LiveView, only: [assign: 3, push_event: 3]
 
   def dispatch("GC" <> _rest = msg, socket) do
     socket |> assign(:agc, Extract.agc(msg))
+  end
+
+  def dispatch("NR" <> _rest = msg, socket) do
+    socket |> assign(:agc, Extract.nr(msg))
   end
 
   def dispatch("MG" <> _rest = msg, socket) do
@@ -77,6 +81,34 @@ defmodule Open890Web.Live.Dispatch do
   def dispatch("MV" <> _rest = msg, socket) do
     value = msg |> Extract.vfo_memory_state()
     socket |> assign(:vfo_memory_state, value)
+  end
+
+  def dispatch("NB1" <> _rest = msg, socket) do
+    enabled = msg |> Extract.nb_enabled()
+
+    nb_state = socket.assigns[:noise_blank_state]
+    |> case do
+      %NoiseBlankState{} = state ->
+        %{state | nb_1_enabled: enabled}
+
+      _ -> %NoiseBlankState{nb_1_enabled: enabled}
+    end
+
+    socket |> assign(:noise_blank_state, nb_state)
+  end
+
+  def dispatch("NB2" <> _rest = msg, socket) do
+    enabled = msg |> Extract.nb_enabled()
+
+    nb_state = socket.assigns[:noise_blank_state]
+    |> case do
+      %NoiseBlankState{} = state ->
+        %{state | nb_2_enabled: enabled}
+
+      _ -> %NoiseBlankState{nb_2_enabled: enabled}
+    end
+
+    socket |> assign(:noise_blank_state, nb_state)
   end
 
 

@@ -1,7 +1,7 @@
 defmodule Open890.Extract do
   require Logger
 
-  alias Open890.{AntennaState, NotchState}
+  alias Open890.AntennaState
 
   @scope_modes %{
     "0" => :center,
@@ -269,6 +269,25 @@ defmodule Open890.Extract do
         offset |> String.to_integer()
       "1" <> offset ->
         -(String.to_integer(offset))
+    end
+  end
+
+  def nr(str) when is_binary(str) do
+    str
+    |> trim_to_integer(["NR"])
+    |> case do
+      0 -> :off
+      1 -> :nr_1
+      2 -> :nr_2
+    end
+  end
+
+  def nb_enabled(str) when is_binary(str) do
+    str
+    |> trim_to_integer(["NB1", "NB2"])
+    |> case do
+      1 -> true
+      _ -> false
     end
   end
 

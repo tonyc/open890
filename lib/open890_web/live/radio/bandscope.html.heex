@@ -151,6 +151,20 @@
     <div class="eight wide column center aligned">
       <div class="ui _container">
         <div class="ui grid sixteen wide">
+          <div class="row">
+            <div class="four wide left aligned column">
+              <p>NR</p>
+            </div>
+            <div class="four wide left aligned column">
+              <%= live_component @socket, Open890Web.Live.NBIndicatorComponent, noise_blank_state: @noise_blank_state %>
+            </div>
+            <div class="four wide left aligned column">
+              <p>BC</p>
+            </div>
+            <div class="four wide left aligned column">
+              <p>NOTCH</p>
+            </div>
+          </div>
           <div id="frequencyDisplay" class="ui row">
 
             <%= case @vfo_memory_state do %>
