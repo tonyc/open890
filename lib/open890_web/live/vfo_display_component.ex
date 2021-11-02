@@ -2,7 +2,7 @@ defmodule Open890Web.Live.VFODisplayComponent do
   use Open890Web, :live_component
 
   alias Open890Web.Live.BandIndicatorComponent
-  alias Open890.{BandRegisterState, NotchState}
+  alias Open890.{BandRegisterState}
 
   def render(assigns) do
     ~L"""
@@ -28,14 +28,6 @@ defmodule Open890Web.Live.VFODisplayComponent do
 
               <div class="row">
                 <div class="eight wide left aligned column">
-                  <%= if @notch_state.enabled do %>
-                    <span class="notchIndicator">
-                      NOTCH
-                      <span class="notchWidth inverted"><%= format_notch_width(@notch_state) %></span>
-                    </span>
-                  <% else %>
-                    &nbsp;
-                  <% end %>
                 </div>
                 <div class="eight wide right aligned column">
                   <span class="bandRegister">
@@ -96,12 +88,4 @@ defmodule Open890Web.Live.VFODisplayComponent do
     band_register_state |> BandRegisterState.band_for(receiver)
   end
 
-  def format_notch_width(%NotchState{width: width} = _notch_state) do
-    case width do
-      :narrow -> "N"
-      :mid -> "M"
-      :wide -> "W"
-      _ -> ""
-    end
-  end
 end

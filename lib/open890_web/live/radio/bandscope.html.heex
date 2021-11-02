@@ -162,7 +162,7 @@
               <%= live_component @socket, Open890Web.Live.BCIndicatorComponent, bc: @bc %>
             </div>
             <div class="four wide left aligned column">
-              <p>NOTCH</p>
+              <%= live_component @socket, Open890Web.Live.NotchIndicatorComponent, notch_state: @notch_state %>
             </div>
           </div>
           <div id="frequencyDisplay" class="ui row">
