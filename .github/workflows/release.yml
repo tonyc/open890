@@ -104,8 +104,8 @@ jobs:
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
       - name: Install Erlang and Elixir
         env:
-          ERLANG_VERSION: 23.2.7
-          ELIXIR_VERSION: 1.11.3
+          ERLANG_VERSION: 23.3.4.6
+          ELIXIR_VERSION: 1.12.3
         run: |
           build_scripts\win64\install_elixir.ps1;
           echo "c:\erlang\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append;
