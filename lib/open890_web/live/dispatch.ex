@@ -10,6 +10,10 @@ defmodule Open890Web.Live.Dispatch do
     socket |> assign(:agc, Extract.agc(msg))
   end
 
+  def dispatch("MG" <> _rest = msg, socket) do
+    socket |> assign(:mic_gain, Extract.mic_gain(msg))
+  end
+
   def dispatch("TX0", socket) do
     socket |> assign(:tx_state, :send)
   end

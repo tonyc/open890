@@ -272,6 +272,10 @@ defmodule Open890.Extract do
     end
   end
 
+  def mic_gain(str) when is_binary(str) do
+    str |> trim_to_integer(["MG0"])
+  end
+
   def notch_filter(str) when is_binary(str) do
     str |> trim_to_integer(["BP"])
   end

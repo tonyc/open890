@@ -33,6 +33,11 @@ defmodule Open890.ConnectionCommands do
     |> get_antenna_state()
     |> get_cw_key_data()
     |> get_agc()
+    |> get_mic_gain()
+  end
+
+  def get_mic_gain(conn) do
+    conn |> cmd("MG")
   end
 
   def get_cw_key_data(conn) do

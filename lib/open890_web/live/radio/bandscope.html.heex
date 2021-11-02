@@ -121,9 +121,13 @@
 
     <div class="four wide column">
       <div class="ui grid">
-        <div class="eight wide column right aligned">
+        <div class="eight wide column left aligned">
           <%= if @active_mode in [:cw, :cw_r] && @cw_key_speed do %>
             <%= @cw_key_speed %>WPM
+          <% else %>
+            <%= if @mic_gain do %>
+              MIC: <%= @mic_gain %>
+            <% end %>
           <% end %>
         </div>
         <div class="eight wide column right aligned">
