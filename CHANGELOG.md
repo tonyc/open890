@@ -1,5 +1,7 @@
 # open890 Changelog
 
+## Unreleased
+
 ## 0.5 - 2021-11-02
 
 * Added NR, NB, BC, NOTCH indicator row to UI
