@@ -5,6 +5,7 @@
 ## 0.5 - 2021-11-02
 
 * Added NR, NB, BC, NOTCH indicator row to UI
+* Added notch position marker to audio scope in CW mode
 * Added power level, mic gain, key speed, key delay, AGC status in top bar
 * Added start/stop connection button in top bar.
 * Added band stack register display
