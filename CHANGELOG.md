@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-* Added notch indicator
+* Added NR, NB, BC, NOTCH indicator row to UI
 * Added power level, mic gain, key speed, key delay, AGC status in top bar
 * Added start/stop connection button in top bar.
 * Added band stack register display
