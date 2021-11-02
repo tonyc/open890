@@ -13,10 +13,10 @@ defmodule Open890Web.Live.VFODisplayComponent do
 
               <div class="row">
                 <div class="two wide left aligned column">
-                  <span class="modeIndicator active"><%= format_mode(@active_mode) %></span>
+                  <span class="modeIndicator indicator active"><%= format_mode(@active_mode) %></span>
                 </div>
                 <div class="two wide left aligned column">
-                  <span class="vfoMemIndicator"><%= format_vfo_memory_state(@vfo_memory_state) %></span>
+                  <span class="vfoMemIndicator indicator"><%= format_vfo_memory_state(@vfo_memory_state) %></span>
                 </div>
                 <div class="twelve wide right aligned column">
                   <div class="freq active" phx-hook="ActiveVFO" id="ActiveVFO">
@@ -48,8 +48,8 @@ defmodule Open890Web.Live.VFODisplayComponent do
             <div class="ui grid">
               <div class="row">
                 <div class="four wide left aligned column">
-                  <span class="vfoMemIndicator inactive"></span>
-                  <span class="modeIndicator inactive"><%= format_mode(@inactive_mode) %></span>
+                  <span class="vfoMemIndicator indicator inactive"></span>
+                  <span class="modeIndicator indicator inactive"><%= format_mode(@inactive_mode) %></span>
                 </div>
                 <div class="twelve wide right aligned column">
                   <div class="freq inactive">
