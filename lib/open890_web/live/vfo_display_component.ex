@@ -12,21 +12,20 @@ defmodule Open890Web.Live.VFODisplayComponent do
             <div class="ui grid">
 
               <div class="row">
-
-                <span class="vfoMemIndicator"><%= format_vfo_memory_state(@vfo_memory_state) %></span>
-                <span class="modeIndicator active"><%= format_mode(@active_mode) %></span>
-                <div class="freq active" phx-hook="ActiveVFO" id="ActiveVFO">
-                  <%= vfo_display_frequency(@active_frequency, @transverter_state) %>
+                <div class="four wide left aligned column">
+                  <span class="vfoMemIndicator"><%= format_vfo_memory_state(@vfo_memory_state) %></span>
+                  <span class="modeIndicator active"><%= format_mode(@active_mode) %></span>
                 </div>
-
-
-
+                <div class="twelve wide right aligned column">
+                  <div class="freq active" phx-hook="ActiveVFO" id="ActiveVFO">
+                    <%= vfo_display_frequency(@active_frequency, @transverter_state) %>
+                  </div>
+                </div>
               </div>
 
 
-              <div class="row ">
+              <div class="row">
                 <div class="eight wide left aligned column">
-
                   <%= if @notch_state.enabled do %>
                     <span class="notchIndicator">
                       NOTCH
@@ -50,11 +49,34 @@ defmodule Open890Web.Live.VFODisplayComponent do
           <div class="two wide center aligned column">
             <%= live_component @socket, BandIndicatorComponent, active_receiver: @active_receiver %>
           </div>
+
           <div class="seven wide left aligned column computer only tablet only">
-            <span><%= format_mode(@inactive_mode) %></span>
-            <div class="freq inactive"><%= vfo_display_frequency(@inactive_frequency, @transverter_state) %></div>
-            <div class="bandRegister inactive">BAND <span class="register"><%= band_for(@band_register_state, @inactive_receiver) %></span></div>
+            <div class="ui grid">
+              <div class="row">
+                <div class="four wide left aligned column">
+                  <span class="vfoMemIndicator inactive"></span>
+                  <span class="modeIndicator inactive"><%= format_mode(@inactive_mode) %></span>
+                </div>
+                <div class="twelve wide right aligned column">
+                  <div class="freq inactive">
+                    <%= vfo_display_frequency(@inactive_frequency, @transverter_state) %>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="eight wide left aligned column">
+                &nbsp;
+                </div>
+                <div class="eight wide right aligned column">
+                  <span class="bandRegister">
+                    BAND <span class="register inverted"><%= band_for(@band_register_state, @inactive_receiver) %></span>
+                  </span>
+                </div>
+              </div>
+
+            </div>
           </div>
+
         </div>
       </div>
     """
