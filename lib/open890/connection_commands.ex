@@ -35,6 +35,7 @@ defmodule Open890.ConnectionCommands do
     |> get_agc()
     |> get_mic_gain()
     |> get_nr()
+    |> get_bc()
     |> get_nb_states()
   end
 
@@ -45,6 +46,7 @@ defmodule Open890.ConnectionCommands do
   end
 
   def get_nr(conn), do: conn |> cmd("NR")
+  def get_bc(conn), do: conn |> cmd("BC")
 
   def get_mic_gain(conn) do
     conn |> cmd("MG")

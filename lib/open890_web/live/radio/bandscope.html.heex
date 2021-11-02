@@ -153,13 +153,13 @@
         <div class="ui grid sixteen wide">
           <div class="row">
             <div class="four wide left aligned column">
-              <p>NR</p>
+              <%= live_component @socket, Open890Web.Live.NRIndicatorComponent, nr: @nr %>
             </div>
             <div class="four wide left aligned column">
               <%= live_component @socket, Open890Web.Live.NBIndicatorComponent, noise_blank_state: @noise_blank_state %>
             </div>
             <div class="four wide left aligned column">
-              <p>BC</p>
+              <%= live_component @socket, Open890Web.Live.BCIndicatorComponent, bc: @bc %>
             </div>
             <div class="four wide left aligned column">
               <p>NOTCH</p>

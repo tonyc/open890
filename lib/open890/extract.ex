@@ -248,6 +248,16 @@ defmodule Open890.Extract do
     end
   end
 
+  def bc(str) when is_binary(str) do
+    str
+    |> String.trim_leading("BC")
+    |> case do
+      "0" -> :off
+      "1" -> :bc_1
+      "2" -> :bc_2
+    end
+  end
+
   def band_register(str) when is_binary(str) do
     str |> trim_to_integer(["BU0", "BU1"])
   end

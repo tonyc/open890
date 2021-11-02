@@ -31,6 +31,7 @@ defmodule Open890Web.Live.RadioSocketState do
     {:inactive_mode, :unknown},
     {:inactive_receiver, :b},
     {:mic_gain, nil},
+    {:bc, nil},
     {:nr, nil},
     {:cw_key_speed, nil},
     {:cw_delay, nil},

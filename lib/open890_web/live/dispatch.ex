@@ -11,7 +11,11 @@ defmodule Open890Web.Live.Dispatch do
   end
 
   def dispatch("NR" <> _rest = msg, socket) do
-    socket |> assign(:agc, Extract.nr(msg))
+    socket |> assign(:nr, Extract.nr(msg))
+  end
+
+  def dispatch("BC" <> _rest = msg, socket) do
+    socket |> assign(:bc, Extract.bc(msg))
   end
 
   def dispatch("MG" <> _rest = msg, socket) do
