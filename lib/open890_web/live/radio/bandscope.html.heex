@@ -151,7 +151,7 @@
     <div class="eight wide column center aligned">
       <div class="ui _container">
         <div class="ui grid sixteen wide">
-          <div class="row">
+          <div class="row indicators">
             <div class="four wide left aligned column">
               <%= live_component @socket, Open890Web.Live.NRIndicatorComponent, nr: @nr %>
             </div>
@@ -161,7 +161,7 @@
             <div class="four wide left aligned column">
               <%= live_component @socket, Open890Web.Live.BCIndicatorComponent, bc: @bc %>
             </div>
-            <div class="four wide left aligned column">
+            <div class="four wide right aligned column">
               <%= live_component @socket, Open890Web.Live.NotchIndicatorComponent, notch_state: @notch_state %>
             </div>
           </div>
