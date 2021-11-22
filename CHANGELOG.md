@@ -1,6 +1,6 @@
 # open890 Changelog
 
-## Unreleased
+## 0.5.1 - 2021-11-22
 * Fixed non-functional macro buttons
 
 ## 0.5 - 2021-11-02
