@@ -274,7 +274,7 @@
     <div class="row">
       <div class="column">
         <%= for %{"label" => name} <- @__ui_macros do %>
-          <div class="ui black button" phx-click="run_macro" phx-value-name="{name}"><%= name %></div>
+          <div class="ui black button" phx-click="run_macro" phx-value-name={name}><%= name %></div>
         <% end %>
       </div>
     </div>
