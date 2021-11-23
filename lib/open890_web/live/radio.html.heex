@@ -135,17 +135,13 @@
             <%= if @cw_delay == 0, do: "FULL-BK", else: "DELAY: #{@cw_delay}" %>
           <% end %>
         </div>
-
-
       </div>
     </div>
   </div>
 
   <div class="computer only tablet only row">
     <div class="four wide column">
-      <div id="sMeterWrapper">
-        <Meter.meter s_meter={@s_meter} alc_meter={@alc_meter} swr_meter={@swr_meter} />
-      </div>
+      <Meter.meter s_meter={@s_meter} alc_meter={@alc_meter} swr_meter={@swr_meter} />
     </div>
 
     <div class="eight wide column center aligned">

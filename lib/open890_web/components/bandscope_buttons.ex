@@ -31,7 +31,6 @@ defmodule Open890Web.Components.BandscopeButtons do
                 200 => "BS45",
                 500 => "BS46"
               }, class: "black") %>
-              %>
               <div class="ui black button">
                 Span: <%= @band_scope_span %> kHz
               </div>
