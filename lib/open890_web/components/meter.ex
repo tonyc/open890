@@ -1,12 +1,11 @@
-defmodule Open890Web.Live.DigitalMeterComponent do
-  use Open890Web, :live_component
-
-  def render(assigns) do
-    ~L"""
+defmodule Open890Web.Components.Meter do
+  use Phoenix.Component
+  def meter(assigns) do
+    ~H"""
       <svg id="sMeter" class="" viewbox="0 0 350 35">
         <mask id="m">
           <%= for x <- (0..70) do %>
-            <rect x="<%= (x * 5) - 2 %>" y="-3" width="2" height="25" fill="white" />
+            <rect x={pip_x_offset(x)} y="-3" width="2" height="25" fill="white" />
           <% end %>
         </mask>
 
@@ -39,9 +38,9 @@ defmodule Open890Web.Live.DigitalMeterComponent do
 
         <g transform="translate(0 20)">
           <rect x="0" y="0" width="350" height="15" class="meterBG" />
-          <rect x="0" y="0" width="<%= (@s_meter * 5) %>" height="15" class="meter low" />
+          <rect x="0" y="0" width={meter_low_width(@s_meter)} height="15" class="meter low" />
           <%= if @s_meter > 35 do %>
-            <rect x="175" y="0" width="<%= (@s_meter * 5) - 175 %>" height="15" class="meter high" />
+            <rect x="175" y="0" width={meter_high_width(@s_meter)} height="15" class="meter high" />
           <% end %>
 
           <rect x="0" y="-2" width="350" height="25" fill="black" mask="url(#m)" />
@@ -56,9 +55,9 @@ defmodule Open890Web.Live.DigitalMeterComponent do
 
         <g transform="translate(0 20)">
           <rect x="0" y="0" width="350" height="15" class="meterBG" />
-          <rect x="0" y="0" width="<%= (@alc_meter * 5) %>" height="15" class="meter low" />
+          <rect x="0" y="0" width={meter_low_width(@alc_meter)} height="15" class="meter low" />
           <%= if @alc_meter > 35 do %>
-            <rect x="175" y="0" width="<%= (@alc_meter * 5) - 175 %>" height="15" class="meter high" />
+            <rect x="175" y="0" width={meter_high_width(@alc_meter)} height="15" class="meter high" />
           <% end %>
           <rect x="0" y="-2" width="350" height="25" fill="black" mask="url(#m)" />
         </g>
@@ -75,13 +74,26 @@ defmodule Open890Web.Live.DigitalMeterComponent do
 
         <g transform="translate(0 20)">
           <rect x="0" y="0" width="350" height="15" class="meterBG" />
-          <rect x="0" y="0" width="<%= (@swr_meter * 5) %>" height="15" class="meter low" />
+          <rect x="0" y="0" width={meter_low_width(@swr_meter)} height="15" class="meter low" />
           <%= if @swr_meter > 35 do %>
-            <rect x="175" y="0" width="<%= (@swr_meter * 5) - 175 %>" height="15" class="meter high" />
+            <rect x="175" y="0" width={meter_high_width(@swr_meter)} height="15" class="meter high" />
           <% end %>
           <rect x="0" y="-2" width="350" height="25" fill="black" mask="url(#m)" />
         </g>
       </svg>
     """
   end
+
+  def pip_x_offset(x) do
+    (x * 5) - 1
+  end
+
+  def meter_low_width(val) do
+    val * 5
+  end
+
+  def meter_high_width(val) do
+    (val * 5) - 175
+  end
+
 end

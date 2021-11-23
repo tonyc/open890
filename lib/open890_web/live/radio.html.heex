@@ -144,7 +144,7 @@
   <div class="computer only tablet only row">
     <div class="four wide column">
       <div id="sMeterWrapper">
-        <%= live_component @socket, Open890Web.Live.DigitalMeterComponent, s_meter: @s_meter, alc_meter: @alc_meter, swr_meter: @swr_meter %>
+        <Meter.meter s_meter={@s_meter} alc_meter={@alc_meter} swr_meter={@swr_meter} />
       </div>
     </div>
 
