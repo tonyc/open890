@@ -24,6 +24,9 @@ defmodule Open890Web.Live.Bandscope do
 
     socket = socket |> assign(RadioSocketState.initial_state())
 
+    is_popout = !!params["popout"]
+
+    socket = assign(socket, :popout, is_popout)
 
     # Load macros
     #

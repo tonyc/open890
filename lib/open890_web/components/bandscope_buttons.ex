@@ -134,7 +134,7 @@ defmodule Open890Web.Components.BandscopeButtons do
             }, class: "small compact black") %>
         <% end %>
 
-        <%= if @popout_link do %>
+        <%= if !@popout do %>
           <div class="ui small compact black button" phx-hook="PopoutBandscope" data-connection-id={@radio_connection.id} id="bandscope_popout">
             Popout &nbsp;
             <i class="icon external alternate"></i>

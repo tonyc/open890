@@ -10,7 +10,7 @@ let Hooks = {
         event.preventDefault()
 
         let id = this.el.dataset.connectionId
-        let url = `/connections/${id}/bandscope`
+        let url = `/connections/${id}/bandscope?popout`
         me.window = window.open(url, `bandscope-${id}`, "width=1500,height=780,popup=true,menubar=off,scrollbars=off")
       })
     }
