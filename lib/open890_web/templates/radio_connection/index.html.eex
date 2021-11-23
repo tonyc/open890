@@ -29,7 +29,7 @@
           <tr>
             <td>
               <h2><%= connection.name %></h2>
-               <%= link("Bandscope", to: Routes.radio_bandscope_path(@conn, :show, connection), class: "ui tiny button") %></h2>
+               <%= link("Bandscope", to: Routes.radio_path(@conn, :show, connection), class: "ui tiny button") %></h2>
                <%#= link("Buttons", to: Routes.radio_buttons_path(@conn, :buttons, connection), class: "ui tiny button") %></h2>
             </td>
 
