@@ -18,8 +18,9 @@
       <table class="ui table">
         <thead>
           <tr>
-            <th class="four wide">Name</th>
+            <th>Name</th>
             <th>Status</th>
+            <th>UI</th>
             <th>Details</th>
             <th></th>
           </tr>
@@ -29,8 +30,6 @@
           <tr>
             <td>
               <h2><%= connection.name %></h2>
-               <%= link("Radio", to: Routes.radio_path(@conn, :show, connection), data_tooltip: "Full radio UI", class: "ui tiny button") %></h2>
-               <%= link("Bandscope", to: Routes.bandscope_path(@conn, :show, connection), data_tooltip: "Bandscope & minimal controls", class: "ui tiny button") %></h2>
             </td>
 
             <td>
@@ -39,6 +38,12 @@
               <% else %>
                 <div class="ui rounded center aligned basic basic label">Stopped</div>
               <% end %>
+            </td>
+
+            <td>
+               <%= link("Radio", to: Routes.radio_path(@conn, :show, connection), data_tooltip: "Full radio UI", class: "ui tiny button") %></h2>
+               <%= link("Bandscope", to: Routes.bandscope_path(@conn, :show, connection), data_tooltip: "Bandscope & minimal controls", class: "ui tiny button") %></h2>
+               <%= link("Audioscope", to: Routes.audio_scope_path(@conn, :show, connection), data_tooltip: "Audio/filter scope", class: "ui tiny button") %></h2>
             </td>
 
             <td>

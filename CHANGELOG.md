@@ -1,6 +1,8 @@
 # open890 Changelog
 
 ## Unreleased
+* Added the ability to pop out a separate bandscope display.
+* Fixed white UI background on radio/bandscope screens.
 
 ## 0.5.1 - 2021-11-22
 * Fixed non-functional macro buttons

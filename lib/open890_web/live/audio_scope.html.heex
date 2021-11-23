@@ -1,0 +1,15 @@
+<div>
+  <AudioScope.audio_scope
+    active_if_filter={@active_if_filter}
+    active_mode={@active_mode}
+    audio_scope_data={@audio_scope_data}
+    filter_state={@filter_state}
+    roofing_filter_data={@roofing_filter_data}
+    notch_state={@notch_state}
+    theme={@theme} />
+</div>
+<div class="ui mini black buttons">
+  <%= cmd_button "FIL A", "FL00", class: "ui button" %>
+  <%= cmd_button "FIL B", "FL01", class: "ui button" %>
+  <%= cmd_button "FIL C", "FL02", class: "ui button" %>
+</div>

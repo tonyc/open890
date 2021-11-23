@@ -26,6 +26,7 @@ defmodule Open890Web.Router do
 
     live "/connections/:id", Live.Radio, :show
     live "/connections/:id/bandscope", Live.Bandscope, :show
+    live "/connections/:id/audioscope", Live.AudioScope, :show
     # live "/connections/:id/buttons", Live.RadioButtonsLive, :index
   end
 
