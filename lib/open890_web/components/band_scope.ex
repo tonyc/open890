@@ -8,13 +8,13 @@ defmodule Open890Web.Components.BandScope do
   def bandscope(assigns) do
     ~H"""
       <div id="bandScopeWrapper" class="hover-pointer" data-spectrum-scale={@spectrum_scale}>
-        <svg id="bandScope" class="scope themed kenwood" viewbox="0 0 640 140">
+        <svg id="bandScope" class="scope themed kenwood" viewbox="0 0 640 160">
           <defs>
             <filter id="blur" filterunits="userSpaceOnUse" x="0" y="0" width="640" height="150">
               <fegaussianblur in="sourceAlpha" stddeviation="1" />
             </filter>
 
-            <lineargradient id="kenwoodBandScope" x1="0" y1="140" x2="0" y2="0" gradientunits="userSpaceOnUse">
+            <lineargradient id="kenwoodBandScope" x1="0" y1="160" x2="0" y2="0" gradientunits="userSpaceOnUse">
               <stop offset="0" stop-color="#030356" />
               <stop offset="45%" stop-color="#cdcdcd" />
             </lineargradient>
@@ -29,26 +29,37 @@ defmodule Open890Web.Components.BandScope do
             </lineargradient>
           </defs>
 
-          <%= band_scope_vertical_grid(@band_scope_mode, freq: @active_frequency, span: @band_scope_span) %>
-          <%= band_scope_horizontal_grid() %>
+          <g transform="translate(0 20)">
+            <%= band_scope_vertical_grid(@band_scope_mode, freq: @active_frequency, span: @band_scope_span) %>
+            <%= band_scope_horizontal_grid() %>
 
-          <polygon id="bandSpectrum" class="spectrum"
-            vector-effect="non-scaling-stroke"
-            points={RadioViewHelpers.scope_data_to_svg(@band_scope_data, max_value: 140, scale_y: @spectrum_scale)}  />
+            <polygon id="bandSpectrum" class="spectrum" vector-effect="non-scaling-stroke" points={RadioViewHelpers.scope_data_to_svg(@band_scope_data, max_value: 140, scale_y: @spectrum_scale)}  />
+          </g>
 
-          <%= if @band_scope_edges do %>
-            <g transform="translate(0 12)">
-              <text class="bandEdge low" x="5" y="0"><%= @band_scope_edges |> format_band_scope_low() %></text>
-              <text class="bandEdge high" x="635" y="0"><%= @band_scope_edges |> format_band_scope_high() %></text>
-            </g>
-          <% end %>
 
+          <g transform="translate(0 20)">
             <%= if @band_scope_edges && @filter_state do %>
               <.passband_polygon mode={@active_mode} active_frequency={@active_frequency} filter_state={@filter_state} scope_edges={@band_scope_edges} />
               <.carrier_line frequency={@active_frequency} band_scope_edges={@band_scope_edges} />
             <% end %>
 
-          <rect id="bandscopeBackground" x="0" y="0" height="150" width="1280" pointer-events="visibleFill" phx-hook="BandScope" />
+            <rect id="bandscopeBackground" x="0" y="0" height="150" width="1280" pointer-events="visibleFill" phx-hook="BandScope" />
+          </g>
+
+          <g transform="translate(0 12)">
+            <%= if @band_scope_edges do %>
+              <text class="bandEdge low" x="5" y="0">
+                <%= @band_scope_edges |> format_band_scope_low() %>
+              </text>
+              <text class="bandEdge high" x="635" y="0">
+                <%= @band_scope_edges |> format_band_scope_high() %>
+              </text>
+            <% end %>
+
+            <%= if @active_frequency do %>
+              <text class="bandEdge mid" x="300" y="0"><%= @active_frequency |> format_active_frequency() %></text>
+            <% end %>
+          </g>
         </svg>
 
         <canvas
@@ -59,7 +70,8 @@ defmodule Open890Web.Components.BandScope do
           data-draw-interval={@draw_interval}
           data-max-value="140"
           width="1280"
-          height="300"></canvas>
+          height="275"
+          ></canvas>
       </div>
 
     """
@@ -122,7 +134,7 @@ defmodule Open890Web.Components.BandScope do
     offset = 140 / 8
 
     ~e{
-      <%= for i <- (1..7) do %>
+      <%= for i <- (0..7) do %>
         <line class="bandscopeGrid horizontal" x1="0" y1="<%= i * offset %>" x2="640" y2="<%= i * offset %>" />
       <% end %>
     }
@@ -226,5 +238,9 @@ defmodule Open890Web.Components.BandScope do
 
   def format_band_scope_high({_low, high}) do
     high |> RadioViewHelpers.format_raw_frequency()
+  end
+
+  def format_active_frequency(freq) do
+    freq |> RadioViewHelpers.format_raw_frequency()
   end
 end

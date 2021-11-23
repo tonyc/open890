@@ -268,6 +268,21 @@ let Hooks = {
         this.clearScope()
       })
 
+      // window.addEventListener('resize', event => {
+      //   let tgt = event.target;
+
+      //   console.log("window resize: inner:", tgt.innerHeight, "outer:", tgt.outerHeight)
+
+      //   let rect = me.canvas.getBoundingClientRect()
+      //   console.log("rect", rect);
+        
+      //   let newHeight = tgt.innerHeight - rect.top;
+      //   console.log("computed height", newHeight)
+      //   me.canvas.setAttribute('height', newHeight)
+      //   me.height = newHeight;
+      //   // me.pushEvent('canvas_height', {height: newHeight})
+      // })
+
       this.el.addEventListener("wheel", event => {
         // this is duplicated in the BandScope hooks above
         event.preventDefault();
@@ -331,7 +346,7 @@ let Hooks = {
         } else if (canvasDelta > 0) {
           // right side
           this.ctx.fillStyle = '#000'
-          this.ctx.fillRect(this.canvas.width - width, 0, width, this.canvas.height)
+          this.ctx.fillRect(this.canvas.width - width, 0, width, this.height)
         }
       }).bind(this)
 
