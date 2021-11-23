@@ -5,16 +5,10 @@ defmodule Open890Web.Live.AudioScope do
   use Open890Web.Live.RadioLiveEventHandling
 
   alias Phoenix.Socket.Broadcast
-  alias Open890.{ConnectionCommands, Extract, RadioConnection}
+  alias Open890.{ConnectionCommands, RadioConnection}
   alias Open890Web.Live.{Dispatch, RadioSocketState}
 
   alias Open890Web.Components.AudioScope
-
-
-  # @impl true
-  # def render(assigns) do
-  #   Phoenix.View.render(Open890Web.RadioLiveView, "radio_live.html", assigns)
-  # end
 
   @impl true
   def mount(%{"id" => connection_id} = params, _session, socket) do
@@ -25,20 +19,6 @@ defmodule Open890Web.Live.AudioScope do
     end
 
     socket = socket |> assign(RadioSocketState.initial_state())
-
-    socket =
-      with {:ok, file} <- File.read("config/config.toml"),
-           {:ok, config} <- Toml.decode(file) do
-        macros = config |> get_in(["ui", "macros"]) || []
-        socket |> assign(:__ui_macros, macros)
-      else
-        reason ->
-          Logger.warn(
-            "Could not load config/config.toml: #{inspect(reason)}. This is not currently an error."
-          )
-
-          socket
-      end
 
     socket =
       RadioConnection.find(connection_id)
@@ -92,28 +72,14 @@ defmodule Open890Web.Live.AudioScope do
     {:noreply, socket}
   end
 
-  # Connection state messages
-  def handle_info(%Broadcast{event: "connection_state", payload: payload}, socket) do
-    Logger.debug("Bandscope LV: RX connection_state: #{inspect(payload)}")
+  # # Connection state messages
+  # def handle_info(%Broadcast{event: "connection_state", payload: payload}, socket) do
+  #   Logger.debug("Bandscope LV: RX connection_state: #{inspect(payload)}")
 
-    {:noreply, assign(socket, :connection_state, payload)}
-  end
-
-  # def handle_info(%Broadcast{event: "radio_info", payload: %{level: level, msg: msg}}, socket) do
-  #   Logger.info("***** radio_info: [#{level}] msg: #{inspect(msg)}")
-  #   {:noreply, put_flash(socket, level, msg)}
+  #   {:noreply, assign(socket, :connection_state, payload)}
   # end
 
   def handle_info(%Broadcast{} = _bc, socket) do
-    {:noreply, socket}
-  end
-
-  # received by Task.async
-  def handle_info({_ref, :ok}, socket) do
-    {:noreply, socket}
-  end
-
-  def handle_info({:DOWN, _ref, :process, _pid, :normal}, socket) do
     {:noreply, socket}
   end
 
@@ -122,17 +88,4 @@ defmodule Open890Web.Live.AudioScope do
     {:noreply, socket}
   end
 
-  defp close_modals(socket) do
-    socket |> assign(display_band_selector: false, display_screen_id: 0)
-  end
-
-  def radio_classes(debug \\ false) do
-    classes = "noselect ui stackable doubling grid"
-
-    if debug do
-      classes <> " debug"
-    else
-      classes
-    end
-  end
 end
