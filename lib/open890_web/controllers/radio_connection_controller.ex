@@ -3,6 +3,8 @@ defmodule Open890Web.RadioConnectionController do
 
   alias Open890.RadioConnection
 
+  plug :assign_bg_theme
+
   def index(conn, _params) do
     radio_connections = RadioConnection.all()
 
@@ -145,4 +147,9 @@ defmodule Open890Web.RadioConnectionController do
     conn
     |> redirect(to: Routes.radio_connection_path(conn, :index))
   end
+
+  defp assign_bg_theme(conn, _options) do
+    conn |> assign(:bg_theme, "light")
+  end
+
 end

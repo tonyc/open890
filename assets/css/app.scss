@@ -78,12 +78,15 @@ $border-radius-small: 4px;
 
 // dark mode?
 
-.dark {
-  background-color: #222;
+body.dark {
+  background-color: #000;
+}
+
+body.light {
+  background-color: #fff;
 }
 
 #radio {
-  background-color: #000;
   color: #ccc;
 }
 
