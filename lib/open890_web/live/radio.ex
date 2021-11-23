@@ -8,7 +8,7 @@ defmodule Open890Web.Live.Radio do
   alias Open890.{ConnectionCommands, Extract, RadioConnection}
   alias Open890Web.Live.{BandButtonsComponent, Dispatch, RadioSocketState}
 
-  alias Open890Web.Components.{AudioScope, BandScope, Slider}
+  alias Open890Web.Components.{AudioScope, Slider}
 
   # @impl true
   # def render(assigns) do

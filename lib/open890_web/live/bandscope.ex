@@ -8,7 +8,11 @@ defmodule Open890Web.Live.Bandscope do
   alias Open890.{ConnectionCommands, RadioConnection}
   alias Open890Web.Live.{Dispatch, RadioSocketState}
 
-  alias Open890Web.Components.BandScope
+  alias Open890Web.Components.{BandScope, BandscopeButtons}
+
+  def mount(:not_mounted_at_router, session, socket) do
+    mount(%{"id" => session["id"]}, session, socket)
+  end
 
   @impl true
   def mount(%{"id" => connection_id} = params, _session, socket) do
@@ -99,8 +103,8 @@ defmodule Open890Web.Live.Bandscope do
     {:noreply, assign(socket, :connection_state, payload)}
   end
 
-  def handle_info(%Broadcast{} = bc, socket) do
-    Logger.warn("Unknown broadcast: #{inspect(bc)}")
+  def handle_info(%Broadcast{} = _bc, socket) do
+    # Logger.warn("Unknown broadcast: #{inspect(bc)}")
 
     {:noreply, socket}
   end
