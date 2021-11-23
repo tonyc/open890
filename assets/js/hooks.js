@@ -2,6 +2,24 @@ import Interpolate from "./interpolate"
 import ColorMap from "./colormap"
 
 let Hooks = {
+  PopoutBandscope: {
+    mounted() {
+      console.log("popoutbandscope mounted")
+      let me = this;
+      this.el.addEventListener("click", event => {
+        event.preventDefault()
+
+        let id = this.el.getAttribute("id")
+        let url = this.el.getAttribute("href")
+        console.log("popout bandscope to:", url, "id:", id)
+
+        
+        me.window = window.open(url, `bandscope-${id}`, "height=770,popup=true,menubar=off,scrollbars=off")
+
+      })
+    }
+  },
+
   MaintainAttrs: {
     attrs(){ return this.el.getAttribute("data-attrs").split(", ") },
     beforeUpdate(){ this.prevAttrs = this.attrs().map(name => [name, this.el.getAttribute(name)]) },
