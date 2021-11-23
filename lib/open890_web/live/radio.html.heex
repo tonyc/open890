@@ -281,13 +281,6 @@
   <% end %>
 
   <div class="row">
-    <div class="column">
-      <UtilButtons.popout_link text="Pop-out bandscope" to={Routes.bandscope_path(@socket, :show, @radio_connection.id)} id="bandscope-popout-#{id}"/>
-    </div>
-  </div>
-
-
-  <div class="row">
     <%= live_render @socket, Open890Web.Live.Bandscope, id: "bandscope", session: %{
       "id" => @radio_connection.id
     } %>

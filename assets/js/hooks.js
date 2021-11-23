@@ -9,13 +9,9 @@ let Hooks = {
       this.el.addEventListener("click", event => {
         event.preventDefault()
 
-        let id = this.el.getAttribute("id")
-        let url = this.el.getAttribute("href")
-        console.log("popout bandscope to:", url, "id:", id)
-
-        
-        me.window = window.open(url, `bandscope-${id}`, "height=770,popup=true,menubar=off,scrollbars=off")
-
+        let id = this.el.dataset.connectionId
+        let url = `/connections/${id}/bandscope`
+        me.window = window.open(url, `bandscope-${id}`, "width=1500,height=780,popup=true,menubar=off,scrollbars=off")
       })
     }
   },

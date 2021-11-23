@@ -1,11 +1,12 @@
 defmodule Open890Web.Components.BandscopeButtons do
   use Phoenix.Component
+  use Phoenix.HTML
+
   import Open890Web.RadioViewHelpers
 
   def buttons(assigns) do
     ~H"""
       <div class="scopeButtons">
-
         <%= if @band_scope_mode do %>
           <%= cycle_label_button("", @band_scope_mode,
             %{
@@ -131,6 +132,13 @@ defmodule Open890Web.Components.BandscopeButtons do
               2 => %{label: "Mid", cmd: "DD01"},
               3 => %{label: "Low", cmd: "DD02"},
             }, class: "small compact black") %>
+        <% end %>
+
+        <%= if @popout_link do %>
+          <div class="ui small compact black button" phx-hook="PopoutBandscope" data-connection-id={@radio_connection.id} id="bandscope_popout">
+            Popout &nbsp;
+            <i class="icon external alternate"></i>
+          </div>
         <% end %>
 
       </div> <!-- ui buttons -->

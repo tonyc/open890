@@ -3,6 +3,7 @@
   <div id="bandScopeDetails" class="row">
     <div class="column left aligned computer only tablet only">
       <BandscopeButtons.buttons
+        radio_connection={@radio_connection}
         band_scope_mode={@band_scope_mode}
         band_scope_span={@band_scope_span}
         band_scope_att={@band_scope_att}
@@ -11,8 +12,9 @@
         spectrum_scale={@spectrum_scale}
         data_speed={@data_speed}
         ref_level={@ref_level}
+        popout_link={true}
+        socket={@socket}
       />
-
     </div>
   </div>
 
