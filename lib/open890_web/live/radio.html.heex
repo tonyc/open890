@@ -174,7 +174,6 @@
             <% _ -> %>
             <% end %>
           </div> <!-- frequencyDisplay -->
-          
 
           <!-- NR/NB/BC/Notch indicators, TBD -->
           <div class="row indicators">
@@ -224,7 +223,7 @@
                   2 => "RA3",
                   3 => "RA0"
                 }, class: "small black button") %>
-                
+
                 <%= cycle_button("NR #{format_nr(@nr)}", @nr, %{
                   :off => "NR1",
                   :nr_1 => "NR2",
@@ -255,13 +254,11 @@
                   }, class: "small black button") %>
                 <% end %>
 
-
               </div>
             </div>
           </div>
 
           <div class="row">
-
             <div class="eight wide column computer only tablet only">
               <!-- nothing here yet -->
             </div>

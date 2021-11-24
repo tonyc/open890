@@ -10,11 +10,6 @@ defmodule Open890Web.Live.Radio do
 
   alias Open890Web.Components.{AudioScope, Meter, Slider}
 
-  # @impl true
-  # def render(assigns) do
-  #   Phoenix.View.render(Open890Web.RadioLiveView, "radio_live.html", assigns)
-  # end
-
   @impl true
   def mount(%{"id" => connection_id} = params, _session, socket) do
     Logger.info("LiveView mount: params: #{inspect(params)}")
@@ -108,11 +103,6 @@ defmodule Open890Web.Live.Radio do
 
     {:noreply, assign(socket, :connection_state, payload)}
   end
-
-  # def handle_info(%Broadcast{event: "radio_info", payload: %{level: level, msg: msg}}, socket) do
-  #   Logger.info("***** radio_info: [#{level}] msg: #{inspect(msg)}")
-  #   {:noreply, put_flash(socket, level, msg)}
-  # end
 
   def handle_info(%Broadcast{} = bc, socket) do
     Logger.warn("Unknown broadcast: #{inspect(bc)}")
