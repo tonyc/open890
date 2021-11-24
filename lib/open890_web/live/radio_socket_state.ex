@@ -53,6 +53,7 @@ defmodule Open890Web.Live.RadioSocketState do
     {:active_if_filter, nil},
     {:roofing_filter_data, %{a: nil, b: nil, c: nil}},
     {:s_meter, 0},
+    {:squelch, nil},
     {:ssb_data_filter_mode, nil},
     {:ssb_filter_mode, nil},
     {:theme, "kenwood"},

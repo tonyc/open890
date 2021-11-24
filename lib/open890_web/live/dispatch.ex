@@ -6,6 +6,10 @@ defmodule Open890Web.Live.Dispatch do
 
   import Phoenix.LiveView, only: [assign: 3, push_event: 3]
 
+  def dispatch("SQ" <> _rest = msg, socket) do
+    socket |> assign(:squelch, Extract.sql(msg))
+  end
+
   def dispatch("GC" <> _rest = msg, socket) do
     socket |> assign(:agc, Extract.agc(msg))
   end

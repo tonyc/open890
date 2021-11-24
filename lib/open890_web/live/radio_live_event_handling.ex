@@ -107,12 +107,45 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
         {:noreply, socket}
       end
 
+      def handle_event("adjust_sql", %{"is_up" => is_up} = params, socket) do
+        squelch = socket.assigns.squelch
+
+        step =
+          case is_up do
+            true -> 1
+            false -> -1
+          end
+
+        new_squelch = squelch + step
+
+        squelch =
+          case is_up do
+            true -> min(new_squelch, 255)
+            false -> max(new_squelch, 0)
+          end
+
+        socket.assigns.radio_connection |> Radio.set_squelch(squelch)
+
+        {:noreply, socket}
+      end
+
+
+      def handle_event(
+            "sql_changed",
+            params,
+            %{assigns: %{radio_connection: connection}} = socket
+          ) do
+        connection |> Radio.set_squelch(params["value"])
+
+        {:noreply, socket}
+      end
+
       def handle_event(
             "rf_gain_changed",
             params,
             %{assigns: %{radio_connection: connection}} = socket
           ) do
-        connection |> Radio.set_rf_gain(params["value"])
+        connection |> Radio.set_sql(params["value"])
 
         {:noreply, socket}
       end

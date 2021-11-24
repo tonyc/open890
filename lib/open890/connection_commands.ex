@@ -37,6 +37,12 @@ defmodule Open890.ConnectionCommands do
     |> get_nr()
     |> get_bc()
     |> get_nb_states()
+    |> get_squelch()
+  end
+
+  def get_squelch(conn) do
+    conn
+    |> cmd("SQ")
   end
 
   def get_nb_states(conn) do
@@ -139,6 +145,11 @@ defmodule Open890.ConnectionCommands do
 
   def get_ref_level(conn) do
     conn |> cmd("BSC")
+  end
+
+  def set_squelch(conn, value) when is_integer(value) do
+    value = value |> to_string() |> String.pad_leading(3, "0")
+    conn |> cmd("SQ" <> value)
   end
 
   def set_audio_gain(conn, value) when is_integer(value) do

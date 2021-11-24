@@ -568,6 +568,10 @@ defmodule Open890.Extract do
     str |> trim_to_integer("PA")
   end
 
+  def sql(str) when is_binary(str) do
+    str |> trim_to_integer("SQ")
+  end
+
   def band_scope_avg(str) when is_binary(str) do
     str |> trim_to_integer("BSA")
   end

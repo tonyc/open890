@@ -273,6 +273,12 @@
               <%= if @rf_gain do %>
                 <Slider.slider label="RF" value={@rf_gain} click="rf_gain_changed" wheel="adjust_rf_gain" />
               <% end %>
+
+              <br /> <br/>
+
+              <%= if @squelch do %>
+                <Slider.slider label="SQL" value={@squelch} click="sql_changed" wheel="adjust_sql" />
+              <% end %>
             </div>
 
           </div>
