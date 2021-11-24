@@ -146,23 +146,10 @@
 
     <div class="eight wide column center aligned">
       <div class="ui _container">
-        <div class="ui grid sixteen wide">
-          <div class="row indicators">
-            <div class="four wide left aligned column">
-              <%= live_component @socket, Open890Web.Live.NRIndicatorComponent, nr: @nr %>
-            </div>
-            <div class="four wide left aligned column">
-              <%= live_component @socket, Open890Web.Live.NBIndicatorComponent, noise_blank_state: @noise_blank_state %>
-            </div>
-            <div class="four wide left aligned column">
-              <%= live_component @socket, Open890Web.Live.BCIndicatorComponent, bc: @bc %>
-            </div>
-            <div class="four wide right aligned column">
-              <%= live_component @socket, Open890Web.Live.NotchIndicatorComponent, notch_state: @notch_state %>
-            </div>
-          </div>
-          <div id="frequencyDisplay" class="ui row">
 
+        <div class="ui grid sixteen wide">
+
+          <div id="frequencyDisplay" class="ui row">
             <%= case @vfo_memory_state do %>
             <% :vfo -> %>
               <div class="eight column row">
@@ -187,6 +174,25 @@
             <% _ -> %>
             <% end %>
           </div> <!-- frequencyDisplay -->
+          
+
+          <!-- NR/NB/BC/Notch indicators, TBD -->
+          <div class="row indicators">
+            <div class="four wide left aligned column">
+              <%= live_component @socket, Open890Web.Live.NRIndicatorComponent, nr: @nr %>
+            </div>
+            <div class="four wide left aligned column">
+              <%= live_component @socket, Open890Web.Live.NBIndicatorComponent, noise_blank_state: @noise_blank_state %>
+            </div>
+            <div class="four wide left aligned column">
+              <%= live_component @socket, Open890Web.Live.BCIndicatorComponent, bc: @bc %>
+            </div>
+            <div class="four wide right aligned column">
+              <%= live_component @socket, Open890Web.Live.NotchIndicatorComponent, notch_state: @notch_state %>
+            </div>
+          </div>
+
+          <!-- VFO A/B buttons etc -->
 
           <div class="row stackable grid">
 
@@ -205,19 +211,50 @@
             </div>
 
             <div class="eight wide column">
-              <div class="ui small black buttons">
+              <div class="ui small black">
                 <%= cycle_button("PRE #{format_rf_pre(@rf_pre)}", @rf_pre, %{
                   0 => "PA1",
                   1 => "PA2",
                   2 => "PA0"
-                }, class: "button") %>
+                }, class: "small black button") %>
 
                 <%= cycle_button("ATT #{format_rf_att(@rf_att)}", @rf_att, %{
                   0 => "RA1",
                   1 => "RA2",
                   2 => "RA3",
                   3 => "RA0"
-                }, class: "button") %>
+                }, class: "small black button") %>
+                
+                <%= cycle_button("NR #{format_nr(@nr)}", @nr, %{
+                  :off => "NR1",
+                  :nr_1 => "NR2",
+                  :nr_2 => "NR0"
+                }, class: "small black button") %>
+
+                <%= cycle_button("NB1 #{on_off(@noise_blank_state.nb_1_enabled)}", @noise_blank_state.nb_1_enabled, %{
+                  true => "NB10",
+                  false => "NB11"
+                }, class: "small black button") %>
+
+                <%= cycle_button("NB2 #{on_off(@noise_blank_state.nb_2_enabled)}", @noise_blank_state.nb_2_enabled, %{
+                  true => "NB20",
+                  false => "NB21"
+                }, class: "small black button") %>
+
+                <%= live_component @socket, Components.NotchButton, notch_state: @notch_state %>
+
+                <%= if @active_mode in [:cw, :cw_r] do %>
+                  <button class="ui small disabled black button">
+                    BC <%= format_bc(@bc) %>
+                  </button>
+                <% else %>
+                  <%= cycle_button("BC #{format_bc(@bc)}", @bc, %{
+                    :off => "BC1",
+                    :bc_1 => "BC2",
+                    :bc_2 => "BC0",
+                  }, class: "small black button") %>
+                <% end %>
+
 
               </div>
             </div>

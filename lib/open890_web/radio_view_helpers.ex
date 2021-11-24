@@ -370,4 +370,38 @@ defmodule Open890Web.RadioViewHelpers do
     end
   end
 
+  def on_off(flag) do
+    if flag, do: "ON", else: "OFF"
+  end
+
+  def format_nr(nr_state) do
+    nr_state
+    |> case do
+      :off -> "OFF"
+      :nr_1 -> "1"
+      :nr_2 -> "2"
+      _ -> ""
+    end
+  end
+
+  def simple_state(value) do
+    value
+    |> to_string()
+    |> String.last()
+    |> case do
+      "0" -> "OFF"
+      other -> other
+    end
+  end
+
+  def format_bc(bc) do
+    case bc do
+      :off -> "OFF"
+      :bc_1 -> "1"
+      :bc_2 -> "2"
+      _ -> ""
+    end
+  end
+
+
 end

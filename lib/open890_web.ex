@@ -49,6 +49,7 @@ defmodule Open890Web do
         layout: {Open890Web.LayoutView, "live.html"}
 
       alias Open890Web.Components
+      alias Open890Web.RadioViewHelpers
 
       unquote(view_helpers())
     end

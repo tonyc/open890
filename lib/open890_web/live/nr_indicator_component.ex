@@ -5,14 +5,14 @@ defmodule Open890Web.Live.NRIndicatorComponent do
     ~H"""
       <div class="indicator nr">
         <%= if @nr && @nr !== :off do %>
-          NR <span class="inverted"><%= format_nr(@nr) %></span>
+          NR <span class="inverted"><%= format_nr_state(@nr) %></span>
         <% end %>
         &nbsp;
       </div>
     """
   end
 
-  def format_nr(nr_state) do
+  def format_nr_state(nr_state) do
     nr_state
     |> case do
       :off -> ""

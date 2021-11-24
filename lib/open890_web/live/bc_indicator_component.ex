@@ -1,5 +1,6 @@
 defmodule Open890Web.Live.BCIndicatorComponent do
   use Open890Web, :live_component
+  import Open890Web.RadioViewHelpers
 
   def render(assigns) do
     ~H"""
@@ -12,12 +13,4 @@ defmodule Open890Web.Live.BCIndicatorComponent do
     """
   end
 
-  def format_bc(bc_state) do
-    bc_state
-    |> case do
-      :off -> ""
-      :bc_1 -> "1"
-      :bc_2 -> "2"
-    end
-  end
 end
