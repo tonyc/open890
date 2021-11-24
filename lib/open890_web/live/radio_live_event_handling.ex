@@ -145,7 +145,7 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
             params,
             %{assigns: %{radio_connection: connection}} = socket
           ) do
-        connection |> Radio.set_sql(params["value"])
+        connection |> Radio.set_rf_gain(params["value"])
 
         {:noreply, socket}
       end
