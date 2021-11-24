@@ -112,8 +112,8 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
 
         step =
           case is_up do
-            true -> 1
-            false -> -1
+            true -> 5
+            false -> -5
           end
 
         new_squelch = squelch + step

@@ -1,6 +1,7 @@
 # open890 Changelog
 
 ## Unreleased
+* Added SQL control
 * Added NR, NB, BC, NCH control buttons.
 * Added the ability to pop out separate bandscope, audioscope, and meter displays.
 * Fixed white UI background on radio/bandscope screens.
