@@ -1,7 +1,8 @@
 # open890 Changelog
 
 ## Unreleased
-* Added the ability to pop out a separate bandscope display.
+* Added NR, NB, BC, NCH control buttons.
+* Added the ability to pop out separate bandscope, audioscope, and meter displays.
 * Fixed white UI background on radio/bandscope screens.
 
 ## 0.5.1 - 2021-11-22
