@@ -141,107 +141,140 @@
 
   <div class="computer only tablet only row">
     <div class="four wide column">
-      <Meter.meter s_meter={@s_meter} alc_meter={@alc_meter} swr_meter={@swr_meter} />
+
+      <div class="row">
+        <div class="column">
+          <Meter.meter s_meter={@s_meter} alc_meter={@alc_meter} swr_meter={@swr_meter} />
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="column">
+          <%= if @audio_gain do %>
+            <Slider.slider label="AF" value={@audio_gain} click="audio_gain_changed" wheel="adjust_audio_gain" />
+          <% end %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="column">
+          <%= if @rf_gain do %>
+            <Slider.slider label="RF" value={@rf_gain} click="rf_gain_changed" wheel="adjust_rf_gain" />
+          <% end %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="column">
+          <%= if @squelch do %>
+            <Slider.slider label="SQL" value={@squelch} click="sql_changed" wheel="adjust_sql" />
+          <% end %>
+        </div>
+      </div>
     </div>
 
     <div class="eight wide column center aligned">
-      <div class="ui _container">
-
-        <div class="ui grid sixteen wide">
-
-          <div id="frequencyDisplay" class="ui row">
-            <%= case @vfo_memory_state do %>
-            <% :vfo -> %>
-              <div class="eight column row">
-                <%= live_component @socket, Open890Web.Live.VFODisplayComponent,
-                                            active_frequency: @active_frequency,
-                                            active_mode: @active_mode,
-                                            active_receiver: @active_receiver,
-                                            inactive_receiver: @inactive_receiver,
-                                            inactive_frequency: @inactive_frequency,
-                                            inactive_mode: @inactive_mode,
-                                            transverter_state: @transverter_state,
-                                            vfo_memory_state: @vfo_memory_state,
-                                            notch_state: @notch_state,
-                                            band_register_state: @band_register_state %>
+      <div class="ui grid sixteen wide">
+        <div id="frequencyDisplay" class="ui row">
+          <%= case @vfo_memory_state do %>
+          <% :vfo -> %>
+            <div class="eight column row">
+              <%= live_component @socket, Open890Web.Live.VFODisplayComponent,
+                                          active_frequency: @active_frequency,
+                                          active_mode: @active_mode,
+                                          active_receiver: @active_receiver,
+                                          inactive_receiver: @inactive_receiver,
+                                          inactive_frequency: @inactive_frequency,
+                                          inactive_mode: @inactive_mode,
+                                          transverter_state: @transverter_state,
+                                          vfo_memory_state: @vfo_memory_state,
+                                          notch_state: @notch_state,
+                                          band_register_state: @band_register_state %>
+            </div>
+          <% :memory -> %>
+            <div id="memoryDisplay" class="eight column row">
+              <div class="column">
+                <p>Memory display not implemented yet.</p>
               </div>
-            <% :memory -> %>
-              <div id="memoryDisplay" class="eight column row">
-                <div class="column">
-                  <p>Memory display not implemented yet.</p>
-                </div>
-              </div>
-            <% _ -> %>
-            <% end %>
-          </div> <!-- frequencyDisplay -->
+            </div>
+          <% _ -> %>
+          <% end %>
+        </div> <!-- frequencyDisplay -->
 
-          <!-- NR/NB/BC/Notch indicators, TBD -->
-          <div class="row indicators">
-            <div class="four wide left aligned column">
-              <%= live_component @socket, Open890Web.Live.NRIndicatorComponent, nr: @nr %>
-            </div>
-            <div class="four wide left aligned column">
-              <%= live_component @socket, Open890Web.Live.NBIndicatorComponent, noise_blank_state: @noise_blank_state %>
-            </div>
-            <div class="four wide left aligned column">
-              <%= live_component @socket, Open890Web.Live.BCIndicatorComponent, bc: @bc %>
-            </div>
-            <div class="four wide right aligned column">
-              <%= live_component @socket, Open890Web.Live.NotchIndicatorComponent, notch_state: @notch_state %>
+        <!-- NR/NB/BC/Notch indicators, TBD -->
+        <div class="row indicators">
+          <div class="four wide left aligned column">
+            <%= live_component @socket, Open890Web.Live.NRIndicatorComponent, nr: @nr %>
+          </div>
+          <div class="four wide left aligned column">
+            <%= live_component @socket, Open890Web.Live.NBIndicatorComponent, noise_blank_state: @noise_blank_state %>
+          </div>
+          <div class="four wide left aligned column">
+            <%= live_component @socket, Open890Web.Live.BCIndicatorComponent, bc: @bc %>
+          </div>
+          <div class="four wide right aligned column">
+            <%= live_component @socket, Open890Web.Live.NotchIndicatorComponent, notch_state: @notch_state %>
+          </div>
+        </div>
+
+        <!-- VFO A/B buttons etc -->
+
+        <div class="row stackable grid">
+
+          <!-- middle -->
+          <div class="eight wide column">
+            <div class="ui small black buttons">
+
+              <%= if @vfo_memory_state == :vfo do %>
+                <%= vfo_switch_button(@active_receiver, class: "ui small black button") %>
+                <%= vfo_equalize_button(class: "ui small black button") %>
+              <% end %>
+              <%= if @vfo_memory_state do %>
+                <%= vfo_mem_switch_button(@vfo_memory_state, class: "ui small black button") %>
+              <% end %>
             </div>
           </div>
 
-          <!-- VFO A/B buttons etc -->
+          <div class="eight wide column">
+            <div class="four column ui grid">
 
-          <div class="row stackable grid">
+              <div class="row">
+                <div class="column"></div>
+                <div class="column">
+                  <Buttons.pre_button rf_pre={@rf_pre} />
+                </div>
+                <div class="column">
+                  <Buttons.att_button rf_att={@rf_att} />
+                </div>
+                <div class="column"></div>
+              </div>
 
-            <!-- middle -->
-            <div class="eight wide column">
-              <div class="ui small black buttons">
-
-                <%= if @vfo_memory_state == :vfo do %>
-                  <%= vfo_switch_button(@active_receiver, class: "ui small black button") %>
-                  <%= vfo_equalize_button(class: "ui small black button") %>
-                <% end %>
-                <%= if @vfo_memory_state do %>
-                  <%= vfo_mem_switch_button(@vfo_memory_state, class: "ui small black button") %>
-                <% end %>
+              <div class="row">
+                <div class="column">
+                  <Buttons.nr_button nr={@nr} />
+                </div>
+                <div class="column">
+                  <Buttons.nb1_button noise_blank_state={@noise_blank_state} />
+                </div>
+                <div class="column">
+                  <Buttons.nb2_button noise_blank_state={@noise_blank_state} />
+                </div>
+                <div class="column">
+                  <Buttons.notch_button notch_state={@notch_state} />
+                </div>
               </div>
             </div>
 
-            <div class="eight wide column">
-              <div class="ui small black">
-                <%= cycle_button("PRE #{format_rf_pre(@rf_pre)}", @rf_pre, %{
-                  0 => "PA1",
-                  1 => "PA2",
-                  2 => "PA0"
-                }, class: "small black button") %>
 
-                <%= cycle_button("ATT #{format_rf_att(@rf_att)}", @rf_att, %{
-                  0 => "RA1",
-                  1 => "RA2",
-                  2 => "RA3",
-                  3 => "RA0"
-                }, class: "small black button") %>
 
-                <%= cycle_button("NR #{format_nr(@nr)}", @nr, %{
-                  :off => "NR1",
-                  :nr_1 => "NR2",
-                  :nr_2 => "NR0"
-                }, class: "small black button") %>
 
-                <%= cycle_button("NB1 #{on_off(@noise_blank_state.nb_1_enabled)}", @noise_blank_state.nb_1_enabled, %{
-                  true => "NB10",
-                  false => "NB11"
-                }, class: "small black button") %>
 
-                <%= cycle_button("NB2 #{on_off(@noise_blank_state.nb_2_enabled)}", @noise_blank_state.nb_2_enabled, %{
-                  true => "NB20",
-                  false => "NB21"
-                }, class: "small black button") %>
 
-                <%= live_component @socket, Components.NotchButton, notch_state: @notch_state %>
 
+            
+
+            <div class="row">
+              <div class="column">
+              </div>
+              <div class="column">
                 <%= if @active_mode in [:cw, :cw_r] do %>
                   <button class="ui small disabled black button">
                     BC <%= format_bc(@bc) %>
@@ -253,37 +286,25 @@
                     :bc_2 => "BC0",
                   }, class: "small black button") %>
                 <% end %>
-
               </div>
             </div>
-          </div>
 
-          <div class="row">
-            <div class="eight wide column computer only tablet only">
-              <!-- nothing here yet -->
-            </div>
 
-            <div class="eight wide column computer only tablet only right aligned">
-              <%= if @audio_gain do %>
-                <Slider.slider label="AF" value={@audio_gain} click="audio_gain_changed" wheel="adjust_audio_gain" />
-              <% end %>
-
-              <br /> <br/>
-
-              <%= if @rf_gain do %>
-                <Slider.slider label="RF" value={@rf_gain} click="rf_gain_changed" wheel="adjust_rf_gain" />
-              <% end %>
-
-              <br /> <br/>
-
-              <%= if @squelch do %>
-                <Slider.slider label="SQL" value={@squelch} click="sql_changed" wheel="adjust_sql" />
-              <% end %>
-            </div>
 
           </div>
         </div>
-      </div> <!-- container -->
+
+        <div class="row">
+          <div class="eight wide column computer only tablet only">
+            <!-- nothing here yet -->
+          </div>
+
+          <div class="eight wide column computer only tablet only">
+            <!-- nothing here yet -->
+          </div>
+
+        </div>
+      </div>
 
     </div>
 

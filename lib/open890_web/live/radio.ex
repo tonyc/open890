@@ -8,7 +8,7 @@ defmodule Open890Web.Live.Radio do
   alias Open890.{ConnectionCommands, Extract, RadioConnection}
   alias Open890Web.Live.{BandButtonsComponent, Dispatch, RadioSocketState}
 
-  alias Open890Web.Components.{AudioScope, Meter, Slider}
+  alias Open890Web.Components.{AudioScope, Buttons, Meter, Slider}
 
   @impl true
   def mount(%{"id" => connection_id} = params, _session, socket) do

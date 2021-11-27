@@ -117,24 +117,6 @@ defmodule Open890Web.RadioViewHelpers do
     end
   end
 
-  def format_rf_pre(level) do
-    level
-    |> case do
-      0 -> "OFF"
-      str -> str |> to_string()
-    end
-  end
-
-  def format_rf_att(level) do
-    level
-    |> case do
-      0 -> "OFF"
-      1 -> "6dB"
-      2 -> "12dB"
-      3 -> "18dB"
-    end
-  end
-
   def linear_interpolate(value, y_min, y_max, x_min, x_max) do
     percent = (value - y_min) / (y_max - y_min)
     percent * (x_max - x_min) + x_min
@@ -372,16 +354,6 @@ defmodule Open890Web.RadioViewHelpers do
 
   def on_off(flag) do
     if flag, do: "ON", else: "OFF"
-  end
-
-  def format_nr(nr_state) do
-    nr_state
-    |> case do
-      :off -> "OFF"
-      :nr_1 -> "1"
-      :nr_2 -> "2"
-      _ -> ""
-    end
   end
 
   def simple_state(value) do

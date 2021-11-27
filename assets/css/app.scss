@@ -45,6 +45,14 @@
   margin-top: 1rem;
 }
 
+.float-right {
+  float: right;
+}
+
+.float-left {
+  float: left;
+}
+
 
 h1.title {
   padding-bottom: 2rem;
@@ -196,8 +204,7 @@ nav {
 }
 
 .sMeterWrapper, .audioScopeWrapper {
-  //width: 100%;
-  max-width: 400px
+  max-width: 350px;
 }
 
 .sMeterWrapper {
@@ -246,7 +253,6 @@ nav {
       &.high { fill: red; }
     }
   }
-
 
   #alcMeterLegend {
     text {
@@ -643,10 +649,6 @@ svg#bandScope {
 
 }
 
-// .scopeButtons button {
-//   width: 200px;
-// }
-
 .resize-both {
   resize: both;
   overflow: auto;
@@ -672,10 +674,11 @@ svg#bandScope {
 
 
 .slider {
+  margin-bottom: 0.5rem;
   width: 300px;
+  display: block;
 
   .label {
-    float: left;
     width: 3rem;
   }
 }
@@ -684,7 +687,8 @@ svg#bandScope {
   margin-top: 5px;
   float: right;
   width: 255px;
-  height: 12px;
+  // max-width: 300px;
+  height: 1rem;
   background-color: $kenwood-grey;
 
   cursor: pointer;
@@ -694,7 +698,7 @@ svg#bandScope {
     top: 0;
     left: 0;
     height: 100%;
-    background-color: $kenwood-cyan;
+    background-color: white;
 
     &.green {
       background-color: $elecraft-green;
