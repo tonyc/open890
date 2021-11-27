@@ -8,7 +8,7 @@ defmodule Open890Web.Components.AudioScope do
 
   def audio_scope(assigns) do
     ~H"""
-      <div id="audioScopeWrapper" class="hover-pointer">
+      <div class="audioScopeWrapper" class="hover-pointer">
         <svg id="audioScope" class="scope themed" viewbox="0 0 212 60" phx-hook="AudioScope">
           <defs>
             <lineargradient id="kenwoodAudioScope" x1="0" y1="60" x2="0" y2="0" gradientunits="userSpaceOnUse">

@@ -176,12 +176,6 @@ nav {
   }
 }
 
-#themeSelector {
-  // float: right;
-  // font-size: smaller;
-  // font-weight: bold;
-}
-
 .receiverIndicator {
   background-color: #ccc;
   color: black;
@@ -201,9 +195,9 @@ nav {
   }
 }
 
-.sMeterWrapper, #audioScopeWrapper {
-  width: 100%;
-  // max-width: 400px
+.sMeterWrapper, .audioScopeWrapper {
+  //width: 100%;
+  max-width: 400px
 }
 
 .sMeterWrapper {
@@ -281,7 +275,7 @@ nav {
   }
 }
 
-#audioScopeWrapper {
+.audioScopeWrapper {
   float: right;
   #audioScope, #AudioScopeCanvas {
     width: 100%;
@@ -418,7 +412,6 @@ svg#bandScope {
   }
 
   .spectrum {
-
     // themeish specific
     // background: linear-gradient($kenwood-gradient-light, $kenwood-gradient-dark);
     // fill: rgba(0, 0, 0, 1.0);

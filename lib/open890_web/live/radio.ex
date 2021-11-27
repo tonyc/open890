@@ -268,7 +268,7 @@ defmodule Open890Web.Live.Radio do
   end
 
   def radio_classes(debug \\ false) do
-    classes = "noselect ui stackable doubling grid"
+    classes = "ui grid noselect"
 
     if debug do
       classes <> " debug"
