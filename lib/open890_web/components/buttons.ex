@@ -7,24 +7,22 @@ defmodule Open890Web.Components.Buttons do
   def notch_button(assigns) do
     ~H"""
       <div class="ui small black buttons">
-
         <%= cycle_button("NCH #{format_notch(@notch_state)}", @notch_state.enabled, %{
           false => "NT1",
           true => "NT0"
-        }, class: "small black button") %>
+        }) %>
 
         <%= if @notch_state.enabled do %>
           <%= cycle_button("#{format_notch_width(@notch_state)}", @notch_state.width, %{
             :narrow => "NW1",
             :mid => "NW2",
             :wide => "NW0"
-          }, class: "small black button") %>
+          }) %>
         <% else %>
-            <button class="small black ui disabled button">
-              <%= format_notch_width(@notch_state) %>
-            </button>
+          <button class="ui small disabled button btn">
+            <%= format_notch_width(@notch_state) %>
+          </button>
         <% end %>
-
       </div>
     """
   end
@@ -35,7 +33,7 @@ defmodule Open890Web.Components.Buttons do
         0 => "PA1",
         1 => "PA2",
         2 => "PA0"
-      }, class: "small black button") %>
+      }) %>
     """
   end
 
@@ -46,7 +44,7 @@ defmodule Open890Web.Components.Buttons do
         1 => "RA2",
         2 => "RA3",
         3 => "RA0"
-      }, class: "small black button") %>
+      }) %>
     """
   end
 
@@ -56,7 +54,7 @@ defmodule Open890Web.Components.Buttons do
         :off => "NR1",
         :nr_1 => "NR2",
         :nr_2 => "NR0"
-      }, class: "small black button") %>
+      }) %>
     """
   end
 
@@ -75,7 +73,7 @@ defmodule Open890Web.Components.Buttons do
     <%= cycle_button("NB1 #{on_off(@noise_blank_state.nb_1_enabled)}", @noise_blank_state.nb_1_enabled, %{
       true => "NB10",
       false => "NB11"
-    }, class: "small black button") %>
+    }) %>
    """
   end
 
@@ -84,7 +82,7 @@ defmodule Open890Web.Components.Buttons do
     <%= cycle_button("NB2 #{on_off(@noise_blank_state.nb_2_enabled)}", @noise_blank_state.nb_2_enabled, %{
       true => "NB20",
       false => "NB21"
-    }, class: "small black button") %>
+    }) %>
    """
   end
 

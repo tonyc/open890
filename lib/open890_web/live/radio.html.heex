@@ -217,93 +217,85 @@
 
         <!-- VFO A/B buttons etc -->
 
-        <div class="row stackable grid">
+        <div class="row ui eight column doubling grid">
 
-          <!-- middle -->
-          <div class="eight wide column">
-            <div class="ui small black buttons">
-
+          <div class="row">
+            <div class="column">
               <%= if @vfo_memory_state == :vfo do %>
                 <%= vfo_switch_button(@active_receiver, class: "ui small black button") %>
+              <% end %>
+            </div>
+
+            <div class="column">
+              <%= if @vfo_memory_state == :vfo do %>
                 <%= vfo_equalize_button(class: "ui small black button") %>
               <% end %>
+            </div>
+
+            <div class="column">
               <%= if @vfo_memory_state do %>
                 <%= vfo_mem_switch_button(@vfo_memory_state, class: "ui small black button") %>
               <% end %>
             </div>
+
+            <div class="column"></div>
+
+            <div class="column"></div>
+            <div class="column">
+              <Buttons.pre_button rf_pre={@rf_pre} />
+            </div>
+            <div class="column">
+              <Buttons.att_button rf_att={@rf_att} />
+            </div>
+            <div class="column"></div>
           </div>
 
-          <div class="eight wide column">
-            <div class="four column ui grid">
-
-              <div class="row">
-                <div class="column"></div>
-                <div class="column">
-                  <Buttons.pre_button rf_pre={@rf_pre} />
-                </div>
-                <div class="column">
-                  <Buttons.att_button rf_att={@rf_att} />
-                </div>
-                <div class="column"></div>
-              </div>
-
-              <div class="row">
-                <div class="column">
-                  <Buttons.nr_button nr={@nr} />
-                </div>
-                <div class="column">
-                  <Buttons.nb1_button noise_blank_state={@noise_blank_state} />
-                </div>
-                <div class="column">
-                  <Buttons.nb2_button noise_blank_state={@noise_blank_state} />
-                </div>
-                <div class="column">
-                  <Buttons.notch_button notch_state={@notch_state} />
-                </div>
-              </div>
+          <div class="row">
+            <div class="column"></div>
+            <div class="column"></div>
+            <div class="column"></div>
+            <div class="column"></div>
+            <div class="column">
+              <Buttons.nr_button nr={@nr} />
             </div>
-
-
-
-
-
-
-
-            
-
-            <div class="row">
-              <div class="column">
-              </div>
-              <div class="column">
-                <%= if @active_mode in [:cw, :cw_r] do %>
-                  <button class="ui small disabled black button">
-                    BC <%= format_bc(@bc) %>
-                  </button>
-                <% else %>
-                  <%= cycle_button("BC #{format_bc(@bc)}", @bc, %{
-                    :off => "BC1",
-                    :bc_1 => "BC2",
-                    :bc_2 => "BC0",
-                  }, class: "small black button") %>
-                <% end %>
-              </div>
+            <div class="column">
+              <Buttons.nb1_button noise_blank_state={@noise_blank_state} />
             </div>
-
-
-
+            <div class="column">
+              <Buttons.nb2_button noise_blank_state={@noise_blank_state} />
+            </div>
+            <div class="column">
+              <Buttons.notch_button notch_state={@notch_state} />
+            </div>
           </div>
+
+          <div class="row">
+            <div class="column"></div>
+            <div class="column"></div>
+            <div class="column"></div>
+            <div class="column"></div>
+            <div class="column"></div>
+            <div class="column"></div>
+            <div class="column"></div>
+            <div class="column">
+              <%= if @active_mode in [:cw, :cw_r] do %>
+                <button class="ui small disabled black button btn">
+                  BC <%= format_bc(@bc) %>
+                </button>
+              <% else %>
+                <%= cycle_button("BC #{format_bc(@bc)}", @bc, %{
+                  :off => "BC1",
+                  :bc_1 => "BC2",
+                  :bc_2 => "BC0",
+                }) %>
+              <% end %>
+            </div>
+          </div>
+
+
+
         </div>
 
-        <div class="row">
-          <div class="eight wide column computer only tablet only">
-            <!-- nothing here yet -->
-          </div>
-
-          <div class="eight wide column computer only tablet only">
-            <!-- nothing here yet -->
-          </div>
-
-        </div>
       </div>
 
     </div>

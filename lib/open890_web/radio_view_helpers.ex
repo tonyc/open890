@@ -18,7 +18,7 @@ defmodule Open890Web.RadioViewHelpers do
     final_opts =
       opts
       |> Keyword.delete(:class)
-      |> Keyword.merge(class: "ui button #{class_opts}")
+      |> Keyword.merge(class: "ui small black button btn #{class_opts}")
       |> Keyword.merge(phx_click: "cmd", phx_value_cmd: cmd)
 
     content_tag(:button, name, final_opts)
