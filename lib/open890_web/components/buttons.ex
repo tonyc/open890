@@ -7,13 +7,13 @@ defmodule Open890Web.Components.Buttons do
   def notch_button(assigns) do
     ~H"""
       <div class="ui small black buttons">
-        <%= cycle_button("NCH #{format_notch(@notch_state)}", @notch_state.enabled, %{
+        <%= fluid_cycle_button("NCH #{format_notch(@notch_state)}", @notch_state.enabled, %{
           false => "NT1",
           true => "NT0"
         }) %>
 
         <%= if @notch_state.enabled do %>
-          <%= cycle_button("#{format_notch_width(@notch_state)}", @notch_state.width, %{
+          <%= fluid_cycle_button("#{format_notch_width(@notch_state)}", @notch_state.width, %{
             :narrow => "NW1",
             :mid => "NW2",
             :wide => "NW0"
@@ -29,7 +29,7 @@ defmodule Open890Web.Components.Buttons do
 
   def pre_button(assigns) do
     ~H"""
-      <%= cycle_button("PRE #{format_rf_pre(@rf_pre)}", @rf_pre, %{
+      <%= fluid_cycle_button("PRE #{format_rf_pre(@rf_pre)}", @rf_pre, %{
         0 => "PA1",
         1 => "PA2",
         2 => "PA0"
@@ -39,7 +39,7 @@ defmodule Open890Web.Components.Buttons do
 
   def att_button(assigns) do
     ~H"""
-      <%= cycle_button("ATT #{format_rf_att(@rf_att)}", @rf_att, %{
+      <%= fluid_cycle_button("ATT #{format_rf_att(@rf_att)}", @rf_att, %{
         0 => "RA1",
         1 => "RA2",
         2 => "RA3",
@@ -50,7 +50,7 @@ defmodule Open890Web.Components.Buttons do
 
   def nr_button(assigns) do
     ~H"""
-      <%= cycle_button("NR #{format_nr(@nr)}", @nr, %{
+      <%= fluid_cycle_button("NR #{format_nr(@nr)}", @nr, %{
         :off => "NR1",
         :nr_1 => "NR2",
         :nr_2 => "NR0"
@@ -68,9 +68,33 @@ defmodule Open890Web.Components.Buttons do
     end
   end
 
+  def vfo_switch_button(assigns) do
+    ~H"""
+      <%= fluid_cycle_button("A / B", @vfo, %{
+        :a => "FR1",
+        :b => "FR0"
+      }) %>
+    """
+  end
+
+  def vfo_equalize_button(assigns) do
+    ~H"""
+      <%= fluid_cmd_button("A = B", "VV") %>
+    """
+  end
+
+  def vfo_mem_button(assigns) do
+    ~H"""
+      <%= fluid_cycle_button("M / V", @vfo_mem, %{
+        :vfo => "MV1",
+        :memory => "MV0"
+      }) %>
+    """
+  end
+
   def nb1_button(assigns) do
    ~H"""
-    <%= cycle_button("NB1 #{on_off(@noise_blank_state.nb_1_enabled)}", @noise_blank_state.nb_1_enabled, %{
+    <%= fluid_cycle_button("NB1 #{on_off(@noise_blank_state.nb_1_enabled)}", @noise_blank_state.nb_1_enabled, %{
       true => "NB10",
       false => "NB11"
     }) %>
@@ -79,7 +103,7 @@ defmodule Open890Web.Components.Buttons do
 
   def nb2_button(assigns) do
    ~H"""
-    <%= cycle_button("NB2 #{on_off(@noise_blank_state.nb_2_enabled)}", @noise_blank_state.nb_2_enabled, %{
+    <%= fluid_cycle_button("NB2 #{on_off(@noise_blank_state.nb_2_enabled)}", @noise_blank_state.nb_2_enabled, %{
       true => "NB20",
       false => "NB21"
     }) %>

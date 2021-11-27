@@ -10,6 +10,10 @@ defmodule Open890Web.RadioViewHelpers do
     if theme == name, do: "selected"
   end
 
+  def fluid_cmd_button(name, cmd, opts \\ []) do
+    cmd_button(name, cmd, opts |> Keyword.put(:class, "fluid"))
+  end
+
   def cmd_button(name, cmd, opts \\ []) when is_binary(name) and is_binary(cmd) do
     class_opts = opts |> Keyword.get(:class, "")
 
@@ -34,6 +38,15 @@ defmodule Open890Web.RadioViewHelpers do
       |> Keyword.merge(phx_click: "cmd", phx_value_cmd: cmd)
 
     content_tag(:button, name, final_opts)
+  end
+
+  def fluid_cycle_button(title, var, values, opts \\ []) do
+    values
+    |> Map.get(var)
+    |> case do
+      nil -> ""
+      cmd -> fluid_cmd_button(title, cmd, opts)
+    end
   end
 
   # cycle_button("Scope Mode", @scope_mode, %{auto_scroll: "BS30", fixed: "BS32", center: "BS31"}
@@ -71,27 +84,9 @@ defmodule Open890Web.RadioViewHelpers do
     content_tag(:button, contents, class: button_classes, phx_click: "cmd", phx_value_cmd: cmd)
   end
 
-  def vfo_switch_button(vfo, opts \\ []) do
-    "A / B" |> cmd_button(vfo_switch_command(vfo), opts)
-  end
-
   def q_min_button(opts \\ []) do
     "Q-M.IN" |> cmd_button("QI", opts)
   end
-
-  defp vfo_switch_command(:a), do: "FR1"
-  defp vfo_switch_command(:b), do: "FR0"
-
-  def vfo_equalize_button(opts \\ []) do
-    "A = B" |> cmd_button("VV", opts)
-  end
-
-  def vfo_mem_switch_button(vfo_mem_state, opts \\ []) do
-    "M / V" |> cmd_button(vfo_mem_switch_command(vfo_mem_state), opts)
-  end
-
-  defp vfo_mem_switch_command(:vfo), do: "MV1"
-  defp vfo_mem_switch_command(:memory), do: "MV0"
 
   # converts the kenwood ref level (BSC) command number to a dB value from -20 to +10
   def format_ref_level(ref_level) do
