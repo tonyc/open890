@@ -20,14 +20,32 @@ defmodule Open890Web.Components.Buttons do
           }}>
           </.cycle_button_2>
         <% else %>
+            notch not enabled
           <button class="ui small disabled button btn">
-            <%= format_notch_width(@value) %>
+            <%= format_notch_width(@value.width) %>
           </button>
         <% end %>
       </div>
     """
   end
 
+  def format_notch_width(width) do
+    case width do
+      :narrow -> "N"
+      :mid -> "M"
+      :wide -> "W"
+      _ -> ""
+    end
+  end
+
+  def format_notch(notch_state) do
+    notch_state.enabled
+    |> case do
+      true -> "ON"
+      false -> "OFF"
+      _ -> ""
+    end
+  end
   def pre_button(assigns) do
     ~H"""
       <.cycle_button_2 value={@value} values={%{0 => "PA1", 1 => "PA2", 2 => "PA0"}}>
@@ -118,7 +136,6 @@ defmodule Open890Web.Components.Buttons do
   end
 
   def nb2_button(assigns) do
-
     ~H"""
       <.cycle_button_2 value={@value.nb_2_enabled} values={ %{true => "NB20", false => "NB21"}}>
         NB2 <%= on_off(@value.nb_2_enabled) %>
@@ -135,25 +152,6 @@ defmodule Open890Web.Components.Buttons do
   end
 
 
-
-
-  def format_notch_width(%NotchState{width: width} = _notch_state) do
-    case width do
-      :narrow -> "N"
-      :mid -> "M"
-      :wide -> "W"
-      _ -> ""
-    end
-  end
-
-  def format_notch(notch_state) do
-    notch_state.enabled
-    |> case do
-      true -> "ON"
-      false -> "OFF"
-      _ -> ""
-    end
-  end
 
   def format_rf_pre(level) do
     level
