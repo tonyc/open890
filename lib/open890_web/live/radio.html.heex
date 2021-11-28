@@ -42,7 +42,7 @@
           </h1>
         </div>
         <div class="content">
-          <%= live_component @socket, BandButtonsComponent %>
+          <%= live_component BandButtonsComponent %>
         </div>
         <div class="actions">
           <div id="BandModalClose" class="ui icon button" phx-click="toggle_band_selector">
@@ -177,17 +177,17 @@
           <%= case @vfo_memory_state do %>
           <% :vfo -> %>
             <div class="eight column row">
-              <%= live_component @socket, Open890Web.Live.VFODisplayComponent,
-                                          active_frequency: @active_frequency,
-                                          active_mode: @active_mode,
-                                          active_receiver: @active_receiver,
-                                          inactive_receiver: @inactive_receiver,
-                                          inactive_frequency: @inactive_frequency,
-                                          inactive_mode: @inactive_mode,
-                                          transverter_state: @transverter_state,
-                                          vfo_memory_state: @vfo_memory_state,
-                                          notch_state: @notch_state,
-                                          band_register_state: @band_register_state %>
+              <%= live_component Open890Web.Live.VFODisplayComponent,
+                active_frequency: @active_frequency,
+                active_mode: @active_mode,
+                active_receiver: @active_receiver,
+                inactive_receiver: @inactive_receiver,
+                inactive_frequency: @inactive_frequency,
+                inactive_mode: @inactive_mode,
+                transverter_state: @transverter_state,
+                vfo_memory_state: @vfo_memory_state,
+                notch_state: @notch_state,
+                band_register_state: @band_register_state %>
             </div>
           <% :memory -> %>
             <div id="memoryDisplay" class="eight column row">
@@ -214,66 +214,58 @@
         theme={@theme} />
 
       <div class="ui mini black buttons">
-        <%= cmd_button "FIL A", "FL00", class: "ui button" %>
-        <%= cmd_button "FIL B", "FL01", class: "ui button" %>
-        <%= cmd_button "FIL C", "FL02", class: "ui button" %>
+        <.filter_buttons />
       </div>
 
     </div>
   </div> <!-- row -->
 
-  <div class="ui eight column doubling grid row">
+  <div class="ui eight column doubling grid container row">
 
     <div class="column">
       <%= if @vfo_memory_state == :vfo do %>
-        <Buttons.vfo_switch_button vfo={@active_receiver} />
+        <.vfo_switch_button value={@active_receiver} />
       <% end %>
     </div>
 
     <div class="column">
       <%= if @vfo_memory_state == :vfo do %>
-        <Buttons.vfo_equalize_button />
+        <.vfo_equalize_button />
       <% end %>
     </div>
 
     <div class="column">
       <%= if @vfo_memory_state do %>
-        <Buttons.vfo_mem_button vfo_mem={@vfo_memory_state} />
+        <.vfo_mem_button value={@vfo_memory_state} />
       <% end %>
     </div>
 
     <div class="column">
-      <Buttons.pre_button rf_pre={@rf_pre} />
+      <.pre_button value={@rf_pre} />
     </div>
 
     <div class="column">
-      <Buttons.att_button rf_att={@rf_att} />
+      <.att_button value={@rf_att} />
     </div>
 
     <div class="column">
-      <Buttons.nr_button nr={@nr} />
+      <.nr_button value={@nr} />
     </div>
 
     <div class="column">
-      <Buttons.nb1_button noise_blank_state={@noise_blank_state} />
+      <.nb1_button value={@noise_blank_state} />
     </div>
 
     <div class="column">
-      <Buttons.nb2_button noise_blank_state={@noise_blank_state} />
+      <.nb2_button value={@noise_blank_state} />
     </div>
 
     <div class="column">
-      <Buttons.notch_button notch_state={@notch_state} />
+      <.notch_button value={@notch_state} />
     </div>
 
     <div class="column">
-      <%= if @active_mode not in [:cw, :cw_r] do %>
-        <%= cycle_button("BC #{format_bc(@bc)}", @bc, %{
-          :off => "BC1",
-          :bc_1 => "BC2",
-          :bc_2 => "BC0",
-        }) %>
-      <% end %>
+      <.bc_button value={@bc} active_mode={@active_mode} />
     </div>
 
   </div>
