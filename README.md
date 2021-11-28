@@ -32,11 +32,17 @@ You should now be able to access http://localhost:4000
 
 ## Binary releases
 
-Binary releases are available from [releases](https://github.com/tonyc/open890/releases/latest).
+Platform/architecture-specific binary releases are available from [releases](https://github.com/tonyc/open890/releases/latest).
 
-### Linux
+### Raspberry Pi
+
+Binary builds are not available for Raspberry Pi due to CPU architecture differences. You will need to install from source (see above)
+in order to get open890 running on a RPi.
+
+### Linux (Ubuntu)
 
 Linux binaries are supported to run on 64-bit Ubuntu 20.04, although other modern Linux releases may work (or not).
+
 
 Download the release `.tar.gz`
 
