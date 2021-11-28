@@ -111,16 +111,16 @@ defmodule Open890Web.Components.Buttons do
     values = %{true => "NB10", false => "NB11"}
 
     ~H"""
-      <.cycle_button_2 value={@value} values={values}}>
-        NB <%= on_off(@value.nb_1_enabled) %>
+      <.cycle_button_2 value={@value.nb_1_enabled} values={values}}>
+        NB1 <%= on_off(@value.nb_1_enabled) %>
       </.cycle_button_2>
     """
   end
 
   def nb2_button(assigns) do
-    values = %{true => "NB20", false => "NB21"}
+
     ~H"""
-      <.cycle_button_2 value={@value} values={values}>
+      <.cycle_button_2 value={@value.nb_2_enabled} values={ %{true => "NB20", false => "NB21"}}>
         NB2 <%= on_off(@value.nb_2_enabled) %>
       </.cycle_button_2>
     """
