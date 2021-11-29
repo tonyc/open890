@@ -7,35 +7,56 @@ defmodule Open890Web.Components.BandscopeButtons do
 
   def buttons(assigns) do
     ~H"""
-      <div class="scopeButtons">
-        <.scope_mode_button band_scope_mode={@band_scope_mode} />
+          <div class="column">
+            <.scope_mode_button band_scope_mode={@band_scope_mode} />
+          </div>
 
-        <.scope_range_button band_scope_mode={@band_scope_mode} band_scope_span={@band_scope_span} />
+          <div class="column">
+            <.scope_range_button band_scope_mode={@band_scope_mode} band_scope_span={@band_scope_span} />
+          </div>
 
-        <%= case @band_scope_mode do %>
-          <% :auto_scroll -> %>
-            <.cmd_button_2 cmd="BSE" class="ui small black compact button">Shift</.cmd_button_2>
-          <% :fixed -> %>
-            <.cmd_button_2 cmd="BSE" class="ui small black compact button">MKR.CTR</.cmd_button_2>
-          <% _ -> %>
-            <%= "" %>
-        <% end %>
+          <div class="column">
+            <%= case @band_scope_mode do %>
+              <% :auto_scroll -> %>
+                <.cmd_button_2 cmd="BSE" class="ui small black compact button">Shift</.cmd_button_2>
+              <% :fixed -> %>
+                <.cmd_button_2 cmd="BSE" class="ui small black compact button">MKR.CTR</.cmd_button_2>
+              <% _ -> %>
+                <%= "" %>
+            <% end %>
+          </div>
 
 
-        <.ref_level_control value={@ref_level} />
+          <div class="column">
+            <.ref_level_control value={@ref_level} />
+          </div>
 
-        <.band_scope_att_button band_scope_att={@band_scope_att} />
+          <div class="column">
+            <.band_scope_att_button band_scope_att={@band_scope_att} />
+          </div>
 
-        <.band_scope_avg_button band_scope_avg={@band_scope_avg} />
+          <div class="column">
+            <.band_scope_avg_button band_scope_avg={@band_scope_avg} />
+          </div>
 
-        <.waterfall_speed_control value={@waterfall_draw_interval} />
+          <div class="column">
+            <.waterfall_speed_control value={@waterfall_draw_interval} />
+          </div>
 
-        <.spectrum_scale_control value={@spectrum_scale} />
+          <div class="column">
+            <.spectrum_scale_control value={@spectrum_scale} />
+          </div>
 
-        <.data_speed_control value={@data_speed} />
+          <div class="column">
+            <.data_speed_control value={@data_speed} />
+          </div>
 
-        <.pop_out_bandscope_button popout={@popout} radio_connection={@radio_connection} />
-      </div> <!-- ui buttons -->
+          <div class="column">
+            <.pop_out_bandscope_button popout={@popout} radio_connection={@radio_connection} />
+          </div>
+
+          <div class="six wide column"></div>
+
     """
   end
 end
