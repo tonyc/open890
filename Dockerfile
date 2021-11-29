@@ -4,7 +4,7 @@ ENV MIX_ENV=prod \
   LANG=C.UTF-8
 
 RUN apk update
-RUN apk add --no-cache make gcc libc-dev nodejs yarn
+RUN apk add --no-cache make gcc libc-dev
 
 # hex & rebar
 RUN mix local.hex --force && \
@@ -23,9 +23,7 @@ COPY mix.lock .
 
 RUN mix deps.get
 RUN mix deps.compile
-RUN yarn --cwd assets install
-RUN yarn --cwd assets run deploy
-RUN mix phx.digest
+RUN mix assets.deploy
 RUN mix release
 
 # -- application stage --
