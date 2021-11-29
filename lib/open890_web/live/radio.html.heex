@@ -42,7 +42,7 @@
           </h1>
         </div>
         <div class="content">
-          <%= live_component @socket, BandButtonsComponent %>
+          <%= live_component BandButtonsComponent %>
         </div>
         <div class="actions">
           <div id="BandModalClose" class="ui icon button" phx-click="toggle_band_selector">
@@ -177,17 +177,17 @@
           <%= case @vfo_memory_state do %>
           <% :vfo -> %>
             <div class="eight column row">
-              <%= live_component @socket, Open890Web.Live.VFODisplayComponent,
-                                          active_frequency: @active_frequency,
-                                          active_mode: @active_mode,
-                                          active_receiver: @active_receiver,
-                                          inactive_receiver: @inactive_receiver,
-                                          inactive_frequency: @inactive_frequency,
-                                          inactive_mode: @inactive_mode,
-                                          transverter_state: @transverter_state,
-                                          vfo_memory_state: @vfo_memory_state,
-                                          notch_state: @notch_state,
-                                          band_register_state: @band_register_state %>
+              <%= live_component Open890Web.Live.VFODisplayComponent,
+                active_frequency: @active_frequency,
+                active_mode: @active_mode,
+                active_receiver: @active_receiver,
+                inactive_receiver: @inactive_receiver,
+                inactive_frequency: @inactive_frequency,
+                inactive_mode: @inactive_mode,
+                transverter_state: @transverter_state,
+                vfo_memory_state: @vfo_memory_state,
+                notch_state: @notch_state,
+                band_register_state: @band_register_state %>
             </div>
           <% :memory -> %>
             <div id="memoryDisplay" class="eight column row">
@@ -199,111 +199,6 @@
           <% end %>
         </div> <!-- frequencyDisplay -->
 
-        <!-- NR/NB/BC/Notch indicators, TBD -->
-        <div class="row indicators">
-          <div class="four wide left aligned column">
-            <%= live_component @socket, Open890Web.Live.NRIndicatorComponent, nr: @nr %>
-          </div>
-          <div class="four wide left aligned column">
-            <%= live_component @socket, Open890Web.Live.NBIndicatorComponent, noise_blank_state: @noise_blank_state %>
-          </div>
-          <div class="four wide left aligned column">
-            <%= live_component @socket, Open890Web.Live.BCIndicatorComponent, bc: @bc %>
-          </div>
-          <div class="four wide right aligned column">
-            <%= live_component @socket, Open890Web.Live.NotchIndicatorComponent, notch_state: @notch_state %>
-          </div>
-        </div>
-
-        <!-- VFO A/B buttons etc -->
-
-        <div class="row stackable grid">
-
-          <!-- middle -->
-          <div class="eight wide column">
-            <div class="ui small black buttons">
-
-              <%= if @vfo_memory_state == :vfo do %>
-                <%= vfo_switch_button(@active_receiver, class: "ui small black button") %>
-                <%= vfo_equalize_button(class: "ui small black button") %>
-              <% end %>
-              <%= if @vfo_memory_state do %>
-                <%= vfo_mem_switch_button(@vfo_memory_state, class: "ui small black button") %>
-              <% end %>
-            </div>
-          </div>
-
-          <div class="eight wide column">
-            <div class="four column ui grid">
-
-              <div class="row">
-                <div class="column"></div>
-                <div class="column">
-                  <Buttons.pre_button rf_pre={@rf_pre} />
-                </div>
-                <div class="column">
-                  <Buttons.att_button rf_att={@rf_att} />
-                </div>
-                <div class="column"></div>
-              </div>
-
-              <div class="row">
-                <div class="column">
-                  <Buttons.nr_button nr={@nr} />
-                </div>
-                <div class="column">
-                  <Buttons.nb1_button noise_blank_state={@noise_blank_state} />
-                </div>
-                <div class="column">
-                  <Buttons.nb2_button noise_blank_state={@noise_blank_state} />
-                </div>
-                <div class="column">
-                  <Buttons.notch_button notch_state={@notch_state} />
-                </div>
-              </div>
-            </div>
-
-
-
-
-
-
-
-            
-
-            <div class="row">
-              <div class="column">
-              </div>
-              <div class="column">
-                <%= if @active_mode in [:cw, :cw_r] do %>
-                  <button class="ui small disabled black button">
-                    BC <%= format_bc(@bc) %>
-                  </button>
-                <% else %>
-                  <%= cycle_button("BC #{format_bc(@bc)}", @bc, %{
-                    :off => "BC1",
-                    :bc_1 => "BC2",
-                    :bc_2 => "BC0",
-                  }, class: "small black button") %>
-                <% end %>
-              </div>
-            </div>
-
-
-
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="eight wide column computer only tablet only">
-            <!-- nothing here yet -->
-          </div>
-
-          <div class="eight wide column computer only tablet only">
-            <!-- nothing here yet -->
-          </div>
-
-        </div>
       </div>
 
     </div>
@@ -319,28 +214,150 @@
         theme={@theme} />
 
       <div class="ui mini black buttons">
-        <%= cmd_button "FIL A", "FL00", class: "ui button" %>
-        <%= cmd_button "FIL B", "FL01", class: "ui button" %>
-        <%= cmd_button "FIL C", "FL02", class: "ui button" %>
+        <.filter_buttons />
       </div>
 
     </div>
   </div> <!-- row -->
 
-  <%= if @__ui_macros != %{} do %>
-    <div class="row">
-      <div class="column">
-        <%= for %{"label" => name} <- @__ui_macros do %>
-          <div class="ui black button" phx-click="run_macro" phx-value-name={name}><%= name %></div>
-        <% end %>
+  <div class="ui sixteen column grid row">
+    <!-- left bandscope column -->
+    <div class="three wide column">
+      <div class="ui three column grid row">
+
+        <div class="column">
+          <%= if @vfo_memory_state == :vfo do %>
+            <.vfo_switch_button value={@active_receiver} fluid />
+          <% end %>
+        </div>
+
+        <div class="column">
+          <%= if @vfo_memory_state == :vfo do %>
+            <.vfo_equalize_button fluid />
+          <% end %>
+        </div>
+
+        <div class="column">
+          <.vfo_mem_button value={@vfo_memory_state} fluid />
+        </div>
       </div>
+      <div class="ui two column grid row">
+
+        <div class="column">
+          <.pre_button value={@rf_pre} fluid />
+        </div>
+
+        <div class="column">
+          <.att_button value={@rf_att} fluid />
+        </div>
+
+        <div class="column">
+          <.nr_button value={@nr} fluid />
+        </div>
+
+        <div class="column">
+          <.bc_button value={@bc} active_mode={@active_mode} fluid />
+        </div>
+
+        <div class="column">
+          <.nb1_button value={@noise_blank_state} fluid />
+        </div>
+
+        <div class="column">
+          <.nb2_button value={@noise_blank_state} fluid />
+        </div>
+
+        <div class="column">
+          <.notch_button value={@notch_state} fluid />
+        </div>
+
+        <div class="column">
+          <.notch_width_button value={@notch_state} fluid />
+        </div>
+
+      </div>
+
+  <%= if @__ui_macros != %{} do %>
+    <div class="ui one column grid row">
+      <%= for %{"label" => name} <- @__ui_macros do %>
+        <div class="column">
+          <div class="ui black fluid button" phx-click="run_macro" phx-value-name={name}><%= name %></div>
+        </div>
+      <% end %>
     </div>
   <% end %>
 
-  <div class="row">
-    <%= live_render @socket, Open890Web.Live.Bandscope, id: "bandscope", session: %{
-      "id" => @radio_connection.id
-    } %>
+
+    </div> <!-- left bandscope column -->
+
+    <div class="thirteen wide column">
+
+      <div class="row ui grid sixteen equal width">
+        <div class="column">
+          <.scope_mode_button fluid band_scope_mode={@band_scope_mode} />
+        </div>
+        <div class="column">
+          <.scope_range_button fluid band_scope_mode={@band_scope_mode} band_scope_span={@band_scope_span} />
+        </div>
+
+        <div class="column">
+          <%= case @band_scope_mode do %>
+            <% :auto_scroll -> %>
+              <.cmd_button_2 cmd="BSE" fluid class="ui small black button">Shift</.cmd_button_2>
+            <% :fixed -> %>
+              <.cmd_button_2 cmd="BSE" fluid class="ui small black button">MKR.CTR</.cmd_button_2>
+            <% _ -> %>
+              <%= "" %>
+          <% end %>
+        </div>
+
+        <div class="column">
+          <.ref_level_control value={@ref_level} fluid />
+        </div>
+
+        <div class="column">
+          <.band_scope_att_button band_scope_att={@band_scope_att} fluid />
+        </div>
+
+        <div class="column">
+          <.band_scope_avg_button band_scope_avg={@band_scope_avg} fluid />
+        </div>
+
+        <div class="column">
+          <.waterfall_speed_control value={@waterfall_draw_interval} fluid />
+        </div>
+
+        <div class="column">
+          <.spectrum_scale_control value={@spectrum_scale} fluid />
+        </div>
+
+        <div class="column">
+          <.data_speed_control value={@data_speed} fluid />
+        </div>
+
+        <div class="column">
+          <.pop_out_bandscope_button radio_connection={@radio_connection} fluid />
+        </div>
+
+      </div>
+
+      <BandScope.bandscope
+        active_frequency={@active_frequency}
+        active_mode={@active_mode}
+        band_scope_mode={@band_scope_mode}
+        band_scope_data={@band_scope_data}
+        band_scope_edges={@band_scope_edges}
+        band_scope_span={@band_scope_span}
+        filter_state={@filter_state}
+        theme={@theme}
+        draw_interval={@waterfall_draw_interval}
+        spectrum_scale={@spectrum_scale} />
+    </div>
+
+
   </div>
+
+
+  <%#= live_render @socket, Open890Web.Live.Bandscope, id: "bandscope", session: %{ "id" => @radio_connection.id } %>
 
 </div>

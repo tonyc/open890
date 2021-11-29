@@ -20,12 +20,12 @@ defmodule Open890Web.Components.BandScope do
             </lineargradient>
 
             <lineargradient id="plasma" x1="0" y1="140" x2="0" y2="0" gradientunits="userSpaceOnUse">
-           		<stop offset="0%" stop-color="black" />
-							<stop offset="2%" stop-color="#8c00a0" />
-							<stop offset="10%" stop-color="#e30084" />
-							<stop offset="25%" stop-color="#ff2830" />
-							<stop offset="40%" stop-color="#ffb56b" />
-							<stop offset="50%" stop-color="white" />
+              <stop offset="0%" stop-color="black" />
+              <stop offset="2%" stop-color="#8c00a0" />
+              <stop offset="10%" stop-color="#e30084" />
+              <stop offset="25%" stop-color="#ff2830" />
+              <stop offset="40%" stop-color="#ffb56b" />
+              <stop offset="50%" stop-color="white" />
             </lineargradient>
           </defs>
 

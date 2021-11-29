@@ -1,7 +1,5 @@
-<div id="radio" class={radio_classes(@debug)} phx-window-keydown="window_keydown" phx-window-keyup="window_keyup">
+<div id="Xradio" xclass={radio_classes(@debug)} phx-window-keydown="window_keydown" phx-window-keyup="window_keyup">
 
-  <div id="bandScopeDetails" class="row">
-    <div class="column left aligned computer only tablet only">
       <BandscopeButtons.buttons
         radio_connection={@radio_connection}
         band_scope_mode={@band_scope_mode}
@@ -13,14 +11,9 @@
         data_speed={@data_speed}
         ref_level={@ref_level}
         popout={@popout}
-        socket={@socket}
-      />
-    </div>
-  </div>
+        socket={@socket} />
 
-  <div id="bandScopeContainer" class="row">
-    <div class="wide column">
-      <BandScope.bandscope 
+      <BandScope.bandscope
         active_frequency={@active_frequency}
         active_mode={@active_mode}
         band_scope_mode={@band_scope_mode}
@@ -30,9 +23,6 @@
         filter_state={@filter_state}
         theme={@theme}
         draw_interval={@waterfall_draw_interval}
-        spectrum_scale={@spectrum_scale}
-      />
-    </div>
-  </div>
+        spectrum_scale={@spectrum_scale} />
 
 </div>

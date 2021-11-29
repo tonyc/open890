@@ -87,6 +87,11 @@ $border-radius-small: 4px;
 
 $vfo-font: "Bebas Neue";
 
+.btn {
+  // width: 100px;
+}
+
+
 // dark mode?
 
 body.dark {
@@ -578,12 +583,8 @@ svg#bandScope {
 
 #bandScopeContainer {
   // border: 1px dashed red;
-  height: 100% !important;
+  //height: 100% !important;
 
-}
-
-#bandScopeDetails {
-  padding-bottom: 0;
 }
 
 #bandScopeWrapper {

@@ -10,112 +10,83 @@ defmodule Open890Web.RadioViewHelpers do
     if theme == name, do: "selected"
   end
 
-  def cmd_button(name, cmd, opts \\ []) when is_binary(name) and is_binary(cmd) do
-    class_opts = opts |> Keyword.get(:class, "")
+  # def fluid_cmd_button(name, cmd, opts \\ []) do
+  #   cmd_button(name, cmd, opts |> Keyword.put(:class, "fluid"))
+  # end
 
-    # icon_opts = opts |> Keyword.get(:icon)
+  # def cmd_button(name, cmd, opts \\ []) when is_binary(name) and is_binary(cmd) do
+  #   class_opts = opts |> Keyword.get(:class, "")
 
-    final_opts =
-      opts
-      |> Keyword.delete(:class)
-      |> Keyword.merge(class: "ui button #{class_opts}")
-      |> Keyword.merge(phx_click: "cmd", phx_value_cmd: cmd)
+  #   # icon_opts = opts |> Keyword.get(:icon)
 
-    content_tag(:button, name, final_opts)
-  end
+  #   final_opts =
+  #     opts
+  #     |> Keyword.delete(:class)
+  #     |> Keyword.merge(class: "ui small black button btn #{class_opts}")
+  #     |> Keyword.merge(phx_click: "cmd", phx_value_cmd: cmd)
 
-  def cmd_label_button(name, cmd, opts \\ []) when is_binary(name) and is_binary(cmd) do
-    class_opts = opts |> Keyword.get(:class, "")
+  #   content_tag(:button, name, final_opts)
+  # end
 
-    final_opts =
-      opts
-      |> Keyword.delete(:class)
-      |> Keyword.merge(class: "ui button #{class_opts}")
-      |> Keyword.merge(phx_click: "cmd", phx_value_cmd: cmd)
+  # def cmd_label_button(name, cmd, opts \\ []) when is_binary(name) and is_binary(cmd) do
+  #   class_opts = opts |> Keyword.get(:class, "")
 
-    content_tag(:button, name, final_opts)
-  end
+  #   final_opts =
+  #     opts
+  #     |> Keyword.delete(:class)
+  #     |> Keyword.merge(class: "ui button #{class_opts}")
+  #     |> Keyword.merge(phx_click: "cmd", phx_value_cmd: cmd)
+
+  #   content_tag(:button, name, final_opts)
+  # end
+
+  # def fluid_cycle_button(title, var, values, opts \\ []) do
+  #   values
+  #   |> Map.get(var)
+  #   |> case do
+  #     nil -> ""
+  #     cmd -> fluid_cmd_button(title, cmd, opts)
+  #   end
+  # end
 
   # cycle_button("Scope Mode", @scope_mode, %{auto_scroll: "BS30", fixed: "BS32", center: "BS31"}
-  def cycle_button(title, var, values, opts \\ []) when is_map(values) do
-    values
-    |> Map.get(var)
-    |> case do
-      nil -> ""
-      cmd -> cmd_button(title, cmd, opts)
-    end
-  end
+  # def cycle_button(title, var, values, opts \\ []) when is_map(values) do
+  #   values
+  #   |> Map.get(var)
+  #   |> case do
+  #     nil -> ""
+  #     cmd -> cmd_button(title, cmd, opts)
+  #   end
+  # end
 
-  def cycle_label_button(title, var, values, opts \\ []) when is_map(values) do
-    values
-    |> Map.get(var)
-    |> case do
-      nil ->
-        ""
+  # def cycle_label_button(title, var, values, opts \\ []) when is_map(values) do
+  #   values
+  #   |> Map.get(var)
+  #   |> case do
+  #     nil ->
+  #       ""
 
-      %{label: label, cmd: cmd} ->
-        cmd_label_button(title, label, cmd, opts)
-    end
-  end
+  #     %{label: label, cmd: cmd} ->
+  #       cmd_label_button(title, label, cmd, opts)
+  #   end
+  # end
 
-  def cmd_label_button(title, label, cmd, opts) do
-    class_opts = opts |> Keyword.get(:class, "")
-    button_classes = "ui button #{class_opts}"
+  # def cmd_label_button(title, label, cmd, opts) do
+  #   class_opts = opts |> Keyword.get(:class, "")
+  #   button_classes = "ui button #{class_opts}"
 
-    contents =
-      case title do
-        blank when blank in ["", nil] -> label
-        str -> "#{str}: #{label}"
-      end
+  #   contents =
+  #     case title do
+  #       blank when blank in ["", nil] -> label
+  #       str -> "#{str}: #{label}"
+  #     end
 
-    content_tag(:button, contents, class: button_classes, phx_click: "cmd", phx_value_cmd: cmd)
-  end
+  #   content_tag(:button, contents, class: button_classes, phx_click: "cmd", phx_value_cmd: cmd)
+  # end
 
-  def vfo_switch_button(vfo, opts \\ []) do
-    "A / B" |> cmd_button(vfo_switch_command(vfo), opts)
-  end
-
-  def q_min_button(opts \\ []) do
-    "Q-M.IN" |> cmd_button("QI", opts)
-  end
-
-  defp vfo_switch_command(:a), do: "FR1"
-  defp vfo_switch_command(:b), do: "FR0"
-
-  def vfo_equalize_button(opts \\ []) do
-    "A = B" |> cmd_button("VV", opts)
-  end
-
-  def vfo_mem_switch_button(vfo_mem_state, opts \\ []) do
-    "M / V" |> cmd_button(vfo_mem_switch_command(vfo_mem_state), opts)
-  end
-
-  defp vfo_mem_switch_command(:vfo), do: "MV1"
-  defp vfo_mem_switch_command(:memory), do: "MV0"
-
-  # converts the kenwood ref level (BSC) command number to a dB value from -20 to +10
-  def format_ref_level(ref_level) do
-    ref_level / 2.0 - 20
-  end
-
-  def format_band_scope_mode(mode) do
-    mode
-    |> case do
-      :auto_scroll -> "Auto Scroll"
-      :fixed -> "Fixed"
-      :center -> "Center"
-    end
-  end
-
-  def format_band_scope_att(level) do
-    level
-    |> case do
-      0 -> "OFF"
-      1 -> "10 dB"
-      2 -> "20 dB"
-      3 -> "30 dB"
-    end
-  end
+  # def q_min_button(opts \\ []) do
+  #   "Q-M.IN" |> cmd_button("QI", opts)
+  # end
 
   def linear_interpolate(value, y_min, y_max, x_min, x_max) do
     percent = (value - y_min) / (y_max - y_min)
@@ -176,14 +147,6 @@ defmodule Open890Web.RadioViewHelpers do
     |> to_string()
     |> String.replace("_", "-")
     |> String.upcase()
-  end
-
-  def esc_button(opts \\ []) do
-    cmd_button("ESC", "DS3", opts)
-  end
-
-  def cwt_button(opts \\ []) do
-    "CW Tune" |> cmd_button("CA1", opts)
   end
 
   def scope_data_to_svg(band_data, opts \\ []) when is_list(band_data) do
@@ -365,15 +328,5 @@ defmodule Open890Web.RadioViewHelpers do
       other -> other
     end
   end
-
-  def format_bc(bc) do
-    case bc do
-      :off -> "OFF"
-      :bc_1 -> "1"
-      :bc_2 -> "2"
-      _ -> ""
-    end
-  end
-
 
 end
