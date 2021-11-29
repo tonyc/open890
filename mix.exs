@@ -51,6 +51,8 @@ defmodule Open890.MixProject do
     [
       {:ecto, "~> 3.5"},
       {:elixir_math, "~> 0.1.2"},
+      {:esbuild, "~> 0.2", runtime: Mix.env() == :dev},
+      {:dart_sass, "~> 0.2", runtime: Mix.env() == :dev},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:mix_test_watch, "~> 1.0", only: [:dev], runtime: false},
@@ -75,6 +77,12 @@ defmodule Open890.MixProject do
   #
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
-    []
+    [
+      "assets.deploy": [
+        "esbuild default --minify",
+        "sass default --no-source-map --style=compressed",
+        "phx.digest"
+      ]
+    ]
   end
 end

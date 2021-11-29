@@ -1,6 +1,8 @@
 # open890 Changelog
 
 ## Unreleased
+* [Dev] Removed node, npm, webpack and node-sass as development dependencies in favor of esbuild and dart-sass.
+* New UI layout
 * Added SQL control
 * Added NR, NB, BC, NCH control buttons.
 * Added the ability to pop out separate bandscope, audioscope, and meter displays.

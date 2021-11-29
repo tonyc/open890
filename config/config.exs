@@ -30,6 +30,20 @@ config :phoenix, :trim_on_html_eex_engine, false
 
 config :open890, Open890.RadioConnectionRepo, database: :"db/radio_connections.dets"
 
+config :esbuild, version: "0.14.0",
+  default: [
+    args: ~w(js/app.js --bundle --target=es2016 --outdir=../priv/static/assets/),
+    cd: Path.expand("../assets", __DIR__),
+    env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
+  ]
+
+config :dart_sass, version: "1.43.4",
+  default: [
+    args: ~w(css/app.scss ../priv/static/assets/app.css),
+    cd: Path.expand("../assets", __DIR__)
+  ]
+
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"

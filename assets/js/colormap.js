@@ -10,7 +10,6 @@ let ColorMap = {
       case "green":
       case "phosphor-green":
         return this.green(val)
-      case "red":
       case "phosphor-red":
         return this.red(val)
       case "grey":
