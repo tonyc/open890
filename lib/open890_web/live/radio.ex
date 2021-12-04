@@ -141,6 +141,11 @@ defmodule Open890Web.Live.Radio do
     {:noreply, socket}
   end
 
+  def handle_event("set_tab", %{"tab" => tab_name}, socket) do
+    Logger.info("set_tab: #{inspect(tab_name)}")
+    {:noreply, socket |> assign(active_tab: tab_name)}
+  end
+
   def handle_event("step_tune_up", %{"stepSize" => step_size} = _params, socket) do
     conn = socket.assigns.radio_connection
 
@@ -289,6 +294,14 @@ defmodule Open890Web.Live.Radio do
       classes <> " debug"
     else
       classes
+    end
+  end
+
+  def tab_classes(name, var) do
+    if name == var do
+      "item active"
+    else
+      "item"
     end
   end
 end

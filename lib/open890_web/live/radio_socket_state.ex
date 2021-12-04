@@ -4,6 +4,7 @@ defmodule Open890Web.Live.RadioSocketState do
   alias Open890.RadioState
 
   @init_socket [
+    {:active_tab, "txrx"},
     {:radio_state, %RadioState{}},
     {:display_band_selector, false},
     {:radio_connection, nil},

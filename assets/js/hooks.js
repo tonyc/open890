@@ -2,6 +2,13 @@ import Interpolate from "./interpolate"
 import ColorMap from "./colormap"
 
 let Hooks = {
+  Tabs: {
+    mounted() {
+      console.log("tabs mounted")
+      $('#ButtonTabs .item').tab();
+    }
+
+  },
   PopoutBandscope: {
     mounted() {
       console.log("popoutbandscope mounted")

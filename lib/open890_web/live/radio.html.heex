@@ -226,120 +226,129 @@
   </div>
 
   <div class="row">
-    <!-- left bandscope column -->
     <div class="three wide column">
-      <div class="ui three column grid row">
+      <!-- left side panel -->
 
-        <div class="ui tabular inverted menu" phx-hook="Tabs" id="ButtonTabs">
-          <a class="item active " data-tab="tx-rx">TX/RX</a>
-          <a class="item" data-tab="scope">Scope</a>
+      <div class="row">
+        <div class="column">
+          <div class="ui inverted small two item menu">
+            <a class={tab_classes("txrx", @active_tab)} phx-click="set_tab" phx-value-tab="txrx">TX/RX</a>
+            <a class={tab_classes("scope", @active_tab)} phx-click="set_tab" phx-value-tab="scope">Scope</a>
+          </div>
         </div>
+      </div>
 
-        <div class="ui tab active" data-tab="tx-rx">
-          <div class="ui three column grid row">
-            <div class="column">
-              <%= if @radio_state.vfo_memory_state == :vfo do %>
-                <.vfo_switch_button value={@radio_state.active_receiver} fluid />
-              <% end %>
-            </div>
-            <div class="column">
-              <%= if @radio_state.vfo_memory_state == :vfo do %>
-                <.vfo_equalize_button fluid />
-              <% end %>
-            </div>
-            <div class="column">
-              <.vfo_mem_button value={@radio_state.vfo_memory_state} fluid />
-            </div>
-          </div>
 
-          <div class="ui two column grid row">
-            <div class="column">
-              <.pre_button value={@radio_state.rf_pre} fluid />
-            </div>
+      <div class="row">
+        <div class="column">
 
-            <div class="column">
-              <.att_button value={@radio_state.rf_att} fluid />
-            </div>
+          <%= if @active_tab == "txrx" do %>
+            <div class="ui tabs">
+              <div class="ui three column grid row">
+                <div class="column">
+                  <%= if @radio_state.vfo_memory_state == :vfo do %>
+                    <.vfo_switch_button value={@radio_state.active_receiver} fluid />
+                  <% end %>
+                </div>
+                <div class="column">
+                  <%= if @radio_state.vfo_memory_state == :vfo do %>
+                    <.vfo_equalize_button fluid />
+                  <% end %>
+                </div>
+                <div class="column">
+                  <.vfo_mem_button value={@radio_state.vfo_memory_state} fluid />
+                </div>
+              </div>
 
-            <div class="column">
-              <.nr_button value={@radio_state.nr} fluid />
-            </div>
+              <div class="ui two column grid row">
+                <div class="column">
+                  <.pre_button value={@radio_state.rf_pre} fluid />
+                </div>
 
-            <div class="column">
-              <.bc_button value={@radio_state.bc} active_mode={@radio_state.active_mode} fluid />
-            </div>
+                <div class="column">
+                  <.att_button value={@radio_state.rf_att} fluid />
+                </div>
 
-            <div class="column">
-              <.nb1_button value={@radio_state.noise_blank_state} fluid />
-            </div>
+                <div class="column">
+                  <.nr_button value={@radio_state.nr} fluid />
+                </div>
 
-            <div class="column">
-              <.nb2_button value={@radio_state.noise_blank_state} fluid />
-            </div>
+                <div class="column">
+                  <.bc_button value={@radio_state.bc} active_mode={@radio_state.active_mode} fluid />
+                </div>
 
-            <div class="column">
-              <.notch_button value={@radio_state.notch_state} fluid />
-            </div>
+                <div class="column">
+                  <.nb1_button value={@radio_state.noise_blank_state} fluid />
+                </div>
 
-            <div class="column">
-              <.notch_width_button value={@radio_state.notch_state} fluid />
-            </div>
-          </div>
+                <div class="column">
+                  <.nb2_button value={@radio_state.noise_blank_state} fluid />
+                </div>
 
-          <div class="ui bottom attached inverted tab segment" data-tab="scope">
-            <div class="column">
-              <.scope_mode_button fluid band_scope_mode={@radio_state.band_scope_mode} />
-            </div>
-            <div class="column">
-              <.scope_range_button fluid band_scope_mode={@radio_state.band_scope_mode} band_scope_span={@radio_state.band_scope_span} />
-            </div>
+                <div class="column">
+                  <.notch_button value={@radio_state.notch_state} fluid />
+                </div>
 
-            <div class="column">
-              <%= case @radio_state.band_scope_mode do %>
-                <% :auto_scroll -> %>
-                  <.cmd_button_2 cmd="BSE" fluid class="ui small black button">Shift</.cmd_button_2>
-                <% :fixed -> %>
-                  <.cmd_button_2 cmd="BSE" fluid class="ui small black button">MKR.CTR</.cmd_button_2>
-                <% _ -> %>
-                  <%= "" %>
-              <% end %>
+                <div class="column">
+                  <.notch_width_button value={@radio_state.notch_state} fluid />
+                </div>
+              </div>
             </div>
+          <% end %>
 
-            <div class="column">
-              <.ref_level_control value={@radio_state.ref_level} fluid />
+          <%= if @active_tab == "scope" do %>
+            <div class="ui tabs">
+              <div class="column">
+                <.scope_mode_button fluid band_scope_mode={@radio_state.band_scope_mode} />
+              </div>
+              <div class="column">
+                <.scope_range_button fluid band_scope_mode={@radio_state.band_scope_mode} band_scope_span={@radio_state.band_scope_span} />
+              </div>
+
+                <%= case @radio_state.band_scope_mode do %>
+                  <% :auto_scroll -> %>
+                    <.cmd_button_2 cmd="BSE" fluid class="ui small black button">Shift</.cmd_button_2>
+                  <% :fixed -> %>
+                    <.cmd_button_2 cmd="BSE" fluid class="ui small black button">MKR.CTR</.cmd_button_2>
+                  <% _ -> %>
+                    <%= "" %>
+                <% end %>
+
+              <div class="column">
+                <.ref_level_control value={@radio_state.ref_level} fluid />
+              </div>
+
+              <div class="column">
+                <.band_scope_att_button band_scope_att={@radio_state.band_scope_att} fluid />
+              </div>
+
+              <div class="column">
+                <.band_scope_avg_button band_scope_avg={@radio_state.band_scope_avg} fluid />
+              </div>
+
+              <div class="column">
+                <.waterfall_speed_control value={@waterfall_draw_interval} fluid />
+              </div>
+
+              <div class="column">
+                <.spectrum_scale_control value={@spectrum_scale} fluid />
+              </div>
+
+              <div class="column">
+                <.data_speed_control value={@radio_state.data_speed} fluid />
+              </div>
+
+              <div class="column">
+                <.pop_out_bandscope_button radio_connection={@radio_connection} fluid />
+              </div>
+
             </div>
-
-            <div class="column">
-              <.band_scope_att_button band_scope_att={@radio_state.band_scope_att} fluid />
-            </div>
-
-            <div class="column">
-              <.band_scope_avg_button band_scope_avg={@radio_state.band_scope_avg} fluid />
-            </div>
-
-            <div class="column">
-              <.waterfall_speed_control value={@waterfall_draw_interval} fluid />
-            </div>
-
-            <div class="column">
-              <.spectrum_scale_control value={@spectrum_scale} fluid />
-            </div>
-
-            <div class="column">
-              <.data_speed_control value={@radio_state.data_speed} fluid />
-            </div>
-
-            <div class="column">
-              <.pop_out_bandscope_button radio_connection={@radio_connection} fluid />
-            </div>
-
-          </div>
-
-        </div>
+          <% end %>
 
       </div>
 
   <%= if @__ui_macros != %{} do %>
+    <h4>Macros</h4>
     <div class="ui one column grid row">
       <%= for %{"label" => name} <- @__ui_macros do %>
         <div class="column">
@@ -350,11 +359,11 @@
   <% end %>
 
 
+      </div>
+
     </div> <!-- left bandscope column -->
 
     <div class="thirteen wide column">
-
-
       <BandScope.bandscope
         active_frequency={@radio_state.active_frequency}
         active_mode={@radio_state.active_mode}
@@ -367,11 +376,6 @@
         draw_interval={@waterfall_draw_interval}
         spectrum_scale={@spectrum_scale} />
     </div>
-
-
   </div>
-
-
-  <%#= live_render @socket, Open890Web.Live.Bandscope, id: "bandscope", session: %{ "id" => @radio_connection.id } %>
 
 </div>

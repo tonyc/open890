@@ -217,12 +217,17 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
             %{"x" => x, "width" => width} = _params,
             %{
               assigns: %{
+                radio_state: radio_state,
                 radio_connection: connection,
-                active_receiver: active_receiver,
-                band_scope_edges: {scope_low, scope_high}
               }
             } = socket
           ) do
+
+          %{
+            active_receiver: active_receiver,
+            band_scope_edges: {scope_low, scope_high}
+          } = radio_state
+
         new_frequency =
           x
           |> screen_to_frequency({scope_low, scope_high}, width)
