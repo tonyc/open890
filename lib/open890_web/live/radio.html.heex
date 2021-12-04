@@ -1,20 +1,3 @@
-<%= if false && @debug do %>
-  <div id="debugger" class="ui wide sidebar vertical menu left visible">
-    <h2 class="header item">Debug Vars</h2>
-
-    <table class="ui small very basic collapsing very compact table item">
-      <tbody>
-        <%= for k <- assigns |> Map.drop([:__changed__, :socket, :live_module, :live_action, :band_scope_data, :audio_scope_data]) |> Map.keys() |> Enum.sort() do %>
-          <tr>
-            <td class="right aligned"><%= k %></td>
-            <td><span class="mono"><%= inspect(assigns[k]) %></span></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
-<% end %>
-
 <div id="radio" class={radio_classes(@debug)} phx-window-keydown="window_keydown" phx-window-keyup="window_keyup">
 
   <%#-- disabled --%>
