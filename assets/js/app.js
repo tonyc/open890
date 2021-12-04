@@ -18,8 +18,8 @@ import Hooks from "./hooks"
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 
-import {Interpolate} from "./interpolate"
-import {ColorMap} from "./colormap"
+import Interpolate from "./interpolate"
+import ColorMap from "./colormap"
 
 window.Interpolate = Interpolate;
 window.ColorMap = ColorMap;
