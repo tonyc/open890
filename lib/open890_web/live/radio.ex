@@ -8,6 +8,8 @@ defmodule Open890Web.Live.Radio do
   alias Open890.{ConnectionCommands, Extract, RadioConnection}
   alias Open890Web.Live.{BandButtonsComponent, Dispatch, RadioSocketState}
 
+  alias Open890.RadioState
+
   alias Open890Web.Components.{AudioScope, Buttons, Meter, Slider}
   import Open890Web.Components.Buttons
   alias Open890Web.Components.BandscopeButtons
@@ -76,10 +78,15 @@ defmodule Open890Web.Live.Radio do
 
   @impl true
   def handle_info(%Broadcast{event: "scope_data", payload: %{payload: audio_scope_data}}, socket) do
+
+    radio_state = socket.assigns.radio_state
+
+    new_state = %{radio_state | audio_scope_data: audio_scope_data}
+
     {:noreply,
      socket
      |> push_event("scope_data", %{scope_data: audio_scope_data})
-     |> assign(:audio_scope_data, audio_scope_data)}
+     |> assign(:radio_state, new_state)}
   end
 
   @impl true
@@ -87,10 +94,15 @@ defmodule Open890Web.Live.Radio do
         %Broadcast{event: "band_scope_data", payload: %{payload: band_scope_data}},
         socket
       ) do
+
+    radio_state = socket.assigns.radio_state
+
+    new_state = %{radio_state | band_scope_data: band_scope_data}
+
     {:noreply,
      socket
      |> push_event("band_scope_data", %{scope_data: band_scope_data})
-     |> assign(:band_scope_data, band_scope_data)}
+     |> assign(:radio_state, new_state)}
   end
 
   @impl true
