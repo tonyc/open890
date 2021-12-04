@@ -220,7 +220,58 @@
     </div>
   </div> <!-- row -->
 
-  <div class="ui sixteen column grid row">
+  <div class="equal width row">
+    <!-- scope controls here -->
+
+    <div class="column">
+      <.scope_mode_button fluid band_scope_mode={@band_scope_mode} />
+    </div>
+    <div class="column">
+      <.scope_range_button fluid band_scope_mode={@band_scope_mode} band_scope_span={@band_scope_span} />
+    </div>
+
+    <div class="column">
+      <%= case @band_scope_mode do %>
+        <% :auto_scroll -> %>
+          <.cmd_button_2 cmd="BSE" fluid class="ui small black button">Shift</.cmd_button_2>
+          <% :fixed -> %>
+            <.cmd_button_2 cmd="BSE" fluid class="ui small black button">MKR.CTR</.cmd_button_2>
+            <% _ -> %>
+              <%= "" %>
+            <% end %>
+    </div>
+
+    <div class="column">
+      <.ref_level_control value={@ref_level} fluid />
+    </div>
+
+    <div class="column">
+      <.band_scope_att_button band_scope_att={@band_scope_att} fluid />
+    </div>
+
+    <div class="column">
+      <.band_scope_avg_button band_scope_avg={@band_scope_avg} fluid />
+    </div>
+
+    <div class="column">
+      <.waterfall_speed_control value={@waterfall_draw_interval} fluid />
+    </div>
+
+    <div class="column">
+      <.spectrum_scale_control value={@spectrum_scale} fluid />
+    </div>
+
+    <div class="column">
+      <.data_speed_control value={@data_speed} fluid />
+    </div>
+
+    <div class="column">
+      <.pop_out_bandscope_button radio_connection={@radio_connection} fluid />
+    </div>
+
+  </div>
+
+  <div class="row">
     <!-- left bandscope column -->
     <div class="three wide column">
       <div class="ui three column grid row">
@@ -241,8 +292,8 @@
           <.vfo_mem_button value={@vfo_memory_state} fluid />
         </div>
       </div>
-      <div class="ui two column grid row">
 
+      <div class="ui two column grid row">
         <div class="column">
           <.pre_button value={@rf_pre} fluid />
         </div>
@@ -292,54 +343,6 @@
 
     <div class="thirteen wide column">
 
-      <div class="row ui grid sixteen equal width">
-        <div class="column">
-          <.scope_mode_button fluid band_scope_mode={@band_scope_mode} />
-        </div>
-        <div class="column">
-          <.scope_range_button fluid band_scope_mode={@band_scope_mode} band_scope_span={@band_scope_span} />
-        </div>
-
-        <div class="column">
-          <%= case @band_scope_mode do %>
-            <% :auto_scroll -> %>
-              <.cmd_button_2 cmd="BSE" fluid class="ui small black button">Shift</.cmd_button_2>
-            <% :fixed -> %>
-              <.cmd_button_2 cmd="BSE" fluid class="ui small black button">MKR.CTR</.cmd_button_2>
-            <% _ -> %>
-              <%= "" %>
-          <% end %>
-        </div>
-
-        <div class="column">
-          <.ref_level_control value={@ref_level} fluid />
-        </div>
-
-        <div class="column">
-          <.band_scope_att_button band_scope_att={@band_scope_att} fluid />
-        </div>
-
-        <div class="column">
-          <.band_scope_avg_button band_scope_avg={@band_scope_avg} fluid />
-        </div>
-
-        <div class="column">
-          <.waterfall_speed_control value={@waterfall_draw_interval} fluid />
-        </div>
-
-        <div class="column">
-          <.spectrum_scale_control value={@spectrum_scale} fluid />
-        </div>
-
-        <div class="column">
-          <.data_speed_control value={@data_speed} fluid />
-        </div>
-
-        <div class="column">
-          <.pop_out_bandscope_button radio_connection={@radio_connection} fluid />
-        </div>
-
-      </div>
 
       <BandScope.bandscope
         active_frequency={@active_frequency}
