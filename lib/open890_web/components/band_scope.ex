@@ -39,13 +39,13 @@ defmodule Open890Web.Components.BandScope do
           <%= if @split_enabled do %>
             <%= if freq_low(@inactive_frequency, @band_scope_edges) do %>
               <g transform="translate(10 46),rotate(90)">
-                <polygon class="txOffscreen" points="0 10,-8 0,8 0"/>
+                <.tx_offscreen_indicator />
               </g>
             <% end %>
 
             <%= if freq_high(@inactive_frequency, @band_scope_edges) do %>
               <g transform="translate(630 46),rotate(-90)">
-                <polygon class="txOffscreen" points="0 10,-8 0,8 0"/>
+                <.tx_offscreen_indicator />
               </g>
             <% end %>
           <% end %>
@@ -260,6 +260,12 @@ defmodule Open890Web.Components.BandScope do
 
   def add_mode(mode, str) do
     str <> " " <> mode
+  end
+
+  def tx_offscreen_indicator(assigns) do
+    ~H"""
+      <polygon class="txOffscreen" points="0 10,-8 0,8 0"/>
+    """
   end
 
   def round_up_to_step(value, step) when is_integer(value) and is_integer(step) do
