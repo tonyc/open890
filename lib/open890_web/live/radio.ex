@@ -329,6 +329,14 @@ defmodule Open890Web.Live.Radio do
     end
   end
 
+  def panel_classes(flag) do
+    if flag do
+      "bandscopePanel left"
+    else
+      "bandscopePanel left hidden"
+    end
+  end
+
   def tab_classes(name, var) do
     if name == var do
       "item active"
