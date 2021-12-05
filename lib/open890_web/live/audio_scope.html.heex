@@ -1,11 +1,11 @@
 <div>
   <AudioScope.audio_scope
-    active_if_filter={@active_if_filter}
-    active_mode={@active_mode}
+    active_if_filter={@radio_state.active_if_filter}
+    active_mode={@radio_state.active_mode}
     audio_scope_data={@audio_scope_data}
-    filter_state={@filter_state}
-    roofing_filter_data={@roofing_filter_data}
-    notch_state={@notch_state}
+    filter_state={@radio_state.filter_state}
+    roofing_filter_data={@radio_state.roofing_filter_data}
+    notch_state={@radio_state.notch_state}
     theme={@theme} />
 </div>
 <div class="ui mini black buttons">

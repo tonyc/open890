@@ -1,8 +1,9 @@
 # open890 Changelog
 
 ## Unreleased
+* Added SPLIT button, TX frequency display on spectrum, offscreen indicator
+* Rearranged UI considerably. Added collapsible side panel for buttons, arranged buttons into tabs
 * [Dev] Removed node, npm, webpack and node-sass as development dependencies in favor of esbuild and dart-sass.
-* New UI layout
 * Added SQL control
 * Added NR, NB, BC, NCH control buttons.
 * Added the ability to pop out separate bandscope, audioscope, and meter displays.

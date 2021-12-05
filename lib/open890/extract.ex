@@ -236,6 +236,10 @@ defmodule Open890.Extract do
     "F" => :am_d
   }
 
+  def split_enabled(str) when is_binary(str) do
+    str |> String.trim_leading("TB") == "1"
+  end
+
   def agc(str) when is_binary(str) do
     str
     |> String.trim_leading("GC")

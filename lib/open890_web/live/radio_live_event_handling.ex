@@ -64,7 +64,7 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
       end
 
       def handle_event("adjust_audio_gain", %{"is_up" => is_up} = params, socket) do
-        audio_gain = socket.assigns.audio_gain
+        audio_gain = socket.assigns.radio_state.audio_gain
 
         step =
           case is_up do
@@ -86,7 +86,7 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
       end
 
       def handle_event("adjust_rf_gain", %{"is_up" => is_up} = params, socket) do
-        rf_gain = socket.assigns.rf_gain
+        rf_gain = socket.assigns.radio_state.rf_gain
 
         step =
           case is_up do
@@ -108,7 +108,7 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
       end
 
       def handle_event("adjust_sql", %{"is_up" => is_up} = params, socket) do
-        squelch = socket.assigns.squelch
+        squelch = socket.assigns.radio_state.squelch
 
         step =
           case is_up do
@@ -217,12 +217,17 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
             %{"x" => x, "width" => width} = _params,
             %{
               assigns: %{
+                radio_state: radio_state,
                 radio_connection: connection,
-                active_receiver: active_receiver,
-                band_scope_edges: {scope_low, scope_high}
               }
             } = socket
           ) do
+
+          %{
+            active_receiver: active_receiver,
+            band_scope_edges: {scope_low, scope_high}
+          } = radio_state
+
         new_frequency =
           x
           |> screen_to_frequency({scope_low, scope_high}, width)

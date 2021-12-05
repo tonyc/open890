@@ -2,8 +2,19 @@ defmodule Open890Web.Components.Buttons do
   use Phoenix.Component
   require Logger
 
-  alias Open890.NotchState
   import Open890Web.RadioViewHelpers
+
+  def split_button(assigns) do
+    values = %{false => "TB1", true => "TB0"}
+
+    ~H"""
+      <%= if ! is_nil(@value) do %>
+        <.cycle_button_2 value={@value} values={values} fluid={@fluid}>
+          SPLIT <%= on_off(@value) %>
+        </.cycle_button_2>
+      <% end %>
+    """
+  end
 
   def notch_button(assigns) do
     ~H"""
@@ -30,8 +41,6 @@ defmodule Open890Web.Components.Buttons do
         NCH <%= format_notch_width(@value.width) %>
       </button>
     <% end %>
-
-
     """
   end
 
@@ -125,7 +134,7 @@ defmodule Open890Web.Components.Buttons do
 
   def vfo_equalize_button(assigns) do
     ~H"""
-      <.cmd_button_2 cmd="VV" fluid={assigns[:fluid]}>A = B</.cmd_button_2>
+      <.cmd_button_2 cmd="VV" fluid={assigns[:fluid]}>A=B</.cmd_button_2>
     """
   end
 
@@ -134,9 +143,7 @@ defmodule Open890Web.Components.Buttons do
 
     ~H"""
       <%= if @value do %>
-        <.cycle_button_2 value={@value} values={values} fluid={assigns[:fluid]}>
-          M / V
-        </.cycle_button_2>
+        <.cycle_button_2 value={@value} values={values} fluid={assigns[:fluid]}>M/V</.cycle_button_2>
       <% end %>
     """
   end
@@ -244,23 +251,8 @@ defmodule Open890Web.Components.Buttons do
   def scope_range_button(assigns) do
     ~H"""
       <%= if @band_scope_mode == :fixed do %>
-        <button class="ui black button">Range: (fixme)</button>
+        <button class="ui small black fluid button">Range: (fixme)</button>
       <% else %>
-        <div class="ui small compact labeled buttons">
-          <.cycle_button_2 value={@band_scope_span} values={
-            %{
-              5 => "BS47",
-              10 => "BS40",
-              20 => "BS41",
-              30 => "BS42",
-              50 => "BS43",
-              100 => "BS44",
-              200 => "BS45",
-              500 => "BS46"
-            }}>▼</.cycle_button_2>
-
-          <div class="ui black button">Span: <%= @band_scope_span %> kHz</div>
-
           <.cycle_button_2 value={@band_scope_span} values={
             %{
               5 => "BS41",
@@ -272,17 +264,18 @@ defmodule Open890Web.Components.Buttons do
               200 => "BS47",
               500 => "BS40",
             }
-          }>▲</.cycle_button_2>
-        </div>
+        } fluid>
+        Span: <%= @band_scope_span %> kHz
+        </.cycle_button_2>
       <% end %>
     """
   end
 
   def ref_level_control(assigns) do
     ~H"""
-      <div class="ui fluid black button" id="RefLevelControl">
+      <div class="ui small black fluid button" id="RefLevelControl">
         <form class="" id="refLevel" phx-change="ref_level_changed">
-          Ref Level
+          Ref:
           <input class="miniTextInput" name="refLevel" type="number" min="-20" max="10" step="0.5" value={format_ref_level(@value)} />
           dB
         </form>
@@ -313,11 +306,9 @@ defmodule Open890Web.Components.Buttons do
 
     ~H"""
       <%= if @band_scope_att do %>
-        <div class="ui small compact black buttons">
-          <.cycle_button_2 value={@band_scope_att} values={down_values}>▼</.cycle_button_2>
-          <div class="ui button">Scope ATT:<%= format_band_scope_att(@band_scope_att) %></div>
-          <.cycle_button_2 value={@band_scope_att}, values={up_values}>▲</.cycle_button_2>
-        </div>
+        <.cycle_button_2 value={@band_scope_att}, values={up_values} fluid>
+          ATT: <%= format_band_scope_att(@band_scope_att) %>
+        </.cycle_button_2>
       <% end %>
     """
   end
@@ -350,20 +341,18 @@ defmodule Open890Web.Components.Buttons do
 
     ~H"""
       <%= if @band_scope_avg do %>
-        <div class="ui small compact black buttons">
-          <.cycle_button_2 value={@band_scope_avg} values={down_values}>▼</.cycle_button_2>
-          <div class="ui button">Scope Avg: <%= @band_scope_avg %></div>
-          <.cycle_button_2 value={@band_scope_avg} values={up_values}>▲</.cycle_button_2>
-        </div>
+        <.cycle_button_2 value={@band_scope_avg} values={up_values} fluid>
+          Averaging: <%= @band_scope_avg %>
+        </.cycle_button_2>
       <% end %>
     """
   end
 
   def waterfall_speed_control(assigns) do
     ~H"""
-      <div class="ui small compact black button">
+      <div class="ui small black fluid button">
         <form id="WaterfallSpeed" phx-hook="WaterfallSpeedForm">
-          WF Speed: 1 /
+          WF speed: 1 /
           <input class="miniTextInput" name="value" type="number" min="1" max="100" step="1" value={@value} />
         </form>
       </div>
@@ -371,11 +360,10 @@ defmodule Open890Web.Components.Buttons do
   end
 
   def spectrum_scale_control(assigns) do
-
     ~H"""
-      <div class="ui small compact black button">
+      <div class="ui small black fluid button">
         <form id="SpectrumScale" phx-hook="SpectrumScaleForm">
-          Spectrum Scale
+          Scale:
           <input class="miniTextInput" name="value" type="number" min="1" max="10" step="0.1" value={@value} />
         </form>
       </div>
@@ -390,7 +378,7 @@ defmodule Open890Web.Components.Buttons do
             1 => %{label: "High", cmd: "DD03"},
             2 => %{label: "Mid", cmd: "DD01"},
             3 => %{label: "Low", cmd: "DD02"},
-          }}>Data Speed</.cycle_label_button>
+          }}>Data Speed: </.cycle_label_button>
       <% end %>
     """
   end
@@ -398,7 +386,7 @@ defmodule Open890Web.Components.Buttons do
   def pop_out_bandscope_button(assigns) do
     ~H"""
       <%= if !assigns[:popout] do %>
-        <div class="ui small compact black fluid button" phx-hook="PopoutBandscope" data-connection-id={@radio_connection.id} id="bandscope_popout">
+        <div class="ui small black fluid button" phx-hook="PopoutBandscope" data-connection-id={@radio_connection.id} id="bandscope_popout">
           Popout &nbsp;
           <i class="icon external alternate"></i>
         </div>

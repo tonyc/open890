@@ -8,9 +8,8 @@ defmodule Open890Web.Live.Radio do
   alias Open890.{ConnectionCommands, Extract, RadioConnection}
   alias Open890Web.Live.{BandButtonsComponent, Dispatch, RadioSocketState}
 
-  alias Open890Web.Components.{AudioScope, Buttons, Meter, Slider}
+  alias Open890Web.Components.{AudioScope, Meter, Slider}
   import Open890Web.Components.Buttons
-  alias Open890Web.Components.BandscopeButtons
   alias Open890Web.Components.BandScope
 
   @impl true
@@ -75,7 +74,25 @@ defmodule Open890Web.Live.Radio do
   end
 
   @impl true
+  def handle_params(params, _uri, socket) do
+    selected_tab = params["panelTab"]
+    |> case do
+      "scope" -> "scope"
+      _ -> "txrx"
+    end
+
+    panel_open = params |> Map.get("panel", "true") == "true"
+
+    socket = socket
+    |> assign(active_tab: selected_tab)
+    |> assign(left_panel_open: panel_open)
+
+    {:noreply, socket}
+  end
+
+  @impl true
   def handle_info(%Broadcast{event: "scope_data", payload: %{payload: audio_scope_data}}, socket) do
+
     {:noreply,
      socket
      |> push_event("scope_data", %{scope_data: audio_scope_data})
@@ -87,6 +104,7 @@ defmodule Open890Web.Live.Radio do
         %Broadcast{event: "band_scope_data", payload: %{payload: band_scope_data}},
         socket
       ) do
+
     {:noreply,
      socket
      |> push_event("band_scope_data", %{scope_data: band_scope_data})
@@ -122,10 +140,41 @@ defmodule Open890Web.Live.Radio do
     {:noreply, socket}
   end
 
+  def handle_event("toggle_panel", _params, socket) do
+    new_state = !socket.assigns.left_panel_open
+
+    radio_conn = socket.assigns.radio_connection
+
+    new_params = %{
+      panel: new_state,
+      panelTab: socket.assigns.active_tab
+    }
+
+    socket = socket
+    |> push_patch(to: Routes.radio_path(socket, :show, radio_conn.id, new_params))
+
+    {:noreply, socket}
+  end
+
   def handle_event("toggle_band_selector", _params, socket) do
     new_state = !socket.assigns.display_band_selector
-
     socket = assign(socket, :display_band_selector, new_state)
+    {:noreply, socket}
+  end
+
+  def handle_event("set_tab", %{"tab" => tab_name}, socket) do
+    Logger.info("set_tab: #{inspect(tab_name)}")
+
+    radio_conn = socket.assigns.radio_connection
+
+    new_params = %{
+      panel: socket.assigns.left_panel_open,
+      panelTab: tab_name
+    }
+
+    socket = socket
+    |> push_patch(to: Routes.radio_path(socket, :show, radio_conn.id, new_params))
+
     {:noreply, socket}
   end
 
@@ -277,6 +326,30 @@ defmodule Open890Web.Live.Radio do
       classes <> " debug"
     else
       classes
+    end
+  end
+
+  def panel_classes(flag) do
+    if flag do
+      "bandscopePanel left"
+    else
+      "bandscopePanel left hidden"
+    end
+  end
+
+  def tab_classes(name, var) do
+    if name == var do
+      "item active"
+    else
+      "item"
+    end
+  end
+
+  def tab_panel_classes(name, var) do
+    if name == var do
+      "ui tabs"
+    else
+      "ui tabs hidden"
     end
   end
 end

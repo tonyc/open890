@@ -36,17 +36,21 @@ defmodule Open890Web.Components.BandScope do
             <polygon id="bandSpectrum" class="spectrum" vector-effect="non-scaling-stroke" points={RadioViewHelpers.scope_data_to_svg(@band_scope_data, max_value: 140, scale_y: @spectrum_scale)}  />
           </g>
 
-
-          <g transform="translate(0 20)">
-            <%= if @band_scope_edges && @filter_state do %>
-              <.passband_polygon mode={@active_mode} active_frequency={@active_frequency} filter_state={@filter_state} scope_edges={@band_scope_edges} />
-              <.carrier_line frequency={@active_frequency} band_scope_edges={@band_scope_edges} />
+          <%= if @split_enabled do %>
+            <%= if freq_low(@inactive_frequency, @band_scope_edges) do %>
+              <g transform="translate(10 46),rotate(90)">
+                <.tx_offscreen_indicator />
+              </g>
             <% end %>
 
-            <rect id="bandscopeBackground" x="0" y="0" height="150" width="1280" pointer-events="visibleFill" phx-hook="BandScope" />
-          </g>
+            <%= if freq_high(@inactive_frequency, @band_scope_edges) do %>
+              <g transform="translate(630 46),rotate(-90)">
+                <.tx_offscreen_indicator />
+              </g>
+            <% end %>
+          <% end %>
 
-          <g transform="translate(0 12)">
+          <g transform="translate(0 8)">
             <%= if @band_scope_edges do %>
               <text class="bandEdge low" x="5" y="0">
                 <%= @band_scope_edges |> format_band_scope_low() %>
@@ -60,6 +64,23 @@ defmodule Open890Web.Components.BandScope do
               <text class="bandEdge mid" x="300" y="0"><%= @active_frequency |> format_active_frequency() %></text>
             <% end %>
           </g>
+
+          <g transform="translate(0 20)">
+            <%= if @band_scope_edges && @filter_state do %>
+              <.passband_polygon mode={@active_mode} active_frequency={@active_frequency} filter_state={@filter_state} scope_edges={@band_scope_edges} />
+
+              <%= if @split_enabled do %>
+                <.carrier_line mode="tx" label="T" frequency={@inactive_frequency} band_scope_edges={@band_scope_edges} piggyback={false}/>
+              <% else %>
+                <.carrier_line mode="tx" label="T" frequency={@active_frequency} band_scope_edges={@band_scope_edges} piggyback={true} />
+              <% end %>
+
+              <.carrier_line mode="rx" label="R" frequency={@active_frequency} band_scope_edges={@band_scope_edges} split_enabled={@split_enabled} />
+            <% end %>
+
+            <rect id="bandscopeBackground" x="0" y="0" height="150" width="1280" pointer-events="visibleFill" phx-hook="BandScope" />
+          </g>
+
         </svg>
 
         <canvas
@@ -211,20 +232,40 @@ defmodule Open890Web.Components.BandScope do
     0
   end
 
-  def carrier_line(%{frequency: frequency, band_scope_edges: band_scope_edges} = assigns) do
+  def carrier_line(%{frequency: frequency, band_scope_edges: band_scope_edges, mode: mode} = assigns) do
     loc = project_to_bandscope_limits(frequency, band_scope_edges)
 
     tri_ofs = 10
     tri_text_x = loc - 3
 
-    rx_triangle_points = "#{loc},#{tri_ofs} #{loc - tri_ofs},0 #{loc + tri_ofs},0"
+    triangle_points = "#{loc},#{tri_ofs} #{loc - tri_ofs},0 #{loc + tri_ofs},0"
+
+    label_translate = case assigns[:piggyback] do
+      true -> "translate(0 -#{tri_ofs})"
+      _ -> "translate(0 0)"
+    end
+
+    label = case mode do
+      "tx" -> "T"
+      _ -> "R"
+    end
 
     ~H"""
-      <line id="active_receiver_line" class="primaryCarrier" x1={loc} y1="0" x2={loc} y2="150" />
-      <g id="rxTriangleGroup">
-        <polygon class="rx triangle" points={rx_triangle_points} />
-        <text class="rx triangleText" x={tri_text_x} y="7">R</text>
+      <line class={add_mode(mode, "carrier")} x1={loc} y1="0" x2={loc} y2="150" />
+      <g class={add_mode(mode, "triangleGroup")} transform={label_translate}>
+        <polygon class={add_mode(mode, "triangle")} points={triangle_points} />
+        <text class={add_mode(mode, "triangleText")} x={tri_text_x} y="7"><%= label %></text>
       </g>
+    """
+  end
+
+  def add_mode(mode, str) do
+    str <> " " <> mode
+  end
+
+  def tx_offscreen_indicator(assigns) do
+    ~H"""
+      <polygon class="txOffscreen" points="0 10,-8 0,8 0"/>
     """
   end
 
@@ -242,5 +283,17 @@ defmodule Open890Web.Components.BandScope do
 
   def format_active_frequency(freq) do
     freq |> RadioViewHelpers.format_raw_frequency()
+  end
+
+  def freq_low(freq, edges) do
+    {low, _} = edges
+
+    freq < low
+  end
+
+  def freq_high(freq, edges) do
+    {_, high} = edges
+
+    freq > high
   end
 end

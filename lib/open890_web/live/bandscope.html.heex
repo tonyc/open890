@@ -1,28 +1,14 @@
 <div id="Xradio" xclass={radio_classes(@debug)} phx-window-keydown="window_keydown" phx-window-keyup="window_keyup">
-
-      <BandscopeButtons.buttons
-        radio_connection={@radio_connection}
-        band_scope_mode={@band_scope_mode}
-        band_scope_span={@band_scope_span}
-        band_scope_att={@band_scope_att}
-        band_scope_avg={@band_scope_avg}
-        waterfall_draw_interval={@waterfall_draw_interval}
-        spectrum_scale={@spectrum_scale}
-        data_speed={@data_speed}
-        ref_level={@ref_level}
-        popout={@popout}
-        socket={@socket} />
-
-      <BandScope.bandscope
-        active_frequency={@active_frequency}
-        active_mode={@active_mode}
-        band_scope_mode={@band_scope_mode}
-        band_scope_data={@band_scope_data}
-        band_scope_edges={@band_scope_edges}
-        band_scope_span={@band_scope_span}
-        filter_state={@filter_state}
-        theme={@theme}
-        draw_interval={@waterfall_draw_interval}
-        spectrum_scale={@spectrum_scale} />
-
+  <BandScope.bandscope
+    active_frequency={@radio_state.active_frequency}
+    active_mode={@radio_state.active_mode}
+    band_scope_mode={@radio_state.band_scope_mode}
+    band_scope_data={@band_scope_data}
+    band_scope_edges={@radio_state.band_scope_edges}
+    band_scope_span={@radio_state.band_scope_span}
+    filter_state={@radio_state.filter_state}
+    split_enabled={@radio_state.split_enabled}
+    theme={@theme}
+    draw_interval={@waterfall_draw_interval}
+    spectrum_scale={@spectrum_scale}></BandScope.bandscope>
 </div>
