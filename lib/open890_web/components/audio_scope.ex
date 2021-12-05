@@ -24,7 +24,7 @@ defmodule Open890Web.Components.AudioScope do
               <%= audio_scope_filter_edges(@active_mode, @filter_state) %>
             <% end %>
 
-            <line id="audioScopeTuneIndicator" class="primaryCarrier" x1="106" y1="5" x2="106" y2="60" />
+            <line id="audioScopeTuneIndicator" class="carrier rx" x1="106" y1="5" x2="106" y2="60" />
 
             <%= if @notch_state.enabled do %>
               <.notch_indicator notch_state={@notch_state} active_mode={@active_mode} filter_state={@filter_state} />
