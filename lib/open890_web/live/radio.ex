@@ -81,7 +81,13 @@ defmodule Open890Web.Live.Radio do
       _ -> "txrx"
     end
 
-    {:noreply, assign(socket, :active_tab, selected_tab)}
+    panel_open = params |> Map.get("panel", "true") == "true"
+
+    socket = socket
+    |> assign(active_tab: selected_tab)
+    |> assign(left_panel_open: panel_open)
+
+    {:noreply, socket}
   end
 
   @impl true
@@ -145,12 +151,21 @@ defmodule Open890Web.Live.Radio do
   def handle_event("toggle_panel", _params, socket) do
     new_state = !socket.assigns.left_panel_open
 
-    {:noreply, assign(socket, :left_panel_open, new_state)}
+    radio_conn = socket.assigns.radio_connection
+
+    new_params = %{
+      panel: new_state,
+      panelTab: socket.assigns.active_tab
+    }
+
+    socket = socket
+    |> push_patch(to: Routes.radio_path(socket, :show, radio_conn.id, new_params))
+
+    {:noreply, socket}
   end
 
   def handle_event("toggle_band_selector", _params, socket) do
     new_state = !socket.assigns.display_band_selector
-
     socket = assign(socket, :display_band_selector, new_state)
     {:noreply, socket}
   end
@@ -160,9 +175,13 @@ defmodule Open890Web.Live.Radio do
 
     radio_conn = socket.assigns.radio_connection
 
-    # change this to a push_patch
+    new_params = %{
+      panel: socket.assigns.left_panel_open,
+      panelTab: tab_name
+    }
+
     socket = socket
-    |> push_patch(to: Routes.radio_path(socket, :show, radio_conn.id, %{panelTab: tab_name}))
+    |> push_patch(to: Routes.radio_path(socket, :show, radio_conn.id, new_params))
 
     {:noreply, socket}
   end
