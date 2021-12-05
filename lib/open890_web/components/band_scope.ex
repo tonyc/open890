@@ -37,6 +37,23 @@ defmodule Open890Web.Components.BandScope do
           </g>
 
 
+          <%= if @split_enabled do %>
+            <%= if freq_low(@inactive_frequency, @band_scope_edges) do %>
+              <g transform="translate(10 45),rotate(90)">
+                <polygon class="txOffscreen" points="0 10,-10 0,10 0"/>
+              </g>
+            <% end %>
+
+            <%= if freq_high(@inactive_frequency, @band_scope_edges) do %>
+              <g transform="translate(630 45),rotate(-90)">
+                <polygon class="txOffscreen" points="0 10,-10 0,10 0"/>
+              </g>
+
+            <% end %>
+
+          <% end %>
+
+
           <g transform="translate(0 20)">
             <%= if @band_scope_edges && @filter_state do %>
               <.passband_polygon mode={@active_mode} active_frequency={@active_frequency} filter_state={@filter_state} scope_edges={@band_scope_edges} />
@@ -274,5 +291,17 @@ defmodule Open890Web.Components.BandScope do
 
   def format_active_frequency(freq) do
     freq |> RadioViewHelpers.format_raw_frequency()
+  end
+
+  def freq_low(freq, edges) do
+    {low, _} = edges
+
+    freq < low
+  end
+
+  def freq_high(freq, edges) do
+    {_, high} = edges
+
+    freq > high
   end
 end

@@ -464,6 +464,10 @@ svg#bandScope {
     font-family: sans-serif;
   }
 
+  .txOffscreen {
+    fill: $kenwood-red;
+  }
+
   &.kenwood {
     .primaryCarrier {
       stroke: $kenwood-carrier-stroke;
