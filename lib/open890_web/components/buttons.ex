@@ -10,7 +10,7 @@ defmodule Open890Web.Components.Buttons do
     ~H"""
       <%= if ! is_nil(@value) do %>
         <.cycle_button_2 value={@value} values={values} fluid={@fluid}>
-          SPLIT: <%= on_off(@value) %>
+          SPLIT <%= on_off(@value) %>
         </.cycle_button_2>
       <% end %>
     """
@@ -350,7 +350,7 @@ defmodule Open890Web.Components.Buttons do
 
   def waterfall_speed_control(assigns) do
     ~H"""
-      <div class="ui small black button">
+      <div class="ui small black fluid button">
         <form id="WaterfallSpeed" phx-hook="WaterfallSpeedForm">
           WF Speed: 1 /
           <input class="miniTextInput" name="value" type="number" min="1" max="100" step="1" value={@value} />
@@ -360,9 +360,8 @@ defmodule Open890Web.Components.Buttons do
   end
 
   def spectrum_scale_control(assigns) do
-
     ~H"""
-      <div class="ui small black button">
+      <div class="ui small black fluid button">
         <form id="SpectrumScale" phx-hook="SpectrumScaleForm">
           Spectrum Scale
           <input class="miniTextInput" name="value" type="number" min="1" max="10" step="0.1" value={@value} />

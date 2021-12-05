@@ -242,11 +242,15 @@
       <!-- tab buttons -->
       <div class="row">
         <div class="column">
-          <div class="ui inverted small two item menu">
+          <div class="ui secondary inverted pointing two item menu">
             <a class={tab_classes("txrx", @active_tab)} phx-click="set_tab" phx-value-tab="txrx">TX/RX</a>
             <a class={tab_classes("scope", @active_tab)} phx-click="set_tab" phx-value-tab="scope">Scope</a>
           </div>
         </div>
+      </div>
+
+      <div class="row">
+        <div class="column">&nbsp;</div>
       </div>
 
       <!-- tab contents -->

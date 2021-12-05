@@ -422,7 +422,7 @@ svg#bandScope {
     // fill: url(#plasma);
     stroke-width: 1.1;
     fill: url(#kenwoodBandScope);
-    stroke: rgba(192, 207, 204, 1.0);
+    // stroke: rgba(192, 207, 204, 1.0);
   }
 
 }
@@ -474,10 +474,6 @@ svg#bandScope {
     .bandscopeGrid {
       stroke: $kenwood-grid;
       stroke-width: $kenwood-grid-width;
-    }
-
-    .spectrum {
-
     }
   }
   
@@ -820,9 +816,9 @@ $panel-toggle-width: 20px;
 .bandscopePanel.left {
   margin-right: 0;
   padding: 1rem;
-  border-top: 2px solid $kenwood-button-bg;
-  border-bottom: 2px solid $kenwood-button-bg;
-  border-left: 2px solid $kenwood-button-bg;
+  // border-top: 2px solid $kenwood-button-bg;
+  // border-bottom: 2px solid $kenwood-button-bg;
+  // border-left: 2px solid $kenwood-button-bg;
   width: $panel-width;
 }
 
@@ -833,7 +829,7 @@ $panel-toggle-width: 20px;
   position: relative;
   float: left;
   width: $panel-toggle-width;
-  border-radius: 0px;
+  border-radius: $border-radius-small;
   height: 100%;
   background-color: $kenwood-button-bg;
 

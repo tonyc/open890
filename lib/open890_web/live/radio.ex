@@ -8,11 +8,8 @@ defmodule Open890Web.Live.Radio do
   alias Open890.{ConnectionCommands, Extract, RadioConnection}
   alias Open890Web.Live.{BandButtonsComponent, Dispatch, RadioSocketState}
 
-  alias Open890.RadioState
-
-  alias Open890Web.Components.{AudioScope, Buttons, Meter, Slider}
+  alias Open890Web.Components.{AudioScope, Meter, Slider}
   import Open890Web.Components.Buttons
-  alias Open890Web.Components.BandscopeButtons
   alias Open890Web.Components.BandScope
 
   @impl true
@@ -74,6 +71,17 @@ defmodule Open890Web.Live.Radio do
       end
 
     {:ok, socket}
+  end
+
+  @impl true
+  def handle_params(params, _uri, socket) do
+    selected_tab = params["panelTab"]
+    |> case do
+      "scope" -> "scope"
+      _ -> "txrx"
+    end
+
+    {:noreply, assign(socket, :active_tab, selected_tab)}
   end
 
   @impl true
@@ -149,7 +157,14 @@ defmodule Open890Web.Live.Radio do
 
   def handle_event("set_tab", %{"tab" => tab_name}, socket) do
     Logger.info("set_tab: #{inspect(tab_name)}")
-    {:noreply, socket |> assign(active_tab: tab_name)}
+
+    radio_conn = socket.assigns.radio_connection
+
+    # change this to a push_patch
+    socket = socket
+    |> push_patch(to: Routes.radio_path(socket, :show, radio_conn.id, %{panelTab: tab_name}))
+
+    {:noreply, socket}
   end
 
   def handle_event("step_tune_up", %{"stepSize" => step_size} = _params, socket) do
