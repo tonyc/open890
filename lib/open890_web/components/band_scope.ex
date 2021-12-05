@@ -48,9 +48,7 @@ defmodule Open890Web.Components.BandScope do
               <g transform="translate(630 45),rotate(-90)">
                 <polygon class="txOffscreen" points="0 10,-10 0,10 0"/>
               </g>
-
             <% end %>
-
           <% end %>
 
 
@@ -59,12 +57,12 @@ defmodule Open890Web.Components.BandScope do
               <.passband_polygon mode={@active_mode} active_frequency={@active_frequency} filter_state={@filter_state} scope_edges={@band_scope_edges} />
 
               <%= if @split_enabled do %>
-                <.tx_carrier_line label="T" frequency={@inactive_frequency} band_scope_edges={@band_scope_edges} piggyback={false}/>
+                <.carrier_line mode="tx" label="T" frequency={@inactive_frequency} band_scope_edges={@band_scope_edges} piggyback={false}/>
               <% else %>
-                <.tx_carrier_line label="T" frequency={@active_frequency} band_scope_edges={@band_scope_edges} piggyback={true} />
+                <.carrier_line mode="tx" label="T" frequency={@active_frequency} band_scope_edges={@band_scope_edges} piggyback={true} />
               <% end %>
 
-              <.carrier_line label="R" frequency={@active_frequency} band_scope_edges={@band_scope_edges} split_enabled={@split_enabled} />
+              <.carrier_line mode="rx" label="R" frequency={@active_frequency} band_scope_edges={@band_scope_edges} split_enabled={@split_enabled} />
             <% end %>
 
             <rect id="bandscopeBackground" x="0" y="0" height="150" width="1280" pointer-events="visibleFill" phx-hook="BandScope" />
@@ -235,47 +233,36 @@ defmodule Open890Web.Components.BandScope do
     0
   end
 
-  def carrier_line(%{frequency: frequency, band_scope_edges: band_scope_edges} = assigns) do
+  def carrier_line(%{frequency: frequency, band_scope_edges: band_scope_edges, mode: mode} = assigns) do
     loc = project_to_bandscope_limits(frequency, band_scope_edges)
 
     tri_ofs = 10
     tri_text_x = loc - 3
 
-    rx_triangle_points = "#{loc},#{tri_ofs} #{loc - tri_ofs},0 #{loc + tri_ofs},0"
-
-    ~H"""
-      <line class="carrier rx" x1={loc} y1="0" x2={loc} y2="150" />
-      <g class="triangleGroup rx">
-        <polygon class="rx triangle" points={rx_triangle_points} />
-        <text class="rx triangleText" x={tri_text_x} y="7"><%= @label %></text>
-      </g>
-    """
-  end
-
-  def tx_carrier_line(%{frequency: frequency, band_scope_edges: band_scope_edges} = assigns) do
-    loc = project_to_bandscope_limits(frequency, band_scope_edges)
-
-    tri_ofs = 10
-    tri_text_x = loc - 3
-
-    tx_triangle_points = "#{loc},#{tri_ofs} #{loc - tri_ofs},0 #{loc + tri_ofs},0"
+    triangle_points = "#{loc},#{tri_ofs} #{loc - tri_ofs},0 #{loc + tri_ofs},0"
 
     label_translate = case assigns[:piggyback] do
       true -> "translate(0 -#{tri_ofs})"
       _ -> "translate(0 0)"
     end
 
+    label = case mode do
+      "tx" -> "T"
+      _ -> "R"
+    end
 
     ~H"""
-      <line class="carrier tx" x1={loc} y1="0" x2={loc} y2="150" />
-
-      <g class="triangleGroup tx" transform={label_translate}>
-        <polygon class="tx triangle" points={tx_triangle_points} />
-        <text class="tx triangleText" x={tri_text_x} y="7"><%= @label %></text>
+      <line class={add_mode(mode, "carrier")} x1={loc} y1="0" x2={loc} y2="150" />
+      <g class={add_mode(mode, "triangleGroup")} transform={label_translate}>
+        <polygon class={add_mode(mode, "triangle")} points={triangle_points} />
+        <text class={add_mode(mode, "triangleText")} x={tri_text_x} y="7"><%= label %></text>
       </g>
     """
   end
 
+  def add_mode(mode, str) do
+    str <> " " <> mode
+  end
 
   def round_up_to_step(value, step) when is_integer(value) and is_integer(step) do
     div(value, step) * step + step
