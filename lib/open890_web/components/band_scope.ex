@@ -50,7 +50,22 @@ defmodule Open890Web.Components.BandScope do
             <% end %>
           <% end %>
 
-          <g transform="translate(0 20)">
+          <g transform="translate(0 8)">
+            <%= if @band_scope_edges do %>
+              <text class="bandEdge low" x="5" y="0">
+                <%= @band_scope_edges |> format_band_scope_low() %>
+              </text>
+              <text class="bandEdge high" x="635" y="0">
+                <%= @band_scope_edges |> format_band_scope_high() %>
+              </text>
+            <% end %>
+
+            <%= if @active_frequency do %>
+              <text class="bandEdge mid" x="300" y="0"><%= @active_frequency |> format_active_frequency() %></text>
+            <% end %>
+          </g>
+
+          <g transform="translate(0 10)">
             <%= if @band_scope_edges && @filter_state do %>
               <.passband_polygon mode={@active_mode} active_frequency={@active_frequency} filter_state={@filter_state} scope_edges={@band_scope_edges} />
 
@@ -66,20 +81,6 @@ defmodule Open890Web.Components.BandScope do
             <rect id="bandscopeBackground" x="0" y="0" height="150" width="1280" pointer-events="visibleFill" phx-hook="BandScope" />
           </g>
 
-          <g transform="translate(0 12)">
-            <%= if @band_scope_edges do %>
-              <text class="bandEdge low" x="5" y="0">
-                <%= @band_scope_edges |> format_band_scope_low() %>
-              </text>
-              <text class="bandEdge high" x="635" y="0">
-                <%= @band_scope_edges |> format_band_scope_high() %>
-              </text>
-            <% end %>
-
-            <%= if @active_frequency do %>
-              <text class="bandEdge mid" x="300" y="0"><%= @active_frequency |> format_active_frequency() %></text>
-            <% end %>
-          </g>
         </svg>
 
         <canvas
