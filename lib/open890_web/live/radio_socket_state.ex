@@ -3,6 +3,8 @@ defmodule Open890Web.Live.RadioSocketState do
 
   @init_socket [
     {:active_tab, "txrx"},
+    {:audio_scope_data, []},
+    {:band_scope_data, []},
     {:connection_state, :stopped},
     {:connection_state, nil},
     {:debug, false},

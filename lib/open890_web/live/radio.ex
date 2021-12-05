@@ -93,14 +93,10 @@ defmodule Open890Web.Live.Radio do
   @impl true
   def handle_info(%Broadcast{event: "scope_data", payload: %{payload: audio_scope_data}}, socket) do
 
-    radio_state = socket.assigns.radio_state
-
-    new_state = %{radio_state | audio_scope_data: audio_scope_data}
-
     {:noreply,
      socket
      |> push_event("scope_data", %{scope_data: audio_scope_data})
-     |> assign(:radio_state, new_state)}
+     |> assign(:audio_scope_data, audio_scope_data)}
   end
 
   @impl true
@@ -109,14 +105,10 @@ defmodule Open890Web.Live.Radio do
         socket
       ) do
 
-    radio_state = socket.assigns.radio_state
-
-    new_state = %{radio_state | band_scope_data: band_scope_data}
-
     {:noreply,
      socket
      |> push_event("band_scope_data", %{scope_data: band_scope_data})
-     |> assign(:radio_state, new_state)}
+     |> assign(:band_scope_data, band_scope_data)}
   end
 
   @impl true

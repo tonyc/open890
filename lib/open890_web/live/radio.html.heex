@@ -207,11 +207,7 @@
         </div>
 
 
-
-
-
       </div>
-
 
 
     </div>
@@ -220,7 +216,7 @@
       <AudioScope.audio_scope
         active_if_filter={@radio_state.active_if_filter}
         active_mode={@radio_state.active_mode}
-        audio_scope_data={@radio_state.audio_scope_data}
+        audio_scope_data={@audio_scope_data}
         filter_state={@radio_state.filter_state}
         roofing_filter_data={@radio_state.roofing_filter_data}
         notch_state={@radio_state.notch_state}
@@ -366,7 +362,7 @@
         inactive_frequency={@radio_state.inactive_frequency}
         active_mode={@radio_state.active_mode}
         band_scope_mode={@radio_state.band_scope_mode}
-        band_scope_data={@radio_state.band_scope_data}
+        band_scope_data={@band_scope_data}
         band_scope_edges={@radio_state.band_scope_edges}
         band_scope_span={@radio_state.band_scope_span}
         filter_state={@radio_state.filter_state}

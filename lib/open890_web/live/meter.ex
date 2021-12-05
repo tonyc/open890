@@ -13,7 +13,7 @@ defmodule Open890Web.Live.Meter do
   @impl true
   def render(assigns) do
     ~H"""
-      <Meter.meter s_meter={@s_meter} alc_meter={@alc_meter} swr_meter={@swr_meter} />
+      <Meter.meter s_meter={@radio_state.s_meter} alc_meter={@radio_state.alc_meter} swr_meter={@radio_state.swr_meter} />
     """
   end
 
