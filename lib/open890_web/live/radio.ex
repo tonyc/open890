@@ -344,4 +344,12 @@ defmodule Open890Web.Live.Radio do
       "item"
     end
   end
+
+  def tab_panel_classes(name, var) do
+    if name == var do
+      "ui tabs"
+    else
+      "ui tabs hidden"
+    end
+  end
 end

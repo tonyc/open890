@@ -257,11 +257,9 @@
       <div class="row">
         <div class="column">
 
-          <%= if @active_tab == "txrx" do %>
-            <div class="ui _tabs">
+            <div class={tab_panel_classes("txrx", @active_tab)}>
 
               <div class="ui two column grid row">
-
 
                 <div class="column">
                   <.pre_button value={@radio_state.rf_pre} fluid />
@@ -296,10 +294,8 @@
                 </div>
               </div>
             </div>
-          <% end %>
 
-          <%= if @active_tab == "scope" do %>
-            <div class="ui tabs">
+            <div class={tab_panel_classes("scope", @active_tab)}>
               <div class="column">
                 <.scope_mode_button fluid band_scope_mode={@radio_state.band_scope_mode} />
               </div>
@@ -345,7 +341,6 @@
               </div>
 
             </div>
-          <% end %>
         </div>
       </div>
 
