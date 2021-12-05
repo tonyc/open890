@@ -827,7 +827,9 @@ $panel-toggle-width: 20px;
 .bandscopePanel.left {
   margin-right: 0;
   padding: 1rem;
-  border: 2px solid $kenwood-button-bg;
+  border-top: 2px solid $kenwood-button-bg;
+  border-bottom: 2px solid $kenwood-button-bg;
+  border-left: 2px solid $kenwood-button-bg;
   width: $panel-width;
 }
 
