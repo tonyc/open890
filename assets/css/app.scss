@@ -2,6 +2,8 @@
 // @import "./phoenix.css";
 /* Alerts and form errors */
 
+@import "vars";
+
 .alert {
   position: absolute;
   z-index: 9999;
@@ -58,34 +60,6 @@ h1.title {
   padding-bottom: 2rem;
 }
 
-$secondary-color: rgb(202, 203, 205);
-
-// theme variables
-$kenwood-cyan: rgba(0, 205, 238, 1.0);
-$kenwood-red: rgba(204, 0, 0, 1.0);
-$kenwood-smeter-bg: rgba(40, 40, 40, 1.0);
-$kenwood-grey: rgba(90, 90, 90, 1.0);
-$kenwood-grid: rgba(64, 64, 64, 1.0);
-$kenwood-grid-width: 0.75;
-$kenwood-carrier-stroke: rgba(230, 230, 230, 1.0);
-$kenwood-passband-fill: rgba(255, 255, 255, 0.25);
-// $kenwood-passband-stroke: rgba(50, 50, 50, 1.0);
-// $kenwood-grey: rgba(120, 120, 120, 1.0);
-$kenwood-gradient-dark: rgba(3, 3, 86, 1.0); // #030356
-$kenwood-gradient-light: rgba(242, 242, 242, 1.0);
-$kenwood-button-bg: rgba(42, 42, 42, 1.0);
-
-$elecraft-green: rgba(0, 252, 0, 1.0);
-$elecraft-green-transparent: rgba(0, 252, 0, 0.25);
-$elecraft-yellow: rgba(251, 251, 0, 1.0);
-$elecraft-dark-blue: rgba(0, 0, 64, 1.0);
-$elecraft-grid: rgba(128, 128, 128, 1.0);
-
-$border-radius-medium: 10px;
-$border-radius-small: 4px;
-
-
-$vfo-font: "Bebas Neue";
 
 body.dark {
   background-color: #000;
@@ -124,7 +98,6 @@ body.light {
 //   color: #ccc;
 // }
 
-$meter-legend-font-size: 9px;
 
 .debug {
   //border-width: 1px;
@@ -827,8 +800,6 @@ svg#bandScope {
   padding: 0;
 }
 
-$panel-width: 600px;
-$panel-toggle-width: 20px;
 
 .bandscopePanel.left {
   margin-right: 0;
@@ -862,6 +833,6 @@ $panel-toggle-width: 20px;
 
 // TBD
 .splitButton.active {
-  // color: black !important;
-  // background-color: $elecraft-green !important;
+  color: black !important;
+  background-color: $kenwood-yellow !important;
 }
