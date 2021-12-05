@@ -22,7 +22,7 @@ jobs:
           draft: false
           prerelease: ${{ endsWith(github.ref, '-pre') }}
 
-  release-linux:
+  release-ubuntu:
     needs: [create_release]
     runs-on: ubuntu-20.04
     steps:
@@ -63,22 +63,22 @@ jobs:
           cwd: ./_build/prod/rel
           files: |
             ./open890
-          outPath: /tmp/open890-${{ steps.vars.outputs.tag }}-linux-x64.tar.gz
+          outPath: /tmp/open890-${{ steps.vars.outputs.tag }}-ubuntu-x64.tar.gz
       - name: Output release checksum
         run: |
-          echo "::set-output name=sha256_linux::$(sha256sum /tmp/open890-${{ steps.vars.outputs.tag }}-linux.x64.tar.gz)"
+          echo "::set-output name=sha256_linux::$(sha256sum /tmp/open890-${{ steps.vars.outputs.tag }}-ubuntu.x64.tar.gz)"
       - name: Upload Release Asset
         id: upload-release-asset
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: /tmp/open890-${{ steps.vars.outputs.tag }}-linux-x64.tar.gz
-          asset_name: open890-${{ steps.vars.outputs.tag }}-linux-x64.tar.gz
+          file: /tmp/open890-${{ steps.vars.outputs.tag }}-ubuntu-x64.tar.gz
+          asset_name: open890-${{ steps.vars.outputs.tag }}-ubuntu-x64.tar.gz
           tag: ${{ steps.vars.outputs.tag }}
       - name: Upload Release Asset to S3
         id: upload-release-asset-s3
         run: |
-          aws s3 cp /tmp/open890-${{ steps.vars.outputs.tag }}-linux-x64.tar.gz s3://${{ secrets.AWS_S3_BUCKET }}/${{ secrets.AWS_S3_BUCKET_PATH }}
+          aws s3 cp /tmp/open890-${{ steps.vars.outputs.tag }}-ubuntu-x64.tar.gz s3://${{ secrets.AWS_S3_BUCKET }}/${{ secrets.AWS_S3_BUCKET_PATH }}
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
