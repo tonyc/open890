@@ -368,6 +368,7 @@
     <div class="bandscopePanel right ">
       <BandScope.bandscope
         active_frequency={@radio_state.active_frequency}
+        inactive_frequency={@radio_state.inactive_frequency}
         active_mode={@radio_state.active_mode}
         band_scope_mode={@radio_state.band_scope_mode}
         band_scope_data={@radio_state.band_scope_data}
@@ -376,6 +377,7 @@
         filter_state={@radio_state.filter_state}
         theme={@theme}
         draw_interval={@waterfall_draw_interval}
+        split_enabled={@radio_state.split_enabled}
         spectrum_scale={@spectrum_scale} />
     </div>
   </div>

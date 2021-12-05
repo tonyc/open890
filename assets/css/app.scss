@@ -432,24 +432,37 @@ svg#bandScope {
     fill: $kenwood-passband-fill;
   }
 
-  .primaryCarrier {
+  .secondaryCarrier {
+    stroke: $kenwood-red;
+  }
+
+  .carrier.rx {
     stroke: white;
     stroke-width: 0.5pt;
     stroke-dasharray: 0;
+  }
+
+  .carrier.tx {
+    stroke: $kenwood-red;
+    stroke-width: 0.5pt;
+    stroke-dasharray: 0;
+
   }
 
   .triangle.rx {
     fill: white;
   }
 
-  .triangleText.rx {
+  .triangle.tx {
+    fill: $kenwood-red;
+  }
+
+  .triangleText {
     color: #666;
     font-size: 12px;
     font-weight: bold;
     font-family: sans-serif;
   }
-
-
 
   &.kenwood {
     .primaryCarrier {
@@ -460,7 +473,7 @@ svg#bandScope {
       fill: white;
     }
 
-    .triangleText.rx {
+    .triangleText {
       color: #666;
       font-size: 8px;
       font-weight: bold;
