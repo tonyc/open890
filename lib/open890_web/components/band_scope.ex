@@ -65,7 +65,7 @@ defmodule Open890Web.Components.BandScope do
             <% end %>
           </g>
 
-          <g transform="translate(0 10)">
+          <g transform="translate(0 20)">
             <%= if @band_scope_edges && @filter_state do %>
               <.passband_polygon mode={@active_mode} active_frequency={@active_frequency} filter_state={@filter_state} scope_edges={@band_scope_edges} />
 
