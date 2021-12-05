@@ -1,7 +1,7 @@
 # open890 Changelog
 
 ## Unreleased
-* Added SPLIT
+* Added SPLIT button, TX frequency display on spectrum, offscreen indicator
 * Rearranged UI considerably. Added collapsible side panel for buttons, arranged buttons into tabs
 * Added SQL control
 * Added NR, NB, BC, NCH control buttons.
