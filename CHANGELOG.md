@@ -2,7 +2,7 @@
 
 ## Unreleased
 * Added SPLIT
-* Added collapsible side panel for buttons. Rearranged UI considerably.
+* Rearranged UI considerably. Added collapsible side panel for buttons, arranged buttons into tabs
 * Added SQL control
 * Added NR, NB, BC, NCH control buttons.
 * Added the ability to pop out separate bandscope, audioscope, and meter displays.
