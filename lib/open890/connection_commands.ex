@@ -38,7 +38,10 @@ defmodule Open890.ConnectionCommands do
     |> get_bc()
     |> get_nb_states()
     |> get_squelch()
+    |> get_split()
   end
+
+  def get_split(conn), do: conn |> cmd("TB")
 
   def get_squelch(conn) do
     conn

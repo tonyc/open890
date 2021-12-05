@@ -2,8 +2,19 @@ defmodule Open890Web.Components.Buttons do
   use Phoenix.Component
   require Logger
 
-  alias Open890.NotchState
   import Open890Web.RadioViewHelpers
+
+  def split_button(assigns) do
+    values = %{false => "TB1", true => "TB0"}
+
+    ~H"""
+      <%= if ! is_nil(@value) do %>
+        <.cycle_button_2 value={@value} values={values} fluid={@fluid}>
+          SPLIT: <%= on_off(@value) %>
+        </.cycle_button_2>
+      <% end %>
+    """
+  end
 
   def notch_button(assigns) do
     ~H"""
@@ -30,8 +41,6 @@ defmodule Open890Web.Components.Buttons do
         NCH <%= format_notch_width(@value.width) %>
       </button>
     <% end %>
-
-
     """
   end
 

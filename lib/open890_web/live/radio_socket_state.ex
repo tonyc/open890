@@ -1,6 +1,4 @@
 defmodule Open890Web.Live.RadioSocketState do
-  alias Open890.{AntennaState, BandRegisterState, FilterState, NoiseBlankState, NotchState, TransverterState}
-
   alias Open890.RadioState
 
   @init_socket [

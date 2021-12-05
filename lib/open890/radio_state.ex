@@ -50,6 +50,7 @@ defmodule Open890.RadioState do
     ssb_data_filter_mode: nil,
     ssb_filter_mode: nil,
     swr_meter: 0,
+    split_enabled: false,
     temp_meter: 0,
     transverter_state: %TransverterState{},
     tx_state: :off,

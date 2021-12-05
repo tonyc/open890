@@ -182,7 +182,37 @@
           <% end %>
         </div> <!-- frequencyDisplay -->
 
+
+
+        <div class="row equal width">
+          <div class="column">
+            <.vfo_mem_button value={@radio_state.vfo_memory_state} fluid />
+          </div>
+
+          <div class="column">
+            <%= if @radio_state.vfo_memory_state == :vfo do %>
+              <.vfo_equalize_button fluid />
+            <% end %>
+          </div>
+
+          <div class="column">
+            <%= if @radio_state.vfo_memory_state == :vfo do %>
+              <.vfo_switch_button value={@radio_state.active_receiver} fluid />
+            <% end %>
+          </div>
+
+          <div class="column">
+            <.split_button value={@radio_state.split_enabled} fluid }/>
+          </div>
+        </div>
+
+
+
+
+
       </div>
+
+
 
     </div>
 
@@ -224,24 +254,11 @@
         <div class="column">
 
           <%= if @active_tab == "txrx" do %>
-            <div class="ui tabs">
-              <div class="ui three column grid row">
-                <div class="column">
-                  <%= if @radio_state.vfo_memory_state == :vfo do %>
-                    <.vfo_switch_button value={@radio_state.active_receiver} fluid />
-                  <% end %>
-                </div>
-                <div class="column">
-                  <%= if @radio_state.vfo_memory_state == :vfo do %>
-                    <.vfo_equalize_button fluid />
-                  <% end %>
-                </div>
-                <div class="column">
-                  <.vfo_mem_button value={@radio_state.vfo_memory_state} fluid />
-                </div>
-              </div>
+            <div class="ui _tabs">
 
               <div class="ui two column grid row">
+
+
                 <div class="column">
                   <.pre_button value={@radio_state.rf_pre} fluid />
                 </div>
