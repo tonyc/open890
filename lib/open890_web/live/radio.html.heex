@@ -305,11 +305,15 @@
             <% end %>
 
             <div class="column">
+              <.band_scope_att_button band_scope_att={@radio_state.band_scope_att} fluid />
+            </div>
+
+            <div class="column">
               <.ref_level_control value={@radio_state.ref_level} fluid />
             </div>
 
             <div class="column">
-              <.band_scope_att_button band_scope_att={@radio_state.band_scope_att} fluid />
+              <.spectrum_scale_control value={@spectrum_scale} fluid />
             </div>
 
             <div class="column">
@@ -318,10 +322,6 @@
 
             <div class="column">
               <.waterfall_speed_control value={@waterfall_draw_interval} fluid />
-            </div>
-
-            <div class="column">
-              <.spectrum_scale_control value={@spectrum_scale} fluid />
             </div>
 
             <div class="column">

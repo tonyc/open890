@@ -275,7 +275,7 @@ defmodule Open890Web.Components.Buttons do
     ~H"""
       <div class="ui small black fluid button" id="RefLevelControl">
         <form class="" id="refLevel" phx-change="ref_level_changed">
-          Ref Level
+          Ref:
           <input class="miniTextInput" name="refLevel" type="number" min="-20" max="10" step="0.5" value={format_ref_level(@value)} />
           dB
         </form>
@@ -307,7 +307,7 @@ defmodule Open890Web.Components.Buttons do
     ~H"""
       <%= if @band_scope_att do %>
         <.cycle_button_2 value={@band_scope_att}, values={up_values} fluid>
-          Scope ATT: <%= format_band_scope_att(@band_scope_att) %>
+          ATT: <%= format_band_scope_att(@band_scope_att) %>
         </.cycle_button_2>
       <% end %>
     """
@@ -342,7 +342,7 @@ defmodule Open890Web.Components.Buttons do
     ~H"""
       <%= if @band_scope_avg do %>
         <.cycle_button_2 value={@band_scope_avg} values={up_values} fluid>
-          Scope Avg: <%= @band_scope_avg %>
+          Averaging: <%= @band_scope_avg %>
         </.cycle_button_2>
       <% end %>
     """
@@ -352,7 +352,7 @@ defmodule Open890Web.Components.Buttons do
     ~H"""
       <div class="ui small black fluid button">
         <form id="WaterfallSpeed" phx-hook="WaterfallSpeedForm">
-          WF Speed: 1 /
+          WF speed: 1 /
           <input class="miniTextInput" name="value" type="number" min="1" max="100" step="1" value={@value} />
         </form>
       </div>
@@ -363,7 +363,7 @@ defmodule Open890Web.Components.Buttons do
     ~H"""
       <div class="ui small black fluid button">
         <form id="SpectrumScale" phx-hook="SpectrumScaleForm">
-          Spectrum Scale
+          Scale:
           <input class="miniTextInput" name="value" type="number" min="1" max="10" step="0.1" value={@value} />
         </form>
       </div>
@@ -378,7 +378,7 @@ defmodule Open890Web.Components.Buttons do
             1 => %{label: "High", cmd: "DD03"},
             2 => %{label: "Mid", cmd: "DD01"},
             3 => %{label: "Low", cmd: "DD02"},
-          }}>Data Speed</.cycle_label_button>
+          }}>Data Speed: </.cycle_label_button>
       <% end %>
     """
   end
