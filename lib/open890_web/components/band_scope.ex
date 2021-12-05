@@ -40,11 +40,14 @@ defmodule Open890Web.Components.BandScope do
           <g transform="translate(0 20)">
             <%= if @band_scope_edges && @filter_state do %>
               <.passband_polygon mode={@active_mode} active_frequency={@active_frequency} filter_state={@filter_state} scope_edges={@band_scope_edges} />
-              <.carrier_line label="R" frequency={@active_frequency} band_scope_edges={@band_scope_edges} />
 
               <%= if @split_enabled do %>
-                <.tx_carrier_line label="T" frequency={@inactive_frequency} band_scope_edges={@band_scope_edges} />
+                <.tx_carrier_line label="T" frequency={@inactive_frequency} band_scope_edges={@band_scope_edges} piggyback={false}/>
+              <% else %>
+                <.tx_carrier_line label="T" frequency={@active_frequency} band_scope_edges={@band_scope_edges} piggyback={true} />
               <% end %>
+
+              <.carrier_line label="R" frequency={@active_frequency} band_scope_edges={@band_scope_edges} split_enabled={@split_enabled} />
             <% end %>
 
             <rect id="bandscopeBackground" x="0" y="0" height="150" width="1280" pointer-events="visibleFill" phx-hook="BandScope" />
@@ -238,12 +241,19 @@ defmodule Open890Web.Components.BandScope do
     tri_ofs = 10
     tri_text_x = loc - 3
 
-    rx_triangle_points = "#{loc},#{tri_ofs} #{loc - tri_ofs},0 #{loc + tri_ofs},0"
+    tx_triangle_points = "#{loc},#{tri_ofs} #{loc - tri_ofs},0 #{loc + tri_ofs},0"
+
+    label_translate = case assigns[:piggyback] do
+      true -> "translate(0 -#{tri_ofs})"
+      _ -> "translate(0 0)"
+    end
+
 
     ~H"""
       <line class="carrier tx" x1={loc} y1="0" x2={loc} y2="150" />
-      <g class="triangleGroup tx">
-        <polygon class="tx triangle" points={rx_triangle_points} />
+
+      <g class="triangleGroup tx" transform={label_translate}>
+        <polygon class="tx triangle" points={tx_triangle_points} />
         <text class="tx triangleText" x={tri_text_x} y="7"><%= @label %></text>
       </g>
     """
