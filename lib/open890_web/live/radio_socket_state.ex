@@ -5,16 +5,17 @@ defmodule Open890Web.Live.RadioSocketState do
 
   @init_socket [
     {:active_tab, "txrx"},
-    {:radio_state, %RadioState{}},
-    {:display_band_selector, false},
-    {:radio_connection, nil},
+    {:connection_state, :stopped},
     {:connection_state, nil},
     {:debug, false},
+    {:display_band_selector, false},
+    {:left_panel_open, true},
     {:projected_active_receiver_location, ""},
+    {:radio_connection, nil},
+    {:radio_state, %RadioState{}},
+    {:spectrum_scale, 1.0},
     {:theme, "kenwood"},
     {:waterfall_draw_interval, 1},
-    {:spectrum_scale, 1.0},
-    {:connection_state, :stopped},
     {:__ui_macros, %{}}
   ]
 

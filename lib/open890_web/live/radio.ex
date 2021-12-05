@@ -134,6 +134,12 @@ defmodule Open890Web.Live.Radio do
     {:noreply, socket}
   end
 
+  def handle_event("toggle_panel", _params, socket) do
+    new_state = !socket.assigns.left_panel_open
+
+    {:noreply, assign(socket, :left_panel_open, new_state)}
+  end
+
   def handle_event("toggle_band_selector", _params, socket) do
     new_state = !socket.assigns.display_band_selector
 

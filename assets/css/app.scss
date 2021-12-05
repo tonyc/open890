@@ -810,3 +810,44 @@ svg#bandScope {
 @-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
 @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
 @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+
+
+.bandscopeContainer {
+  display: flex;
+  position: relative;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  padding: 0;
+}
+
+$panel-width: 600px;
+$panel-toggle-width: 20px;
+
+.bandscopePanel.left {
+  margin-right: 0;
+  padding: 1rem;
+  border: 2px solid $kenwood-button-bg;
+  width: $panel-width;
+}
+
+.bandscopePanel.toggle {
+  margin-right: 1rem;
+  margin-left: 0;
+  padding: 0;
+  position: relative;
+  float: left;
+  width: $panel-toggle-width;
+  border-radius: 0px;
+  height: 100%;
+  background-color: $kenwood-button-bg;
+
+  &:hover {
+    background-color: $kenwood-grid;
+    cursor: pointer;
+  }
+}
+
+.bandscopePanel.right {
+  flex-grow: 1;
+}

@@ -203,15 +203,13 @@
     </div>
   </div> <!-- row -->
 
-  <div class="equal width row">
-    <!-- scope controls here -->
+  <div class="_row bandscopeContainer">
 
-  </div>
+    <%= if @left_panel_open do %>
+    <div class="bandscopePanel left ">
+      <!-- left side panel contents -->
 
-  <div class="row">
-    <div class="three wide column">
-      <!-- left side panel -->
-
+      <!-- tab buttons -->
       <div class="row">
         <div class="column">
           <div class="ui inverted small two item menu">
@@ -221,7 +219,7 @@
         </div>
       </div>
 
-
+      <!-- tab contents -->
       <div class="row">
         <div class="column">
 
@@ -327,26 +325,26 @@
 
             </div>
           <% end %>
-
+        </div>
       </div>
 
-  <%= if @__ui_macros != %{} do %>
-    <h4>Macros</h4>
-    <div class="ui one column grid row">
-      <%= for %{"label" => name} <- @__ui_macros do %>
-        <div class="column">
-          <div class="ui black fluid button" phx-click="run_macro" phx-value-name={name}><%= name %></div>
+      <!-- macros -->
+      <%= if @__ui_macros != %{} do %>
+        <h4>Macros</h4>
+        <div class="ui one column grid row">
+          <%= for %{"label" => name} <- @__ui_macros do %>
+            <div class="column">
+              <div class="ui black fluid button" phx-click="run_macro" phx-value-name={name}><%= name %></div>
+            </div>
+          <% end %>
         </div>
       <% end %>
     </div>
-  <% end %>
+    <% end %>
 
+    <div class="bandscopePanel toggle" phx-click="toggle_panel"></div>
 
-      </div>
-
-    </div> <!-- left bandscope column -->
-
-    <div class="thirteen wide column">
+    <div class="bandscopePanel right ">
       <BandScope.bandscope
         active_frequency={@radio_state.active_frequency}
         active_mode={@radio_state.active_mode}
@@ -361,4 +359,5 @@
     </div>
   </div>
 
-</div>
+</div> <!-- end radio -->
+
