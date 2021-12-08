@@ -1,0 +1,12 @@
+{
+  "name": "open890",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "cpx": "^1.5.0",
+    "postcss": "^8.4.4",
+    "postcss-cli": "^9.0.2",
+    "postcss-preset-env": "^7.0.1"
+  }
+}
