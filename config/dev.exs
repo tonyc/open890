@@ -13,7 +13,24 @@ config :open890, Open890Web.Endpoint,
   check_origin: false,
   watchers: [
     esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
-    sass: {DartSass, :install_and_run, [:default, ~w(--embed-source-map --source-map-urls=absolute --watch)]}
+    node: [
+      "./node_modules/.bin/postcss",
+      "./css/app.scss",
+      "--output",
+      "../priv/static/assets/app.css",
+      "--verbose",
+      "--parser",
+      "postcss-scss",
+      "--config",
+      Path.expand("../assets", __DIR__),
+      "--use",
+      "postcss-advanced-variables",
+      "postcss-nested",
+      "autoprefixer",
+      cd: Path.expand("../assets", __DIR__),
+      env: [{"NODE_ENV", "development"}]
+    ]
+    #sass: {DartSass, :install_and_run, [:default, ~w(--embed-source-map --source-map-urls=absolute --watch)]}
   ]
 
 # ## SSL Support

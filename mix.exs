@@ -52,7 +52,6 @@ defmodule Open890.MixProject do
       {:ecto, "~> 3.5"},
       {:elixir_math, "~> 0.1.2"},
       {:esbuild, "~> 0.2", runtime: Mix.env() == :dev},
-      {:dart_sass, "~> 0.2", runtime: Mix.env() == :dev},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:mix_test_watch, "~> 1.0", only: [:dev], runtime: false},
@@ -80,7 +79,7 @@ defmodule Open890.MixProject do
     [
       "assets.deploy": [
         "esbuild default --minify",
-        "sass default --no-source-map --style=compressed",
+        "cmd ./assets/node_modules/.bin/postcss ./assets/css/app.scss --output ./priv/static/assets/app.css --verbose --parser postcss-scss --config ./assets --use postcss-advanced-variables postcss-nested autoprefixer",
         "phx.digest"
       ]
     ]

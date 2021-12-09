@@ -4,9 +4,13 @@
   "main": "index.js",
   "license": "MIT",
   "devDependencies": {
+    "autoprefixer": "^10.4.0",
     "cpx": "^1.5.0",
     "postcss": "^8.4.4",
+    "postcss-advanced-variables": "^3.0.1",
     "postcss-cli": "^9.0.2",
-    "postcss-preset-env": "^7.0.1"
+    "postcss-nested": "^5.0.6",
+    "postcss-preset-env": "^7.0.1",
+    "postcss-scss": "^4.0.2"
   }
 }
