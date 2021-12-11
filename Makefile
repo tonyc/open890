@@ -1,4 +1,4 @@
-.PHONY: all clean up install_tools yarn_install
+.PHONY: all clean clean_elixir deps up install_tools yarn_install
 
 all: clean compile yarn_install
 
@@ -6,6 +6,7 @@ clean : clean_elixir clean_static_assets clean_node_deps
 
 clean_elixir:
 				mix clean --deps
+				rm -rf deps/
 
 clean_static_assets:
 				rm -rf priv/static_assets
@@ -31,7 +32,7 @@ compile_elixir_deps: install_elixir_deps
 compile: compile_elixir_deps
 				mix compile
 
-yarn_install:
+yarn_install: install_tools
 				yarn install --cwd assets
 
 up: compile yarn_install
