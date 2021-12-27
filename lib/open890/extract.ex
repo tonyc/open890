@@ -173,6 +173,10 @@ defmodule Open890.Extract do
     5000
   }
 
+  @ssb_data_hi_cut_lookup {
+
+  }
+
   @am_hi_cut_lookup {
     2000,
     2100,
@@ -506,7 +510,7 @@ defmodule Open890.Extract do
     @fm_lo_cut_lookup |> elem(passband_id)
   end
 
-  def filter_lo_width(passband_id, filter_mode, mode) when mode in [:usb, :usb_d, :lsb, :lsb_d] do
+  def filter_lo_width(passband_id, filter_mode, mode) when mode in [:usb, :lsb] do
     case filter_mode do
       :hi_lo_cut ->
         @ssb_lo_cut_lookup |> elem(passband_id)
@@ -514,6 +518,10 @@ defmodule Open890.Extract do
       :shift_width ->
         @ssb_width_lookup |> elem(passband_id)
     end
+  end
+
+  def filter_lo_width(passband_id, filter_mode, mode) when mode in [:usb_d, :lsb_d] do
+    Logger.warn("Unimplemented filter_lo_width for mode:#{inspect(mode)}, filter_mode:#{inspect(filter_mode)}, passband_id:#{inspect(passband_id)}")
   end
 
   def filter_lo_width(passband_id, filter_mode, mode) do
@@ -534,8 +542,13 @@ defmodule Open890.Extract do
     case filter_mode do
       :hi_lo_cut ->
         cond do
-          current_mode in [:usb, :usb_d, :lsb, :lsb_d] ->
+          current_mode in [:usb, :lsb] ->
             @ssb_hi_cut_lookup |> elem(passband_id)
+
+          current_mode in [:usb_d, :lsb_d] ->
+            Logger.warn("Unimplemented filter_hi_shift for mode: #{current_mode}, filter_mode: #{inspect(filter_mode)}, passband_id:#{inspect(passband_id)}")
+            -1
+            # @ssb_data_hi_cut_lookup |> elem(passband_id)
 
           current_mode in [:am, :am_d] ->
             @am_hi_cut_lookup |> elem(passband_id)
@@ -552,6 +565,10 @@ defmodule Open890.Extract do
         cond do
           current_mode in [:usb, :usb_d, :lsb, :lsb_d] ->
             passband_id |> calculate_ssb_shift()
+
+          current_mode in [:usb_d, :lsb_d] ->
+            Logger.warn("Unimplemented filter_hi_shift for mode: #{current_mode}, filter_mode:#{inspect(filter_mode)}, passband_id:#{inspect(passband_id)}")
+            -1
 
           true ->
             Logger.warn("Unknown mode for hi_shift: :shift_width: #{inspect(current_mode)}")
