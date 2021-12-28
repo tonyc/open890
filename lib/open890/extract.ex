@@ -48,6 +48,7 @@ defmodule Open890.Extract do
     500,
     600,
     700,
+    800,
     900,
     1000,
     1100,

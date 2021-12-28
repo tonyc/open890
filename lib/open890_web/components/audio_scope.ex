@@ -37,9 +37,11 @@ defmodule Open890Web.Components.AudioScope do
             </text>
 
             <g transform="translate(20 0)">
-              <text class="audioScopeLabel">
-                <%= filter_lo_width_label(@active_mode) %>: <%= @filter_state.lo_width %>
-              </text>
+              <%= if @active_mode not in [:usb_d, :lsb_d] and @filter_mode not in [:shift_width] do %>
+                <text class="audioScopeLabel">
+                  <%= filter_lo_width_label(@active_mode) %>: <%= @filter_state.lo_width %>
+                </text>
+              <% end %>
             </g>
 
             <g transform="translate(160 0)">
