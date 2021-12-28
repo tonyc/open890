@@ -131,34 +131,31 @@ defmodule Open890Web.Components.AudioScope do
     }
   end
 
-  def audio_scope_filter_edges(mode, %FilterState{} = filter_state, filter_mode) when mode in [:usb, :lsb, :fm] do
-    filter_state |> IO.inspect(label: "***** audio_scope_filter_edges: filter state, filter_mode: #{inspect(filter_mode)}")
+  def audio_scope_filter_edges(mode, %FilterState{} = _filter_state, :shift_width) when mode in [:usb, :usb_d, :lsb, :lsb_d] do
+    Logger.debug("Unimplemented :shift_width audio_scope_filter_edges for mode: #{inspect(mode)}")
+    ""
+  end
 
-    if filter_mode == :shift_width do
-      ~e{
-        <polyline id="audioScopeFilter" points="" />
-      }
-    else
-      total_width_hz =
-        cond do
-          filter_state.hi_shift >= 3400 -> 5000
-          true -> 3000
-        end
+  def audio_scope_filter_edges(mode, %FilterState{} = filter_state, _filter_mode) when mode in [:usb, :usb_d, :lsb, :lsb_d, :fm] do
+    total_width_hz =
+      cond do
+        filter_state.hi_shift >= 3400 -> 5000
+        true -> 3000
+      end
 
-      [projected_low, projected_hi] =
-        [filter_state.lo_width, filter_state.hi_shift]
-        |> Enum.map(fn val ->
-          val
-          |> project_to_audioscope_limits(total_width_hz)
-          |> round()
-        end)
+    [projected_low, projected_hi] =
+      [filter_state.lo_width, filter_state.hi_shift]
+      |> Enum.map(fn val ->
+        val
+        |> project_to_audioscope_limits(total_width_hz)
+        |> round()
+      end)
 
-      points = audio_scope_filter_points(projected_low, projected_hi)
+    points = audio_scope_filter_points(projected_low, projected_hi)
 
-      ~e{
-        <polyline id="audioScopeFilter" points="<%= points %>" />
-      }
-    end
+    ~e{
+      <polyline id="audioScopeFilter" points="<%= points %>" />
+    }
 
   end
 
@@ -178,10 +175,6 @@ defmodule Open890Web.Components.AudioScope do
     }
   end
 
-  def audio_scope_filter_edges(mode, %FilterState{} = _filter_state, :shift_width) when mode in [:usb, :usb_d, :lsb, :lsb_d] do
-    Logger.debug("Unimplemented :shift_width audio_scope_filter_edges for mode: #{inspect(mode)}")
-    ""
-  end
 
   def audio_scope_filter_edges(mode, %FilterState{} = _filter_state, :hi_lo_cut) when mode in [:usb, :usb_d, :lsb, :lsb_d] do
     Logger.debug("Unimplemented :hi_lo_cut audio_scope_filter_edges for mode: #{inspect(mode)}")

@@ -353,7 +353,7 @@ defmodule Open890Web.Live.Radio do
     end
   end
 
-  def filter_mode(%{active_mode: active_mode, ssb_filter_mode: ssb_filter_mode, ssb_data_filter_mode: ssb_data_filter_mode} = _state) do
+  def filter_mode(active_mode, ssb_filter_mode, ssb_data_filter_mode) do
     case active_mode do
       ssb when ssb in [:usb, :lsb] ->
         ssb_filter_mode

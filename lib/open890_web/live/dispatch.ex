@@ -484,14 +484,15 @@ defmodule Open890Web.Live.Dispatch do
   def dispatch("SH0" <> _rest = msg, socket) do
     %{
       active_mode: current_mode,
-      ssb_filter_mode: filter_mode,
+      ssb_filter_mode: ssb_filter_mode,
+      ssb_data_filter_mode: ssb_data_filter_mode,
       filter_state: filter_state
     } = socket.assigns.radio_state
 
     filter_hi_shift =
       msg
       |> Extract.passband_id()
-      |> Extract.filter_hi_shift(filter_mode, current_mode)
+      |> Extract.filter_hi_shift(ssb_filter_mode, current_mode)
 
     filter_state = %{filter_state | hi_shift: filter_hi_shift}
 
@@ -503,14 +504,15 @@ defmodule Open890Web.Live.Dispatch do
   def dispatch("SL0" <> _rest = msg, socket) do
     %{
       active_mode: current_mode,
-      ssb_filter_mode: filter_mode,
+      ssb_filter_mode: ssb_filter_mode,
+      ssb_data_filter_mode: ssb_data_filter_mode,
       filter_state: filter_state
     } = socket.assigns.radio_state
 
     filter_lo_width =
       msg
       |> Extract.passband_id()
-      |> Extract.filter_lo_width(filter_mode, current_mode)
+      |> Extract.filter_lo_width(ssb_filter_mode, current_mode)
 
     filter_state = %{filter_state | lo_width: filter_lo_width}
 

@@ -2,12 +2,16 @@ defmodule Open890Web.Components.BandScope do
   # use Open890Web, :live_component
   use Phoenix.Component
   import Phoenix.HTML
+  require Logger
 
   alias Open890Web.RadioViewHelpers
 
   def bandscope(assigns) do
     ~H"""
       <div id="bandScopeWrapper" class="hover-pointer" data-spectrum-scale={@spectrum_scale}>
+
+        <p>bandscope: mode: <%= @active_mode %>, filter_mode: <%= @filter_mode %></p>
+
         <svg id="bandScope" class="scope themed kenwood" viewbox="0 0 640 160">
           <defs>
             <filter id="blur" filterunits="userSpaceOnUse" x="0" y="0" width="640" height="150">
@@ -67,11 +71,11 @@ defmodule Open890Web.Components.BandScope do
 
           <g transform="translate(0 20)">
             <%= if @band_scope_edges && @filter_state && @active_mode do %>
-
-              <%= if !(@active_mode in [:usb, :lsb, :usb_d, :lsb_d] and @filter_mode in [:shift_width]) do %>
+              <%= if (@active_mode in [:usb, :lsb, :usb_d, :lsb_d] and @filter_mode in [:hi_lo_cut]) do %>
                 <.passband_polygon
                   mode={@active_mode}
                   active_frequency={@active_frequency}
+                  filter_mode={@filter_mode}
                   filter_state={@filter_state}
                   scope_edges={@band_scope_edges} />
               <% end %>
@@ -172,21 +176,33 @@ defmodule Open890Web.Components.BandScope do
     mode: mode,
     active_frequency: active_frequency,
     filter_state: filter_state,
+    filter_mode: filter_mode,
     scope_edges: scope_edges
-    } = assigns) when mode in [:lsb, :usb] do
+    } = assigns) when mode in [:usb, :usb_d, :lsb, :lsb_d] do
 
-    filter_low =
-      mode
-      |> RadioViewHelpers.offset_frequency(active_frequency, filter_state.lo_width)
-      |> project_to_bandscope_limits(scope_edges)
+    points = case filter_mode do
+      :hi_lo_cut ->
+        filter_low =
+          mode
+          |> RadioViewHelpers.offset_frequency(active_frequency, filter_state.lo_width)
+          |> project_to_bandscope_limits(scope_edges)
 
-    filter_high =
-      mode
-      |> RadioViewHelpers.offset_frequency(active_frequency, filter_state.hi_shift)
-      |> project_to_bandscope_limits(scope_edges)
+        filter_high =
+          mode
+          |> RadioViewHelpers.offset_frequency(active_frequency, filter_state.hi_shift)
+          |> project_to_bandscope_limits(scope_edges)
+
+        "#{filter_low},0 #{filter_high},0 #{filter_high},150 #{filter_low},150"
 
 
-    points = "#{filter_low},0 #{filter_high},0 #{filter_high},150 #{filter_low},150"
+      :shift_width ->
+        Logger.warn("Unimplemented shift_width passband_polygon for: #{mode}")
+        ""
+
+      _ ->
+        Logger.warn("Unknown mode/filter mode combination: #{mode}/#{filter_mode}")
+        ""
+    end
 
     ~H"""
       <polygon id="passband" points={points} />
@@ -199,6 +215,8 @@ defmodule Open890Web.Components.BandScope do
     filter_state: filter_state,
     scope_edges: scope_edges
     } = assigns) when mode in [:cw, :cw_r] do
+
+    Logger.debug("passband_polygon: cw mode")
 
     half_width = (filter_state.lo_width / 2) |> round()
 
@@ -223,6 +241,7 @@ defmodule Open890Web.Components.BandScope do
   end
 
   def passband_polygon(assigns) do
+    Logger.debug("passband_polygon: default case")
     ~H"""
     """
   end
