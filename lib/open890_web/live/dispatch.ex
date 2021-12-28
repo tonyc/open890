@@ -322,7 +322,7 @@ defmodule Open890Web.Live.Dispatch do
         page_title = "#{formatted_frequency} - #{formatted_mode}"
 
         socket
-        |> put_radio_state(:page_title, page_title)
+        |> assign(:page_title, page_title)
         |> put_radio_state(:active_frequency, frequency)
         |> put_radio_state(:active_frequency_delta, delta)
       else
@@ -364,7 +364,7 @@ defmodule Open890Web.Live.Dispatch do
         page_title = "#{formatted_frequency} - #{formatted_mode}"
 
         socket
-        |> put_radio_state(:page_title, page_title)
+        |> assign(:page_title, page_title)
         |> put_radio_state(:active_frequency, frequency)
         |> put_radio_state(:active_frequency_delta, delta)
       else
