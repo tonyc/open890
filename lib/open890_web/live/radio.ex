@@ -352,4 +352,17 @@ defmodule Open890Web.Live.Radio do
       "ui tabs hidden"
     end
   end
+
+  def filter_mode(%{active_mode: active_mode, ssb_filter_mode: ssb_filter_mode, ssb_data_filter_mode: ssb_data_filter_mode} = _state) do
+    case active_mode do
+      ssb when ssb in [:usb, :lsb] ->
+        ssb_filter_mode
+
+      ssb_data when ssb_data in [:usb_d, :lsb_d] ->
+        ssb_data_filter_mode
+
+      _ ->
+        nil
+    end
+  end
 end

@@ -522,12 +522,14 @@ defmodule Open890.Extract do
 
   def filter_lo_width(passband_id, filter_mode, mode) when mode in [:usb_d, :lsb_d] do
     Logger.warn("Unimplemented filter_lo_width for mode:#{inspect(mode)}, filter_mode:#{inspect(filter_mode)}, passband_id:#{inspect(passband_id)}")
+    nil
   end
 
   def filter_lo_width(passband_id, filter_mode, mode) do
     Logger.warn(
       "Unknown passband_id, filter_mode, mode: #{inspect({passband_id, filter_mode, mode})}"
     )
+    nil
   end
 
   def filter_hi_shift(passband_id, _filter_mode, :cw) do
@@ -547,7 +549,7 @@ defmodule Open890.Extract do
 
           current_mode in [:usb_d, :lsb_d] ->
             Logger.warn("Unimplemented filter_hi_shift for mode: #{current_mode}, filter_mode: #{inspect(filter_mode)}, passband_id:#{inspect(passband_id)}")
-            -1
+            nil
             # @ssb_data_hi_cut_lookup |> elem(passband_id)
 
           current_mode in [:am, :am_d] ->
@@ -558,7 +560,7 @@ defmodule Open890.Extract do
 
           true ->
             Logger.warn("Unknown mode for high/shift: #{inspect(current_mode)}")
-            -1
+            nil
         end
 
       :shift_width ->
@@ -568,11 +570,11 @@ defmodule Open890.Extract do
 
           current_mode in [:usb_d, :lsb_d] ->
             Logger.warn("Unimplemented filter_hi_shift for mode: #{current_mode}, filter_mode:#{inspect(filter_mode)}, passband_id:#{inspect(passband_id)}")
-            -1
+            nil
 
           true ->
             Logger.warn("Unknown mode for hi_shift: :shift_width: #{inspect(current_mode)}")
-            -1
+            nil
         end
     end
   end

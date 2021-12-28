@@ -66,8 +66,15 @@ defmodule Open890Web.Components.BandScope do
           </g>
 
           <g transform="translate(0 20)">
-            <%= if @band_scope_edges && @filter_state do %>
-              <.passband_polygon mode={@active_mode} active_frequency={@active_frequency} filter_state={@filter_state} scope_edges={@band_scope_edges} />
+            <%= if @band_scope_edges && @filter_state && @active_mode do %>
+
+              <%= if !(@active_mode in [:usb, :lsb, :usb_d, :lsb_d] and @filter_mode in [:shift_width]) do %>
+                <.passband_polygon
+                  mode={@active_mode}
+                  active_frequency={@active_frequency}
+                  filter_state={@filter_state}
+                  scope_edges={@band_scope_edges} />
+              <% end %>
 
               <%= if @split_enabled do %>
                 <.carrier_line mode="tx" label="T" frequency={@inactive_frequency} band_scope_edges={@band_scope_edges} piggyback={false}/>

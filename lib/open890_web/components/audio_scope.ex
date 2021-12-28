@@ -21,7 +21,7 @@ defmodule Open890Web.Components.AudioScope do
             <polygon id="audioSpectrum" class="spectrum" points={RadioViewHelpers.scope_data_to_svg(@audio_scope_data, max_value: 60)} vector-effect="non-scaling-stroke" />
 
             <%= if @active_if_filter && @roofing_filter_data[@active_if_filter] do %>
-              <%= audio_scope_filter_edges(@active_mode, @filter_state) %>
+              <%= audio_scope_filter_edges(@active_mode, @filter_state, @filter_mode) %>
             <% end %>
 
             <line id="audioScopeTuneIndicator" class="carrier rx" x1="106" y1="5" x2="106" y2="60" />
@@ -44,7 +44,7 @@ defmodule Open890Web.Components.AudioScope do
 
             <g transform="translate(160 0)">
               <text class="audioScopeLabel">
-                <%= if @active_mode in [:cw, :cw_r, :lsb, :lsb_d, :usb, :usb_d, :am, :fm] do %>
+                <%= if @active_mode in [:cw, :cw_r, :lsb, :usb, :am, :fm] do %>
                   <%= filter_hi_shift_label(@active_mode) %>: <%= @filter_state.hi_shift %>
                 <% end %>
               </text>
@@ -102,7 +102,7 @@ defmodule Open890Web.Components.AudioScope do
     |> Kernel.+(70)  # a magic number I don't know where it comes from, but seems to look right
   end
 
-  def audio_scope_filter_edges(mode, %FilterState{} = filter_state) when mode in [:cw, :cw_r] do
+  def audio_scope_filter_edges(mode, %FilterState{} = filter_state, _filter_mode) when mode in [:cw, :cw_r] do
     filter_width = FilterState.width(filter_state)
 
     half_width = (filter_width / 2) |> round()
@@ -131,29 +131,38 @@ defmodule Open890Web.Components.AudioScope do
     }
   end
 
-  def audio_scope_filter_edges(mode, %FilterState{} = filter_state) when mode in [:usb, :lsb, :fm] do
-    total_width_hz =
-      cond do
-        filter_state.hi_shift >= 3400 -> 5000
-        true -> 3000
-      end
+  def audio_scope_filter_edges(mode, %FilterState{} = filter_state, filter_mode) when mode in [:usb, :lsb, :fm] do
+    filter_state |> IO.inspect(label: "***** audio_scope_filter_edges: filter state, filter_mode: #{inspect(filter_mode)}")
 
-    [projected_low, projected_hi] =
-      [filter_state.lo_width, filter_state.hi_shift]
-      |> Enum.map(fn val ->
-        val
-        |> project_to_audioscope_limits(total_width_hz)
-        |> round()
-      end)
+    if filter_mode == :shift_width do
+      ~e{
+        <polyline id="audioScopeFilter" points="" />
+      }
+    else
+      total_width_hz =
+        cond do
+          filter_state.hi_shift >= 3400 -> 5000
+          true -> 3000
+        end
 
-    points = audio_scope_filter_points(projected_low, projected_hi)
+      [projected_low, projected_hi] =
+        [filter_state.lo_width, filter_state.hi_shift]
+        |> Enum.map(fn val ->
+          val
+          |> project_to_audioscope_limits(total_width_hz)
+          |> round()
+        end)
 
-    ~e{
-      <polyline id="audioScopeFilter" points="<%= points %>" />
-    }
+      points = audio_scope_filter_points(projected_low, projected_hi)
+
+      ~e{
+        <polyline id="audioScopeFilter" points="<%= points %>" />
+      }
+    end
+
   end
 
-  def audio_scope_filter_edges(:am, %FilterState{} = filter_state) do
+  def audio_scope_filter_edges(:am, %FilterState{} = filter_state, _filter_mode) do
     [projected_low, projected_hi] =
       [filter_state.lo_width, filter_state.hi_shift]
       |> Enum.map(fn val ->
@@ -169,7 +178,19 @@ defmodule Open890Web.Components.AudioScope do
     }
   end
 
-  def audio_scope_filter_edges(_mode, %FilterState{} = _filter_state) do
+  def audio_scope_filter_edges(mode, %FilterState{} = _filter_state, :shift_width) when mode in [:usb, :usb_d, :lsb, :lsb_d] do
+    Logger.debug("Unimplemented :shift_width audio_scope_filter_edges for mode: #{inspect(mode)}")
+    ""
+  end
+
+  def audio_scope_filter_edges(mode, %FilterState{} = _filter_state, :hi_lo_cut) when mode in [:usb, :usb_d, :lsb, :lsb_d] do
+    Logger.debug("Unimplemented :hi_lo_cut audio_scope_filter_edges for mode: #{inspect(mode)}")
+    ""
+  end
+
+  def audio_scope_filter_edges(mode, %FilterState{} = _filter_state, filter_mode) do
+    info = %{mode: mode, filter_mode: filter_mode}
+    Logger.debug("Unimplemented audio_scope_filter_edges for: #{inspect(info)}")
     ""
   end
 
@@ -177,6 +198,10 @@ defmodule Open890Web.Components.AudioScope do
     edge_offset = 7
 
     "#{low_val - edge_offset},50 #{low_val},5 #{high_val},5 #{high_val + edge_offset},50"
+  end
+
+  def project_to_audioscope_limits(nil, _width) do
+    0
   end
 
   def project_to_audioscope_limits(value, width)

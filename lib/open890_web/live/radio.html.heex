@@ -213,6 +213,9 @@
     </div>
 
     <div class="four wide column right aligned">
+    <p>active mode: <%= @radio_state.active_mode %></p>
+    <p>ssb_data_filter_mode: <%= @radio_state.ssb_data_filter_mode %></p>
+    <p>ssb_filter_mode: <%= @radio_state.ssb_filter_mode %></p>
       <AudioScope.audio_scope
         active_if_filter={@radio_state.active_if_filter}
         active_mode={@radio_state.active_mode}
@@ -220,6 +223,7 @@
         filter_state={@radio_state.filter_state}
         roofing_filter_data={@radio_state.roofing_filter_data}
         notch_state={@radio_state.notch_state}
+        filter_mode={filter_mode(@radio_state)}
         theme={@theme} />
 
       <div class="ui mini black buttons">
@@ -356,6 +360,7 @@
         active_frequency={@radio_state.active_frequency}
         inactive_frequency={@radio_state.inactive_frequency}
         active_mode={@radio_state.active_mode}
+        filter_mode={filter_mode(@radio_state)}
         band_scope_mode={@radio_state.band_scope_mode}
         band_scope_data={@band_scope_data}
         band_scope_edges={@radio_state.band_scope_edges}
