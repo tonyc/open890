@@ -193,11 +193,11 @@ defmodule Open890Web.Components.BandScope do
 
 
       :shift_width ->
-        Logger.warn("Unimplemented shift_width passband_polygon for: #{mode}")
+        Logger.debug("Unimplemented shift_width passband_polygon for: #{mode}")
         ""
 
       _ ->
-        Logger.warn("Unknown mode/filter mode combination: #{mode}/#{filter_mode}")
+        Logger.debug("Unknown mode/filter mode combination: #{mode}/#{filter_mode}")
         ""
     end
 
@@ -212,8 +212,6 @@ defmodule Open890Web.Components.BandScope do
     filter_state: filter_state,
     scope_edges: scope_edges
     } = assigns) when mode in [:cw, :cw_r] do
-
-    Logger.debug("passband_polygon: cw mode")
 
     half_width = (filter_state.lo_width / 2) |> round()
 
@@ -238,8 +236,8 @@ defmodule Open890Web.Components.BandScope do
   end
 
   def passband_polygon(assigns) do
-    Logger.debug("passband_polygon: default case")
     ~H"""
+      <polygon id="passband" class="defaultCase" points="" />
     """
   end
 
