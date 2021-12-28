@@ -568,6 +568,9 @@ defmodule Open890.Extract do
             Logger.warn("Unknown mode for hi_shift: :shift_width: #{inspect(current_mode)}")
             nil
         end
+
+        _ ->
+          Logger.warn("Unknown filter mode #{filter_mode} for #{current_mode}")
     end
   end
 
