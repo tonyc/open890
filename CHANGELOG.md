@@ -2,6 +2,7 @@
 
 ## Unreleased
 * Fixes a display crash related to entering SSB-DATA mode and default settings for menu items 6-11/6-12.
+* Fixes incorrectly-displayed frequency in browser tab title
 * [Dev] Added a Makefile, and updated dev instructions on wiki. Running 'make' should more or less result in a reproducible build, including installing dependencies.
 
 
