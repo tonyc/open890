@@ -2,6 +2,7 @@
 
 ## Unreleased
 * Fixes a display crash bug related to SSB/SSB-DATA modes and menu items 6-11/6-12 being set to "Shift & Width". Passband polygons are not currently displayed for Shift/Width mode.
+* [Dev] Added a Makefile, and updated dev instructions on wiki. Running 'make' should more or less result in a reproducible build, including installing dependencies.
 
 
 ## 0.6.0 - 2021-12-05
