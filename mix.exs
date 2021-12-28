@@ -81,6 +81,11 @@ defmodule Open890.MixProject do
         "esbuild default --minify",
         "cmd assets/node_modules/.bin/postcss assets/css/app.scss --output priv/static/css/app.css --verbose --parser postcss-scss --config assets --use postcss-advanced-variables postcss-nested autoprefixer",
         "phx.digest"
+      ],
+      "assets.deploy.windows": [
+        "esbuild default --minify",
+        "cmd assets\\node_modules\\.bin\\postcss assets\\css\\app.scss --output priv\\static\\css\\app.css --verbose --parser psotcss-scss --config assets --use postcss-advanced-variabled postcss-nested autoprefixer",
+        "phx.digest"
       ]
     ]
   end

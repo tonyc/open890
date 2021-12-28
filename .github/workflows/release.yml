@@ -121,9 +121,9 @@ jobs:
         env:
           MIX_ENV: prod
           SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
-      - name: mix assets.deploy
+      - name: mix assets.deploy.windows
         run: |
-          mix assets.deploy
+          mix assets.deploy.windows
         env:
           MIX_ENV: prod
           SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
