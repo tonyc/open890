@@ -205,17 +205,10 @@
             <.split_button value={@radio_state.split_enabled} fluid }/>
           </div>
         </div>
-
-
       </div>
-
-
     </div>
 
     <div class="four wide column right aligned">
-    <p>active mode: <%= @radio_state.active_mode %></p>
-    <p>ssb_data_filter_mode: <%= @radio_state.ssb_data_filter_mode %></p>
-    <p>ssb_filter_mode: <%= @radio_state.ssb_filter_mode %></p>
       <AudioScope.audio_scope
         active_if_filter={@radio_state.active_if_filter}
         active_mode={@radio_state.active_mode}

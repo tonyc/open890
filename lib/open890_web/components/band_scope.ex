@@ -9,9 +9,6 @@ defmodule Open890Web.Components.BandScope do
   def bandscope(assigns) do
     ~H"""
       <div id="bandScopeWrapper" class="hover-pointer" data-spectrum-scale={@spectrum_scale}>
-
-        <p>bandscope: mode: <%= @active_mode %>, filter_mode: <%= @filter_mode %></p>
-
         <svg id="bandScope" class="scope themed kenwood" viewbox="0 0 640 160">
           <defs>
             <filter id="blur" filterunits="userSpaceOnUse" x="0" y="0" width="640" height="150">
