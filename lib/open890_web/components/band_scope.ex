@@ -1,5 +1,4 @@
 defmodule Open890Web.Components.BandScope do
-  # use Open890Web, :live_component
   use Phoenix.Component
   import Phoenix.HTML
   require Logger

@@ -104,10 +104,9 @@ defmodule Open890Web.Components.AudioScope do
     |> Kernel.+(70)  # a magic number I don't know where it comes from, but seems to look right
   end
 
-  def audio_scope_filter_edges(mode, %FilterState{} = filter_state, _filter_mode) when mode in [:cw, :cw_r] do
+  def cw_filter_points(%FilterState{} = filter_state) do
     filter_width = FilterState.width(filter_state)
-
-    half_width = (filter_width / 2) |> round()
+    half_width = round(filter_width / 2)
 
     scope_width = cond do
       filter_width < 700 -> 500
@@ -126,19 +125,36 @@ defmodule Open890Web.Components.AudioScope do
     low_val = 106 - distance + half_shift_projected
     high_val = 106 + distance + half_shift_projected
 
-    points = audio_scope_filter_points(low_val, high_val)
-
-    ~e{
-      <polyline id="audioScopeFilter" points="<%= points %>" />
-    }
+    audio_scope_filter_points(low_val, high_val)
   end
 
-  def audio_scope_filter_edges(mode, %FilterState{} = _filter_state, :shift_width) when mode in [:usb, :usb_d, :lsb, :lsb_d] do
-    Logger.debug("Unimplemented :shift_width audio_scope_filter_edges for mode: #{inspect(mode)}")
-    ""
+  def shifted_ssb_filter_points(%FilterState{hi_shift: shift} = filter_state) do
+    filter_width = FilterState.width(filter_state)
+    half_width = div(filter_width, 2)
+
+    # if shift + (width /2) >= 3000, the display changes to a 5k width
+    scope_width = if shift + half_width > 3000 do
+      5000
+    else
+      3000
+    end
+
+    center_f = div(scope_width, 2)
+
+    shift_delta = center_f - shift
+
+    low = center_f - half_width - shift_delta
+    high = center_f + half_width - shift_delta
+
+    [low_val, high_val] = [low, high]
+                          |> Enum.map(fn x ->
+                            x |> project_to_audioscope_limits(scope_width)
+                          end)
+
+    audio_scope_filter_points(low_val, high_val)
   end
 
-  def audio_scope_filter_edges(mode, %FilterState{} = filter_state, _filter_mode) when mode in [:usb, :usb_d, :lsb, :lsb_d, :fm] do
+  def hi_lo_cut_filter_points(%FilterState{} = filter_state) do
     total_width_hz =
       cond do
         filter_state.hi_shift >= 3400 -> 5000
@@ -153,40 +169,42 @@ defmodule Open890Web.Components.AudioScope do
         |> round()
       end)
 
-    points = audio_scope_filter_points(projected_low, projected_hi)
+    audio_scope_filter_points(projected_low, projected_hi)
+  end
+
+  def audio_scope_filter_edges(mode, %FilterState{} = filter_state, ssb_filter_mode) do
+    points = case mode do
+      :am -> am_filter_points(filter_state)
+      :fm -> hi_lo_cut_filter_points(filter_state)
+      cw when cw in [:cw, :cw_r] -> cw_filter_points(%FilterState{} = filter_state)
+
+      ssb when ssb in [:usb, :usb_d, :lsb, :lsb_d] ->
+        if ssb_filter_mode == :hi_lo_cut do
+          hi_lo_cut_filter_points(filter_state)
+        else
+          shifted_ssb_filter_points(filter_state)
+        end
+
+      other ->
+        Logger.debug("Unimplemented case for audio_scope_filter_edges for mode #{inspect(other)}")
+        ""
+    end
 
     ~e{
       <polyline id="audioScopeFilter" points="<%= points %>" />
     }
-
   end
 
-  def audio_scope_filter_edges(:am, %FilterState{} = filter_state, _filter_mode) do
+  def am_filter_points(%FilterState{lo_width: lo_width, hi_shift: hi_shift}) do
     [projected_low, projected_hi] =
-      [filter_state.lo_width, filter_state.hi_shift]
+      [lo_width, hi_shift]
       |> Enum.map(fn val ->
         val
         |> project_to_audioscope_limits(5000)
         |> round()
       end)
 
-    points = audio_scope_filter_points(projected_low, projected_hi)
-
-    ~e{
-      <polyline id="audioScopeFilter" points="<%= points %>" />
-    }
-  end
-
-
-  def audio_scope_filter_edges(mode, %FilterState{} = _filter_state, :hi_lo_cut) when mode in [:usb, :usb_d, :lsb, :lsb_d] do
-    Logger.debug("Unimplemented :hi_lo_cut audio_scope_filter_edges for mode: #{inspect(mode)}")
-    ""
-  end
-
-  def audio_scope_filter_edges(mode, %FilterState{} = _filter_state, filter_mode) do
-    info = %{mode: mode, filter_mode: filter_mode}
-    Logger.debug("Unimplemented audio_scope_filter_edges for: #{inspect(info)}")
-    ""
+    audio_scope_filter_points(projected_low, projected_hi)
   end
 
   defp audio_scope_filter_points(low_val, high_val) do
@@ -195,9 +213,7 @@ defmodule Open890Web.Components.AudioScope do
     "#{low_val - edge_offset},50 #{low_val},5 #{high_val},5 #{high_val + edge_offset},50"
   end
 
-  def project_to_audioscope_limits(nil, _width) do
-    0
-  end
+  def project_to_audioscope_limits(nil, _width), do: 0
 
   def project_to_audioscope_limits(value, width)
       when is_integer(value) and is_integer(width) do
