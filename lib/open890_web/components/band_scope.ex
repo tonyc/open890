@@ -176,10 +176,10 @@ defmodule Open890Web.Components.BandScope do
   } = assigns) do
 
     points = case mode do
-      shifty when shifty in [:cw, :cw_r, :fsk, :fsk_r, :psk, :psk_r] ->
+      x when x in [:cw, :cw_r, :fsk, :fsk_r, :psk, :psk_r] ->
         shifted_passband_points(mode, filter_state, active_frequency, scope_edges)
 
-      ssb when ssb in [:usb, :usb_d, :lsb, :lsb_d] ->
+      x when x in [:usb, :usb_d, :lsb, :lsb_d] ->
         hi_lo_cut_passband_points(mode, filter_state, active_frequency, scope_edges, filter_mode)
 
       _ ->
@@ -196,15 +196,16 @@ defmodule Open890Web.Components.BandScope do
     half_width = (filter_state.lo_width / 2) |> round()
 
     shift_direction = case mode do
-      modes when modes in [:cw_r, :fsk_r, :psk_r] -> -1
-      modes when modes in [:usb, :usb_d] -> 1
-      modes when modes in [:lsb, :lsb_d] -> -1
+      x when x in [:cw_r, :fsk_r, :psk_r] -> -1
+      x when x in [:psk, :fsk] -> -1
+      x when x in [:usb, :usb_d] -> 1
+      x when x in [:lsb, :lsb_d] -> -1
       other ->
-        Logger.debug("Unhandled shifted_passband_points for mode #{inspect(mode)}")
+        Logger.debug("Unhandled shifted_passband_points for mode #{inspect(other)}")
         1
     end
 
-    shift = shift_direction * filter_state.hi_shift
+    shift = shift_direction * (filter_state.hi_shift || 0)
 
     filter_low =
       (active_frequency + half_width + shift) |> project_to_bandscope_limits(scope_edges)
