@@ -44,7 +44,9 @@ defmodule Open890Web.Components.AudioScope do
 
             <g transform="translate(160 0)">
               <text class="audioScopeLabel">
-                <%= filter_hi_shift_label(@active_mode, @filter_mode) %>: <%= @filter_state.hi_shift %>
+                <%= if @active_mode not in [:fsk, :fsk_r, :psk, :psk_r] do %>
+                  <%= filter_hi_shift_label(@active_mode, @filter_mode) %>: <%= @filter_state.hi_shift %>
+                <% end %>
               </text>
             </g>
           </g>
@@ -233,7 +235,7 @@ defmodule Open890Web.Components.AudioScope do
 
   def filter_hi_shift_label(mode, ssb_filter_mode) do
     case mode do
-      x when x in [:cw, :cw_r, :fsk, :fsk_r, :psk, :psk_r] -> "SHIFT"
+      x when x in [:cw, :cw_r] -> "SHIFT"
       x when x in [:am, :fm] -> "HC"
       x when x in [:usb, :usb_d, :lsb, :lsb_d] ->
         if ssb_filter_mode == :hi_lo_cut do
