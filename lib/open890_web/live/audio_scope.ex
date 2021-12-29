@@ -73,13 +73,6 @@ defmodule Open890Web.Live.AudioScope do
     {:noreply, socket}
   end
 
-  # # Connection state messages
-  # def handle_info(%Broadcast{event: "connection_state", payload: payload}, socket) do
-  #   Logger.debug("Bandscope LV: RX connection_state: #{inspect(payload)}")
-
-  #   {:noreply, assign(socket, :connection_state, payload)}
-  # end
-
   def handle_info(%Broadcast{} = _bc, socket) do
     {:noreply, socket}
   end

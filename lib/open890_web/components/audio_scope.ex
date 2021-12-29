@@ -102,6 +102,30 @@ defmodule Open890Web.Components.AudioScope do
     |> Kernel.+(70)  # a magic number I don't know where it comes from, but seems to look right
   end
 
+  def data_filter_points(%FilterState{} = filter_state) do
+    filter_width = FilterState.width(filter_state)
+    half_width = round(filter_width / 2)
+
+    scope_width = if filter_width <= 500 do
+      500
+    else
+      3000
+    end
+
+    center_f = div(scope_width, 2)
+
+    low = center_f - half_width
+    high = center_f + half_width
+
+    [low_val, high_val] = [low, high]
+                          |> Enum.map(fn x ->
+                            x |> project_to_audioscope_limits(scope_width)
+                          end)
+
+    audio_scope_filter_points(low_val, high_val)
+
+  end
+
   def cw_filter_points(%FilterState{} = filter_state) do
     filter_width = FilterState.width(filter_state)
     half_width = round(filter_width / 2)
@@ -174,9 +198,9 @@ defmodule Open890Web.Components.AudioScope do
     points = case mode do
       :am -> am_filter_points(filter_state)
       :fm -> hi_lo_cut_filter_points(filter_state)
-      cw when cw in [:cw, :cw_r] -> cw_filter_points(%FilterState{} = filter_state)
-
-      ssb when ssb in [:usb, :usb_d, :lsb, :lsb_d] ->
+      x when x in [:cw, :cw_r] -> cw_filter_points(filter_state)
+      x when x in [:fsk, :fsk_r, :psk, :psk_r] -> data_filter_points(filter_state)
+      x when x in [:usb, :usb_d, :lsb, :lsb_d] ->
         if ssb_filter_mode == :hi_lo_cut do
           hi_lo_cut_filter_points(filter_state)
         else
