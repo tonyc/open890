@@ -147,7 +147,18 @@ let Hooks = {
   },
   AudioScope: {
     mounted() {
-      this.el.addEventListener("mouseup", (event) => {
+      this.el.addEventListener("wheel", (event) => {
+        event.preventDefault();
+        let isScrollUp = (event.deltaY < 0);
+
+        let dir = isScrollUp ? "up" : "down";
+        let isShifted = event.shiftKey;
+
+        console.log("audioScope wheel, dir:", dir, "shifted", isShifted, "event:", event);
+        this.pushEvent("adjust_filter", {dir: dir, shift: isShifted})
+      });
+
+      this.el.addEventListener("click", (event) => {
         event.preventDefault();
         this.pushEvent("cw_tune", {})
       })

@@ -209,19 +209,58 @@
     </div>
 
     <div class="four wide column right aligned">
-      <AudioScope.audio_scope
-        active_if_filter={@radio_state.active_if_filter}
-        active_mode={@radio_state.active_mode}
-        audio_scope_data={@audio_scope_data}
-        filter_state={@radio_state.filter_state}
-        roofing_filter_data={@radio_state.roofing_filter_data}
-        notch_state={@radio_state.notch_state}
-        filter_mode={filter_mode(@radio_state.active_mode, @radio_state.ssb_filter_mode, @radio_state.ssb_data_filter_mode)}
-        theme={@theme} />
-
-      <div class="ui mini black buttons">
-        <.filter_buttons />
+      <div class="row">
+        <div class="column">
+          <AudioScope.audio_scope
+            active_if_filter={@radio_state.active_if_filter}
+            active_mode={@radio_state.active_mode}
+            audio_scope_data={@audio_scope_data}
+            filter_state={@radio_state.filter_state}
+            roofing_filter_data={@radio_state.roofing_filter_data}
+            notch_state={@radio_state.notch_state}
+            filter_mode={filter_mode(@radio_state.active_mode, @radio_state.ssb_filter_mode, @radio_state.ssb_data_filter_mode)}
+            theme={@theme} />
+        </div>
       </div>
+
+      <!--
+      <div class="row right aligned">
+        <span>
+          <div class="ui small black icon button">
+            <i class="caret right icon"></i><i class="caret left icon"></i>
+          </div>
+          <span>Width</span>
+          <div class="ui small black right icon button">
+            <i class="caret left icon"></i><i class="caret right icon"></i>
+          </div>
+        </span>
+        <span>
+          <div class="ui small black icon button">
+            <i class="caret left icon"></i>
+          </div>
+          <span>Shift</span>
+          <div class="ui small black right icon button">
+            <i class="caret right icon"></i>
+          </div>
+        </span>
+      </div>
+      -->
+
+
+      <div class="row">
+        <div class="column">
+          <div class="ui mini black buttons" style="margin-right: 2rem;">
+            <.filter_buttons />
+          </div>
+
+          <%= if @radio_state.active_mode in [:cw, :cw_r] do %>
+            <div class="ui mini black buttons">
+              <.cmd_button_2 cmd="CA1">CW T</.cmd_button_2>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
 
     </div>
   </div> <!-- row -->

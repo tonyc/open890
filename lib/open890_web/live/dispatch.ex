@@ -495,12 +495,12 @@ defmodule Open890Web.Live.Dispatch do
       _ -> :unknown
     end
 
-    filter_hi_shift =
-      msg
-      |> Extract.passband_id()
-      |> Extract.filter_hi_shift(filter_mode, active_mode)
+    passband_id = Extract.passband_id(msg)
 
-    filter_state = %{filter_state | hi_shift: filter_hi_shift}
+    filter_hi_shift =
+      passband_id |> Extract.filter_hi_shift(filter_mode, active_mode)
+
+    filter_state = %{filter_state | hi_shift: filter_hi_shift, hi_passband_id: passband_id}
 
     socket
     |> put_radio_state(:filter_state, filter_state)
@@ -521,12 +521,12 @@ defmodule Open890Web.Live.Dispatch do
       _ -> :unknown
     end
 
-    filter_lo_width =
-      msg
-      |> Extract.passband_id()
-      |> Extract.filter_lo_width(filter_mode, active_mode)
+    passband_id = Extract.passband_id(msg)
 
-    filter_state = %{filter_state | lo_width: filter_lo_width}
+    filter_lo_width =
+      passband_id |> Extract.filter_lo_width(filter_mode, active_mode)
+
+    filter_state = %{filter_state | lo_width: filter_lo_width, lo_passband_id: passband_id}
 
     socket
     |> put_radio_state(:filter_state, filter_state)

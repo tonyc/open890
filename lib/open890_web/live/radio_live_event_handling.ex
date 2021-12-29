@@ -254,6 +254,12 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
         {:noreply, socket}
       end
 
+      def handle_event("adjust_filter", params, %{assigns: %{radio_connection: connection}} = socket) do
+        Logger.info("adjust_filter: #{inspect(params)}")
+        {:noreply, socket}
+      end
+
+
       defp set_screen_id(socket, id) do
         socket |> assign(:display_screen_id, id)
       end
