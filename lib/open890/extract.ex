@@ -123,6 +123,7 @@ defmodule Open890.Extract do
     250,
     300,
     350,
+    400,
     450,
     500,
     600,
