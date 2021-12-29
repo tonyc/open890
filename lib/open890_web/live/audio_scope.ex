@@ -78,7 +78,7 @@ defmodule Open890Web.Live.AudioScope do
   end
 
   def handle_event(event, params, socket) do
-    Logger.warn("RadioLive.Bandscope: Unknown event: #{event}, params: #{inspect(params)}")
+    Logger.warn("Live.AudioScope: Unknown event: #{event}, params: #{inspect(params)}")
     {:noreply, socket}
   end
 

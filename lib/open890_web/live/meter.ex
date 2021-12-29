@@ -83,7 +83,7 @@ defmodule Open890Web.Live.Meter do
   end
 
   def handle_event(event, params, socket) do
-    Logger.warn("RadioLive.Bandscope: Unknown event: #{event}, params: #{inspect(params)}")
+    Logger.warn("Live.Meter: Unknown event: #{event}, params: #{inspect(params)}")
     {:noreply, socket}
   end
 

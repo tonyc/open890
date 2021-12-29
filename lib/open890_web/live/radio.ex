@@ -310,8 +310,47 @@ defmodule Open890Web.Live.Radio do
     {:noreply, socket}
   end
 
+  def handle_event("adjust_filter", params, socket) do
+    Logger.info("adjust_filter: #{inspect(params)}")
+
+    filter_state = socket.assigns.radio_state.filter_state
+    connection = socket.assigns.radio_connection
+
+    lo_width_passband_id = filter_state.lo_passband_id
+    hi_shift_passband_id = filter_state.hi_passband_id
+
+    is_up = params["dir"] == "up"
+
+    if params["shift"] do
+          # adjust shift
+      new_passband_id = if is_up do
+        hi_shift_passband_id + 1
+      else
+        hi_shift_passband_id - 1
+      end
+      |> to_string()
+      |> String.pad_leading(4, "0")
+
+      connection |> RadioConnection.cmd("SH#{new_passband_id}")
+    else
+      # width
+      new_passband_id = if is_up do
+        lo_width_passband_id + 1
+      else
+        lo_width_passband_id - 1
+      end
+      |> to_string()
+      |> String.pad_leading(3, "0")
+
+      connection |> RadioConnection.cmd("SL#{new_passband_id}")
+    end
+
+    {:noreply, socket}
+  end
+
+
   def handle_event(event, params, socket) do
-    Logger.warn("RadioLive.Bandscope: Unknown event: #{event}, params: #{inspect(params)}")
+    Logger.warn("Live.Radio: Unknown event: #{event}, params: #{inspect(params)}")
     {:noreply, socket}
   end
 

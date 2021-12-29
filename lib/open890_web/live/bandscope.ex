@@ -182,6 +182,8 @@ defmodule Open890Web.Live.Bandscope do
     {:noreply, socket}
   end
 
+
+
   def handle_event(event, params, socket) do
     Logger.warn("RadioLive.Bandscope: Unknown event: #{event}, params: #{inspect(params)}")
     {:noreply, socket}
