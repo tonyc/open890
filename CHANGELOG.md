@@ -1,6 +1,7 @@
 # open890 Changelog
 
 ## Unreleased
+* Implemented correct shift/width display for bandscope passband polygon
 
 ## 0.6.1 - 2021-12-28
 * Fixes a display crash related to entering SSB-DATA mode and default settings for menu items 6-11/6-12.
