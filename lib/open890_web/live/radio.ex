@@ -348,7 +348,6 @@ defmodule Open890Web.Live.Radio do
     {:noreply, socket}
   end
 
-
   def handle_event(event, params, socket) do
     Logger.warn("Live.Radio: Unknown event: #{event}, params: #{inspect(params)}")
     {:noreply, socket}

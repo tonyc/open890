@@ -1,6 +1,7 @@
 # open890 Changelog
 
 ## Unreleased
+* Added mousewheel-based filter adjustments: Wheel for lo/width, shift+wheel for hi/shift.
 * Finished implementation of audio scope filter edges for all modes
 * Implemented correct shift/width display for bandscope passband polygon
 
