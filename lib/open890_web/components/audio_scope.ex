@@ -37,18 +37,14 @@ defmodule Open890Web.Components.AudioScope do
             </text>
 
             <g transform="translate(20 0)">
-              <%= if @active_mode not in [:usb_d, :lsb_d] and @filter_mode not in [:shift_width] do %>
-                <text class="audioScopeLabel">
-                  <%= filter_lo_width_label(@active_mode) %>: <%= @filter_state.lo_width %>
-                </text>
-              <% end %>
+              <text class="audioScopeLabel">
+                <%= filter_lo_width_label(@active_mode, @filter_mode) %>: <%= @filter_state.lo_width %>
+              </text>
             </g>
 
             <g transform="translate(160 0)">
               <text class="audioScopeLabel">
-                <%= if @active_mode in [:cw, :cw_r, :lsb, :usb, :am, :fm] do %>
-                  <%= filter_hi_shift_label(@active_mode) %>: <%= @filter_state.hi_shift %>
-                <% end %>
+                <%= filter_hi_shift_label(@active_mode, @filter_mode) %>: <%= @filter_state.hi_shift %>
               </text>
             </g>
           </g>
@@ -221,19 +217,32 @@ defmodule Open890Web.Components.AudioScope do
     percentage * 212
   end
 
-  def filter_lo_width_label(mode) when mode in [:cw, :cw_r, :fsk, :fsk_r, :psk, :psk_r] do
-    "WIDTH"
+  def filter_lo_width_label(mode, ssb_filter_mode) do
+    case mode do
+      x when x in [:cw, :cw_r, :fsk, :fsk_r, :psk, :psk_r] -> "WIDTH"
+      x when x in [:am, :fm] -> "LC"
+      x when x in [:usb, :usb_d, :lsb, :lsb_d] ->
+        if ssb_filter_mode == :hi_lo_cut do
+          "LC"
+        else
+          "WIDTH"
+        end
+      _ -> ""
+    end
   end
 
-  def filter_lo_width_label(_) do
-    "LC"
+  def filter_hi_shift_label(mode, ssb_filter_mode) do
+    case mode do
+      x when x in [:cw, :cw_r, :fsk, :fsk_r, :psk, :psk_r] -> "SHIFT"
+      x when x in [:am, :fm] -> "HC"
+      x when x in [:usb, :usb_d, :lsb, :lsb_d] ->
+        if ssb_filter_mode == :hi_lo_cut do
+          "HC"
+        else
+          "SHIFT"
+        end
+      _ -> ""
+    end
   end
 
-  def filter_hi_shift_label(mode) when mode in [:cw, :cw_r] do
-    "SHIFT"
-  end
-
-  def filter_hi_shift_label(_) do
-    "HC"
-  end
 end

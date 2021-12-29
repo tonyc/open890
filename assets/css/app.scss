@@ -253,10 +253,11 @@ nav {
 
 .audioScopeWrapper {
   float: right;
+
   #audioScope, #AudioScopeCanvas {
     width: 100%;
   }
-  
+
   #audioScope {
     //border-radius: $border-radius-small;
     border-top: 2px solid $kenwood-grey;
@@ -584,7 +585,7 @@ svg#bandScope {
 
 
 .hover-pointer:hover {
-  cursor: pointer;
+  cursor: pointer !important;
 }
 
 
