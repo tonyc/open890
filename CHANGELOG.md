@@ -1,6 +1,7 @@
 # open890 Changelog
 
 ## Unreleased
+* Finished implementation of audio scope filter edges for all modes
 * Implemented correct shift/width display for bandscope passband polygon
 
 ## 0.6.1 - 2021-12-28
