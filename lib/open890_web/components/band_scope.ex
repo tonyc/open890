@@ -198,8 +198,8 @@ defmodule Open890Web.Components.BandScope do
     shift_direction = case mode do
       x when x in [:cw_r, :fsk_r, :psk_r] -> -1
       x when x in [:psk, :fsk] -> -1
-      x when x in [:usb, :usb_d] -> 1
       x when x in [:lsb, :lsb_d] -> -1
+      x when x in [:usb, :usb_d, :cw] -> 1
       other ->
         Logger.debug("Unhandled shifted_passband_points for mode #{inspect(other)}")
         1
