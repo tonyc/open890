@@ -40,7 +40,12 @@ defmodule Open890.ConnectionCommands do
     |> get_squelch()
     |> get_split()
     |> get_apf_state()
+    |> get_voip_state()
   end
+
+  def get_voip_state(conn), do: conn |> cmd("##VP")
+  def start_voip(conn), do: conn |> cmd("##VP1")
+  def stop_voip(conn), do: conn |> cmd("##VP0")
 
   def get_apf_state(conn), do: conn |> cmd("AP0")
 

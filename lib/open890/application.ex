@@ -24,7 +24,8 @@ defmodule Open890.Application do
       # Start the Endpoint (http/https)
       Open890Web.Endpoint,
       {Open890.RadioConnectionSupervisor,
-       strategy: :one_for_one, name: Open890.RadioConnectionSupervisor}
+       strategy: :one_for_one, name: Open890.RadioConnectionSupervisor},
+      {Open890.UDPAudioServer, []},
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

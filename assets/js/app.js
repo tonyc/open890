@@ -13,6 +13,7 @@ import ColorMap from "./colormap"
 window.Interpolate = Interpolate;
 window.ColorMap = ColorMap;
 
+
 let liveSocket = new LiveSocket("/live", Socket, {
   hooks: Hooks,
   params: {_csrf_token: csrfToken},

@@ -7,6 +7,14 @@ defmodule Open890Web.Live.Dispatch do
 
   import Phoenix.LiveView, only: [assign: 3, push_event: 3]
 
+  def dispatch("##VP1" <> _rest = msg, socket) do
+    socket |> put_radio_state(:voip_enabled, true)
+  end
+
+  def dispatch("##VP0" <> _rest = msg, socket) do
+    socket |> put_radio_state(:voip_enabled, false)
+  end
+
   def dispatch("AP0" <> _rest = msg, socket) do
     socket |> put_radio_state(:apf_enabled, Extract.apf_enabled(msg))
   end

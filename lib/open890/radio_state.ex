@@ -57,6 +57,7 @@ defmodule Open890.RadioState do
     vfo_a_frequency: nil,
     vfo_b_frequency: nil,
     vfo_memory_state: nil,
+    voip_enabled: nil,
   ]
 
   def filter_mode(%__MODULE__{} = radio_state) do

@@ -291,6 +291,7 @@ defmodule Open890Web.RadioViewHelpers do
       {:down, :timeout} -> "Connection Timeout"
       {:down, :kns_in_use} -> "KNS Connection Already In Use"
       {:down, :bad_credentials} -> "Incorrect username or password"
+      nil -> "Connection Down"
       other -> inspect(other)
     end
   end
@@ -299,6 +300,7 @@ defmodule Open890Web.RadioViewHelpers do
     case connection_state do
       :stopped -> true
       {:down, _} -> true
+      nil -> true
       _ -> false
     end
   end

@@ -76,10 +76,6 @@ defmodule Open890Web.Live.Radio do
   @impl true
   def handle_params(params, _uri, socket) do
     selected_tab = params["panelTab"]
-    |> case do
-      "scope" -> "scope"
-      _ -> "txrx"
-    end
 
     panel_open = params |> Map.get("panel", "true") == "true"
 

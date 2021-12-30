@@ -105,7 +105,7 @@ defmodule Open890.RadioConnection do
   end
 
   def stop(%__MODULE__{id: id} = connection) do
-    Registry.lookup(:radio_connection_registry, id)
+    Registry.lookup(:radio_connection_registry, {:tcp, id})
     |> case do
       [{pid, _}] ->
         DynamicSupervisor.terminate_child(RadioConnectionSupervisor, pid)
@@ -173,7 +173,7 @@ defmodule Open890.RadioConnection do
   end
 
   defp get_connection_pid(%__MODULE__{id: id}) do
-    Registry.lookup(:radio_connection_registry, id)
+    Registry.lookup(:radio_connection_registry, {:tcp, id})
     |> case do
       [{pid, _}] -> {:ok, pid}
       [] -> {:error, :not_found}

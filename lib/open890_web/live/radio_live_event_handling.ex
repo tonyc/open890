@@ -11,6 +11,16 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
       alias Open890.TCPClient, as: Radio
       alias Open890.Menu
 
+      def handle_event("stop_voip", params, %{assigns: %{radio_connection: connection}} = socket) do
+        connection |> Radio.stop_voip()
+        {:noreply, socket}
+      end
+
+      def handle_event("start_voip", params, %{assigns: %{radio_connection: connection}} = socket) do
+        connection |> Radio.start_voip()
+        {:noreply, socket}
+      end
+
       def handle_event(
             "ref_level_changed",
             params,
@@ -257,6 +267,9 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
       defp set_screen_id(socket, id) do
         socket |> assign(:display_screen_id, id)
       end
+
+
+
     end
   end
 end

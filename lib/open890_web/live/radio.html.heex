@@ -65,30 +65,56 @@
           <% end %>
         </div>
 
-        <div class="two wide column center aligned">
+        <div class="six wide column">
+          <!-- connection status -->
           <%= if connection_startable?(@connection_state) do %>
-            <span class="ui icon hover-pointer" phx-click="start_connection" data-tooltip="Start connection" data-position="bottom center">
-              <i class="large play circle outline icon"></i>
-            </span>
+            <div class="ui icon large black buttons">
+              <button class="ui button" phx-click="start_connection" data-tooltip="Start connection" data-position="bottom center">
+                <i class="play circle outline icon"></i>
+                <span class="secondaryText">
+                  <%= format_connection_state(@connection_state) %>
+                </span>
+              </button>
+            </div>
           <% else %>
-            <span class="ui icon hover-pointer" phx-click="stop_connection" data-tooltip="Stop connection" data-position="bottom center">
-              <i class="large stop circle outline icon"></i>
-            </span>
+            <div class="ui icon large black buttons">
+              <button class="ui button" phx-click="stop_connection" data-tooltip="Stop connection" data-position="bottom center">
+                <i class="stop circle outline icon"></i>
+                <span class="secondaryText">
+                  <%= format_connection_state(@connection_state) %>
+                </span>
+              </button>
+            </div>
           <% end %>
+
         </div>
 
-        <!-- connection status -->
-        <div class="eight wide center aligned column">
-          <span class="connectionStatus">
-            <span class="ui icon rotating">
-              <%= connection_status_icon(@connection_state) %>
-            </span>
-
-            <%= format_connection_state(@connection_state) %>
-          </span>
-        </div>
-
-        <div class="two wide center aligned column">
+        <div class="six wide column">
+          <!-- audio stream status -->
+          <div phx-hook="AudioStream">
+            <%= if @connection_state == :up && @radio_state.voip_enabled do %>
+              <div class="ui icon large black buttons">
+                <button class="ui button" phx-click="stop_voip" data-tooltip="Stop VOIP audio" data-position="bottom center">
+                  <span class="secondaryText">
+                    Audio: Streaming &nbsp;
+                    <i class="icon small sync rotating"></i>
+                  </span>
+                </button>
+              </div>
+            <% else %>
+              <div class="ui icon large black buttons">
+                <%= if @connection_state == :up do %>
+                  <button class="ui button" phx-click="start_voip" data-tooltip="Start VOIP Audio" data-position="bottom center">
+                    <span class="secondaryText">Audio: Stopped</span>
+                  </button>
+                <% else %>
+                  <button class="ui button disabled">
+                    <span class="secondaryText">Audio: Stopped</span>
+                  </button>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
         </div>
 
         <div class="two wide right aligned column">
@@ -337,7 +363,7 @@
             <div class="column">
               <.scope_range_button fluid band_scope_mode={@radio_state.band_scope_mode} band_scope_span={@radio_state.band_scope_span} />
             </div>
-            
+
             <%= if @radio_state.band_scope_mode == :auto_scroll do %>
               <.cmd_button_2 cmd="BSE" fluid class="ui small black button">Shift</.cmd_button_2>
             <% end %>
@@ -374,6 +400,7 @@
               <.pop_out_bandscope_button radio_connection={@radio_connection} fluid />
             </div>
           </div>
+
         </div>
       </div>
 

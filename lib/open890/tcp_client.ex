@@ -5,6 +5,7 @@ defmodule Open890.TCPClient do
   @socket_opts [:binary, active: true, exit_on_close: true, send_timeout: 1000, send_timeout_close: true]
   @connect_timeout_ms 5000
 
+  @enable_voip true
   @enable_audio_scope true
   @enable_band_scope true
 
@@ -16,7 +17,7 @@ defmodule Open890.TCPClient do
   end
 
   def via_tuple(connection_id) do
-    {:via, Registry, {:radio_connection_registry, connection_id}}
+    {:via, Registry, {:radio_connection_registry, {:tcp, connection_id}}}
   end
 
   @impl true
@@ -126,8 +127,8 @@ defmodule Open890.TCPClient do
   end
 
   def handle_info(:enable_voip, state) do
-    # Logger.info("Enabling HQ VOIP stream")
-    # state.socket |> send_command("##VP1") # high quality
+    Logger.info("\n\n**** Enabling HQ VOIP stream\n\n")
+    state.socket |> send_command("##VP1") # high quality
     # state.socket |> send_command("##VP2") # low quality
 
     {:noreply, state}
@@ -178,7 +179,7 @@ defmodule Open890.TCPClient do
     Logger.info("signed in, scheduling first ping")
     schedule_ping()
 
-    # send(self(), :enable_voip)
+    #if @enable_voip, do: send(self(), :enable_voip)
     if @enable_audio_scope, do: send(self(), :enable_audioscope)
     if @enable_band_scope, do: send(self(), :enable_bandscope)
 
