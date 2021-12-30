@@ -253,14 +253,16 @@
             <.filter_buttons />
           </div>
 
-          <%= if @radio_state.active_mode in [:cw, :cw_r] do %>
-            <div class="ui mini black buttons">
-              <.cmd_button_2 cmd="CA1">CW T</.cmd_button_2>
-            </div>
-          <% end %>
-
           <%= if @radio_state.active_mode in [:cw, :cw_r, :fsk, :fsk_r] do %>
-            <.apf_button value={@radio_state.apf_enabled} />
+            <%= if @radio_state.active_mode in [:cw, :cw_r] do %>
+              <div class="ui mini black buttons">
+                <.cmd_button_2 cmd="CA1">CW T</.cmd_button_2>
+              </div>
+            <% end %>
+
+            <div class="ui mini black buttons">
+              <.apf_button value={@radio_state.apf_enabled} />
+            </div>
           <% end %>
         </div>
       </div>
