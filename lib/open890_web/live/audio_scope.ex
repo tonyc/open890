@@ -5,7 +5,7 @@ defmodule Open890Web.Live.AudioScope do
   use Open890Web.Live.RadioLiveEventHandling
 
   alias Phoenix.Socket.Broadcast
-  alias Open890.{ConnectionCommands, RadioConnection}
+  alias Open890.{ConnectionCommands, RadioConnection, RadioState}
   alias Open890Web.Live.{Dispatch, RadioSocketState}
 
   alias Open890Web.Components.AudioScope

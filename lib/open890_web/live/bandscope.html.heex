@@ -1,7 +1,9 @@
 <div id="Xradio" xclass={radio_classes(@debug)} phx-window-keydown="window_keydown" phx-window-keyup="window_keyup">
   <BandScope.bandscope
     active_frequency={@radio_state.active_frequency}
+    inactive_frequency={@radio_state.inactive_frequency}
     active_mode={@radio_state.active_mode}
+    filter_mode={RadioState.filter_mode(@radio_state)}
     band_scope_mode={@radio_state.band_scope_mode}
     band_scope_data={@band_scope_data}
     band_scope_edges={@radio_state.band_scope_edges}
