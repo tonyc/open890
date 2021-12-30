@@ -18,9 +18,9 @@ install_tools : install_asdf_plugins
 		asdf install
 
 install_asdf_plugins:
-		@asdf plugin-list | grep erlang || asdf plugin-add erlang https://github.com/asdf-vm/asdf-erlang.git
-		@asdf plugin-list | grep elixir || asdf plugin-add elixir https://github.com/asdf-vm/asdf-elixir.git
-		@asdf plugin-list | grep nodejs || asdf plugin-add nodejs https://github.com/asdf-vm/asdf-nodejs.git
+		@asdf plugin-list | grep erlang || asdf plugin-add erlang
+		@asdf plugin-list | grep elixir || asdf plugin-add elixir
+		@asdf plugin-list | grep nodejs || asdf plugin-add nodejs
 		@asdf plugin-list | grep yarn || asdf plugin-add yarn
 
 install_elixir_deps: install_tools
