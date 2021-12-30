@@ -5,7 +5,7 @@ defmodule Open890Web.Live.Radio do
   use Open890Web.Live.RadioLiveEventHandling
 
   alias Phoenix.Socket.Broadcast
-  alias Open890.{ConnectionCommands, Extract, RadioConnection}
+  alias Open890.{ConnectionCommands, Extract, RadioConnection, RadioState}
   alias Open890Web.Live.{BandButtonsComponent, Dispatch, RadioSocketState}
 
   alias Open890Web.Components.{AudioScope, Meter, Slider}
@@ -388,19 +388,6 @@ defmodule Open890Web.Live.Radio do
       "ui tabs"
     else
       "ui tabs hidden"
-    end
-  end
-
-  def filter_mode(active_mode, ssb_filter_mode, ssb_data_filter_mode) do
-    case active_mode do
-      ssb when ssb in [:usb, :lsb] ->
-        ssb_filter_mode
-
-      ssb_data when ssb_data in [:usb_d, :lsb_d] ->
-        ssb_data_filter_mode
-
-      _ ->
-        nil
     end
   end
 end

@@ -31,15 +31,15 @@ defmodule Open890.RadioConnection do
   end
 
   def find(id) do
-    id |> Repo.find()
+    id |> repo().find()
   end
 
   def all do
-    Repo.all()
+    repo().all()
   end
 
   def create(params) when is_map(params) do
-    params |> Repo.insert()
+    params |> repo().insert()
   end
 
   def delete_connection(%__MODULE__{id: id}) when is_integer(id) do
@@ -47,7 +47,11 @@ defmodule Open890.RadioConnection do
   end
 
   def delete_connection(id) do
-    id |> Repo.delete()
+    id |> repo().delete()
+  end
+
+  def delete_all do
+    repo().delete_all()
   end
 
   def update_connection(%__MODULE__{} = conn, params) when is_map(params) do
@@ -64,11 +68,11 @@ defmodule Open890.RadioConnection do
         auto_start: params["auto_start"]
       })
 
-    new_connection |> Repo.update()
+    new_connection |> repo().update()
   end
 
   def count_connections do
-    Repo.count()
+    repo().count()
   end
 
   def start(id) when is_integer(id) or is_binary(id) do
@@ -174,5 +178,9 @@ defmodule Open890.RadioConnection do
       [{pid, _}] -> {:ok, pid}
       [] -> {:error, :not_found}
     end
+  end
+
+  def repo do
+    Repo
   end
 end

@@ -58,4 +58,18 @@ defmodule Open890.RadioState do
     vfo_b_frequency: nil,
     vfo_memory_state: nil,
   ]
+
+  def filter_mode(%__MODULE__{} = radio_state) do
+    case radio_state.active_mode do
+      ssb when ssb in [:usb, :lsb] ->
+        radio_state.ssb_filter_mode
+
+      ssb_data when ssb_data in [:usb_d, :lsb_d] ->
+        radio_state.ssb_data_filter_mode
+
+      _ ->
+        nil
+
+    end
+  end
 end
