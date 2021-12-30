@@ -158,6 +158,16 @@ defmodule Open890Web.Components.Buttons do
     """
   end
 
+  def apf_button(assigns) do
+    values = %{true => "AP00", false => "AP01"}
+
+    ~H"""
+      <.cycle_button_2 value={@value} values={values} fluid={assigns[:fluid]}>
+        APF <%= on_off(@value) %>
+      </.cycle_button_2>
+    """
+  end
+
   def nb2_button(assigns) do
     values = %{true => "NB20", false => "NB21"}
 

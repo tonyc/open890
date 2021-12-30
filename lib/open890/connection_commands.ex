@@ -39,7 +39,10 @@ defmodule Open890.ConnectionCommands do
     |> get_nb_states()
     |> get_squelch()
     |> get_split()
+    |> get_apf_state()
   end
+
+  def get_apf_state(conn), do: conn |> cmd("AP0")
 
   def get_split(conn), do: conn |> cmd("TB")
 

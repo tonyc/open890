@@ -11,6 +11,7 @@ defmodule Open890.RadioState do
     agc: nil,
     alc_meter: 0,
     antenna_state: %AntennaState{},
+    apf_enabled: nil,
     audio_gain: nil,
     band_register_state: %BandRegisterState{},
     band_scope_att: nil,

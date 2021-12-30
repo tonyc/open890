@@ -258,6 +258,10 @@
               <.cmd_button_2 cmd="CA1">CW T</.cmd_button_2>
             </div>
           <% end %>
+
+          <%= if @radio_state.active_mode in [:cw, :cw_r, :fsk, :fsk_r] do %>
+            <.apf_button value={@radio_state.apf_enabled} />
+          <% end %>
         </div>
       </div>
 
