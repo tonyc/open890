@@ -18,6 +18,8 @@ defmodule Open890Web.RadioConnectionControllerTest do
 
   describe "index" do
     test "shows the onboarding screen when no connections exist", %{conn: conn} do
+      RadioConnection.delete_all()
+
       assert RadioConnection.count_connections() == 0
 
       conn = get(conn, Routes.radio_connection_path(conn, :index))

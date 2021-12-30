@@ -121,6 +121,10 @@ defmodule Open890.RadioConnectionRepo do
     table_name() |> :dets.delete(id)
   end
 
+  def delete_all do
+    table_name() |> :dets.delete_all_objects()
+  end
+
   defp table_name do
     :open890
     |> Application.get_env(Open890.RadioConnectionRepo)

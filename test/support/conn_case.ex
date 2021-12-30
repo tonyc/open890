@@ -23,6 +23,7 @@ defmodule Open890Web.ConnCase do
       import Plug.Conn
       import Phoenix.ConnTest
       import Open890Web.ConnCase
+      import ExUnit.Case
 
       alias Open890Web.Router.Helpers, as: Routes
 
