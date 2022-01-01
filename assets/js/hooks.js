@@ -7,6 +7,8 @@ function PCMPlayer(t){this.init(t)}PCMPlayer.prototype.init=function(t){this.opt
 let Hooks = {
   AudioStream: {
     mounted() {
+      console.log("AudioStream: mounted")
+
       this.player = new PCMPlayer({
         encoding: '16bitInt',
         channels: 1,
@@ -14,7 +16,6 @@ let Hooks = {
         flushingTime: 125
       })
 
-      console.log("AudioStream mounted")
       this.audioStreamChannel = socket.channel("radio:audio_stream", {})
       this.audioStreamChannel.join()
         .receive("ok", (resp) => { console.log("joined audio stream channel, resp:", resp) })
@@ -28,8 +29,6 @@ let Hooks = {
           this.player.feed(buff)
         }
       })
-
-
     }
   },
   Tabs: {

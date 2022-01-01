@@ -91,7 +91,7 @@
 
         <div class="six wide column">
           <!-- audio stream status -->
-          <div phx-hook="AudioStream">
+          <div phx-hook="AudioStream" id="AudioStreamPlayer">
             <%= if @connection_state == :up && @radio_state.voip_enabled do %>
               <div class="ui icon large black buttons">
                 <button class="ui button" phx-click="stop_voip" data-tooltip="Stop VOIP audio" data-position="bottom center">
