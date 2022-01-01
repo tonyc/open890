@@ -91,30 +91,44 @@
 
         <div class="six wide column">
           <!-- audio stream status -->
-          <div phx-hook="AudioStream" id="AudioStreamPlayer">
-            <%= if @connection_state == :up && @radio_state.voip_enabled do %>
-              <div class="ui icon large black buttons">
-                <button class="ui button" phx-click="stop_voip" data-tooltip="Stop VOIP audio" data-position="bottom center">
-                  <span class="secondaryText">
-                    Audio: Streaming &nbsp;
-                    <i class="icon small sync rotating"></i>
-                  </span>
-                </button>
-              </div>
-            <% else %>
-              <div class="ui icon large black buttons">
-                <%= if @connection_state == :up do %>
-                  <button class="ui button" phx-click="start_voip" data-tooltip="Start VOIP Audio" data-position="bottom center">
-                    <span class="secondaryText">Audio: Stopped</span>
+
+          <%= if @radio_state.voip_available do %>
+            <div phx-hook="AudioStream" id="AudioStreamPlayer">
+              <%= if @connection_state == :up && @radio_state.voip_enabled do %>
+                <div class="ui icon large black buttons">
+                  <button class="ui button" phx-click="stop_voip" data-tooltip="Stop VOIP audio" data-position="bottom center">
+                    <span class="secondaryText">
+                      Audio: Streaming &nbsp;
+                      <i class="icon small sync rotating"></i>
+                    </span>
                   </button>
-                <% else %>
-                  <button class="ui button disabled">
-                    <span class="secondaryText">Audio: Stopped</span>
-                  </button>
-                <% end %>
-              </div>
-            <% end %>
-          </div>
+                </div>
+              <% else %>
+                <div class="ui icon large black buttons">
+                  <%= if @connection_state == :up do %>
+                    <button class="ui button" phx-click="start_voip" data-tooltip="Start VOIP Audio" data-position="bottom center">
+                      <span class="secondaryText">Audio: Stopped</span>
+                    </button>
+                  <% else %>
+                    <button class="ui button disabled">
+                      <span class="secondaryText">Audio: Stopped</span>
+                    </button>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+
+
+          <% else %>
+            <div class="ui icon large black buttons">
+              <button class="ui button" data-tooltip="Enable through MENU &rarr; KNS &rarr; Config &rarr; Built-in VOIP: ON" data-position="bottom center">
+                <i class="icon grey exclamation triangle"></i>
+                &nbsp;
+                <span class="secondaryText">Audio: Not available</span>
+              </button>
+            </div>
+          <% end %>
+
         </div>
 
         <div class="two wide right aligned column">

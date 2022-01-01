@@ -57,6 +57,7 @@ defmodule Open890.RadioState do
     vfo_a_frequency: nil,
     vfo_b_frequency: nil,
     vfo_memory_state: nil,
+    voip_available: nil,
     voip_enabled: nil,
   ]
 

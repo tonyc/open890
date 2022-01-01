@@ -15,6 +15,14 @@ defmodule Open890Web.Live.Dispatch do
     socket |> put_radio_state(:voip_enabled, false)
   end
 
+  def dispatch("##KN21" <> _rest = msg, socket) do
+    socket |> put_radio_state(:voip_available, true)
+  end
+
+  def dispatch("##KN20" <> _rest = msg, socket) do
+    socket |> put_radio_state(:voip_available, false)
+  end
+
   def dispatch("AP0" <> _rest = msg, socket) do
     socket |> put_radio_state(:apf_enabled, Extract.apf_enabled(msg))
   end
