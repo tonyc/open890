@@ -5,6 +5,7 @@
 * Added mousewheel-based filter adjustments: Wheel for lo/width, shift+wheel for hi/shift.
 * Finished implementation of audio scope filter edges for all modes
 * Implemented correct shift/width display for bandscope passband polygon
+* [Dev] 'make compile' changed to 'make build'
 
 ## 0.6.1 - 2021-12-28
 * Fixes a display crash related to entering SSB-DATA mode and default settings for menu items 6-11/6-12.
