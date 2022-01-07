@@ -6,7 +6,7 @@ defmodule Open890Web.Live.Radio do
 
   alias Phoenix.Socket.Broadcast
   alias Open890.{ConnectionCommands, Extract, RadioConnection, RadioState}
-  alias Open890Web.Live.{BandButtonsComponent, Dispatch, RadioSocketState}
+  alias Open890Web.Live.{BandButtonsComponent, RadioSocketState}
 
   alias Open890Web.Components.{AudioScope, Meter, Slider}
   import Open890Web.Components.Buttons
@@ -108,8 +108,21 @@ defmodule Open890Web.Live.Radio do
   end
 
   @impl true
-  def handle_info(%Broadcast{event: "radio_state_data", payload: %{msg: msg}}, socket) do
-    socket = Dispatch.dispatch(msg, socket)
+  def handle_info(%Broadcast{event: "band_scope_cleared"}, socket) do
+    {:noreply, socket |> push_event("clear_band_scope", %{})}
+  end
+
+  @impl true
+  def handle_info(%Broadcast{event: "radio_state_data", payload: %{msg: radio_state}}, socket) do
+
+    formatted_frequency = RadioState.active_frequency(radio_state)
+                          |> RadioViewHelpers.format_raw_frequency()
+
+    formatted_mode = radio_state.active_mode |> RadioViewHelpers.format_mode()
+    page_title = "#{formatted_frequency} - #{formatted_mode}"
+
+    socket = assign(socket, :radio_state, radio_state)
+             |> assign(:page_title, page_title)
 
     {:noreply, socket}
   end
@@ -120,6 +133,11 @@ defmodule Open890Web.Live.Radio do
 
     {:noreply, assign(socket, :connection_state, payload)}
   end
+
+  def handle_info(%Broadcast{event: "freq_delta", payload: payload}, socket) do
+    {:noreply, socket |> push_event("freq_delta", payload)}
+  end
+
 
   def handle_info(%Broadcast{} = bc, socket) do
     Logger.warn("Unknown broadcast: #{inspect(bc)}")

@@ -16,7 +16,10 @@ defmodule Open890Web.Live.RadioTest do
         "user_name" => "testuser",
         "password" => "testpass",
         "auto_start" => false,
-        "user_is_admin" => false
+        "user_is_admin" => false,
+        "cloudlog_enabled" => false,
+        "cloudlog_url" => nil,
+        "cloudlog_api_key" => nil
       }
       {:ok, radio_connection} = RadioConnection.create(connection_params)
 

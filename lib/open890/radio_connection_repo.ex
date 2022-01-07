@@ -74,7 +74,10 @@ defmodule Open890.RadioConnectionRepo do
           "user_name" => user_name,
           "password" => password,
           "auto_start" => auto_start,
-          "user_is_admin" => user_is_admin
+          "user_is_admin" => user_is_admin,
+          "cloudlog_enabled" => cloudlog_enabled,
+          "cloudlog_url" => cloudlog_url,
+          "cloudlog_api_key" => cloudlog_api_key
         } = _params
       ) do
     %RadioConnection{
@@ -86,7 +89,10 @@ defmodule Open890.RadioConnectionRepo do
       auto_start: auto_start,
       user_name: user_name,
       password: password,
-      user_is_admin: user_is_admin
+      user_is_admin: user_is_admin,
+      cloudlog_enabled: cloudlog_enabled,
+      cloudlog_url: cloudlog_url |> to_string() |> String.trim() |> String.trim_trailing("/"),
+      cloudlog_api_key: cloudlog_api_key |> to_string() |> String.trim()
     }
     |> insert()
   end

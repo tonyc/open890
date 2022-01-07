@@ -1,6 +1,7 @@
 # open890 Changelog
 
 ## Unreleased
+* Adds Cloudlog integration - syncs frequency/mode information to a Cloudlog instance.
 * Adds experimental audio streaming from the radio. Click the "Audio" button at the top once the connection is started.
 * Added mousewheel-based filter adjustments: Wheel for lo/width, shift+wheel for hi/shift.
 * Finished implementation of audio scope filter edges for all modes

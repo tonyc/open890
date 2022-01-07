@@ -6,7 +6,7 @@ defmodule Open890Web.Live.AudioScope do
 
   alias Phoenix.Socket.Broadcast
   alias Open890.{ConnectionCommands, RadioConnection, RadioState}
-  alias Open890Web.Live.{Dispatch, RadioSocketState}
+  alias Open890Web.Live.{RadioSocketState}
 
   alias Open890Web.Components.AudioScope
   import Open890Web.Components.Buttons
@@ -67,9 +67,8 @@ defmodule Open890Web.Live.AudioScope do
   end
 
   @impl true
-  def handle_info(%Broadcast{event: "radio_state_data", payload: %{msg: msg}}, socket) do
-    socket = Dispatch.dispatch(msg, socket)
-
+  def handle_info(%Broadcast{event: "radio_state_data", payload: %{msg: radio_state}}, socket) do
+    socket = assign(socket, :radio_state, radio_state)
     {:noreply, socket}
   end
 
