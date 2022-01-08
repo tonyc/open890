@@ -135,7 +135,13 @@ defmodule Open890Web.Live.Radio do
   end
 
   def handle_info(%Broadcast{event: "freq_delta", payload: payload}, socket) do
-    {:noreply, socket |> push_event("freq_delta", payload)}
+    socket = if socket.assigns.radio_state.band_scope_mode == :center do
+      socket |> push_event("freq_delta", payload)
+    else
+      socket
+    end
+
+    {:noreply, socket}
   end
 
 
