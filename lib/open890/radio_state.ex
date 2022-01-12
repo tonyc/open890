@@ -12,6 +12,7 @@ defmodule Open890.RadioState do
     active_mode: :unknown,
     active_receiver: :a,
     active_transmitter: :a,
+    agc_off: nil,
     agc: nil,
     alc_meter: 0,
     antenna_state: %AntennaState{},
@@ -93,8 +94,12 @@ defmodule Open890.RadioState do
     %{state | squelch: Extract.sql(msg)}
   end
 
+  def dispatch("GC0" <> _ = _msg, %__MODULE__{} = state) do
+    %{state | agc_off: true}
+  end
+
   def dispatch("GC" <> _ = msg, %__MODULE__{} = state) do
-    %{state | agc: Extract.agc(msg)}
+    %{state | agc: Extract.agc(msg), agc_off: false}
   end
 
   def dispatch("NR" <> _ = msg, %__MODULE__{} = state) do

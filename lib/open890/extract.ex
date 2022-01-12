@@ -250,11 +250,9 @@ defmodule Open890.Extract do
     str
     |> String.trim_leading("GC")
     |> case do
-      "0" -> :off
       "1" -> :slow
       "2" -> :med
       "3" -> :fast
-      _ -> :unknown
     end
   end
 

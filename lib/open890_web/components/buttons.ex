@@ -4,6 +4,40 @@ defmodule Open890Web.Components.Buttons do
 
   import Open890Web.RadioViewHelpers
 
+  def agc_button(assigns) do
+    values = %{slow: "GC2", med: "GC3", fast: "GC1"}
+
+    ~H"""
+    <%= if @agc_off do %>
+      <button class="ui small black fluid button disabled">
+        AGC <%= format_agc(@value) %>
+      </button>
+    <% else %>
+      <.cycle_button_2 value={@value} values={values} fluid={@fluid}>
+        AGC <%= format_agc(@value) %>
+      </.cycle_button_2>
+    <% end %>
+    """
+  end
+
+  def agc_off_button(assigns) do
+    ~H"""
+      <%= if @agc_off do %>
+        <.cmd_button_2 cmd={cmd_for_agc(@agc)} fluid={assigns[:fluid]}>AGC OFF</.cmd_button_2>
+      <% else %>
+        <.cmd_button_2 cmd="GC0" fluid={assigns[:fluid]}>AGC ON</.cmd_button_2>
+      <% end %>
+    """
+  end
+
+  def cmd_for_agc(agc_state) when is_atom(agc_state) do
+    case agc_state do
+      :slow -> "GC1"
+      :med -> "GC2"
+      :fast -> "GC3"
+    end
+  end
+
   def split_button(assigns) do
     values = %{false => "TB1", true => "TB0"}
 
