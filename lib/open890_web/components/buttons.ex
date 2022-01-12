@@ -5,7 +5,7 @@ defmodule Open890Web.Components.Buttons do
   import Open890Web.RadioViewHelpers
 
   def agc_button(assigns) do
-    values = %{slow: "GC2", med: "GC3", fast: "GC1"}
+    values = %{slow: "GC3", med: "GC1", fast: "GC2"}
 
     ~H"""
     <%= if @agc_off do %>
