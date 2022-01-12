@@ -5,6 +5,7 @@
     * See https://github.com/tonyc/open890/wiki/Cloudlog-Integration for more information
 * Adds experimental audio streaming from the radio. Click the "Audio" button at the top once the connection is started.
 * Added mousewheel-based filter adjustments: Wheel for lo/width, shift+wheel for hi/shift.
+* Added AGC controls to side panel
 * Finished implementation of audio scope filter edges for all modes
 * Implemented correct shift/width display for bandscope passband polygon
 * [Dev] 'make compile' changed to 'make build'
