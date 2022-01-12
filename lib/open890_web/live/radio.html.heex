@@ -386,6 +386,12 @@
                 <.notch_width_button value={@radio_state.notch_state} fluid />
               </div>
             </div>
+
+            <div class="ui one column grid row">
+              <div class="column">
+                <input type="range" min="0" max="255" value={@radio_state.notch_state.frequency} step="5" style="width: 100%;"/>
+              </div>
+            </div>
           </div>
 
           <div class={tab_panel_classes("scope", @active_tab)}>
