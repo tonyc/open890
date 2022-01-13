@@ -350,6 +350,21 @@ nav {
 
 }
 
+.rit_xit_offset {
+  font-family: $vfo-font;
+  font-size: 2.2vmax;
+  position: relative;
+  top: 1rem;
+  color: white;
+  &.inactive {
+    color: $secondary-color;
+  }
+}
+
+#frequencyDisplay {
+  //height: 3.5vmax;
+}
+
 #scopeDetails {
   padding: 0rem 0.5rem;
 

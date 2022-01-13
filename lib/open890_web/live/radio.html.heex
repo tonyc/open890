@@ -195,9 +195,58 @@
       </div>
     </div>
 
-    <div class="eight wide column center aligned">
-      <div class="ui grid sixteen wide">
-        <div id="frequencyDisplay" class="ui row">
+    <div class="eight wide column">
+
+      <div class="ui grid wide">
+        <div class="row">
+
+          <div class="column">
+            <div class="ui two column grid">
+              <div class="row">
+
+                <div class="five wide right aligned column">
+
+                    <div class="column">
+                      <span class="indicator">
+                        <%= if @radio_state.rit_enabled do %>
+                          RIT
+                        <% else %>
+                          &nbsp;
+                        <% end %>
+                      </span>
+                    </div>
+                    <div class="column">
+                      <span class="indicator">
+                        <%= if @radio_state.xit_enabled do %>
+                          XIT
+                        <% else %>
+                          &nbsp;
+                        <% end %>
+                      </span>
+                    </div>
+
+                </div>
+
+                <div class="two wide right aligned column">
+                  <div class="ui grid">
+                    <div class="row">
+                      <div class="column bottom aligned">
+                        <span class={rit_xit_offset_class(@radio_state)}>
+                          <%= @radio_state.rit_xit_offset |> RadioViewHelpers.format_rit_xit() %>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div id="frequencyDisplay" class="ui row top aligned">
           <%= case @radio_state.vfo_memory_state do %>
           <% :vfo -> %>
             <div class="eight column row">
@@ -222,8 +271,6 @@
           <% _ -> %>
           <% end %>
         </div> <!-- frequencyDisplay -->
-
-
 
         <div class="row equal width">
           <div class="column">

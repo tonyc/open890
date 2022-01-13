@@ -4,7 +4,7 @@ defmodule Open890Web.RadioViewHelpers do
   import Phoenix.HTML
   import Phoenix.HTML.Tag
 
-  alias Open890.{Menu, TransverterState}
+  alias Open890.{Menu, RadioState, TransverterState}
 
   def selected_theme?(theme, name) do
     if theme == name, do: "selected"
@@ -113,6 +113,25 @@ defmodule Open890Web.RadioViewHelpers do
     |> Enum.chunk_every(3, 3, [])
     |> Enum.join(".")
     |> String.reverse()
+  end
+
+  def format_rit_xit(nil), do: "0"
+  def format_rit_xit(val) when is_integer(val) do
+    is_negative = val < 0
+
+    padding = if is_negative, do: 6, else: 5
+
+    (val / 1000.0)
+    |> to_string()
+    |> String.pad_trailing(padding, "0")
+  end
+
+  def rit_xit_offset_class(%RadioState{} = radio_state) do
+    if radio_state.rit_enabled || radio_state.xit_enabled do
+      "rit_xit_offset active"
+    else
+      "rit_xit_offset inactive"
+    end
   end
 
   def s_meter_value_to_s_units(val) when is_integer(val) do

@@ -42,6 +42,14 @@ defmodule Open890.ConnectionCommands do
     |> get_apf_state()
     |> get_voip_available()
     |> get_voip_state()
+    |> get_rit_xit()
+  end
+
+  def get_rit_xit(conn) do
+    conn
+    |> cmd("RT")
+    |> cmd("XT")
+    |> cmd("RF")
   end
 
   def get_voip_available(conn), do: conn |> cmd("##KN2")

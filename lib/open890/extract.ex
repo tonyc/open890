@@ -246,6 +246,12 @@ defmodule Open890.Extract do
     str |> String.trim_leading("TB") == "1"
   end
 
+  def rit_xit_offset(str) when is_binary(str) do
+    str
+    |> String.trim_leading("RF")
+    |> signed_integer()
+  end
+
   def agc(str) when is_binary(str) do
     str
     |> String.trim_leading("GC")
@@ -282,12 +288,7 @@ defmodule Open890.Extract do
   def transverter_offset(str) when is_binary(str) do
     str
     |> String.trim_leading("XO")
-    |> case do
-      "0" <> offset ->
-        offset |> String.to_integer()
-      "1" <> offset ->
-        -(String.to_integer(offset))
-    end
+    |> signed_integer()
   end
 
   def nr(str) when is_binary(str) do
@@ -633,5 +634,24 @@ defmodule Open890.Extract do
   def trim_all_leading(src, items) when is_binary(src) and is_list(items) do
     items
     |> Enum.reduce(src, &String.trim_leading(&2, &1))
+  end
+
+  def boolean(msg, opts \\ []) when is_binary(msg) and is_list(opts) do
+    msg
+    |> String.trim_leading(opts |> Keyword.get(:prefix, ""))
+    |> case do
+      "1" -> true
+      _ -> false
+    end
+  end
+
+  # extracts the leading 0/1 from a string and returns the rest as a signed integer
+  def signed_integer(msg) do
+    msg
+    |> case do
+      "0" <> rest -> String.to_integer(rest)
+      "1" <> rest -> -(String.to_integer(rest))
+    end
+
   end
 end

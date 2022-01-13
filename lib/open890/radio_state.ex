@@ -12,8 +12,8 @@ defmodule Open890.RadioState do
     active_mode: :unknown,
     active_receiver: :a,
     active_transmitter: :a,
-    agc_off: nil,
     agc: nil,
+    agc_off: nil,
     alc_meter: 0,
     antenna_state: %AntennaState{},
     apf_enabled: nil,
@@ -50,11 +50,11 @@ defmodule Open890.RadioState do
     rf_pre: 0,
     roofing_filter_data: %{a: nil, b: nil, c: nil},
     s_meter: 0,
+    split_enabled: false,
     squelch: nil,
     ssb_data_filter_mode: nil,
     ssb_filter_mode: nil,
     swr_meter: 0,
-    split_enabled: false,
     temp_meter: 0,
     transverter_state: %TransverterState{},
     tx_state: :off,
@@ -64,6 +64,9 @@ defmodule Open890.RadioState do
     vfo_memory_state: nil,
     voip_available: nil,
     voip_enabled: nil,
+    rit_enabled: nil,
+    xit_enabled: nil,
+    rit_xit_offset: nil,
   ]
 
   def dispatch("##VP1" <> _ = _msg, %__MODULE__{} = state) do
@@ -80,6 +83,18 @@ defmodule Open890.RadioState do
 
   def dispatch("##KN20" <> _ = _msg, %__MODULE__{} = state) do
     %{state | voip_available: false}
+  end
+
+  def dispatch("RT" <> _ = msg, %__MODULE__{} = state) do
+    %{state | rit_enabled: Extract.boolean(msg, prefix: "RT")}
+  end
+
+  def dispatch("XT" <> _ = msg, %__MODULE__{} = state) do
+    %{state | xit_enabled: Extract.boolean(msg, prefix: "XT")}
+  end
+
+  def dispatch("RF" <> _ = msg, %__MODULE__{} = state) do
+    %{state | rit_xit_offset: Extract.rit_xit_offset(msg)}
   end
 
   def dispatch("AP0" <> _ = msg, %__MODULE__{} = state) do
