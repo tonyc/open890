@@ -209,18 +209,18 @@
                     <div class="column">
                       <span class="indicator">
                         <%= if @radio_state.rit_enabled do %>
-                          RIT
+                          <button class="ui mini grey button rit_xit">RIT</button>
                         <% else %>
-                          &nbsp;
+                          <button class="ui mini inverted secondary button rit_xit">RIT</button>
                         <% end %>
                       </span>
                     </div>
                     <div class="column">
                       <span class="indicator">
                         <%= if @radio_state.xit_enabled do %>
-                          XIT
+                          <button class="ui mini grey button rit_xit">XIT</button>
                         <% else %>
-                          &nbsp;
+                          <button class="ui mini inverted secondary button rit_xit">XIT</button>
                         <% end %>
                       </span>
                     </div>
@@ -237,6 +237,10 @@
                       </div>
                     </div>
                   </div>
+                </div>
+
+                <div class="one wide column">
+                  <button class="ui mini black button rit_xit_clr">CLR</button>
                 </div>
 
               </div>
