@@ -499,6 +499,7 @@ defmodule Open890Web.Live.Dispatch do
       msg
       |> Extract.passband_id()
       |> Extract.filter_hi_shift(filter_mode, active_mode)
+    |> IO.inspect(label: "pending filter_hi_shift")
 
     filter_state = %{filter_state | hi_shift: filter_hi_shift}
 
