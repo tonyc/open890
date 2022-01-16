@@ -537,6 +537,14 @@ defmodule Open890.Extract do
     passband_id |> calculate_cw_shift()
   end
 
+  def filter_hi_shift(passband_id, _filter_mode, mode) when mode in [:am, :am_d] do
+    @am_hi_cut_lookup |> elem(passband_id)
+  end
+
+  def filter_hi_shift(passband_id, _filter_mode, mode) when mode in [:fm, :fm_d] do
+    @fm_hi_cut_lookup |> elem(passband_id)
+  end
+
   def filter_hi_shift(passband_id, filter_mode, current_mode) do
     {passband_id, filter_mode, current_mode} |> IO.inspect(label: "*** filter_hi_shift")
     case filter_mode do
