@@ -162,7 +162,6 @@ defmodule Open890Web.Components.AudioScope do
   end
 
   def audio_scope_filter_edges(:am, %FilterState{} = filter_state, _filter_mode) do
-    filter_state |> IO.inspect(label: "FILTER STATE")
     [projected_low, projected_hi] =
       [filter_state.lo_width, filter_state.hi_shift]
       |> Enum.map(fn val ->

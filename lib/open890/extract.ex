@@ -546,7 +546,6 @@ defmodule Open890.Extract do
   end
 
   def filter_hi_shift(passband_id, filter_mode, current_mode) do
-    {passband_id, filter_mode, current_mode} |> IO.inspect(label: "*** filter_hi_shift")
     case filter_mode do
       :hi_lo_cut ->
         cond do
