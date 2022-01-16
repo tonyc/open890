@@ -356,14 +356,14 @@ button.rit_xit {
 
 button.rit_xit_clr {
   position: relative;
-  top: 1rem;
+  //top: 1rem;
 }
 
 .rit_xit_offset {
   font-family: $vfo-font;
   font-size: 2.2vmax;
   position: relative;
-  top: 1rem;
+  top: 0.5rem;
   color: white;
   &.inactive {
     color: $secondary-color;

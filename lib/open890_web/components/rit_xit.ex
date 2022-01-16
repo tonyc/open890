@@ -6,30 +6,26 @@ defmodule Open890Web.Components.RitXit do
     ~H"""
       <div class="ui grid">
         <div class="row">
-          <div class="column seven wide right aligned">
+          <div class="column three wide"></div>
 
-              <div class="column">
-                <span class="indicator">
-                  <%= if @rit_enabled do %>
-                    <button class="ui mini grey button rit_xit">RIT</button>
-                  <% else %>
-                    <button class="ui mini inverted secondary button rit_xit">RIT</button>
-                  <% end %>
-                </span>
-              </div>
-              <div class="column">
-                <span class="indicator">
-                  <%= if @xit_enabled do %>
-                    <button class="ui mini grey button rit_xit">XIT</button>
-                  <% else %>
-                    <button class="ui mini inverted secondary button rit_xit">XIT</button>
-                  <% end %>
-                </span>
-              </div>
-
+          <div class="four wide right aligned column">
+            <span class="indicator">
+              <%= if @rit_enabled do %>
+                <button class="ui mini grey button rit_xit">RIT</button>
+              <% else %>
+                <button class="ui mini inverted secondary button rit_xit">RIT</button>
+              <% end %>
+            </span>
+            <span class="indicator">
+              <%= if @xit_enabled do %>
+                <button class="ui mini grey button rit_xit">XIT</button>
+              <% else %>
+                <button class="ui mini inverted secondary button rit_xit">XIT</button>
+              <% end %>
+            </span>
           </div>
-          <div class="column two wide">
 
+          <div class="column two wide right aligned">
             <span class={rit_xit_offset_class(@rit_enabled, @xit_enabled)}>
               <%= @offset |> RadioViewHelpers.format_rit_xit() %>
             </span>
