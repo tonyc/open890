@@ -126,13 +126,6 @@ defmodule Open890Web.RadioViewHelpers do
     |> String.pad_trailing(padding, "0")
   end
 
-  def rit_xit_offset_class(%RadioState{} = radio_state) do
-    if radio_state.rit_enabled || radio_state.xit_enabled do
-      "rit_xit_offset active"
-    else
-      "rit_xit_offset inactive"
-    end
-  end
 
   def s_meter_value_to_s_units(val) when is_integer(val) do
     cond do

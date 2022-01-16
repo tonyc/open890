@@ -198,56 +198,13 @@
     <div class="eight wide column">
 
       <div class="ui grid wide">
+
         <div class="row">
-
           <div class="column">
-            <div class="ui two column grid">
-              <div class="row">
-
-                <div class="five wide right aligned column">
-
-                    <div class="column">
-                      <span class="indicator">
-                        <%= if @radio_state.rit_enabled do %>
-                          <button class="ui mini grey button rit_xit">RIT</button>
-                        <% else %>
-                          <button class="ui mini inverted secondary button rit_xit">RIT</button>
-                        <% end %>
-                      </span>
-                    </div>
-                    <div class="column">
-                      <span class="indicator">
-                        <%= if @radio_state.xit_enabled do %>
-                          <button class="ui mini grey button rit_xit">XIT</button>
-                        <% else %>
-                          <button class="ui mini inverted secondary button rit_xit">XIT</button>
-                        <% end %>
-                      </span>
-                    </div>
-
-                </div>
-
-                <div class="two wide right aligned column">
-                  <div class="ui grid">
-                    <div class="row">
-                      <div class="column bottom aligned">
-                        <span class={rit_xit_offset_class(@radio_state)}>
-                          <%= @radio_state.rit_xit_offset |> RadioViewHelpers.format_rit_xit() %>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="one wide column">
-                  <button class="ui mini black button rit_xit_clr">CLR</button>
-                </div>
-
-              </div>
-            </div>
-
+            <RitXit.rit_xit rit_enabled={@radio_state.rit_enabled} xit_enabled={@radio_state.xit_enabled}
+               offset={@radio_state.rit_xit_offset}
+            />
           </div>
-
         </div>
 
         <div id="frequencyDisplay" class="ui row top aligned">
@@ -307,6 +264,7 @@
           <div class="column"></div>
         </div>
       </div>
+
     </div>
 
     <div class="four wide column right aligned">
