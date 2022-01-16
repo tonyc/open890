@@ -61,6 +61,7 @@ config :open890, Open890Web.Endpoint,
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
+      ~r"lib/open890_web/components/.*(ex)$",
       ~r"lib/open890_web/(live|views)/.*(ex)$",
       ~r"lib/open890_web/templates/.*(eex)$"
     ]
