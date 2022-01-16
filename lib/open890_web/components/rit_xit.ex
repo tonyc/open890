@@ -26,7 +26,7 @@ defmodule Open890Web.Components.RitXit do
           </div>
 
           <div class="column two wide right aligned">
-            <span class={rit_xit_offset_class(@rit_enabled, @xit_enabled)}>
+            <span class={rit_xit_offset_class(@rit_enabled, @xit_enabled)} phx-hook="RitXitControl" id="RitXitControl">
               <%= @offset |> RadioViewHelpers.format_rit_xit() %>
             </span>
 
@@ -42,9 +42,9 @@ defmodule Open890Web.Components.RitXit do
 
   def rit_xit_offset_class(rit_enabled, xit_enabled) do
     if rit_enabled || xit_enabled do
-      "rit_xit_offset active"
+      "rit_xit_offset hover-pointer active"
     else
-      "rit_xit_offset inactive"
+      "rit_xit_offset hover-pointer inactive"
     end
   end
 end

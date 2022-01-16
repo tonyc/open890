@@ -101,6 +101,32 @@ let Hooks = {
     }
   },
 
+  RitXitControl: {
+    mounted() {
+      this.el.addEventListener("wheel", (event) => {
+        event.preventDefault();
+
+        var isScrollUp = event.deltaY < 0;
+        console.log("rit wheel up:", isScrollUp, "event:", event)
+      })
+
+      this.el.addEventListener("mousedown", (event) => {
+        event.preventDefault();
+
+        console.log("RIT/XIT mouseDown")
+      })
+
+      this.el.addEventListener("mousemove", event => {
+        event.preventDefault();
+
+        if (event.buttons && event.buttons == 1) {
+          console.log("rit/xit drag")
+        }
+      })
+    }
+
+  },
+
   MultiCH: {
     mounted() {
       this.el.addEventListener("wheel", event => {
