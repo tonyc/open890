@@ -34,6 +34,7 @@ defmodule Open890.RadioState do
     filter_high_freq: nil,
     filter_low_freq: nil,
     filter_state: %FilterState{},
+    fine: nil,
     id_meter: 0,
     inactive_frequency: "",
     inactive_mode: :unknown,
@@ -68,6 +69,14 @@ defmodule Open890.RadioState do
     xit_enabled: nil,
     rit_xit_offset: nil,
   ]
+
+  def dispatch("FS00" <> _ = _msg, %__MODULE__{} = state) do
+    %{state | fine: false}
+  end
+
+  def dispatch("FS11" <> _ = _msg, %__MODULE__{} = state) do
+    %{state | fine: true}
+  end
 
   def dispatch("##VP1" <> _ = _msg, %__MODULE__{} = state) do
     %{state | voip_enabled: true}

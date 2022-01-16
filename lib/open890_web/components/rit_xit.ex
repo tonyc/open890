@@ -1,6 +1,7 @@
 defmodule Open890Web.Components.RitXit do
   use Phoenix.Component
   alias Open890Web.{RadioViewHelpers}
+  import Open890Web.Components.Buttons
 
   def rit_xit(assigns) do
     ~H"""
@@ -32,7 +33,7 @@ defmodule Open890Web.Components.RitXit do
 
           </div>
           <div class="column seven wide">
-            <button class="ui mini black button rit_xit_clr">CLR</button>
+            <.cmd_button_2 cmd="RC">CLR</.cmd_button_2>
           </div>
         </div>
 

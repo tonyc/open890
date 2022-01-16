@@ -107,7 +107,7 @@ let Hooks = {
         event.preventDefault();
 
         var isScrollUp = event.deltaY < 0;
-        console.log("rit wheel up:", isScrollUp, "event:", event)
+        this.pushEvent("adjust_rit_xit", {is_up: isScrollUp})
       })
 
       this.el.addEventListener("mousedown", (event) => {
