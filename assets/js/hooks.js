@@ -102,6 +102,10 @@ let Hooks = {
   },
 
   RitXitControl: {
+    copyTouch({identifier, pageX, pageY}) {
+      return { identifier, pageX, pageY }
+    },
+
     mounted() {
       this.el.addEventListener("wheel", (event) => {
         event.preventDefault();
@@ -110,20 +114,66 @@ let Hooks = {
         this.pushEvent("adjust_rit_xit", {is_up: isScrollUp})
       })
 
-      this.el.addEventListener("mousedown", (event) => {
-        event.preventDefault();
+      this.el.addEventListener("touchstart", (event) => {
+        var me = this;
 
-        console.log("RIT/XIT mouseDown")
-      })
-
-      this.el.addEventListener("mousemove", event => {
-        event.preventDefault();
-
-        if (event.buttons && event.buttons == 1) {
-          console.log("rit/xit drag")
+        if (event.changedTouches[0]) {
+          let touch = event.changedTouches[0];
+          me.prevTouch = this.copyTouch(touch);
         }
       })
-    }
+
+      this.el.addEventListener("touchend", (event) => {
+        var me = this;
+        event.preventDefault();
+        me.prevTouch = null;
+      })
+
+      this.el.addEventListener("touchmove", (event) => {
+        event.preventDefault();
+        var me = this;
+
+        if (event.changedTouches[0]) {
+          if (me.prevTouch) {
+            let touch = event.changedTouches[0];
+
+            let deltaX = touch.pageX - me.prevTouch.pageX;
+            let deltaY = touch.pageY - me.prevTouch.pageY;
+
+            let isUp = deltaX > 0;
+            console.log("move dx/dy:", deltaX, deltaY);
+
+            if (Math.abs(deltaX) > 5) {
+              this.pushEvent("adjust_rit_xit", {is_up: isUp})
+            }
+          }
+        }
+      })
+
+      //this.el.addEventListener("mousedown", (event) => {
+      //  event.preventDefault();
+      //  me.dragStartCoord = event.x;
+
+      //  console.log("RIT/XIT mouseDown", event.x)
+      //})
+
+
+      //this.el.addEventListener("mouseup", (event) => {
+      //  event.preventDefault();
+
+
+      //  console.log("RIT/XIT mouseUp", event.x)
+      //})
+
+      //this.el.addEventListener("mousemove", event => {
+      //  event.preventDefault();
+
+      //  if (event.buttons && event.buttons == 1) {
+      //    console.log("rit/xit drag", event)
+      //  }
+      //})
+    },
+
 
   },
 
