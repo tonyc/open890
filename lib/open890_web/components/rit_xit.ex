@@ -12,16 +12,16 @@ defmodule Open890Web.Components.RitXit do
           <div class="four wide right aligned column">
             <span class="indicator">
               <%= if @rit_enabled do %>
-                <button class="ui mini grey button rit_xit">RIT</button>
+                <.cmd_button_2 cmd="RT0" classes="mini grey rit_xit">RIT</.cmd_button_2>
               <% else %>
-                <button class="ui mini inverted secondary button rit_xit">RIT</button>
+                <.cmd_button_2 cmd="RT1" classes="mini inverted secondary rit_xit">RIT</.cmd_button_2>
               <% end %>
             </span>
             <span class="indicator">
               <%= if @xit_enabled do %>
-                <button class="ui mini grey button rit_xit">XIT</button>
+                <.cmd_button_2 cmd="XT0" classes="mini grey rit_xit">XIT</.cmd_button_2>
               <% else %>
-                <button class="ui mini inverted secondary button rit_xit">XIT</button>
+                <.cmd_button_2 cmd="XT1" classes="mini inverted secondary rit_xit">XIT</.cmd_button_2>
               <% end %>
             </span>
           </div>

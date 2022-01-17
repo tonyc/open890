@@ -268,7 +268,14 @@ defmodule Open890Web.Components.Buttons do
     end
 
     assigned_classes = assigns[:classes] || ""
-    classes = "ui small black button #{assigned_classes} #{fluid_class}"
+
+    size_class = if ~w(mini tiny small medium large big huge massive) |> Enum.any?(fn size -> assigned_classes |> String.contains?(size) end) do
+      ""
+    else
+      "mini"
+    end
+
+    classes = "ui #{size_class} black button #{assigned_classes} #{fluid_class}"
 
     ~H"""
       <button class={classes} phx-click="cmd" phx-value-cmd={@cmd}>
