@@ -18,9 +18,9 @@ defmodule Open890Web.Components.BandscopeButtons do
           <div class="column">
             <%= case @band_scope_mode do %>
               <% :auto_scroll -> %>
-                <.cmd_button_2 cmd="BSE" class="ui small black compact button">Shift</.cmd_button_2>
+                <.cmd_button cmd="BSE" class="ui small black compact button">Shift</.cmd_button>
               <% :fixed -> %>
-                <.cmd_button_2 cmd="BSE" class="ui small black compact button">MKR.CTR</.cmd_button_2>
+                <.cmd_button cmd="BSE" class="ui small black compact button">MKR.CTR</.cmd_button>
               <% _ -> %>
                 <%= "" %>
             <% end %>
