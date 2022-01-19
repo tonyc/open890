@@ -315,7 +315,7 @@
           <%= if @radio_state.active_mode in [:cw, :cw_r, :fsk, :fsk_r] do %>
             <%= if @radio_state.active_mode in [:cw, :cw_r] do %>
               <div class="ui mini black buttons">
-                <.cmd_button cmd="CA1">CW T</.cmd_button>
+                <.cmd_button_2 cmd="CA1">CW T</.cmd_button_2>
               </div>
             <% end %>
 
@@ -406,11 +406,11 @@
             </div>
 
             <%= if @radio_state.band_scope_mode == :auto_scroll do %>
-              <.cmd_button cmd="BSE" fluid class="ui small black button">Shift</.cmd_button>
+              <.cmd_button_2 cmd="BSE" fluid class="ui small black button">Shift</.cmd_button_2>
             <% end %>
 
             <%= if @radio_state.band_scope_mode == :fixed do %>
-              <.cmd_button cmd="BSE" fluid class="ui small black button">MKR.CTR</.cmd_button>
+              <.cmd_button_2 cmd="BSE" fluid class="ui small black button">MKR.CTR</.cmd_button_2>
             <% end %>
 
             <div class="column">

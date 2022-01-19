@@ -12,16 +12,16 @@ defmodule Open890Web.Components.RitXit do
           <div class="four wide right aligned column">
             <span class="indicator">
               <%= if @rit_enabled do %>
-                <.cmd_button cmd="RT0" classes="mini grey rit_xit">RIT</.cmd_button>
+                <.cmd_button_2 cmd="RT0" classes="mini grey rit_xit">RIT</.cmd_button_2>
               <% else %>
-                <.cmd_button cmd="RT1" classes="mini inverted secondary rit_xit">RIT</.cmd_button>
+                <.cmd_button_2 cmd="RT1" classes="mini inverted secondary rit_xit">RIT</.cmd_button_2>
               <% end %>
             </span>
             <span class="indicator">
               <%= if @xit_enabled do %>
-                <.cmd_button cmd="XT0" classes="mini grey rit_xit">XIT</.cmd_button>
+                <.cmd_button_2 cmd="XT0" classes="mini grey rit_xit">XIT</.cmd_button_2>
               <% else %>
-                <.cmd_button cmd="XT1" classes="mini inverted secondary rit_xit">XIT</.cmd_button>
+                <.cmd_button_2 cmd="XT1" classes="mini inverted secondary rit_xit">XIT</.cmd_button_2>
               <% end %>
             </span>
           </div>
@@ -33,7 +33,7 @@ defmodule Open890Web.Components.RitXit do
 
           </div>
           <div class="column seven wide">
-            <.cmd_button cmd="RC">CLR</.cmd_button>
+            <.cmd_button_2 cmd="RC">CLR</.cmd_button_2>
           </div>
         </div>
 

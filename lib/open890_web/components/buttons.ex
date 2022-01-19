@@ -23,9 +23,9 @@ defmodule Open890Web.Components.Buttons do
   def agc_off_button(assigns) do
     ~H"""
       <%= if @agc_off do %>
-        <.cmd_button cmd={cmd_for_agc(@agc)} fluid={assigns[:fluid]}>AGC OFF</.cmd_button>
+        <.cmd_button_2 cmd={cmd_for_agc(@agc)} fluid={assigns[:fluid]}>AGC OFF</.cmd_button_2>
       <% else %>
-        <.cmd_button cmd="GC0" fluid={assigns[:fluid]}>AGC ON</.cmd_button>
+        <.cmd_button_2 cmd="GC0" fluid={assigns[:fluid]}>AGC ON</.cmd_button_2>
       <% end %>
     """
   end
@@ -35,7 +35,6 @@ defmodule Open890Web.Components.Buttons do
       :slow -> "GC1"
       :med -> "GC2"
       :fast -> "GC3"
-      _ -> ""
     end
   end
 
@@ -169,7 +168,7 @@ defmodule Open890Web.Components.Buttons do
 
   def vfo_equalize_button(assigns) do
     ~H"""
-      <.cmd_button cmd="VV" fluid={assigns[:fluid]}>A=B</.cmd_button>
+      <.cmd_button_2 cmd="VV" fluid={assigns[:fluid]}>A=B</.cmd_button_2>
     """
   end
 
@@ -215,11 +214,13 @@ defmodule Open890Web.Components.Buttons do
 
   def filter_buttons(assigns) do
     ~H"""
-      <.cmd_button cmd="FL00">FIL A</.cmd_button>
-      <.cmd_button cmd="FL01">FIL B</.cmd_button>
-      <.cmd_button cmd="FL02">FIL C</.cmd_button>
+      <.cmd_button_2 cmd="FL00">FIL A</.cmd_button_2>
+      <.cmd_button_2 cmd="FL01">FIL B</.cmd_button_2>
+      <.cmd_button_2 cmd="FL02">FIL C</.cmd_button_2>
     """
   end
+
+
 
   def format_rf_pre(level) do
     level
@@ -242,13 +243,10 @@ defmodule Open890Web.Components.Buttons do
   def cycle_button(assigns) do
     cmd = assigns[:values] |> Map.get(assigns[:value])
 
-    extra = assigns_to_attributes(assigns, [:value, :values])
-    assigns = assigns |> Phoenix.LiveView.assign(:extra, extra)
-
     ~H"""
-      <.cmd_button cmd={cmd} {@extra}>
+      <.cmd_button_2 cmd={cmd} fluid={assigns[:fluid]}>
         <%= render_slot(@inner_block) %>
-      </.cmd_button>
+      </.cmd_button_2>
     """
   end
 
@@ -256,13 +254,13 @@ defmodule Open890Web.Components.Buttons do
     %{label: label, cmd: cmd} = assigns[:values] |> Map.get(assigns[:value])
 
     ~H"""
-      <.cmd_button cmd={cmd} fluid={assigns[:fluid]}>
+      <.cmd_button_2 cmd={cmd} fluid={assigns[:fluid]}>
         <%= render_slot(@inner_block) %> <%= label %>
-      </.cmd_button>
+      </.cmd_button_2>
     """
   end
 
-  def cmd_button(assigns) do
+  def cmd_button_2(assigns) do
     fluid_class = assigns |> Map.get(:fluid, false)
     |> case do
       true -> "fluid"
