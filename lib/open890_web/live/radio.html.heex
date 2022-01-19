@@ -69,21 +69,21 @@
           <!-- connection status -->
           <%= if connection_startable?(@connection_state) do %>
             <div class="ui icon large black buttons">
-              <button class="ui button" phx-click="start_connection" data-tooltip="Start connection" data-position="bottom center">
+              <div class="ui button" phx-click="start_connection" data-tooltip="Start connection" data-position="bottom center">
                 <i class="play circle outline icon"></i>
                 <span class="secondaryText">
                   <%= format_connection_state(@connection_state) %>
                 </span>
-              </button>
+              </div>
             </div>
           <% else %>
             <div class="ui icon large black buttons">
-              <button class="ui button" phx-click="stop_connection" data-tooltip="Stop connection" data-position="bottom center">
+              <div class="ui button" phx-click="stop_connection" data-tooltip="Stop connection" data-position="bottom center">
                 <i class="stop circle outline icon"></i>
                 <span class="secondaryText">
                   <%= format_connection_state(@connection_state) %>
                 </span>
-              </button>
+              </div>
             </div>
           <% end %>
 
@@ -96,23 +96,23 @@
             <div phx-hook="AudioStream" id="AudioStreamPlayer">
               <%= if @connection_state == :up && @radio_state.voip_enabled do %>
                 <div class="ui icon large black buttons">
-                  <button class="ui button" phx-click="stop_voip" data-tooltip="Stop VOIP audio" data-position="bottom center">
+                  <div class="ui button" phx-click="stop_voip" data-tooltip="Stop VOIP audio" data-position="bottom center">
                     <span class="secondaryText">
                       VOIP Audio: Streaming &nbsp;
                       <i class="icon small sync rotating"></i>
                     </span>
-                  </button>
+                  </div>
                 </div>
               <% else %>
                 <div class="ui icon large black buttons">
                   <%= if @connection_state == :up do %>
-                    <button class="ui button" phx-click="start_voip" data-tooltip="Start VOIP Audio" data-position="bottom center">
+                    <div class="ui button" phx-click="start_voip" data-tooltip="Start VOIP Audio" data-position="bottom center">
                       <span class="secondaryText">VOIP Audio: Stopped</span>
-                    </button>
+                    </div>
                   <% else %>
-                    <button class="ui button disabled">
+                    <div class="ui button disabled">
                       <span class="secondaryText">VOIP Audio: Stopped</span>
-                    </button>
+                    </div>
                   <% end %>
                 </div>
               <% end %>
@@ -121,11 +121,11 @@
           <% else %>
             <%= if @connection_state == :up do %>
               <div class="ui icon large black buttons">
-                <button class="ui button" data-tooltip="Enable via MENU ▸ KNS ▸ CONFIG ▸ Built-in VOIP: ON" data-position="bottom center">
+                <div class="ui button" data-tooltip="Enable via MENU ▸ KNS ▸ CONFIG ▸ Built-in VOIP: ON" data-position="bottom center">
                   <i class="icon grey exclamation triangle"></i>
                   &nbsp;
                   <span class="secondaryText">VOIP Audio: Not available</span>
-                </button>
+                </div>
               </div>
             <% end %>
           <% end %>

@@ -9,9 +9,9 @@ defmodule Open890Web.Components.Buttons do
 
     ~H"""
     <%= if @agc_off do %>
-      <button class="ui small black fluid button disabled">
+      <div class="ui small black fluid button disabled">
         AGC <%= format_agc(@value) %>
-      </button>
+      </div>
     <% else %>
       <.cycle_button_2 value={@value} values={values} fluid={@fluid}>
         AGC <%= format_agc(@value) %>
@@ -61,19 +61,21 @@ defmodule Open890Web.Components.Buttons do
   end
 
   def notch_width_button(assigns) do
+    values = %{
+      :narrow => "NW1",
+      :mid => "NW2",
+      :wide => "NW0"
+    }
+
     ~H"""
       <%= if @value.enabled do %>
-        <.cycle_button_2 value={@value.width} values={%{
-          :narrow => "NW1",
-          :mid => "NW2",
-          :wide => "NW0"
-        }} fluid={assigns[:fluid]}>
+        <.cycle_button_2 value={@value.width} values={values} fluid={assigns[:fluid]}>
           NCH <%= format_notch_width(@value.width) %>
         </.cycle_button_2>
       <% else %>
-      <button class="ui small disabled black button fluid">
+      <div class="ui small disabled black button fluid">
         NCH <%= format_notch_width(@value.width) %>
-      </button>
+      </div>
     <% end %>
     """
   end
@@ -132,7 +134,7 @@ defmodule Open890Web.Components.Buttons do
           BC <%= format_bc(@value) %>
         </.cycle_button_2>
       <% else %>
-        <button class="ui small black fluid button disabled">BC</button>
+        <div class="ui small black fluid button disabled">BC</div>
       <% end %>
     """
   end
@@ -241,10 +243,12 @@ defmodule Open890Web.Components.Buttons do
   end
 
   def cycle_button_2(assigns) do
-    cmd = assigns[:values] |> Map.get(assigns[:value])
+    cmd = (assigns[:values] || %{}) |> Map.get(assigns[:value])
+
+    extra = assigns_to_attributes(assigns, [:values, :value])
 
     ~H"""
-      <.cmd_button_2 cmd={cmd} fluid={assigns[:fluid]}>
+      <.cmd_button_2 cmd={cmd} {extra}>
         <%= render_slot(@inner_block) %>
       </.cmd_button_2>
     """
@@ -272,15 +276,15 @@ defmodule Open890Web.Components.Buttons do
     size_class = if ~w(mini tiny small medium large big huge massive) |> Enum.any?(fn size -> assigned_classes |> String.contains?(size) end) do
       ""
     else
-      "mini"
+      "small"
     end
 
     classes = "ui #{size_class} black button #{assigned_classes} #{fluid_class}"
 
     ~H"""
-      <button class={classes} phx-click="cmd" phx-value-cmd={@cmd}>
+      <div class={classes} phx-click="cmd" phx-value-cmd={@cmd}>
         <%= render_slot(@inner_block) %>
-      </button>
+      </div>
     """
   end
 
@@ -302,7 +306,7 @@ defmodule Open890Web.Components.Buttons do
   def scope_range_button(assigns) do
     ~H"""
       <%= if @band_scope_mode == :fixed do %>
-        <button class="ui small black fluid button">Range: (fixme)</button>
+        <div class="ui small black fluid button">Range: (fixme)</div>
       <% else %>
           <.cycle_button_2 value={@band_scope_span} values={
             %{
@@ -357,7 +361,7 @@ defmodule Open890Web.Components.Buttons do
 
     ~H"""
       <%= if @band_scope_att do %>
-        <.cycle_button_2 value={@band_scope_att}, values={up_values} fluid>
+        <.cycle_button_2 value={@band_scope_att} values={up_values} fluid>
           ATT: <%= format_band_scope_att(@band_scope_att) %>
         </.cycle_button_2>
       <% end %>
