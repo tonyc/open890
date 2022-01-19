@@ -263,18 +263,20 @@ defmodule Open890.TCPClient do
         if (msg |> String.starts_with?("FA") && radio_state.active_receiver == :a) ||
           (msg |> String.starts_with?("FB") && radio_state.active_receiver == :b) do
 
-          {low, high} = radio_state.band_scope_edges
-          delta = radio_state.active_frequency_delta
-          active_receiver = radio_state.active_receiver
+          if radio_state.band_scope_edges do
+            {low, high} = radio_state.band_scope_edges
+            delta = radio_state.active_frequency_delta
+            active_receiver = radio_state.active_receiver
 
-          RadioConnection.broadcast_freq_delta(connection, %{
-            delta: delta,
-            vfo: active_receiver,
-            bs: %{low: low, high: high}
-          })
+            RadioConnection.broadcast_freq_delta(connection, %{
+              delta: delta,
+              vfo: active_receiver,
+              bs: %{low: low, high: high}
+            })
+          end
+
+          RadioConnection.broadcast_radio_state(connection, radio_state)
         end
-
-        RadioConnection.broadcast_radio_state(connection, radio_state)
 
         %{state | radio_state: radio_state}
     end
