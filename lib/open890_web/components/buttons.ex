@@ -13,9 +13,9 @@ defmodule Open890Web.Components.Buttons do
         AGC <%= format_agc(@value) %>
       </button>
     <% else %>
-      <.cycle_button value={@value} values={values} fluid={@fluid}>
+      <.cycle_button_2 value={@value} values={values} fluid={@fluid}>
         AGC <%= format_agc(@value) %>
-      </.cycle_button>
+      </.cycle_button_2>
     <% end %>
     """
   end
@@ -43,9 +43,9 @@ defmodule Open890Web.Components.Buttons do
 
     ~H"""
       <%= if ! is_nil(@value) do %>
-        <.cycle_button value={@value} values={values} fluid={@fluid}>
+        <.cycle_button_2 value={@value} values={values} fluid={@fluid}>
           SPLIT <%= on_off(@value) %>
-        </.cycle_button>
+        </.cycle_button_2>
       <% end %>
     """
   end
@@ -53,9 +53,9 @@ defmodule Open890Web.Components.Buttons do
   def notch_button(assigns) do
     ~H"""
       <%= if @value do %>
-        <.cycle_button value={@value.enabled} values={%{false => "NT1", true => "NT0"}} fluid={assigns[:fluid]}>
+        <.cycle_button_2 value={@value.enabled} values={%{false => "NT1", true => "NT0"}} fluid={assigns[:fluid]}>
           NCH <%= format_notch(@value) %>
-        </.cycle_button>
+        </.cycle_button_2>
       <% end %>
     """
   end
@@ -63,13 +63,13 @@ defmodule Open890Web.Components.Buttons do
   def notch_width_button(assigns) do
     ~H"""
       <%= if @value.enabled do %>
-        <.cycle_button value={@value.width} values={%{
+        <.cycle_button_2 value={@value.width} values={%{
           :narrow => "NW1",
           :mid => "NW2",
           :wide => "NW0"
         }} fluid={assigns[:fluid]}>
           NCH <%= format_notch_width(@value.width) %>
-        </.cycle_button>
+        </.cycle_button_2>
       <% else %>
       <button class="ui small disabled black button fluid">
         NCH <%= format_notch_width(@value.width) %>
@@ -97,25 +97,25 @@ defmodule Open890Web.Components.Buttons do
   end
   def pre_button(assigns) do
     ~H"""
-      <.cycle_button value={@value} values={%{0 => "PA1", 1 => "PA2", 2 => "PA0"}} fluid={assigns[:fluid]}>
+      <.cycle_button_2 value={@value} values={%{0 => "PA1", 1 => "PA2", 2 => "PA0"}} fluid={assigns[:fluid]}>
         PRE <%= format_rf_pre(@value) %>
-      </.cycle_button>
+      </.cycle_button_2>
     """
   end
 
   def att_button(assigns) do
     ~H"""
-      <.cycle_button value={@value} values={%{0 => "RA1", 1 => "RA2", 2 => "RA3", 3 => "RA0"}} fluid={assigns[:fluid]}>
+      <.cycle_button_2 value={@value} values={%{0 => "RA1", 1 => "RA2", 2 => "RA3", 3 => "RA0"}} fluid={assigns[:fluid]}>
         ATT <%= format_rf_att(@value) %>
-      </.cycle_button>
+      </.cycle_button_2>
     """
   end
 
   def nr_button(assigns) do
     ~H"""
-      <.cycle_button value={@value} values={%{:off => "NR1", :nr_1 => "NR2", :nr_2 => "NR0"}} fluid={assigns[:fluid]}>
+      <.cycle_button_2 value={@value} values={%{:off => "NR1", :nr_1 => "NR2", :nr_2 => "NR0"}} fluid={assigns[:fluid]}>
         NR <%= format_nr(@value) %>
-      </.cycle_button>
+      </.cycle_button_2>
     """
   end
 
@@ -128,9 +128,9 @@ defmodule Open890Web.Components.Buttons do
 
     ~H"""
       <%= if @active_mode not in [:cw, :cw_r] do %>
-        <.cycle_button value={@value} values={values} fluid={assigns[:fluid]}>
+        <.cycle_button_2 value={@value} values={values} fluid={assigns[:fluid]}>
           BC <%= format_bc(@value) %>
-        </.cycle_button>
+        </.cycle_button_2>
       <% else %>
         <button class="ui small black fluid button disabled">BC</button>
       <% end %>
@@ -160,9 +160,9 @@ defmodule Open890Web.Components.Buttons do
     values = %{:a => "FR1", :b => "FR0"}
 
     ~H"""
-      <.cycle_button fluid={assigns[:fluid]} value={@value} values={values}>
+      <.cycle_button_2 fluid={assigns[:fluid]} value={@value} values={values}>
         A / B
-      </.cycle_button>
+      </.cycle_button_2>
     """
   end
 
@@ -177,7 +177,7 @@ defmodule Open890Web.Components.Buttons do
 
     ~H"""
       <%= if @value do %>
-        <.cycle_button value={@value} values={values} fluid={assigns[:fluid]}>M/V</.cycle_button>
+        <.cycle_button_2 value={@value} values={values} fluid={assigns[:fluid]}>M/V</.cycle_button_2>
       <% end %>
     """
   end
@@ -186,9 +186,9 @@ defmodule Open890Web.Components.Buttons do
     values = %{true => "NB10", false => "NB11"}
 
     ~H"""
-      <.cycle_button value={@value.nb_1_enabled} values={values} fluid={assigns[:fluid]}>
+      <.cycle_button_2 value={@value.nb_1_enabled} values={values} fluid={assigns[:fluid]}>
         NB1 <%= on_off(@value.nb_1_enabled) %>
-      </.cycle_button>
+      </.cycle_button_2>
     """
   end
 
@@ -196,9 +196,9 @@ defmodule Open890Web.Components.Buttons do
     values = %{true => "AP00", false => "AP01"}
 
     ~H"""
-      <.cycle_button value={@value} values={values} fluid={assigns[:fluid]}>
+      <.cycle_button_2 value={@value} values={values} fluid={assigns[:fluid]}>
         APF <%= on_off(@value) %>
-      </.cycle_button>
+      </.cycle_button_2>
     """
   end
 
@@ -206,9 +206,9 @@ defmodule Open890Web.Components.Buttons do
     values = %{true => "NB20", false => "NB21"}
 
     ~H"""
-      <.cycle_button value={@value.nb_2_enabled} values={values} fluid={assigns[:fluid]}>
+      <.cycle_button_2 value={@value.nb_2_enabled} values={values} fluid={assigns[:fluid]}>
         NB2 <%= on_off(@value.nb_2_enabled) %>
-      </.cycle_button>
+      </.cycle_button_2>
     """
   end
 
@@ -240,7 +240,7 @@ defmodule Open890Web.Components.Buttons do
     end
   end
 
-  def cycle_button(assigns) do
+  def cycle_button_2(assigns) do
     cmd = assigns[:values] |> Map.get(assigns[:value])
 
     ~H"""
@@ -304,7 +304,7 @@ defmodule Open890Web.Components.Buttons do
       <%= if @band_scope_mode == :fixed do %>
         <button class="ui small black fluid button">Range: (fixme)</button>
       <% else %>
-          <.cycle_button value={@band_scope_span} values={
+          <.cycle_button_2 value={@band_scope_span} values={
             %{
               5 => "BS41",
               10 => "BS42",
@@ -317,7 +317,7 @@ defmodule Open890Web.Components.Buttons do
             }
         } fluid>
         Span: <%= @band_scope_span %> kHz
-        </.cycle_button>
+        </.cycle_button_2>
       <% end %>
     """
   end
@@ -357,9 +357,9 @@ defmodule Open890Web.Components.Buttons do
 
     ~H"""
       <%= if @band_scope_att do %>
-        <.cycle_button value={@band_scope_att}, values={up_values} fluid>
+        <.cycle_button_2 value={@band_scope_att}, values={up_values} fluid>
           ATT: <%= format_band_scope_att(@band_scope_att) %>
-        </.cycle_button>
+        </.cycle_button_2>
       <% end %>
     """
   end
@@ -392,9 +392,9 @@ defmodule Open890Web.Components.Buttons do
 
     ~H"""
       <%= if @band_scope_avg do %>
-        <.cycle_button value={@band_scope_avg} values={up_values} fluid>
+        <.cycle_button_2 value={@band_scope_avg} values={up_values} fluid>
           Averaging: <%= @band_scope_avg %>
-        </.cycle_button>
+        </.cycle_button_2>
       <% end %>
     """
   end
