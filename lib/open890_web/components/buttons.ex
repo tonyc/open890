@@ -9,9 +9,9 @@ defmodule Open890Web.Components.Buttons do
 
     ~H"""
     <%= if @agc_off do %>
-      <div class="ui small black fluid button disabled">
+      <button class="ui small black fluid button disabled">
         AGC <%= format_agc(@value) %>
-      </div>
+      </button>
     <% else %>
       <.cycle_button value={@value} values={values} fluid={@fluid}>
         AGC <%= format_agc(@value) %>
@@ -72,9 +72,9 @@ defmodule Open890Web.Components.Buttons do
           NCH <%= format_notch_width(@value.width) %>
         </.cycle_button>
       <% else %>
-      <div class="ui small disabled black button fluid">
+      <button class="ui small disabled black button fluid">
         NCH <%= format_notch_width(@value.width) %>
-      </div>
+      </button>
     <% end %>
     """
   end
@@ -133,7 +133,7 @@ defmodule Open890Web.Components.Buttons do
           BC <%= format_bc(@value) %>
         </.cycle_button>
       <% else %>
-        <div class="ui small black fluid button disabled">BC</div>
+        <button class="ui small black fluid button disabled">BC</button>
       <% end %>
     """
   end
@@ -280,9 +280,9 @@ defmodule Open890Web.Components.Buttons do
     classes = "ui #{size_class} black button #{assigned_classes} #{fluid_class}"
 
     ~H"""
-      <div class={classes} phx-click="cmd" phx-value-cmd={@cmd}>
+      <button class={classes} phx-click="cmd" phx-value-cmd={@cmd}>
         <%= render_slot(@inner_block) %>
-      </div>
+      </button>
     """
   end
 
@@ -304,7 +304,7 @@ defmodule Open890Web.Components.Buttons do
   def scope_range_button(assigns) do
     ~H"""
       <%= if @band_scope_mode == :fixed do %>
-        <div class="ui small black fluid button">Range: (fixme)</div>
+        <button class="ui small black fluid button">Range: (fixme)</button>
       <% else %>
           <.cycle_button value={@band_scope_span} values={
             %{
