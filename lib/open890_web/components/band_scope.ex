@@ -37,7 +37,7 @@ defmodule Open890Web.Components.BandScope do
             <polygon id="bandSpectrum" class="spectrum" vector-effect="non-scaling-stroke" points={RadioViewHelpers.scope_data_to_svg(@band_scope_data, max_value: 140, scale_y: @spectrum_scale)}  />
           </g>
 
-          <%= if @split_enabled do %>
+          <%= if @tx_banner_frequency && @band_scope_edges do %>
             <%= if freq_low(@tx_banner_frequency, @band_scope_edges) do %>
               <g transform="translate(10 46),rotate(90)">
                 <.tx_offscreen_indicator />
