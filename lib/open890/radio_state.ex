@@ -65,9 +65,9 @@ defmodule Open890.RadioState do
     vfo_memory_state: nil,
     voip_available: nil,
     voip_enabled: nil,
-    rit_enabled: nil,
-    xit_enabled: nil,
-    rit_xit_offset: nil,
+    rit_enabled: false,
+    xit_enabled: false,
+    rit_xit_offset: 0,
   ]
 
   def dispatch("FS00" <> _ = _msg, %__MODULE__{} = state) do
@@ -681,6 +681,34 @@ defmodule Open890.RadioState do
       :a -> radio_state.vfo_a_frequency
       :b -> radio_state.vfo_b_frequency
       _ -> nil
+    end
+  end
+
+  # The final frequency that displays on the screen, taking RIT into account
+  # This is DIFFERENT from the position that the "R" banner displays on the bandscope
+  def effective_active_frequency(%__MODULE__{} = state) do
+    if state.active_frequency do
+      if state.rit_enabled && state.rit_xit_offset do
+        state.active_frequency + state.rit_xit_offset
+      else
+        state.active_frequency
+      end
+    else
+      nil
+    end
+  end
+
+  # The final frequency display on the right side, taking in split and XIT state into account.
+  # This is DIFFERENT from the position that the "T" banner displays on the bandscope.
+  def effective_inactive_frequency(%__MODULE__{} = state) do
+    if state.inactive_frequency do
+      if state.split_enabled && state.xit_enabled && state.rit_xit_offset do
+        state.inactive_frequency + state.rit_xit_offset
+      else
+        state.inactive_frequency
+      end
+    else
+      nil
     end
   end
 

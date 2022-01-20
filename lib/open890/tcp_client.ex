@@ -41,6 +41,11 @@ defmodule Open890.TCPClient do
       }}
   end
 
+  @impl true
+  def handle_call(:get_radio_state, _from, state) do
+    {:reply, {:ok, state.radio_state}, state}
+  end
+
   # Server API
   @impl true
   def handle_cast({:send_command, cmd}, state) do
