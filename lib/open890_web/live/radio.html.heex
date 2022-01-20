@@ -212,11 +212,11 @@
           <% :vfo -> %>
             <div class="eight column row">
               <%= live_component Open890Web.Live.VFODisplayComponent,
-                active_frequency: @radio_state.active_frequency,
+                active_frequency: RadioState.effective_active_frequency(@radio_state),
                 active_mode: @radio_state.active_mode,
                 active_receiver: @radio_state.active_receiver,
                 inactive_receiver: @radio_state.inactive_receiver,
-                inactive_frequency: @radio_state.inactive_frequency,
+                inactive_frequency: RadioState.effective_inactive_frequency(@radio_state),
                 inactive_mode: @radio_state.inactive_mode,
                 transverter_state: @radio_state.transverter_state,
                 vfo_memory_state: @radio_state.vfo_memory_state,
