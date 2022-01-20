@@ -277,7 +277,6 @@ defmodule Open890.TCPClient do
         end
 
         RadioConnection.broadcast_radio_state(connection, radio_state)
-
         %{state | radio_state: radio_state}
     end
   end
