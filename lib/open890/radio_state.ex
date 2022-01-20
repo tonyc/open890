@@ -685,7 +685,6 @@ defmodule Open890.RadioState do
   end
 
   # The final frequency that displays on the screen, taking RIT into account
-  # This is DIFFERENT from the position that the "R" banner displays on the bandscope
   def effective_active_frequency(%__MODULE__{} = state) do
     if state.active_frequency do
       if state.rit_enabled && state.rit_xit_offset do
@@ -709,6 +708,26 @@ defmodule Open890.RadioState do
       end
     else
       nil
+    end
+  end
+
+  def rx_banner_frequency(%__MODULE__{} = state) do
+    effective_active_frequency(state)
+  end
+
+  def tx_banner_frequency(%__MODULE__{} = state) do
+    if state.split_enabled do
+      if state.xit_enabled && state.rit_xit_offset do
+        state.inactive_frequency + state.rit_xit_offset
+      else
+        state.inactive_frequency
+      end
+    else
+      if state.xit_enabled && state.rit_xit_offset do
+        state.active_frequency + state.rit_xit_offset
+      else
+        state.active_frequency
+      end
     end
   end
 
