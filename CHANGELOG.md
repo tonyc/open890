@@ -1,11 +1,12 @@
 # open890 Changelog
 
 ## Unreleased
-* Adds audio streaming from the radio. Click the "VOIP Audio" button at the top once the connection is started.
-* Adds Cloudlog integration - syncs frequency/mode information to a Cloudlog instance.
+* Added audio streaming from the radio. Click the "VOIP Audio" button at the top once the connection is started.
+* Added Cloudlog integration - syncs frequency/mode information to a Cloudlog instance.
     * See https://github.com/tonyc/open890/wiki/Cloudlog-Integration for more information
-* Adds RIT/XIT functionality:
+* Added RIT/XIT functionality:
     * Mousewheel while hovered over the offset to adjust, or drag left/right on touch interfaces
+* Added notch position slider
 * Added mousewheel-based filter adjustments: Wheel for lo/width, shift+wheel for hi/shift.
 * Added AGC controls to side panel
 * Finished implementation of audio scope filter edges for all modes
