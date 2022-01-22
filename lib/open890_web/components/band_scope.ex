@@ -31,7 +31,7 @@ defmodule Open890Web.Components.BandScope do
           </defs>
 
           <g transform="translate(0 20)">
-            <%= band_scope_vertical_grid(@band_scope_mode, freq: @active_frequency, span: @band_scope_span) %>
+            <%= band_scope_vertical_grid(@band_scope_mode, freq: @effective_active_frequency, span: @band_scope_span) %>
             <%= band_scope_horizontal_grid() %>
 
             <polygon id="bandSpectrum" class="spectrum" vector-effect="non-scaling-stroke" points={RadioViewHelpers.scope_data_to_svg(@band_scope_data, max_value: 140, scale_y: @spectrum_scale)}  />
@@ -75,12 +75,7 @@ defmodule Open890Web.Components.BandScope do
                 filter_state={@filter_state}
                 scope_edges={@band_scope_edges} />
 
-              <%= if @split_enabled do %>
-                <.carrier_line mode="tx" label="T" frequency={@tx_banner_frequency} band_scope_edges={@band_scope_edges} piggyback={false}/>
-              <% else %>
-                <.carrier_line mode="tx" label="T" frequency={@tx_banner_frequency} band_scope_edges={@band_scope_edges} piggyback={true} />
-              <% end %>
-
+              <.carrier_line mode="tx" label="T" frequency={@tx_banner_frequency} band_scope_edges={@band_scope_edges} piggyback={!@split_enabled}/>
               <.carrier_line mode="rx" label="R" frequency={@rx_banner_frequency} band_scope_edges={@band_scope_edges} split_enabled={@split_enabled} />
             <% end %>
 

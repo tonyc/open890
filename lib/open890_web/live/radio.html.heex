@@ -461,7 +461,7 @@
 
     <div class="bandscopePanel toggle" phx-click="toggle_panel"></div>
 
-    <div class="bandscopePanel right ">
+    <div class="bandscopePanel right">
       <BandScope.bandscope
          active_frequency={@radio_state.active_frequency}
          inactive_frequency={@radio_state.inactive_frequency}
@@ -475,13 +475,16 @@
          filter_mode={RadioState.filter_mode(@radio_state)}
          band_scope_mode={@radio_state.band_scope_mode}
          band_scope_data={@band_scope_data}
-         band_scope_edges={@radio_state.band_scope_edges}
+
+         band_scope_edges={RadioState.effective_band_edges(@radio_state)}
+
          band_scope_span={@radio_state.band_scope_span}
          filter_state={@radio_state.filter_state}
          split_enabled={@radio_state.split_enabled}
          theme={@theme}
          draw_interval={@waterfall_draw_interval}
-         spectrum_scale={@spectrum_scale} />
+         spectrum_scale={@spectrum_scale}
+       />
     </div>
   </div>
 

@@ -266,7 +266,9 @@ defmodule Open890.TCPClient do
         end
 
         if (msg |> String.starts_with?("FA") && radio_state.active_receiver == :a) ||
-          (msg |> String.starts_with?("FB") && radio_state.active_receiver == :b) do
+          (msg |> String.starts_with?("FB") && radio_state.active_receiver == :b) #||
+            #(radio_state.band_scope_mode == :center && radio_state.rit_enabled && msg |> String.starts_with?("RF") )
+            do
 
           if radio_state.band_scope_edges do
             {low, high} = radio_state.band_scope_edges
