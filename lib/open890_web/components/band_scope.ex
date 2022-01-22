@@ -178,7 +178,8 @@ defmodule Open890Web.Components.BandScope do
         hi_lo_cut_passband_points(mode, filter_state, active_frequency, scope_edges, filter_mode)
 
       _ ->
-        Logger.warn("passband_polygon: unhandled mode #{mode}")
+        # TODO: FIXME
+        #Logger.warn("passband_polygon: unhandled mode #{mode}")
         ""
     end
 
