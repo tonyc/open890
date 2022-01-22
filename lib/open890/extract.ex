@@ -123,6 +123,7 @@ defmodule Open890.Extract do
     250,
     300,
     350,
+    400,
     450,
     500,
     600,
@@ -237,19 +238,27 @@ defmodule Open890.Extract do
     "F" => :am_d
   }
 
+  def apf_enabled(str) when is_binary(str) do
+    str |> String.trim_leading("AP0") == "1"
+  end
+
   def split_enabled(str) when is_binary(str) do
     str |> String.trim_leading("TB") == "1"
+  end
+
+  def rit_xit_offset(str) when is_binary(str) do
+    str
+    |> String.trim_leading("RF")
+    |> signed_integer()
   end
 
   def agc(str) when is_binary(str) do
     str
     |> String.trim_leading("GC")
     |> case do
-      "0" -> :off
       "1" -> :slow
       "2" -> :med
       "3" -> :fast
-      _ -> :unknown
     end
   end
 
@@ -279,12 +288,7 @@ defmodule Open890.Extract do
   def transverter_offset(str) when is_binary(str) do
     str
     |> String.trim_leading("XO")
-    |> case do
-      "0" <> offset ->
-        offset |> String.to_integer()
-      "1" <> offset ->
-        -(String.to_integer(offset))
-    end
+    |> signed_integer()
   end
 
   def nr(str) when is_binary(str) do
@@ -487,98 +491,64 @@ defmodule Open890.Extract do
     end
   end
 
-  def filter_lo_width(passband_id, _ssb_filter_mode, mode) when mode in [:cw, :cw_r] do
-    @cw_width_lookup |> elem(passband_id)
-  end
+  def get_am_lo_cut(passband_id), do: am_lo_cut_lookup() |> elem(passband_id)
+  def get_cw_width(passband_id), do: cw_width_lookup() |> elem(passband_id)
+  def get_fm_lo_cut(passband_id), do: fm_lo_cut_lookup() |> elem(passband_id)
+  def get_fsk_width(passband_id), do: fsk_width_lookup() |> elem(passband_id)
+  def get_psk_width(passband_id), do: psk_width_lookup() |> elem(passband_id)
+  def get_ssb_lo_cut(passband_id), do: ssb_lo_cut_lookup() |> elem(passband_id)
+  def get_ssb_width(passband_id), do: ssb_width_lookup() |> elem(passband_id)
 
-  def filter_lo_width(passband_id, _ssb_filter_mode, mode) when mode in [:fsk, :fsk_r] do
-    @fsk_width_lookup |> elem(passband_id)
-  end
+  defp am_lo_cut_lookup, do: @am_lo_cut_lookup
+  defp cw_width_lookup, do: @cw_width_lookup
+  defp fm_lo_cut_lookup, do: @fm_lo_cut_lookup
+  defp fsk_width_lookup, do: @fsk_width_lookup
+  defp psk_width_lookup, do: @psk_width_lookup
+  defp ssb_lo_cut_lookup, do: @ssb_lo_cut_lookup
+  defp ssb_width_lookup, do: @ssb_width_lookup
 
-  def filter_lo_width(passband_id, _ssb_filter_mode, mode) when mode in [:psk, :psk_r] do
-    @psk_width_lookup |> elem(passband_id)
-  end
-
-  def filter_lo_width(passband_id, _ssb_filter_mode, mode) when mode in [:am, :am_d] do
-    @am_lo_cut_lookup |> elem(passband_id)
-  end
-
-  def filter_lo_width(passband_id, _ssb_filter_mode, mode) when mode in [:fm, :fm_d] do
-    @fm_lo_cut_lookup |> elem(passband_id)
-  end
-
-  def filter_lo_width(passband_id, filter_mode, mode) when mode in [:usb, :usb_d, :lsb, :lsb_d] do
-    case filter_mode do
-      :hi_lo_cut ->
-        @ssb_lo_cut_lookup |> elem(passband_id)
-
-      :shift_width ->
-        @ssb_width_lookup |> elem(passband_id)
+  def filter_lo_width(passband_id, filter_mode, mode) do
+    case mode do
+      cw when cw in [:cw, :cw_r] -> get_cw_width(passband_id)
+      fsk when fsk in [:fsk, :fsk_r] -> get_fsk_width(passband_id)
+      psk when psk in [:psk, :psk_r] -> get_psk_width(passband_id)
+      am when am in [:am, :am_d] -> get_am_lo_cut(passband_id)
+      fm when fm in [:fm, :fm_d] -> get_fm_lo_cut(passband_id)
+      ssb when ssb in [:usb, :usb_d, :lsb, :lsb_d] ->
+        if filter_mode == :hi_lo_cut do
+          get_ssb_lo_cut(passband_id)
+        else
+          get_ssb_width(passband_id)
+        end
+      _ ->
+        Logger.warn("Unknown passband_id #{passband_id} for mode: #{mode} (filter_mode: #{filter_mode})")
+        nil
     end
   end
 
-  # def filter_lo_width(passband_id, filter_mode, mode) when mode in [:usb_d, :lsb_d] do
-  #   Logger.warn("Unimplemented filter_lo_width for mode:#{inspect(mode)}, filter_mode:#{inspect(filter_mode)}, passband_id:#{inspect(passband_id)}")
-  #   nil
-  # end
+  def get_am_hi_cut(passband_id), do: am_hi_cut_lookup() |> elem(passband_id)
+  def get_fm_hi_cut(passband_id), do: fm_hi_cut_lookup() |> elem(passband_id)
+  def get_ssb_hi_cut(passband_id), do: ssb_hi_cut_lookup() |> elem(passband_id)
 
-  def filter_lo_width(passband_id, filter_mode, mode) do
-    Logger.warn(
-      "Unknown passband_id, filter_mode, mode: #{inspect({passband_id, filter_mode, mode})}"
-    )
-    nil
-  end
+  defp am_hi_cut_lookup, do: @am_hi_cut_lookup
+  defp fm_hi_cut_lookup, do: @fm_hi_cut_lookup
+  defp ssb_hi_cut_lookup, do: @ssb_hi_cut_lookup
 
-  def filter_hi_shift(passband_id, _filter_mode, :cw) do
-    passband_id |> calculate_cw_shift()
-  end
-
-  def filter_hi_shift(passband_id, _filter_mode, :cw_r) do
-    passband_id |> calculate_cw_shift()
-  end
-
-  def filter_hi_shift(passband_id, _filter_mode, mode) when mode in [:am, :am_d] do
-    @am_hi_cut_lookup |> elem(passband_id)
-  end
-
-  def filter_hi_shift(passband_id, _filter_mode, mode) when mode in [:fm, :fm_d] do
-    @fm_hi_cut_lookup |> elem(passband_id)
-  end
-
-  def filter_hi_shift(passband_id, filter_mode, current_mode) do
-    case filter_mode do
-      :hi_lo_cut ->
-        cond do
-          current_mode in [:usb, :usb_d, :lsb, :lsb_d] ->
-            @ssb_hi_cut_lookup |> elem(passband_id)
-
-          current_mode in [:am, :am_d] ->
-            @am_hi_cut_lookup |> elem(passband_id)
-
-          current_mode in [:fm, :fm_d] ->
-            @fm_hi_cut_lookup |> elem(passband_id)
-
-          true ->
-            Logger.warn("Unknown mode for high/shift: #{inspect(current_mode)}")
-            nil
+  def filter_hi_shift(passband_id, filter_mode, mode) do
+    # psk and fsk don't shift
+    case mode do
+      cw when cw in [:cw, :cw_r] -> calculate_cw_shift(passband_id)
+      am when am in [:am, :am_d] -> get_am_hi_cut(passband_id)
+      fm when fm in [:fm, :fm_d] -> get_fm_hi_cut(passband_id)
+      ssb when ssb in [:usb, :usb_d, :lsb, :lsb_d] ->
+        if filter_mode == :hi_lo_cut do
+          get_ssb_hi_cut(passband_id)
+        else
+          calculate_ssb_shift(passband_id)
         end
-
-      :shift_width ->
-        cond do
-          current_mode in [:usb, :usb_d, :lsb, :lsb_d] ->
-            passband_id |> calculate_ssb_shift()
-
-          current_mode in [:usb_d, :lsb_d] ->
-            Logger.debug("Unimplemented filter_hi_shift for mode: #{current_mode}, filter_mode:#{inspect(filter_mode)}, passband_id:#{inspect(passband_id)}")
-            nil
-
-          true ->
-            Logger.debug("Unknown mode for hi_shift: :shift_width: #{inspect(current_mode)}")
-            nil
-        end
-
-        _ ->
-          Logger.debug("Unknown filter mode #{filter_mode} for #{current_mode}")
+      _ ->
+        Logger.warn("Unknown passband_id #{passband_id} for mode: #{mode} (filter_mode: #{filter_mode})")
+        nil
     end
   end
 
@@ -664,5 +634,24 @@ defmodule Open890.Extract do
   def trim_all_leading(src, items) when is_binary(src) and is_list(items) do
     items
     |> Enum.reduce(src, &String.trim_leading(&2, &1))
+  end
+
+  def boolean(msg, opts \\ []) when is_binary(msg) and is_list(opts) do
+    msg
+    |> String.trim_leading(opts |> Keyword.get(:prefix, ""))
+    |> case do
+      "1" -> true
+      _ -> false
+    end
+  end
+
+  # extracts the leading 0/1 from a string and returns the rest as a signed integer
+  def signed_integer(msg) do
+    msg
+    |> case do
+      "0" <> rest -> String.to_integer(rest)
+      "1" <> rest -> -(String.to_integer(rest))
+    end
+
   end
 end

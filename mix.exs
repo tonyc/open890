@@ -52,8 +52,11 @@ defmodule Open890.MixProject do
       {:ecto, "~> 3.5"},
       {:elixir_math, "~> 0.1.2"},
       {:esbuild, "~> 0.2", runtime: Mix.env() == :dev},
+      {:floki, ">= 0.30.0", only: :test},
       {:gettext, "~> 0.11"},
+      {:httpoison, "~> 1.8.0"},
       {:jason, "~> 1.0"},
+      {:poison, "~> 5.0"},
       {:mix_test_watch, "~> 1.0", only: [:dev], runtime: false},
       {:phoenix, "~> 1.6.0-rc.0", override: true},
       {:phoenix_html, "~> 3.0"},
@@ -64,6 +67,7 @@ defmodule Open890.MixProject do
       {:sobelow, "~> 0.11", only: [:dev, :test]},
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 0.5"},
+      {:timex, "~> 3.7.6"},
       {:toml, "~> 0.6.2"},
       {:uniq, "~> 0.4.1"}
     ]

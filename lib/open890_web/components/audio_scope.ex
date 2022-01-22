@@ -8,8 +8,8 @@ defmodule Open890Web.Components.AudioScope do
 
   def audio_scope(assigns) do
     ~H"""
-      <div class="audioScopeWrapper" class="hover-pointer">
-        <svg id="audioScope" class="scope themed" viewbox="0 0 212 60" phx-hook="AudioScope">
+      <div class="audioScopeWrapper">
+        <svg id="audioScope" class="scope themed" viewbox="0 0 212 60" phx-hook="AudioScope" pointer-events="visible-painted">
           <defs>
             <lineargradient id="kenwoodAudioScope" x1="0" y1="60" x2="0" y2="0" gradientunits="userSpaceOnUse">
               <stop offset="15%" stop-color="#030356" />
@@ -37,17 +37,15 @@ defmodule Open890Web.Components.AudioScope do
             </text>
 
             <g transform="translate(20 0)">
-              <%= if @active_mode not in [:usb_d, :lsb_d] and @filter_mode not in [:shift_width] do %>
-                <text class="audioScopeLabel">
-                  <%= filter_lo_width_label(@active_mode) %>: <%= @filter_state.lo_width %>
-                </text>
-              <% end %>
+              <text class="audioScopeLabel">
+                <%= filter_lo_width_label(@active_mode, @filter_mode) %>: <%= @filter_state.lo_width %>
+              </text>
             </g>
 
             <g transform="translate(160 0)">
               <text class="audioScopeLabel">
-                <%= if @active_mode in [:cw, :cw_r, :lsb, :usb, :am, :fm] do %>
-                  <%= filter_hi_shift_label(@active_mode) %>: <%= @filter_state.hi_shift %>
+                <%= if @active_mode not in [:fsk, :fsk_r, :psk, :psk_r] do %>
+                  <%= filter_hi_shift_label(@active_mode, @filter_mode) %>: <%= @filter_state.hi_shift %>
                 <% end %>
               </text>
             </g>
@@ -61,7 +59,7 @@ defmodule Open890Web.Components.AudioScope do
 
         </svg>
 
-        <canvas phx-hook="AudioScopeCanvas" id="AudioScopeCanvas" data-theme={@theme} class="waterfall" width="213" height="60"></canvas>
+        <canvas phx-hook="AudioScopeCanvas" id="AudioScopeCanvas" data-theme={@theme} class="waterfall hover-pointer" width="213" height="60"></canvas>
       </div>
     """
   end
@@ -104,10 +102,33 @@ defmodule Open890Web.Components.AudioScope do
     |> Kernel.+(70)  # a magic number I don't know where it comes from, but seems to look right
   end
 
-  def audio_scope_filter_edges(mode, %FilterState{} = filter_state, _filter_mode) when mode in [:cw, :cw_r] do
+  def data_filter_points(%FilterState{} = filter_state) do
     filter_width = FilterState.width(filter_state)
+    half_width = round(filter_width / 2)
 
-    half_width = (filter_width / 2) |> round()
+    scope_width = if filter_width <= 500 do
+      500
+    else
+      3000
+    end
+
+    center_f = div(scope_width, 2)
+
+    low = center_f - half_width
+    high = center_f + half_width
+
+    [low_val, high_val] = [low, high]
+                          |> Enum.map(fn x ->
+                            x |> project_to_audioscope_limits(scope_width)
+                          end)
+
+    audio_scope_filter_points(low_val, high_val)
+
+  end
+
+  def cw_filter_points(%FilterState{} = filter_state) do
+    filter_width = FilterState.width(filter_state)
+    half_width = round(filter_width / 2)
 
     scope_width = cond do
       filter_width < 700 -> 500
@@ -126,19 +147,36 @@ defmodule Open890Web.Components.AudioScope do
     low_val = 106 - distance + half_shift_projected
     high_val = 106 + distance + half_shift_projected
 
-    points = audio_scope_filter_points(low_val, high_val)
-
-    ~e{
-      <polyline id="audioScopeFilter" points="<%= points %>" />
-    }
+    audio_scope_filter_points(low_val, high_val)
   end
 
-  def audio_scope_filter_edges(mode, %FilterState{} = _filter_state, :shift_width) when mode in [:usb, :usb_d, :lsb, :lsb_d] do
-    Logger.debug("Unimplemented :shift_width audio_scope_filter_edges for mode: #{inspect(mode)}")
-    ""
+  def shifted_ssb_filter_points(%FilterState{hi_shift: shift} = filter_state) do
+    filter_width = FilterState.width(filter_state)
+    half_width = div(filter_width, 2)
+
+    # if shift + (width /2) >= 3000, the display changes to a 5k width
+    scope_width = if shift + half_width > 3000 do
+      5000
+    else
+      3000
+    end
+
+    center_f = div(scope_width, 2)
+
+    shift_delta = center_f - shift
+
+    low = center_f - half_width - shift_delta
+    high = center_f + half_width - shift_delta
+
+    [low_val, high_val] = [low, high]
+                          |> Enum.map(fn x ->
+                            x |> project_to_audioscope_limits(scope_width)
+                          end)
+
+    audio_scope_filter_points(low_val, high_val)
   end
 
-  def audio_scope_filter_edges(mode, %FilterState{} = filter_state, _filter_mode) when mode in [:usb, :usb_d, :lsb, :lsb_d, :fm] do
+  def hi_lo_cut_filter_points(%FilterState{} = filter_state) do
     total_width_hz =
       cond do
         filter_state.hi_shift >= 3400 -> 5000
@@ -153,40 +191,42 @@ defmodule Open890Web.Components.AudioScope do
         |> round()
       end)
 
-    points = audio_scope_filter_points(projected_low, projected_hi)
+    audio_scope_filter_points(projected_low, projected_hi)
+  end
+
+  def audio_scope_filter_edges(mode, %FilterState{} = filter_state, ssb_filter_mode) do
+    points = case mode do
+      :am -> am_filter_points(filter_state)
+      :fm -> hi_lo_cut_filter_points(filter_state)
+      x when x in [:cw, :cw_r] -> cw_filter_points(filter_state)
+      x when x in [:fsk, :fsk_r, :psk, :psk_r] -> data_filter_points(filter_state)
+      x when x in [:usb, :usb_d, :lsb, :lsb_d] ->
+        if ssb_filter_mode == :hi_lo_cut do
+          hi_lo_cut_filter_points(filter_state)
+        else
+          shifted_ssb_filter_points(filter_state)
+        end
+
+      other ->
+        Logger.debug("Unimplemented case for audio_scope_filter_edges for mode #{inspect(other)}")
+        ""
+    end
 
     ~e{
       <polyline id="audioScopeFilter" points="<%= points %>" />
     }
-
   end
 
-  def audio_scope_filter_edges(:am, %FilterState{} = filter_state, _filter_mode) do
+  def am_filter_points(%FilterState{lo_width: lo_width, hi_shift: hi_shift}) do
     [projected_low, projected_hi] =
-      [filter_state.lo_width, filter_state.hi_shift]
+      [lo_width, hi_shift]
       |> Enum.map(fn val ->
         val
         |> project_to_audioscope_limits(5000)
         |> round()
       end)
 
-    points = audio_scope_filter_points(projected_low, projected_hi)
-
-    ~e{
-      <polyline id="audioScopeFilter" points="<%= points %>" />
-    }
-  end
-
-
-  def audio_scope_filter_edges(mode, %FilterState{} = _filter_state, :hi_lo_cut) when mode in [:usb, :usb_d, :lsb, :lsb_d] do
-    Logger.debug("Unimplemented :hi_lo_cut audio_scope_filter_edges for mode: #{inspect(mode)}")
-    ""
-  end
-
-  def audio_scope_filter_edges(mode, %FilterState{} = _filter_state, filter_mode) do
-    info = %{mode: mode, filter_mode: filter_mode}
-    Logger.debug("Unimplemented audio_scope_filter_edges for: #{inspect(info)}")
-    ""
+    audio_scope_filter_points(projected_low, projected_hi)
   end
 
   defp audio_scope_filter_points(low_val, high_val) do
@@ -195,9 +235,7 @@ defmodule Open890Web.Components.AudioScope do
     "#{low_val - edge_offset},50 #{low_val},5 #{high_val},5 #{high_val + edge_offset},50"
   end
 
-  def project_to_audioscope_limits(nil, _width) do
-    0
-  end
+  def project_to_audioscope_limits(nil, _width), do: 0
 
   def project_to_audioscope_limits(value, width)
       when is_integer(value) and is_integer(width) do
@@ -205,19 +243,32 @@ defmodule Open890Web.Components.AudioScope do
     percentage * 212
   end
 
-  def filter_lo_width_label(mode) when mode in [:cw, :cw_r, :fsk, :fsk_r, :psk, :psk_r] do
-    "WIDTH"
+  def filter_lo_width_label(mode, ssb_filter_mode) do
+    case mode do
+      x when x in [:cw, :cw_r, :fsk, :fsk_r, :psk, :psk_r] -> "WIDTH"
+      x when x in [:am, :fm] -> "LC"
+      x when x in [:usb, :usb_d, :lsb, :lsb_d] ->
+        if ssb_filter_mode == :hi_lo_cut do
+          "LC"
+        else
+          "WIDTH"
+        end
+      _ -> ""
+    end
   end
 
-  def filter_lo_width_label(_) do
-    "LC"
+  def filter_hi_shift_label(mode, ssb_filter_mode) do
+    case mode do
+      x when x in [:cw, :cw_r] -> "SHIFT"
+      x when x in [:am, :fm] -> "HC"
+      x when x in [:usb, :usb_d, :lsb, :lsb_d] ->
+        if ssb_filter_mode == :hi_lo_cut do
+          "HC"
+        else
+          "SHIFT"
+        end
+      _ -> ""
+    end
   end
 
-  def filter_hi_shift_label(mode) when mode in [:cw, :cw_r] do
-    "SHIFT"
-  end
-
-  def filter_hi_shift_label(_) do
-    "HC"
-  end
 end

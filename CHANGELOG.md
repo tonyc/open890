@@ -1,5 +1,20 @@
 # open890 Changelog
 
+## 0.7.0
+* Added audio streaming from the radio. Click the "VOIP Audio" button at the top once the connection is started.
+* Added Cloudlog integration - syncs frequency/mode information to a Cloudlog instance.
+    * See https://github.com/tonyc/open890/wiki/Cloudlog-Integration for more information
+* Added RIT/XIT functionality:
+    * Mousewheel while hovered over the offset to adjust, or drag left/right on touch interfaces
+* Added notch position slider
+* Added mousewheel-based filter adjustments: Wheel for lo/width, shift+wheel for hi/shift.
+* Added AGC controls to side panel
+* Finished implementation of audio scope filter edges for all modes
+* Adjusted buttons as to not keep focus/highlight state after being clicked/tapped
+* Adjusted the "TX offscreen" indicator to always show regardless of SPLIT status
+* Implemented correct shift/width display for bandscope passband polygon
+* [Dev] 'make compile' changed to 'make build'
+
 ## 0.6.2 - 2021-01-16
 * Fixes a display crash related to AM/FM modes
 

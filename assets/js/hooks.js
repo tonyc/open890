@@ -1,7 +1,36 @@
 import Interpolate from "./interpolate"
 import ColorMap from "./colormap"
+import socket from "./socket"
+
+function PCMPlayer(t){this.init(t)}PCMPlayer.prototype.init=function(t){this.option=Object.assign({},{encoding:"16bitInt",channels:1,sampleRate:8e3,flushingTime:1e3},t),this.samples=new Float32Array,this.flush=this.flush.bind(this),this.interval=setInterval(this.flush,this.option.flushingTime),this.maxValue=this.getMaxValue(),this.typedArray=this.getTypedArray(),this.createContext()},PCMPlayer.prototype.getMaxValue=function(){var t={"8bitInt":128,"16bitInt":32768,"32bitInt":2147483648,"32bitFloat":1};return t[this.option.encoding]?t[this.option.encoding]:t["16bitInt"]},PCMPlayer.prototype.getTypedArray=function(){var t={"8bitInt":Int8Array,"16bitInt":Int16Array,"32bitInt":Int32Array,"32bitFloat":Float32Array};return t[this.option.encoding]?t[this.option.encoding]:t["16bitInt"]},PCMPlayer.prototype.createContext=function(){this.audioCtx=new(window.AudioContext||window.webkitAudioContext),this.gainNode=this.audioCtx.createGain(),this.gainNode.gain.value=1,this.gainNode.connect(this.audioCtx.destination),this.startTime=this.audioCtx.currentTime},PCMPlayer.prototype.isTypedArray=function(t){return t.byteLength&&t.buffer&&t.buffer.constructor==ArrayBuffer},PCMPlayer.prototype.feed=function(t){if(this.isTypedArray(t)){t=this.getFormatedValue(t);var e=new Float32Array(this.samples.length+t.length);e.set(this.samples,0),e.set(t,this.samples.length),this.samples=e}},PCMPlayer.prototype.getFormatedValue=function(t){t=new this.typedArray(t.buffer);var e,i=new Float32Array(t.length);for(e=0;e<t.length;e++)i[e]=t[e]/this.maxValue;return i},PCMPlayer.prototype.volume=function(t){this.gainNode.gain.value=t},PCMPlayer.prototype.destroy=function(){this.interval&&clearInterval(this.interval),this.samples=null,this.audioCtx.close(),this.audioCtx=null},PCMPlayer.prototype.flush=function(){if(this.samples.length){var t,e,i,n,a,s=this.audioCtx.createBufferSource(),r=this.samples.length/this.option.channels,o=this.audioCtx.createBuffer(this.option.channels,r,this.option.sampleRate);for(e=0;e<this.option.channels;e++)for(t=o.getChannelData(e),i=e,a=50,n=0;n<r;n++)t[n]=this.samples[i],n<50&&(t[n]=t[n]*n/50),r-51<=n&&(t[n]=t[n]*a--/50),i+=this.option.channels;this.startTime<this.audioCtx.currentTime&&(this.startTime=this.audioCtx.currentTime),console.log("start vs current "+this.startTime+" vs "+this.audioCtx.currentTime+" duration: "+o.duration),s.buffer=o,s.connect(this.gainNode),s.start(this.startTime),this.startTime+=o.duration,this.samples=new Float32Array}};
 
 let Hooks = {
+  AudioStream: {
+    mounted() {
+      console.log("AudioStream: mounted")
+
+      this.player = new PCMPlayer({
+        encoding: '16bitInt',
+        channels: 1,
+        sampleRate: 16000,
+        flushingTime: 125
+      })
+
+      this.audioStreamChannel = socket.channel("radio:audio_stream", {})
+      this.audioStreamChannel.join()
+        .receive("ok", (resp) => { console.log("joined audio stream channel, resp:", resp) })
+        .receive("error", (resp) => {
+           console.log("unable to join audio stream channel:", resp)
+        })
+
+      this.audioStreamChannel.on("audio_data", (data) => {
+        if (this.player) {
+          let buff = new Uint8Array(data.payload);
+          this.player.feed(buff)
+        }
+      })
+    }
+  },
   Tabs: {
     mounted() {
       console.log("tabs mounted")
@@ -70,6 +99,82 @@ let Hooks = {
         this.pushEvent("adjust_ref_level", {is_up: isScrollUp})
       })
     }
+  },
+
+  RitXitControl: {
+    copyTouch({identifier, pageX, pageY}) {
+      return { identifier, pageX, pageY }
+    },
+
+    mounted() {
+      this.el.addEventListener("wheel", (event) => {
+        event.preventDefault();
+
+        var isScrollUp = event.deltaY < 0;
+        this.pushEvent("adjust_rit_xit", {is_up: isScrollUp})
+      })
+
+      this.el.addEventListener("touchstart", (event) => {
+        var me = this;
+
+        if (event.changedTouches[0]) {
+          let touch = event.changedTouches[0];
+          me.prevTouch = this.copyTouch(touch);
+        }
+      })
+
+      this.el.addEventListener("touchend", (event) => {
+        var me = this;
+        event.preventDefault();
+        me.prevTouch = null;
+      })
+
+      this.el.addEventListener("touchmove", (event) => {
+        event.preventDefault();
+        var me = this;
+
+        if (event.changedTouches[0]) {
+          if (me.prevTouch) {
+            let touch = event.changedTouches[0];
+
+            let deltaX = touch.pageX - me.prevTouch.pageX;
+            let deltaY = touch.pageY - me.prevTouch.pageY;
+
+            let isUp = deltaX > 0;
+            console.log("move dx/dy:", deltaX, deltaY);
+
+            if (Math.abs(deltaX) > 5) {
+              this.pushEvent("adjust_rit_xit", {is_up: isUp})
+            }
+          }
+        }
+      })
+
+      //this.el.addEventListener("mousedown", (event) => {
+      //  event.preventDefault();
+      //  me.dragStartCoord = event.x;
+
+      //  console.log("RIT/XIT mouseDown", event.x)
+      //})
+
+
+      //this.el.addEventListener("mouseup", (event) => {
+      //  event.preventDefault();
+
+
+      //  console.log("RIT/XIT mouseUp", event.x)
+      //})
+
+      //this.el.addEventListener("mousemove", event => {
+      //  event.preventDefault();
+
+      //  if (event.buttons && event.buttons == 1) {
+      //    console.log("rit/xit drag", event)
+      //  }
+      //})
+    },
+
+
   },
 
   MultiCH: {
@@ -147,7 +252,18 @@ let Hooks = {
   },
   AudioScope: {
     mounted() {
-      this.el.addEventListener("mouseup", (event) => {
+      this.el.addEventListener("wheel", (event) => {
+        event.preventDefault();
+        let isScrollUp = (event.deltaY < 0);
+
+        let dir = isScrollUp ? "up" : "down";
+        let isShifted = event.shiftKey;
+
+        console.log("audioScope wheel, dir:", dir, "shifted", isShifted, "event:", event);
+        this.pushEvent("adjust_filter", {dir: dir, shift: isShifted})
+      });
+
+      this.el.addEventListener("click", (event) => {
         event.preventDefault();
         this.pushEvent("cw_tune", {})
       })
@@ -274,21 +390,6 @@ let Hooks = {
       this.handleEvent("clear_band_scope", (event) => {
         this.clearScope()
       })
-
-      // window.addEventListener('resize', event => {
-      //   let tgt = event.target;
-
-      //   console.log("window resize: inner:", tgt.innerHeight, "outer:", tgt.outerHeight)
-
-      //   let rect = me.canvas.getBoundingClientRect()
-      //   console.log("rect", rect);
-        
-      //   let newHeight = tgt.innerHeight - rect.top;
-      //   console.log("computed height", newHeight)
-      //   me.canvas.setAttribute('height', newHeight)
-      //   me.height = newHeight;
-      //   // me.pushEvent('canvas_height', {height: newHeight})
-      // })
 
       this.el.addEventListener("wheel", event => {
         // this is duplicated in the BandScope hooks above

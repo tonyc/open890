@@ -13,6 +13,7 @@ defmodule Open890.ConnectionCommands do
     |> get_filter_modes()
     |> get_modes()
     |> get_filter_state()
+    |> get_fine()
     |> get_roofing_filter_info()
     |> get_band_scope_mode()
     |> get_band_scope_span()
@@ -39,7 +40,40 @@ defmodule Open890.ConnectionCommands do
     |> get_nb_states()
     |> get_squelch()
     |> get_split()
+    |> get_apf_state()
+    |> get_voip_available()
+    |> get_voip_state()
+    |> get_rit_xit()
   end
+
+  def get_fine(conn), do: conn |> cmd("FS")
+
+  def rit_xit_up(conn), do: conn |> cmd("RU")
+  def rit_xit_down(conn), do: conn |> cmd("RD")
+  def clear_rit_xit(conn), do: conn |> cmd("RC")
+
+  #def set_rit_xit(conn, value) when is_integer(value) do
+  #  direction = if value < 0, do: "1", else: "0"
+  #  value = abs(value)
+  #          |> to_string()
+  #          |> String.pad_leading(4, "0")
+
+  #  conn |> cmd("RF#{direction}#{value}")
+  #end
+
+  def get_rit_xit(conn) do
+    conn
+    |> cmd("RT")
+    |> cmd("XT")
+    |> cmd("RF")
+  end
+
+  def get_voip_available(conn), do: conn |> cmd("##KN2")
+  def get_voip_state(conn), do: conn |> cmd("##VP")
+  def start_voip(conn), do: conn |> cmd("##VP1")
+  def stop_voip(conn), do: conn |> cmd("##VP0")
+
+  def get_apf_state(conn), do: conn |> cmd("AP0")
 
   def get_split(conn), do: conn |> cmd("TB")
 
@@ -95,6 +129,14 @@ defmodule Open890.ConnectionCommands do
     |> cmd("NT")
     |> cmd("NW")
     |> cmd("BP")
+  end
+
+  def set_notch_pos(conn, value) do
+    value = value
+            |> to_string()
+            |> String.pad_leading(3, "0")
+
+    conn |> cmd("BP#{value}")
   end
 
   def get_power_level(conn) do

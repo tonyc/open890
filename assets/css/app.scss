@@ -253,10 +253,11 @@ nav {
 
 .audioScopeWrapper {
   float: right;
+
   #audioScope, #AudioScopeCanvas {
     width: 100%;
   }
-  
+
   #audioScope {
     //border-radius: $border-radius-small;
     border-top: 2px solid $kenwood-grey;
@@ -347,6 +348,30 @@ nav {
     }
   }
 
+}
+
+button.rit_xit {
+  width: 4rem;
+}
+
+button.rit_xit_clr {
+  position: relative;
+  //top: 1rem;
+}
+
+.rit_xit_offset {
+  font-family: $vfo-font;
+  font-size: 2.2vmax;
+  position: relative;
+  top: 0.5rem;
+  color: white;
+  &.inactive {
+    color: $secondary-color;
+  }
+}
+
+#frequencyDisplay {
+  //height: 3.5vmax;
 }
 
 #scopeDetails {
@@ -584,7 +609,7 @@ svg#bandScope {
 
 
 .hover-pointer:hover {
-  cursor: pointer;
+  cursor: pointer !important;
 }
 
 
@@ -733,9 +758,8 @@ svg#bandScope {
   font-size: larger;
 }
 
-.connectionStatus {
+.secondaryText {
   color: #A0A0A0;
-  // color: $kenwood-grey;
 }
 
 .indicators {
@@ -780,9 +804,9 @@ svg#bandScope {
 .rotating {
   line-height: 1;
   height: 1rem;
-  -webkit-animation:spin 10s linear infinite;
-  -moz-animation:spin 10s linear infinite;
-  animation:spin 10s linear infinite;
+  -webkit-animation:spin 5s linear infinite;
+  -moz-animation:spin 5s linear infinite;
+  animation:spin 5s linear infinite;
 }
 
 @-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }

@@ -5,8 +5,8 @@ defmodule Open890Web.Live.AudioScope do
   use Open890Web.Live.RadioLiveEventHandling
 
   alias Phoenix.Socket.Broadcast
-  alias Open890.{ConnectionCommands, RadioConnection}
-  alias Open890Web.Live.{Dispatch, RadioSocketState}
+  alias Open890.{ConnectionCommands, RadioConnection, RadioState}
+  alias Open890Web.Live.{RadioSocketState}
 
   alias Open890Web.Components.AudioScope
   import Open890Web.Components.Buttons
@@ -67,25 +67,17 @@ defmodule Open890Web.Live.AudioScope do
   end
 
   @impl true
-  def handle_info(%Broadcast{event: "radio_state_data", payload: %{msg: msg}}, socket) do
-    socket = Dispatch.dispatch(msg, socket)
-
+  def handle_info(%Broadcast{event: "radio_state_data", payload: %{msg: radio_state}}, socket) do
+    socket = assign(socket, :radio_state, radio_state)
     {:noreply, socket}
   end
-
-  # # Connection state messages
-  # def handle_info(%Broadcast{event: "connection_state", payload: payload}, socket) do
-  #   Logger.debug("Bandscope LV: RX connection_state: #{inspect(payload)}")
-
-  #   {:noreply, assign(socket, :connection_state, payload)}
-  # end
 
   def handle_info(%Broadcast{} = _bc, socket) do
     {:noreply, socket}
   end
 
   def handle_event(event, params, socket) do
-    Logger.warn("RadioLive.Bandscope: Unknown event: #{event}, params: #{inspect(params)}")
+    Logger.warn("Live.AudioScope: Unknown event: #{event}, params: #{inspect(params)}")
     {:noreply, socket}
   end
 

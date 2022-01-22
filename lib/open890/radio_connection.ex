@@ -14,12 +14,16 @@ defmodule Open890.RadioConnection do
             password: nil,
             user_is_admin: false,
             auto_start: true,
-            type: nil
+            type: nil,
+            cloudlog_enabled: false,
+            cloudlog_url: nil,
+            cloudlog_api_key: nil
 
   require Logger
 
-  alias Open890.RadioConnectionSupervisor
+  alias Open890.{CloudlogSupervisor, RadioConnectionSupervisor}
   alias Open890.RadioConnectionRepo, as: Repo
+  alias Open890.RadioState
 
   def tcp_port(%__MODULE__{} = connection) do
     connection
@@ -31,15 +35,17 @@ defmodule Open890.RadioConnection do
   end
 
   def find(id) do
-    id |> Repo.find()
+    id |> repo().find()
   end
 
   def all do
-    Repo.all()
+    repo().all()
   end
 
+  def first, do: all() |> Enum.at(0)
+
   def create(params) when is_map(params) do
-    params |> Repo.insert()
+    params |> repo().insert()
   end
 
   def delete_connection(%__MODULE__{id: id}) when is_integer(id) do
@@ -47,7 +53,31 @@ defmodule Open890.RadioConnection do
   end
 
   def delete_connection(id) do
-    id |> Repo.delete()
+    id |> repo().delete()
+  end
+
+  def delete_all do
+    repo().delete_all()
+  end
+
+  def get_state!(%__MODULE__{} = conn) do
+    get_state(conn)
+    |> case do
+      {:ok, state} -> state
+      _ -> raise "State not available for conn: #{conn.id}"
+    end
+  end
+
+  def get_state(%__MODULE__{} = connection) do
+    connection
+    |> get_connection_pid()
+    |> case do
+      {:ok, pid} ->
+        pid |> GenServer.call(:get_radio_state)
+      _ ->
+        Logger.warn("Could not find pid for connection: #{connection.id}")
+        {:error, :not_found}
+    end
   end
 
   def update_connection(%__MODULE__{} = conn, params) when is_map(params) do
@@ -61,14 +91,17 @@ defmodule Open890.RadioConnection do
         user_name: params["user_name"],
         password: params["password"],
         user_is_admin: params["user_is_admin"],
-        auto_start: params["auto_start"]
+        auto_start: params["auto_start"],
+        cloudlog_enabled: params["cloudlog_enabled"],
+        cloudlog_url: params["cloudlog_url"] |> to_string() |> String.trim() |> String.trim_trailing("/"),
+        cloudlog_api_key: params["cloudlog_api_key"] |> to_string() |> String.trim(),
       })
 
-    new_connection |> Repo.update()
+    new_connection |> repo().update()
   end
 
   def count_connections do
-    Repo.count()
+    repo().count()
   end
 
   def start(id) when is_integer(id) or is_binary(id) do
@@ -79,7 +112,11 @@ defmodule Open890.RadioConnection do
 
   def start(%__MODULE__{} = connection) do
     broadcast_connection_state(connection, :starting)
+    maybe_start_cloudlog_process(connection)
+    start_tcp_process(connection)
+  end
 
+  defp start_tcp_process(%__MODULE__{} = connection) do
     connection
     |> RadioConnectionSupervisor.start_connection()
     |> case do
@@ -94,23 +131,82 @@ defmodule Open890.RadioConnection do
     end
   end
 
+  defp maybe_start_cloudlog_process(%__MODULE__{} = connection) do
+    connection
+    |> Map.get(:cloudlog_enabled, false)
+    |> case do
+      truthy when truthy in [true, "true"] ->
+        Logger.info("Cloudlog enabled for connection #{connection.id}, starting process")
+
+        connection
+        |> CloudlogSupervisor.start_cloudlog()
+        |> case do
+          {:ok, _pid} ->
+            {:ok, connection}
+
+          {:error, {:already_started, _pid}} ->
+            {:error, :already_started}
+
+          other -> other
+        end
+
+      _ ->
+        Logger.info("Cloudlog not enabled for connection #{connection.id}")
+        {:ok, connection}
+    end
+  end
+
   def stop(id) when is_integer(id) or is_binary(id) do
     with {:ok, conn} <- find(id) do
       conn |> stop()
     end
   end
 
-  def stop(%__MODULE__{id: id} = connection) do
-    Registry.lookup(:radio_connection_registry, id)
+  def stop(%__MODULE__{} = connection) do
+    # This should be a proper process tree where we just terminate one
+    # process for the connection, which would actually be a supervisor with
+    # a TCP process and possibly a cloudlog process.
+    maybe_terminate_cloudlog_process(connection)
+    terminate_tcp_process(connection)
+  end
+
+  defp terminate_tcp_process(%__MODULE__{id: connection_id} = connection) do
+    Registry.lookup(:radio_connection_registry, {:tcp, connection_id})
     |> case do
       [{pid, _}] ->
         DynamicSupervisor.terminate_child(RadioConnectionSupervisor, pid)
         broadcast_connection_state(connection, :stopped)
+        :ok
 
       _ ->
-        Logger.debug("Unable to find process for connection id #{id}")
+        Logger.debug("Unable to find TCP process for connection id #{connection_id}")
         {:error, :not_found}
     end
+  end
+
+  defp maybe_terminate_cloudlog_process(%__MODULE__{id: connection_id}) do
+    Registry.lookup(:radio_connection_registry, {:cloudlog, connection_id})
+    |> case do
+      [{pid, _}] ->
+        DynamicSupervisor.terminate_child(CloudlogSupervisor, pid)
+
+      _ ->
+        Logger.debug("Unable to find cloudlog process for connection id #{connection_id}")
+        {:error, :not_found}
+    end
+  end
+
+  def update_cloudlog(%__MODULE__{} = connection, %RadioState{} = radio_state) do
+    connection
+    |> get_cloudlog_pid()
+    |> case do
+      {:ok, pid} ->
+        pid |> GenServer.cast({:update, connection.id, radio_state})
+      _ ->
+        Logger.warn("update_cloudlog: no PID found for connection:#{connection.id}")
+    end
+
+    connection
   end
 
   def cmd(%__MODULE__{} = connection, command) when is_binary(command) do
@@ -142,7 +238,11 @@ defmodule Open890.RadioConnection do
     end
   end
 
-  def broadcast_connection_state(%__MODULE__{id: id}, state) do
+  def broadcast_freq_delta(%__MODULE__{id: id} = _connection, args) do
+    Open890Web.Endpoint.broadcast("connection:#{id}", "freq_delta", args)
+  end
+
+  def broadcast_connection_state(%__MODULE__{id: id} = _connection, state) do
     Open890Web.Endpoint.broadcast("connection:#{id}", "connection_state", state)
   end
 
@@ -156,8 +256,12 @@ defmodule Open890.RadioConnection do
     Open890Web.Endpoint.broadcast("radio:audio_scope:#{connection_id}", "scope_data", %{payload: audio_scope_data})
   end
 
-  def broadcast_message(%__MODULE__{id: connection_id}, msg) do
-    Open890Web.Endpoint.broadcast("radio:state:#{connection_id}", "radio_state_data", %{msg: msg})
+  def broadcast_radio_state(%__MODULE__{id: connection_id}, %RadioState{} = radio_state) do
+    Open890Web.Endpoint.broadcast("radio:state:#{connection_id}", "radio_state_data", %{msg: radio_state})
+  end
+
+  def broadcast_band_scope_cleared(%__MODULE__{id: connection_id}) do
+    Open890Web.Endpoint.broadcast("radio:band_scope:#{connection_id}", "band_scope_cleared", %{})
   end
 
   # bundles up all the knowledge of which topics to subscribe a topic to
@@ -169,10 +273,20 @@ defmodule Open890.RadioConnection do
   end
 
   defp get_connection_pid(%__MODULE__{id: id}) do
-    Registry.lookup(:radio_connection_registry, id)
+    Registry.lookup(:radio_connection_registry, {:tcp, id})
     |> case do
       [{pid, _}] -> {:ok, pid}
       [] -> {:error, :not_found}
     end
   end
+
+  def get_cloudlog_pid(%__MODULE__{id: id}) do
+    Registry.lookup(:radio_connection_registry, {:cloudlog, id})
+    |> case do
+      [{pid, _}] -> {:ok, pid}
+      [] -> {:error, :not_found}
+    end
+  end
+
+  def repo, do: Repo
 end

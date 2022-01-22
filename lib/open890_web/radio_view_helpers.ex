@@ -4,89 +4,11 @@ defmodule Open890Web.RadioViewHelpers do
   import Phoenix.HTML
   import Phoenix.HTML.Tag
 
-  alias Open890.{Menu, TransverterState}
+  alias Open890.{Menu, RadioState, TransverterState}
 
   def selected_theme?(theme, name) do
     if theme == name, do: "selected"
   end
-
-  # def fluid_cmd_button(name, cmd, opts \\ []) do
-  #   cmd_button(name, cmd, opts |> Keyword.put(:class, "fluid"))
-  # end
-
-  # def cmd_button(name, cmd, opts \\ []) when is_binary(name) and is_binary(cmd) do
-  #   class_opts = opts |> Keyword.get(:class, "")
-
-  #   # icon_opts = opts |> Keyword.get(:icon)
-
-  #   final_opts =
-  #     opts
-  #     |> Keyword.delete(:class)
-  #     |> Keyword.merge(class: "ui small black button btn #{class_opts}")
-  #     |> Keyword.merge(phx_click: "cmd", phx_value_cmd: cmd)
-
-  #   content_tag(:button, name, final_opts)
-  # end
-
-  # def cmd_label_button(name, cmd, opts \\ []) when is_binary(name) and is_binary(cmd) do
-  #   class_opts = opts |> Keyword.get(:class, "")
-
-  #   final_opts =
-  #     opts
-  #     |> Keyword.delete(:class)
-  #     |> Keyword.merge(class: "ui button #{class_opts}")
-  #     |> Keyword.merge(phx_click: "cmd", phx_value_cmd: cmd)
-
-  #   content_tag(:button, name, final_opts)
-  # end
-
-  # def fluid_cycle_button(title, var, values, opts \\ []) do
-  #   values
-  #   |> Map.get(var)
-  #   |> case do
-  #     nil -> ""
-  #     cmd -> fluid_cmd_button(title, cmd, opts)
-  #   end
-  # end
-
-  # cycle_button("Scope Mode", @scope_mode, %{auto_scroll: "BS30", fixed: "BS32", center: "BS31"}
-  # def cycle_button(title, var, values, opts \\ []) when is_map(values) do
-  #   values
-  #   |> Map.get(var)
-  #   |> case do
-  #     nil -> ""
-  #     cmd -> cmd_button(title, cmd, opts)
-  #   end
-  # end
-
-  # def cycle_label_button(title, var, values, opts \\ []) when is_map(values) do
-  #   values
-  #   |> Map.get(var)
-  #   |> case do
-  #     nil ->
-  #       ""
-
-  #     %{label: label, cmd: cmd} ->
-  #       cmd_label_button(title, label, cmd, opts)
-  #   end
-  # end
-
-  # def cmd_label_button(title, label, cmd, opts) do
-  #   class_opts = opts |> Keyword.get(:class, "")
-  #   button_classes = "ui button #{class_opts}"
-
-  #   contents =
-  #     case title do
-  #       blank when blank in ["", nil] -> label
-  #       str -> "#{str}: #{label}"
-  #     end
-
-  #   content_tag(:button, contents, class: button_classes, phx_click: "cmd", phx_value_cmd: cmd)
-  # end
-
-  # def q_min_button(opts \\ []) do
-  #   "Q-M.IN" |> cmd_button("QI", opts)
-  # end
 
   def linear_interpolate(value, y_min, y_max, x_min, x_max) do
     percent = (value - y_min) / (y_max - y_min)
@@ -114,6 +36,18 @@ defmodule Open890Web.RadioViewHelpers do
     |> Enum.join(".")
     |> String.reverse()
   end
+
+  def format_rit_xit(nil), do: "0"
+  def format_rit_xit(val) when is_integer(val) do
+    is_negative = val < 0
+
+    padding = if is_negative, do: 6, else: 5
+
+    (val / 1000.0)
+    |> to_string()
+    |> String.pad_trailing(padding, "0")
+  end
+
 
   def s_meter_value_to_s_units(val) when is_integer(val) do
     cond do
@@ -272,10 +206,23 @@ defmodule Open890Web.RadioViewHelpers do
   def format_agc(agc) when is_atom(agc) do
     case agc do
       :off -> "OFF"
-      :slow -> "-S"
-      :med -> "-M"
-      :fast -> "-F"
+      :slow -> "S"
+      :med -> "M"
+      :fast -> "F"
       _ -> ""
+    end
+  end
+
+  def format_agc_topbar(agc_off, agc_state) when is_atom(agc_state) do
+    if agc_off do
+      " OFF"
+    else
+      case agc_state do
+        :slow -> "-S"
+        :med -> "-M"
+        :fast -> "-F"
+        _ -> ""
+      end
     end
   end
 
@@ -291,6 +238,7 @@ defmodule Open890Web.RadioViewHelpers do
       {:down, :timeout} -> "Connection Timeout"
       {:down, :kns_in_use} -> "KNS Connection Already In Use"
       {:down, :bad_credentials} -> "Incorrect username or password"
+      nil -> "Connection Down"
       other -> inspect(other)
     end
   end
@@ -299,6 +247,7 @@ defmodule Open890Web.RadioViewHelpers do
     case connection_state do
       :stopped -> true
       {:down, _} -> true
+      nil -> true
       _ -> false
     end
   end

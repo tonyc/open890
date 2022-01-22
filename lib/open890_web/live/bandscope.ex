@@ -5,8 +5,8 @@ defmodule Open890Web.Live.Bandscope do
   use Open890Web.Live.RadioLiveEventHandling
 
   alias Phoenix.Socket.Broadcast
-  alias Open890.{ConnectionCommands, RadioConnection}
-  alias Open890Web.Live.{Dispatch, RadioSocketState}
+  alias Open890.{ConnectionCommands, RadioConnection, RadioState}
+  alias Open890Web.Live.{RadioSocketState}
 
   alias Open890Web.Components.{BandScope, BandscopeButtons}
 
@@ -93,9 +93,8 @@ defmodule Open890Web.Live.Bandscope do
   end
 
   @impl true
-  def handle_info(%Broadcast{event: "radio_state_data", payload: %{msg: msg}}, socket) do
-    socket = Dispatch.dispatch(msg, socket)
-
+  def handle_info(%Broadcast{event: "radio_state_data", payload: %{msg: radio_state}}, socket) do
+    socket = assign(socket, :radio_state, radio_state)
     {:noreply, socket}
   end
 
@@ -181,6 +180,8 @@ defmodule Open890Web.Live.Bandscope do
 
     {:noreply, socket}
   end
+
+
 
   def handle_event(event, params, socket) do
     Logger.warn("RadioLive.Bandscope: Unknown event: #{event}, params: #{inspect(params)}")

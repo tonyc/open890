@@ -5,12 +5,11 @@ defmodule Open890Web.Live.Radio do
   use Open890Web.Live.RadioLiveEventHandling
 
   alias Phoenix.Socket.Broadcast
-  alias Open890.{ConnectionCommands, Extract, RadioConnection}
-  alias Open890Web.Live.{BandButtonsComponent, Dispatch, RadioSocketState}
+  alias Open890.{ConnectionCommands, Extract, RadioConnection, RadioState}
+  alias Open890Web.Live.{BandButtonsComponent, RadioSocketState}
 
-  alias Open890Web.Components.{AudioScope, Meter, Slider}
+  alias Open890Web.Components.{AudioScope, BandScope, Meter, RitXit, Slider}
   import Open890Web.Components.Buttons
-  alias Open890Web.Components.BandScope
 
   @impl true
   def mount(%{"id" => connection_id} = params, _session, socket) do
@@ -76,10 +75,6 @@ defmodule Open890Web.Live.Radio do
   @impl true
   def handle_params(params, _uri, socket) do
     selected_tab = params["panelTab"]
-    |> case do
-      "scope" -> "scope"
-      _ -> "txrx"
-    end
 
     panel_open = params |> Map.get("panel", "true") == "true"
 
@@ -112,8 +107,21 @@ defmodule Open890Web.Live.Radio do
   end
 
   @impl true
-  def handle_info(%Broadcast{event: "radio_state_data", payload: %{msg: msg}}, socket) do
-    socket = Dispatch.dispatch(msg, socket)
+  def handle_info(%Broadcast{event: "band_scope_cleared"}, socket) do
+    {:noreply, socket |> push_event("clear_band_scope", %{})}
+  end
+
+  @impl true
+  def handle_info(%Broadcast{event: "radio_state_data", payload: %{msg: radio_state}}, socket) do
+
+    formatted_frequency = RadioState.active_frequency(radio_state)
+                          |> RadioViewHelpers.format_raw_frequency()
+
+    formatted_mode = radio_state.active_mode |> RadioViewHelpers.format_mode()
+    page_title = "#{formatted_frequency} - #{formatted_mode}"
+
+    socket = assign(socket, :radio_state, radio_state)
+             |> assign(:page_title, page_title)
 
     {:noreply, socket}
   end
@@ -124,6 +132,17 @@ defmodule Open890Web.Live.Radio do
 
     {:noreply, assign(socket, :connection_state, payload)}
   end
+
+  def handle_info(%Broadcast{event: "freq_delta", payload: payload}, socket) do
+    socket = if socket.assigns.radio_state.band_scope_mode == :center do
+      socket |> push_event("freq_delta", payload)
+    else
+      socket
+    end
+
+    {:noreply, socket}
+  end
+
 
   def handle_info(%Broadcast{} = bc, socket) do
     Logger.warn("Unknown broadcast: #{inspect(bc)}")
@@ -310,8 +329,46 @@ defmodule Open890Web.Live.Radio do
     {:noreply, socket}
   end
 
+  def handle_event("adjust_filter", params, socket) do
+    Logger.info("adjust_filter: #{inspect(params)}")
+
+    filter_state = socket.assigns.radio_state.filter_state
+    connection = socket.assigns.radio_connection
+
+    lo_width_passband_id = filter_state.lo_passband_id
+    hi_shift_passband_id = filter_state.hi_passband_id
+
+    is_up = params["dir"] == "up"
+
+    if params["shift"] do
+          # adjust shift
+      new_passband_id = if is_up do
+        hi_shift_passband_id + 1
+      else
+        hi_shift_passband_id - 1
+      end
+      |> to_string()
+      |> String.pad_leading(4, "0")
+
+      connection |> RadioConnection.cmd("SH#{new_passband_id}")
+    else
+      # width
+      new_passband_id = if is_up do
+        lo_width_passband_id + 1
+      else
+        lo_width_passband_id - 1
+      end
+      |> to_string()
+      |> String.pad_leading(3, "0")
+
+      connection |> RadioConnection.cmd("SL#{new_passband_id}")
+    end
+
+    {:noreply, socket}
+  end
+
   def handle_event(event, params, socket) do
-    Logger.warn("RadioLive.Bandscope: Unknown event: #{event}, params: #{inspect(params)}")
+    Logger.warn("Live.Radio: Unknown event: #{event}, params: #{inspect(params)}")
     {:noreply, socket}
   end
 
@@ -350,19 +407,6 @@ defmodule Open890Web.Live.Radio do
       "ui tabs"
     else
       "ui tabs hidden"
-    end
-  end
-
-  def filter_mode(active_mode, ssb_filter_mode, ssb_data_filter_mode) do
-    case active_mode do
-      ssb when ssb in [:usb, :lsb] ->
-        ssb_filter_mode
-
-      ssb_data when ssb_data in [:usb_d, :lsb_d] ->
-        ssb_data_filter_mode
-
-      _ ->
-        nil
     end
   end
 end

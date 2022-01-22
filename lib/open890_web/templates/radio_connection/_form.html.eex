@@ -5,7 +5,6 @@
   </div>
 </div>
 
-
 <div class="two fields">
   <div class="field">
     <%= label @f, :ip_address, "IP Address" %>
@@ -38,16 +37,50 @@
   </div>
 </div>
 
+  <div class="field">
+    <div class="ui checkbox">
+      <%= checkbox @f, :user_is_admin, value: @radio_connection.user_is_admin, class: "hidden", tabindex: "0" %>
+      <%= label @f, :user_is_admin, "User is admin" %>
+    </div>
+  </div>
+
+  <div class="field">
+    <div class="ui checkbox">
+      <%= checkbox @f, :auto_start, value: @radio_connection |> Map.get(:auto_start, false), class: "hidden", tabindex: "0" %>
+      <%= label @f, :auto_start, "Auto-Start" %>
+    </div>
+  </div>
+
 <div class="field">
   <div class="ui checkbox">
-    <%= checkbox @f, :user_is_admin, value: @radio_connection.user_is_admin, class: "hidden", tabindex: "0" %>
-    <%= label @f, :user_is_admin, "User is admin" %>
+    <%= checkbox @f, :cloudlog_enabled, value: @radio_connection |> Map.get(:cloudlog_enabled, false), class: "hidden", tabindex: "0" %>
+    <label for="radio_connection_cloudlog_enabled">
+      Cloudlog Enabled
+      <span data-inverted="" data-position="bottom center" data-tooltip="Send frequency/mode updates to a Cloudlog instance">
+        <i class="question circle grey icon"></i>
+      </span>
+    </label>
+  </div>
+  <span>&mdash; <a href="https://github.com/tonyc/open890/wiki/Cloudlog-Integration" target="_blank">More information <i class="external alternate icon"></i></a></span>
+</div>
+
+<div class="field">
+  <label for="radio_connection_cloudlog_url">
+    <span class="hover-pointer" data-inverted="" data-position="right center" data-tooltip="The root URL of your Cloudlog instance, WITHOUT any path information, e.g. https://URCALL.cloudlog.co.uk">
+      Cloudlog URL
+      <i class="question circle grey icon"></i>
+    </span>
+  </label>
+  <div class="ui huge input">
+    <%= text_input @f, :cloudlog_url, value: @radio_connection |> Map.get(:cloudlog_url, ""), placeholder: "https://<yourcall>.cloudlog.co.uk" %>
   </div>
 </div>
 
 <div class="field">
-  <div class="ui checkbox">
-    <%= checkbox @f, :auto_start, value: @radio_connection |> Map.get(:auto_start, false), class: "hidden", tabindex: "0" %>
-    <%= label @f, :auto_start, "Auto-Start" %>
+  <%= label @f, :cloudlog_api_key, "Cloudlog API key" %>
+  <div class="ui huge input">
+    <%= text_input @f, :cloudlog_api_key, value: @radio_connection |> Map.get(:cloudlog_api_key, "") %>
   </div>
 </div>
+
+

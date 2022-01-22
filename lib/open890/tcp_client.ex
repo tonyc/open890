@@ -8,7 +8,7 @@ defmodule Open890.TCPClient do
   @enable_audio_scope true
   @enable_band_scope true
 
-  alias Open890.{ConnectionCommands, RadioConnection}
+  alias Open890.{ConnectionCommands, RadioConnection, RadioState}
   alias Open890.KNS.User
 
   def start_link(%RadioConnection{id: id} = args) do
@@ -16,7 +16,7 @@ defmodule Open890.TCPClient do
   end
 
   def via_tuple(connection_id) do
-    {:via, Registry, {:radio_connection_registry, connection_id}}
+    {:via, Registry, {:radio_connection_registry, {:tcp, connection_id}}}
   end
 
   @impl true
@@ -36,8 +36,14 @@ defmodule Open890.TCPClient do
     {:ok,
       %{
         connection: connection,
-        kns_user: kns_user
+        kns_user: kns_user,
+        radio_state: %RadioState{}
       }}
+  end
+
+  @impl true
+  def handle_call(:get_radio_state, _from, state) do
+    {:reply, {:ok, state.radio_state}, state}
   end
 
   # Server API
@@ -94,7 +100,6 @@ defmodule Open890.TCPClient do
 
         {:stop, :shutdown, state}
     end
-
   end
 
   def handle_info(:login_radio, %{socket: socket} = state) do
@@ -126,8 +131,8 @@ defmodule Open890.TCPClient do
   end
 
   def handle_info(:enable_voip, state) do
-    # Logger.info("Enabling HQ VOIP stream")
-    # state.socket |> send_command("##VP1") # high quality
+    Logger.info("\n\n**** Enabling HQ VOIP stream\n\n")
+    state.socket |> send_command("##VP1") # high quality
     # state.socket |> send_command("##VP2") # low quality
 
     {:noreply, state}
@@ -178,7 +183,6 @@ defmodule Open890.TCPClient do
     Logger.info("signed in, scheduling first ping")
     schedule_ping()
 
-    # send(self(), :enable_voip)
     if @enable_audio_scope, do: send(self(), :enable_audioscope)
     if @enable_band_scope, do: send(self(), :enable_bandscope)
 
@@ -219,7 +223,13 @@ defmodule Open890.TCPClient do
     # {:stop, :normal, state}
   end
 
-  def handle_msg(msg, %{socket: _socket, connection: connection} = state) when is_binary(msg) do
+  def handle_msg("BSD", %{connection: connection} = state) do
+    RadioConnection.broadcast_band_scope_cleared(connection)
+
+    state
+  end
+
+  def handle_msg(msg, %{socket: _socket, connection: connection, radio_state: radio_state} = state) when is_binary(msg) do
     cond do
       # high speed filter/audio scope response
       msg |> String.starts_with?("##DD3") ->
@@ -244,13 +254,37 @@ defmodule Open890.TCPClient do
         state
 
       true ->
-        # otherwise, we just braodcast everything to the liveview to let it deal with it
+        # otherwise, broadcast the new radio state to the liveview
         if !(msg |> String.starts_with?("SM0")) do
           Logger.info("[DN] #{inspect(msg)}")
         end
 
-        RadioConnection.broadcast_message(connection,  msg)
-        state
+        radio_state = RadioState.dispatch(msg, radio_state)
+
+        if ["FA", "FB", "OM0", "FT"] |> Enum.any?(&String.starts_with?(msg, &1)) do
+          Open890.Cloudlog.update(connection, radio_state)
+        end
+
+        if (msg |> String.starts_with?("FA") && radio_state.active_receiver == :a) ||
+          (msg |> String.starts_with?("FB") && radio_state.active_receiver == :b) #||
+            #(radio_state.band_scope_mode == :center && radio_state.rit_enabled && msg |> String.starts_with?("RF") )
+            do
+
+          if radio_state.band_scope_edges do
+            {low, high} = radio_state.band_scope_edges
+            delta = radio_state.active_frequency_delta
+            active_receiver = radio_state.active_receiver
+
+            RadioConnection.broadcast_freq_delta(connection, %{
+              delta: delta,
+              vfo: active_receiver,
+              bs: %{low: low, high: high}
+            })
+          end
+        end
+
+        RadioConnection.broadcast_radio_state(connection, radio_state)
+        %{state | radio_state: radio_state}
     end
   end
 

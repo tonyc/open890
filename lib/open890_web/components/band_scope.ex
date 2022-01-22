@@ -1,9 +1,9 @@
 defmodule Open890Web.Components.BandScope do
-  # use Open890Web, :live_component
   use Phoenix.Component
   import Phoenix.HTML
   require Logger
 
+  alias Open890.FilterState
   alias Open890Web.RadioViewHelpers
 
   def bandscope(assigns) do
@@ -31,20 +31,20 @@ defmodule Open890Web.Components.BandScope do
           </defs>
 
           <g transform="translate(0 20)">
-            <%= band_scope_vertical_grid(@band_scope_mode, freq: @active_frequency, span: @band_scope_span) %>
+            <%= band_scope_vertical_grid(@band_scope_mode, freq: @effective_active_frequency, span: @band_scope_span) %>
             <%= band_scope_horizontal_grid() %>
 
             <polygon id="bandSpectrum" class="spectrum" vector-effect="non-scaling-stroke" points={RadioViewHelpers.scope_data_to_svg(@band_scope_data, max_value: 140, scale_y: @spectrum_scale)}  />
           </g>
 
-          <%= if @split_enabled do %>
-            <%= if freq_low(@inactive_frequency, @band_scope_edges) do %>
+          <%= if @tx_banner_frequency && @band_scope_edges do %>
+            <%= if freq_low(@tx_banner_frequency, @band_scope_edges) do %>
               <g transform="translate(10 46),rotate(90)">
                 <.tx_offscreen_indicator />
               </g>
             <% end %>
 
-            <%= if freq_high(@inactive_frequency, @band_scope_edges) do %>
+            <%= if freq_high(@tx_banner_frequency, @band_scope_edges) do %>
               <g transform="translate(630 46),rotate(-90)">
                 <.tx_offscreen_indicator />
               </g>
@@ -62,28 +62,21 @@ defmodule Open890Web.Components.BandScope do
             <% end %>
 
             <%= if @active_frequency do %>
-              <text class="bandEdge mid" x="300" y="0"><%= @active_frequency |> format_active_frequency() %></text>
+              <text class="bandEdge mid" x="300" y="0"><%= @effective_active_frequency |> format_active_frequency() %></text>
             <% end %>
           </g>
 
           <g transform="translate(0 20)">
             <%= if @band_scope_edges && @filter_state && @active_mode do %>
-              <%= if (@active_mode in [:usb, :lsb, :usb_d, :lsb_d] and @filter_mode in [:hi_lo_cut]) do %>
-                <.passband_polygon
-                  mode={@active_mode}
-                  active_frequency={@active_frequency}
-                  filter_mode={@filter_mode}
-                  filter_state={@filter_state}
-                  scope_edges={@band_scope_edges} />
-              <% end %>
+              <.passband_polygon
+                mode={@active_mode}
+                active_frequency={@rx_banner_frequency}
+                filter_mode={@filter_mode}
+                filter_state={@filter_state}
+                scope_edges={@band_scope_edges} />
 
-              <%= if @split_enabled do %>
-                <.carrier_line mode="tx" label="T" frequency={@inactive_frequency} band_scope_edges={@band_scope_edges} piggyback={false}/>
-              <% else %>
-                <.carrier_line mode="tx" label="T" frequency={@active_frequency} band_scope_edges={@band_scope_edges} piggyback={true} />
-              <% end %>
-
-              <.carrier_line mode="rx" label="R" frequency={@active_frequency} band_scope_edges={@band_scope_edges} split_enabled={@split_enabled} />
+              <.carrier_line mode="tx" label="T" frequency={@tx_banner_frequency} band_scope_edges={@band_scope_edges} piggyback={!@split_enabled}/>
+              <.carrier_line mode="rx" label="R" frequency={@rx_banner_frequency} band_scope_edges={@band_scope_edges} split_enabled={@split_enabled} />
             <% end %>
 
             <rect id="bandscopeBackground" x="0" y="0" height="150" width="1280" pointer-events="visibleFill" phx-hook="BandScope" />
@@ -175,8 +168,50 @@ defmodule Open890Web.Components.BandScope do
     filter_state: filter_state,
     filter_mode: filter_mode,
     scope_edges: scope_edges
-    } = assigns) when mode in [:usb, :usb_d, :lsb, :lsb_d] do
+  } = assigns) do
 
+    points = case mode do
+      x when x in [:cw, :cw_r, :fsk, :fsk_r, :psk, :psk_r] ->
+        shifted_passband_points(mode, filter_state, active_frequency, scope_edges)
+
+      x when x in [:usb, :usb_d, :lsb, :lsb_d] ->
+        hi_lo_cut_passband_points(mode, filter_state, active_frequency, scope_edges, filter_mode)
+
+      _ ->
+        Logger.warn("passband_polygon: unhandled mode #{mode}")
+        ""
+    end
+
+    ~H"""
+      <polygon id="passband" points={points} />
+    """
+  end
+
+  def shifted_passband_points(mode, %FilterState{} = filter_state, active_frequency, scope_edges) do
+    half_width = (filter_state.lo_width / 2) |> round()
+
+    shift_direction = case mode do
+      x when x in [:cw_r, :fsk_r, :psk_r] -> -1
+      x when x in [:psk, :fsk] -> -1
+      x when x in [:lsb, :lsb_d] -> -1
+      x when x in [:usb, :usb_d, :cw] -> 1
+      other ->
+        Logger.debug("Unhandled shifted_passband_points for mode #{inspect(other)}")
+        1
+    end
+
+    shift = shift_direction * (filter_state.hi_shift || 0)
+
+    filter_low =
+      (active_frequency + half_width + shift) |> project_to_bandscope_limits(scope_edges)
+
+    filter_high =
+      (active_frequency - half_width + shift) |> project_to_bandscope_limits(scope_edges)
+
+    "#{filter_low},0 #{filter_high},0 #{filter_high},150 #{filter_low},150"
+  end
+
+  def hi_lo_cut_passband_points(mode, %FilterState{} = filter_state, active_frequency, scope_edges, filter_mode) do
     points = case filter_mode do
       :hi_lo_cut ->
         filter_low =
@@ -193,52 +228,14 @@ defmodule Open890Web.Components.BandScope do
 
 
       :shift_width ->
-        Logger.debug("Unimplemented shift_width passband_polygon for: #{mode}")
-        ""
+        shifted_passband_points(mode, filter_state, active_frequency, scope_edges)
 
       _ ->
         Logger.debug("Unknown mode/filter mode combination: #{mode}/#{filter_mode}")
         ""
+
     end
-
-    ~H"""
-      <polygon id="passband" points={points} />
-    """
-  end
-
-  def passband_polygon(%{
-    mode: mode,
-    active_frequency: active_frequency,
-    filter_state: filter_state,
-    scope_edges: scope_edges
-    } = assigns) when mode in [:cw, :cw_r] do
-
-    half_width = (filter_state.lo_width / 2) |> round()
-
-    shift =
-      case mode do
-        :cw_r -> -filter_state.hi_shift
-        _ -> filter_state.hi_shift
-      end
-
-    filter_low =
-      (active_frequency + half_width + shift) |> project_to_bandscope_limits(scope_edges)
-
-    filter_high =
-      (active_frequency - half_width + shift) |> project_to_bandscope_limits(scope_edges)
-
-    points = "#{filter_low},0 #{filter_high},0 #{filter_high},150 #{filter_low},150"
-
-    ~H"""
-      <polygon id="passband" points={points} />
-    """
-
-  end
-
-  def passband_polygon(assigns) do
-    ~H"""
-      <polygon id="passband" class="defaultCase" points="" />
-    """
+    points
   end
 
   def project_to_bandscope_limits(frequency, {low, high})
@@ -249,9 +246,7 @@ defmodule Open890Web.Components.BandScope do
     percentage * 640
   end
 
-  def project_to_bandscope_limits(_, _edges) do
-    0
-  end
+  def project_to_bandscope_limits(_, _), do: 0
 
   def carrier_line(%{frequency: frequency, band_scope_edges: band_scope_edges, mode: mode} = assigns) do
     loc = project_to_bandscope_limits(frequency, band_scope_edges)

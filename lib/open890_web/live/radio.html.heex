@@ -45,7 +45,7 @@
         <div class="four wide column"><%= if @radio_state.antenna_state.ant_out_enabled, do: "ANT OUT" %></div>
         <div class="four wide column">
           <%= if @radio_state.agc do %>
-            AGC<%= @radio_state.agc |> format_agc() %>
+            AGC<%= format_agc_topbar(@radio_state.agc_off, @radio_state.agc) %>
           <% end %>
         </div>
       </div>
@@ -65,30 +65,71 @@
           <% end %>
         </div>
 
-        <div class="two wide column center aligned">
+        <div class="six wide column">
+          <!-- connection status -->
           <%= if connection_startable?(@connection_state) do %>
-            <span class="ui icon hover-pointer" phx-click="start_connection" data-tooltip="Start connection" data-position="bottom center">
-              <i class="large play circle outline icon"></i>
-            </span>
+            <div class="ui icon large black buttons">
+              <div class="ui button" phx-click="start_connection" data-tooltip="Start connection" data-position="bottom center">
+                <i class="play circle outline icon"></i>
+                <span class="secondaryText">
+                  <%= format_connection_state(@connection_state) %>
+                </span>
+              </div>
+            </div>
           <% else %>
-            <span class="ui icon hover-pointer" phx-click="stop_connection" data-tooltip="Stop connection" data-position="bottom center">
-              <i class="large stop circle outline icon"></i>
-            </span>
+            <div class="ui icon large black buttons">
+              <div class="ui button" phx-click="stop_connection" data-tooltip="Stop connection" data-position="bottom center">
+                <i class="stop circle outline icon"></i>
+                <span class="secondaryText">
+                  <%= format_connection_state(@connection_state) %>
+                </span>
+              </div>
+            </div>
           <% end %>
+
         </div>
 
-        <!-- connection status -->
-        <div class="eight wide center aligned column">
-          <span class="connectionStatus">
-            <span class="ui icon rotating">
-              <%= connection_status_icon(@connection_state) %>
-            </span>
+        <div class="six wide column">
+          <!-- audio stream status -->
 
-            <%= format_connection_state(@connection_state) %>
-          </span>
-        </div>
+          <%= if @radio_state.voip_available do %>
+            <div phx-hook="AudioStream" id="AudioStreamPlayer">
+              <%= if @connection_state == :up && @radio_state.voip_enabled do %>
+                <div class="ui icon large black buttons">
+                  <div class="ui button" phx-click="stop_voip" data-tooltip="Stop VOIP audio" data-position="bottom center">
+                    <span class="secondaryText">
+                      VOIP Audio: Streaming &nbsp;
+                      <i class="icon small sync rotating"></i>
+                    </span>
+                  </div>
+                </div>
+              <% else %>
+                <div class="ui icon large black buttons">
+                  <%= if @connection_state == :up do %>
+                    <div class="ui button" phx-click="start_voip" data-tooltip="Start VOIP Audio" data-position="bottom center">
+                      <span class="secondaryText">VOIP Audio: Stopped</span>
+                    </div>
+                  <% else %>
+                    <div class="ui button disabled">
+                      <span class="secondaryText">VOIP Audio: Stopped</span>
+                    </div>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
 
-        <div class="two wide center aligned column">
+          <% else %>
+            <%= if @connection_state == :up do %>
+              <div class="ui icon large black buttons">
+                <div class="ui button" data-tooltip="Enable via MENU ▸ KNS ▸ CONFIG ▸ Built-in VOIP: ON" data-position="bottom center">
+                  <i class="icon grey exclamation triangle"></i>
+                  &nbsp;
+                  <span class="secondaryText">VOIP Audio: Not available</span>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+
         </div>
 
         <div class="two wide right aligned column">
@@ -154,18 +195,28 @@
       </div>
     </div>
 
-    <div class="eight wide column center aligned">
-      <div class="ui grid sixteen wide">
-        <div id="frequencyDisplay" class="ui row">
+    <div class="eight wide column">
+
+      <div class="ui grid wide">
+
+        <div class="row">
+          <div class="column">
+            <RitXit.rit_xit rit_enabled={@radio_state.rit_enabled} xit_enabled={@radio_state.xit_enabled}
+               offset={@radio_state.rit_xit_offset}
+            />
+          </div>
+        </div>
+
+        <div id="frequencyDisplay" class="ui row top aligned">
           <%= case @radio_state.vfo_memory_state do %>
           <% :vfo -> %>
             <div class="eight column row">
               <%= live_component Open890Web.Live.VFODisplayComponent,
-                active_frequency: @radio_state.active_frequency,
+                active_frequency: RadioState.effective_active_frequency(@radio_state),
                 active_mode: @radio_state.active_mode,
                 active_receiver: @radio_state.active_receiver,
                 inactive_receiver: @radio_state.inactive_receiver,
-                inactive_frequency: @radio_state.inactive_frequency,
+                inactive_frequency: RadioState.effective_inactive_frequency(@radio_state),
                 inactive_mode: @radio_state.inactive_mode,
                 transverter_state: @radio_state.transverter_state,
                 vfo_memory_state: @radio_state.vfo_memory_state,
@@ -181,8 +232,6 @@
           <% _ -> %>
           <% end %>
         </div> <!-- frequencyDisplay -->
-
-
 
         <div class="row equal width">
           <div class="column">
@@ -202,26 +251,81 @@
           </div>
 
           <div class="column">
-            <.split_button value={@radio_state.split_enabled} fluid }/>
+            <.split_button value={@radio_state.split_enabled} fluid />
           </div>
         </div>
+
+        <div class="four column row">
+          <div class="column"></div>
+          <div class="column">
+          </div>
+          <div class="column">
+          </div>
+          <div class="column"></div>
+        </div>
       </div>
+
     </div>
 
     <div class="four wide column right aligned">
-      <AudioScope.audio_scope
-        active_if_filter={@radio_state.active_if_filter}
-        active_mode={@radio_state.active_mode}
-        audio_scope_data={@audio_scope_data}
-        filter_state={@radio_state.filter_state}
-        roofing_filter_data={@radio_state.roofing_filter_data}
-        notch_state={@radio_state.notch_state}
-        filter_mode={filter_mode(@radio_state.active_mode, @radio_state.ssb_filter_mode, @radio_state.ssb_data_filter_mode)}
-        theme={@theme} />
-
-      <div class="ui mini black buttons">
-        <.filter_buttons />
+      <div class="row">
+        <div class="column">
+          <AudioScope.audio_scope
+            active_if_filter={@radio_state.active_if_filter}
+            active_mode={@radio_state.active_mode}
+            audio_scope_data={@audio_scope_data}
+            filter_state={@radio_state.filter_state}
+            roofing_filter_data={@radio_state.roofing_filter_data}
+            notch_state={@radio_state.notch_state}
+            filter_mode={RadioState.filter_mode(@radio_state)}
+            theme={@theme} />
+        </div>
       </div>
+
+      <!--
+      <div class="row right aligned">
+        <span>
+          <div class="ui small black icon button">
+            <i class="caret right icon"></i><i class="caret left icon"></i>
+          </div>
+          <span>Width</span>
+          <div class="ui small black right icon button">
+            <i class="caret left icon"></i><i class="caret right icon"></i>
+          </div>
+        </span>
+        <span>
+          <div class="ui small black icon button">
+            <i class="caret left icon"></i>
+          </div>
+          <span>Shift</span>
+          <div class="ui small black right icon button">
+            <i class="caret right icon"></i>
+          </div>
+        </span>
+      </div>
+      -->
+
+
+      <div class="row">
+        <div class="column">
+          <div class="ui mini black buttons" style="margin-right: 2rem;">
+            <.filter_buttons />
+          </div>
+
+          <%= if @radio_state.active_mode in [:cw, :cw_r, :fsk, :fsk_r] do %>
+            <%= if @radio_state.active_mode in [:cw, :cw_r] do %>
+              <div class="ui mini black buttons">
+                <.cmd_button_2 cmd="CA1">CW T</.cmd_button_2>
+              </div>
+            <% end %>
+
+            <div class="ui mini black buttons">
+              <.apf_button value={@radio_state.apf_enabled} />
+            </div>
+          <% end %>
+        </div>
+      </div>
+
 
     </div>
   </div> <!-- row -->
@@ -260,6 +364,14 @@
               </div>
 
               <div class="column">
+                <.agc_off_button agc={@radio_state.agc} agc_off={@radio_state.agc_off} fluid />
+              </div>
+
+              <div class="column">
+                <.agc_button value={@radio_state.agc} agc_off={@radio_state.agc_off} fluid />
+              </div>
+
+              <div class="column">
                 <.nr_button value={@radio_state.nr} fluid />
               </div>
 
@@ -283,6 +395,14 @@
                 <.notch_width_button value={@radio_state.notch_state} fluid />
               </div>
             </div>
+
+            <%= if @radio_state.notch_state.enabled do %>
+              <div class="ui one column grid row">
+                <div class="column">
+                  <Slider.slider label="" value={@radio_state.notch_state.frequency} click="notch_changed" wheel="adjust_notch" />
+                </div>
+              </div>
+            <% end %>
           </div>
 
           <div class={tab_panel_classes("scope", @active_tab)}>
@@ -292,7 +412,7 @@
             <div class="column">
               <.scope_range_button fluid band_scope_mode={@radio_state.band_scope_mode} band_scope_span={@radio_state.band_scope_span} />
             </div>
-            
+
             <%= if @radio_state.band_scope_mode == :auto_scroll do %>
               <.cmd_button_2 cmd="BSE" fluid class="ui small black button">Shift</.cmd_button_2>
             <% end %>
@@ -329,6 +449,7 @@
               <.pop_out_bandscope_button radio_connection={@radio_connection} fluid />
             </div>
           </div>
+
         </div>
       </div>
 
@@ -348,21 +469,30 @@
 
     <div class="bandscopePanel toggle" phx-click="toggle_panel"></div>
 
-    <div class="bandscopePanel right ">
+    <div class="bandscopePanel right">
       <BandScope.bandscope
-        active_frequency={@radio_state.active_frequency}
-        inactive_frequency={@radio_state.inactive_frequency}
-        active_mode={@radio_state.active_mode}
-        filter_mode={filter_mode(@radio_state.active_mode, @radio_state.ssb_filter_mode, @radio_state.ssb_data_filter_mode)}
-        band_scope_mode={@radio_state.band_scope_mode}
-        band_scope_data={@band_scope_data}
-        band_scope_edges={@radio_state.band_scope_edges}
-        band_scope_span={@radio_state.band_scope_span}
-        filter_state={@radio_state.filter_state}
-        theme={@theme}
-        draw_interval={@waterfall_draw_interval}
-        split_enabled={@radio_state.split_enabled}
-        spectrum_scale={@spectrum_scale} />
+         active_frequency={@radio_state.active_frequency}
+         inactive_frequency={@radio_state.inactive_frequency}
+
+         effective_active_frequency={RadioState.effective_active_frequency(@radio_state)}
+         effective_inactive_frequency={RadioState.effective_inactive_frequency(@radio_state)}
+         rx_banner_frequency={RadioState.rx_banner_frequency(@radio_state)}
+         tx_banner_frequency={RadioState.tx_banner_frequency(@radio_state)}
+
+         active_mode={@radio_state.active_mode}
+         filter_mode={RadioState.filter_mode(@radio_state)}
+         band_scope_mode={@radio_state.band_scope_mode}
+         band_scope_data={@band_scope_data}
+
+         band_scope_edges={RadioState.effective_band_edges(@radio_state)}
+
+         band_scope_span={@radio_state.band_scope_span}
+         filter_state={@radio_state.filter_state}
+         split_enabled={@radio_state.split_enabled}
+         theme={@theme}
+         draw_interval={@waterfall_draw_interval}
+         spectrum_scale={@spectrum_scale}
+       />
     </div>
   </div>
 
