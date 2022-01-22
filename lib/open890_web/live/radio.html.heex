@@ -399,7 +399,7 @@
             <%= if @radio_state.notch_state.enabled do %>
               <div class="ui one column grid row">
                 <div class="column">
-                  <input type="range" min="0" max="255" value={@radio_state.notch_state.frequency} step="1" style="width: 100%;"/>
+                  <Slider.slider label="" value={@radio_state.notch_state.frequency} click="notch_changed" wheel="adjust_notch" />
                 </div>
               </div>
             <% end %>

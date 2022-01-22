@@ -131,6 +131,14 @@ defmodule Open890.ConnectionCommands do
     |> cmd("BP")
   end
 
+  def set_notch_pos(conn, value) do
+    value = value
+            |> to_string()
+            |> String.pad_leading(3, "0")
+
+    conn |> cmd("BP#{value}")
+  end
+
   def get_power_level(conn) do
     conn |> cmd("PC")
   end

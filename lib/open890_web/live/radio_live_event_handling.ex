@@ -64,6 +64,12 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
         end
       end
 
+      def handle_event("notch_changed", params, %{assigns: %{radio_connection: connection}} = socket) do
+        connection |> Radio.set_notch_pos(params["value"])
+
+        {:noreply, socket}
+      end
+
       def handle_event(
             "audio_gain_changed",
             params,
@@ -72,6 +78,29 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
         connection |> Radio.set_audio_gain(params["value"])
         {:noreply, socket}
       end
+
+      def handle_event("adjust_notch", %{"is_up" => is_up} = params, socket) do
+        notch_freq = socket.assigns.radio_state.notch_state.frequency
+
+        step =
+          case is_up do
+            true -> 5
+            false -> -5
+          end
+
+        notch_freq = notch_freq + step
+
+        notch_freq =
+          case is_up do
+            true -> min(notch_freq, 255)
+            false -> max(notch_freq, 0)
+          end
+
+        socket.assigns.radio_connection |> Radio.set_notch_pos(notch_freq)
+
+        {:noreply, socket}
+      end
+
 
       def handle_event("adjust_audio_gain", %{"is_up" => is_up} = params, socket) do
         audio_gain = socket.assigns.radio_state.audio_gain
