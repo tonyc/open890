@@ -1,7 +1,7 @@
 # open890 Changelog
 
 ## Unreleased
-* Adds audio streaming from the radio. Click the "Audio" button at the top once the connection is started.
+* Adds audio streaming from the radio. Click the "VOIP Audio" button at the top once the connection is started.
 * Adds Cloudlog integration - syncs frequency/mode information to a Cloudlog instance.
     * See https://github.com/tonyc/open890/wiki/Cloudlog-Integration for more information
 * Adds RIT/XIT functionality:
