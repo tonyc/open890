@@ -31,20 +31,20 @@ defmodule Open890Web.Components.BandScope do
           </defs>
 
           <g transform="translate(0 20)">
-            <%= band_scope_vertical_grid(@band_scope_mode, freq: @active_frequency, span: @band_scope_span) %>
+            <%= band_scope_vertical_grid(@band_scope_mode, freq: @effective_active_frequency, span: @band_scope_span) %>
             <%= band_scope_horizontal_grid() %>
 
             <polygon id="bandSpectrum" class="spectrum" vector-effect="non-scaling-stroke" points={RadioViewHelpers.scope_data_to_svg(@band_scope_data, max_value: 140, scale_y: @spectrum_scale)}  />
           </g>
 
-          <%= if @split_enabled do %>
-            <%= if freq_low(@inactive_frequency, @band_scope_edges) do %>
+          <%= if @tx_banner_frequency && @band_scope_edges do %>
+            <%= if freq_low(@tx_banner_frequency, @band_scope_edges) do %>
               <g transform="translate(10 46),rotate(90)">
                 <.tx_offscreen_indicator />
               </g>
             <% end %>
 
-            <%= if freq_high(@inactive_frequency, @band_scope_edges) do %>
+            <%= if freq_high(@tx_banner_frequency, @band_scope_edges) do %>
               <g transform="translate(630 46),rotate(-90)">
                 <.tx_offscreen_indicator />
               </g>
@@ -62,7 +62,7 @@ defmodule Open890Web.Components.BandScope do
             <% end %>
 
             <%= if @active_frequency do %>
-              <text class="bandEdge mid" x="300" y="0"><%= @active_frequency |> format_active_frequency() %></text>
+              <text class="bandEdge mid" x="300" y="0"><%= @effective_active_frequency |> format_active_frequency() %></text>
             <% end %>
           </g>
 
@@ -70,18 +70,13 @@ defmodule Open890Web.Components.BandScope do
             <%= if @band_scope_edges && @filter_state && @active_mode do %>
               <.passband_polygon
                 mode={@active_mode}
-                active_frequency={@active_frequency}
+                active_frequency={@rx_banner_frequency}
                 filter_mode={@filter_mode}
                 filter_state={@filter_state}
                 scope_edges={@band_scope_edges} />
 
-              <%= if @split_enabled do %>
-                <.carrier_line mode="tx" label="T" frequency={@inactive_frequency} band_scope_edges={@band_scope_edges} piggyback={false}/>
-              <% else %>
-                <.carrier_line mode="tx" label="T" frequency={@active_frequency} band_scope_edges={@band_scope_edges} piggyback={true} />
-              <% end %>
-
-              <.carrier_line mode="rx" label="R" frequency={@active_frequency} band_scope_edges={@band_scope_edges} split_enabled={@split_enabled} />
+              <.carrier_line mode="tx" label="T" frequency={@tx_banner_frequency} band_scope_edges={@band_scope_edges} piggyback={!@split_enabled}/>
+              <.carrier_line mode="rx" label="R" frequency={@rx_banner_frequency} band_scope_edges={@band_scope_edges} split_enabled={@split_enabled} />
             <% end %>
 
             <rect id="bandscopeBackground" x="0" y="0" height="150" width="1280" pointer-events="visibleFill" phx-hook="BandScope" />

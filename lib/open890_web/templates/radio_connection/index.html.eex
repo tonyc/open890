@@ -41,10 +41,10 @@
             </td>
 
             <td>
-               <%= link("Radio", to: Routes.radio_path(@conn, :show, connection), data_tooltip: "Full radio UI", class: "ui tiny button") %></h2>
-               <%= link("Bandscope", to: Routes.bandscope_path(@conn, :show, connection), data_tooltip: "Bandscope & minimal controls", class: "ui tiny button") %></h2>
-               <%= link("Audioscope", to: Routes.audio_scope_path(@conn, :show, connection), data_tooltip: "Audio/filter scope", class: "ui tiny button") %></h2>
-               <%= link("Meters", to: Routes.meter_path(@conn, :show, connection), data_tooltip: "Meters", class: "ui tiny button") %></h2>
+              <%= link("Radio", to: Routes.radio_path(@conn, :show, connection, %{panel: true, panelTab: "txrx"}), data_tooltip: "Full radio UI", class: "ui tiny button") %></h2>
+              <%= link("Bandscope", to: Routes.bandscope_path(@conn, :show, connection), data_tooltip: "Bandscope & minimal controls", class: "ui tiny button") %></h2>
+              <%= link("Audioscope", to: Routes.audio_scope_path(@conn, :show, connection), data_tooltip: "Audio/filter scope", class: "ui tiny button") %></h2>
+              <%= link("Meters", to: Routes.meter_path(@conn, :show, connection), data_tooltip: "Meters", class: "ui tiny button") %></h2>
             </td>
 
             <td>

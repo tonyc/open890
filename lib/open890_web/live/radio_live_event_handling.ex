@@ -117,6 +117,17 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
         {:noreply, socket}
       end
 
+      def handle_event("adjust_rit_xit", %{"is_up" => is_up} = params, socket) do
+        radio_connection = socket.assigns.radio_connection
+        if is_up do
+          radio_connection |> Radio.rit_xit_up()
+        else
+          radio_connection |> Radio.rit_xit_down()
+        end
+
+        {:noreply, socket}
+      end
+
       def handle_event("adjust_sql", %{"is_up" => is_up} = params, socket) do
         squelch = socket.assigns.radio_state.squelch
 

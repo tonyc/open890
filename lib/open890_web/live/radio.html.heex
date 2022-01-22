@@ -69,21 +69,21 @@
           <!-- connection status -->
           <%= if connection_startable?(@connection_state) do %>
             <div class="ui icon large black buttons">
-              <button class="ui button" phx-click="start_connection" data-tooltip="Start connection" data-position="bottom center">
+              <div class="ui button" phx-click="start_connection" data-tooltip="Start connection" data-position="bottom center">
                 <i class="play circle outline icon"></i>
                 <span class="secondaryText">
                   <%= format_connection_state(@connection_state) %>
                 </span>
-              </button>
+              </div>
             </div>
           <% else %>
             <div class="ui icon large black buttons">
-              <button class="ui button" phx-click="stop_connection" data-tooltip="Stop connection" data-position="bottom center">
+              <div class="ui button" phx-click="stop_connection" data-tooltip="Stop connection" data-position="bottom center">
                 <i class="stop circle outline icon"></i>
                 <span class="secondaryText">
                   <%= format_connection_state(@connection_state) %>
                 </span>
-              </button>
+              </div>
             </div>
           <% end %>
 
@@ -96,23 +96,23 @@
             <div phx-hook="AudioStream" id="AudioStreamPlayer">
               <%= if @connection_state == :up && @radio_state.voip_enabled do %>
                 <div class="ui icon large black buttons">
-                  <button class="ui button" phx-click="stop_voip" data-tooltip="Stop VOIP audio" data-position="bottom center">
+                  <div class="ui button" phx-click="stop_voip" data-tooltip="Stop VOIP audio" data-position="bottom center">
                     <span class="secondaryText">
                       VOIP Audio: Streaming &nbsp;
                       <i class="icon small sync rotating"></i>
                     </span>
-                  </button>
+                  </div>
                 </div>
               <% else %>
                 <div class="ui icon large black buttons">
                   <%= if @connection_state == :up do %>
-                    <button class="ui button" phx-click="start_voip" data-tooltip="Start VOIP Audio" data-position="bottom center">
+                    <div class="ui button" phx-click="start_voip" data-tooltip="Start VOIP Audio" data-position="bottom center">
                       <span class="secondaryText">VOIP Audio: Stopped</span>
-                    </button>
+                    </div>
                   <% else %>
-                    <button class="ui button disabled">
+                    <div class="ui button disabled">
                       <span class="secondaryText">VOIP Audio: Stopped</span>
-                    </button>
+                    </div>
                   <% end %>
                 </div>
               <% end %>
@@ -121,11 +121,11 @@
           <% else %>
             <%= if @connection_state == :up do %>
               <div class="ui icon large black buttons">
-                <button class="ui button" data-tooltip="Enable via MENU ▸ KNS ▸ CONFIG ▸ Built-in VOIP: ON" data-position="bottom center">
+                <div class="ui button" data-tooltip="Enable via MENU ▸ KNS ▸ CONFIG ▸ Built-in VOIP: ON" data-position="bottom center">
                   <i class="icon grey exclamation triangle"></i>
                   &nbsp;
                   <span class="secondaryText">VOIP Audio: Not available</span>
-                </button>
+                </div>
               </div>
             <% end %>
           <% end %>
@@ -195,18 +195,28 @@
       </div>
     </div>
 
-    <div class="eight wide column center aligned">
-      <div class="ui grid sixteen wide">
-        <div id="frequencyDisplay" class="ui row">
+    <div class="eight wide column">
+
+      <div class="ui grid wide">
+
+        <div class="row">
+          <div class="column">
+            <RitXit.rit_xit rit_enabled={@radio_state.rit_enabled} xit_enabled={@radio_state.xit_enabled}
+               offset={@radio_state.rit_xit_offset}
+            />
+          </div>
+        </div>
+
+        <div id="frequencyDisplay" class="ui row top aligned">
           <%= case @radio_state.vfo_memory_state do %>
           <% :vfo -> %>
             <div class="eight column row">
               <%= live_component Open890Web.Live.VFODisplayComponent,
-                active_frequency: @radio_state.active_frequency,
+                active_frequency: RadioState.effective_active_frequency(@radio_state),
                 active_mode: @radio_state.active_mode,
                 active_receiver: @radio_state.active_receiver,
                 inactive_receiver: @radio_state.inactive_receiver,
-                inactive_frequency: @radio_state.inactive_frequency,
+                inactive_frequency: RadioState.effective_inactive_frequency(@radio_state),
                 inactive_mode: @radio_state.inactive_mode,
                 transverter_state: @radio_state.transverter_state,
                 vfo_memory_state: @radio_state.vfo_memory_state,
@@ -222,8 +232,6 @@
           <% _ -> %>
           <% end %>
         </div> <!-- frequencyDisplay -->
-
-
 
         <div class="row equal width">
           <div class="column">
@@ -256,6 +264,7 @@
           <div class="column"></div>
         </div>
       </div>
+
     </div>
 
     <div class="four wide column right aligned">
@@ -460,21 +469,30 @@
 
     <div class="bandscopePanel toggle" phx-click="toggle_panel"></div>
 
-    <div class="bandscopePanel right ">
+    <div class="bandscopePanel right">
       <BandScope.bandscope
-        active_frequency={@radio_state.active_frequency}
-        inactive_frequency={@radio_state.inactive_frequency}
-        active_mode={@radio_state.active_mode}
-        filter_mode={RadioState.filter_mode(@radio_state)}
-        band_scope_mode={@radio_state.band_scope_mode}
-        band_scope_data={@band_scope_data}
-        band_scope_edges={@radio_state.band_scope_edges}
-        band_scope_span={@radio_state.band_scope_span}
-        filter_state={@radio_state.filter_state}
-        split_enabled={@radio_state.split_enabled}
-        theme={@theme}
-        draw_interval={@waterfall_draw_interval}
-        spectrum_scale={@spectrum_scale} />
+         active_frequency={@radio_state.active_frequency}
+         inactive_frequency={@radio_state.inactive_frequency}
+
+         effective_active_frequency={RadioState.effective_active_frequency(@radio_state)}
+         effective_inactive_frequency={RadioState.effective_inactive_frequency(@radio_state)}
+         rx_banner_frequency={RadioState.rx_banner_frequency(@radio_state)}
+         tx_banner_frequency={RadioState.tx_banner_frequency(@radio_state)}
+
+         active_mode={@radio_state.active_mode}
+         filter_mode={RadioState.filter_mode(@radio_state)}
+         band_scope_mode={@radio_state.band_scope_mode}
+         band_scope_data={@band_scope_data}
+
+         band_scope_edges={RadioState.effective_band_edges(@radio_state)}
+
+         band_scope_span={@radio_state.band_scope_span}
+         filter_state={@radio_state.filter_state}
+         split_enabled={@radio_state.split_enabled}
+         theme={@theme}
+         draw_interval={@waterfall_draw_interval}
+         spectrum_scale={@spectrum_scale}
+       />
     </div>
   </div>
 

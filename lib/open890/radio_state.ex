@@ -12,8 +12,8 @@ defmodule Open890.RadioState do
     active_mode: :unknown,
     active_receiver: :a,
     active_transmitter: :a,
-    agc_off: nil,
     agc: nil,
+    agc_off: nil,
     alc_meter: 0,
     antenna_state: %AntennaState{},
     apf_enabled: nil,
@@ -34,6 +34,7 @@ defmodule Open890.RadioState do
     filter_high_freq: nil,
     filter_low_freq: nil,
     filter_state: %FilterState{},
+    fine: nil,
     id_meter: 0,
     inactive_frequency: "",
     inactive_mode: :unknown,
@@ -50,11 +51,11 @@ defmodule Open890.RadioState do
     rf_pre: 0,
     roofing_filter_data: %{a: nil, b: nil, c: nil},
     s_meter: 0,
+    split_enabled: false,
     squelch: nil,
     ssb_data_filter_mode: nil,
     ssb_filter_mode: nil,
     swr_meter: 0,
-    split_enabled: false,
     temp_meter: 0,
     transverter_state: %TransverterState{},
     tx_state: :off,
@@ -64,7 +65,18 @@ defmodule Open890.RadioState do
     vfo_memory_state: nil,
     voip_available: nil,
     voip_enabled: nil,
+    rit_enabled: false,
+    xit_enabled: false,
+    rit_xit_offset: 0,
   ]
+
+  def dispatch("FS00" <> _ = _msg, %__MODULE__{} = state) do
+    %{state | fine: false}
+  end
+
+  def dispatch("FS11" <> _ = _msg, %__MODULE__{} = state) do
+    %{state | fine: true}
+  end
 
   def dispatch("##VP1" <> _ = _msg, %__MODULE__{} = state) do
     %{state | voip_enabled: true}
@@ -80,6 +92,18 @@ defmodule Open890.RadioState do
 
   def dispatch("##KN20" <> _ = _msg, %__MODULE__{} = state) do
     %{state | voip_available: false}
+  end
+
+  def dispatch("RT" <> _ = msg, %__MODULE__{} = state) do
+    %{state | rit_enabled: Extract.boolean(msg, prefix: "RT")}
+  end
+
+  def dispatch("XT" <> _ = msg, %__MODULE__{} = state) do
+    %{state | xit_enabled: Extract.boolean(msg, prefix: "XT")}
+  end
+
+  def dispatch("RF" <> _ = msg, %__MODULE__{} = state) do
+    %{state | rit_xit_offset: Extract.rit_xit_offset(msg) }
   end
 
   def dispatch("AP0" <> _ = msg, %__MODULE__{} = state) do
@@ -307,11 +331,10 @@ defmodule Open890.RadioState do
     state = %{state | band_scope_mode: scope_mode}
 
     if scope_mode == :center && !is_nil(state.band_scope_span) do
-      band_scope_edges =
-        calculate_center_mode_edges(
-          state.active_frequency,
-          state.band_scope_span
-        )
+      band_scope_edges = calculate_center_mode_edges(
+        state.active_frequency,
+        state.band_scope_span
+      )
 
       %{state | band_scope_edges: band_scope_edges}
     else
@@ -327,11 +350,10 @@ defmodule Open890.RadioState do
 
     case state.band_scope_mode do
       mode when mode in [:center, :auto_scroll] ->
-        band_scope_edges =
-          calculate_center_mode_edges(
-            state.active_frequency,
-            state.band_scope_span
-          )
+        band_scope_edges = calculate_center_mode_edges(
+          state.active_frequency,
+          state.band_scope_span
+        )
 
         %{state | band_scope_edges: band_scope_edges}
       _ ->
@@ -374,7 +396,8 @@ defmodule Open890.RadioState do
   def dispatch("FA" <> _ = msg, %__MODULE__{} = state) do
     frequency = msg |> Extract.frequency()
     state = %{state | vfo_a_frequency: frequency}
-    previous_active_frequency = state.active_frequency || 0
+
+    previous_active_frequency = effective_active_frequency(state) || 0
     delta = frequency - previous_active_frequency
 
     state =
@@ -389,9 +412,8 @@ defmodule Open890.RadioState do
 
     state =
       if state.band_scope_mode == :center && state.active_receiver == :a do
-        band_scope_edges =
-          calculate_center_mode_edges(
-            state.active_frequency,
+        band_scope_edges = calculate_center_mode_edges(
+            effective_active_frequency(state),
             state.band_scope_span
           )
 
@@ -407,8 +429,9 @@ defmodule Open890.RadioState do
     frequency = msg |> Extract.frequency()
     state = %{state | vfo_b_frequency: frequency}
 
-    previous_active_frequency = state.active_frequency || 0
+    previous_active_frequency = effective_active_frequency(state) || 0
     delta = frequency - previous_active_frequency
+    #delta = (frequency + delta?) - previous_active_frequency
 
     state =
       if state.active_receiver == :b do
@@ -422,11 +445,10 @@ defmodule Open890.RadioState do
 
     state =
       if state.band_scope_mode == :center && state.active_receiver == :b do
-        band_scope_edges =
-          calculate_center_mode_edges(
-            state.active_frequency,
-            state.band_scope_span
-          )
+        band_scope_edges = calculate_center_mode_edges(
+          effective_active_frequency(state),
+          state.band_scope_span
+        )
 
         %{state | band_scope_edges: band_scope_edges}
 
@@ -628,8 +650,7 @@ defmodule Open890.RadioState do
     end
   end
 
-  def calculate_center_mode_edges(freq, span_khz)
-       when is_integer(freq) and is_integer(span_khz) do
+  def calculate_center_mode_edges(freq, span_khz) when is_integer(freq) and is_integer(span_khz) do
     span = span_khz * 1000
     half_span = span |> div(2)
 
@@ -637,6 +658,29 @@ defmodule Open890.RadioState do
     bs_high = freq + half_span
 
     {bs_low, bs_high}
+  end
+
+  def effective_band_edges(%__MODULE__{} = state) do
+    case state.band_scope_mode do
+      :center -> effective_center_mode_edges(state)
+      _ -> state.band_scope_edges
+    end
+  end
+
+  def effective_center_mode_edges(%__MODULE__{} = state) do
+    if state.band_scope_span do
+      freq = state |> effective_active_frequency()
+      span = state.band_scope_span * 1000
+
+      half_span = span |> div(2)
+
+      bs_low = freq - half_span
+      bs_high = freq + half_span
+
+      {bs_low, bs_high}
+    else
+      nil
+    end
   end
 
   def filter_mode(%__MODULE__{} = radio_state) do
@@ -657,6 +701,53 @@ defmodule Open890.RadioState do
       :a -> radio_state.vfo_a_frequency
       :b -> radio_state.vfo_b_frequency
       _ -> nil
+    end
+  end
+
+  # The final frequency that displays on the screen, taking RIT into account
+  def effective_active_frequency(%__MODULE__{} = state) do
+    if state.active_frequency do
+      if state.rit_enabled && state.rit_xit_offset do
+        state.active_frequency + state.rit_xit_offset
+      else
+        state.active_frequency
+      end
+    else
+      nil
+    end
+  end
+
+  # The final frequency display on the right side, taking in split and XIT state into account.
+  # This is DIFFERENT from the position that the "T" banner displays on the bandscope.
+  def effective_inactive_frequency(%__MODULE__{} = state) do
+    if state.inactive_frequency do
+      if state.split_enabled && state.xit_enabled && state.rit_xit_offset do
+        state.inactive_frequency + state.rit_xit_offset
+      else
+        state.inactive_frequency
+      end
+    else
+      nil
+    end
+  end
+
+  def rx_banner_frequency(%__MODULE__{} = state) do
+    effective_active_frequency(state)
+  end
+
+  def tx_banner_frequency(%__MODULE__{} = state) do
+    if state.split_enabled do
+      if state.xit_enabled && state.rit_xit_offset do
+        state.inactive_frequency + state.rit_xit_offset
+      else
+        state.inactive_frequency
+      end
+    else
+      if state.xit_enabled && state.rit_xit_offset do
+        state.active_frequency + state.rit_xit_offset
+      else
+        state.active_frequency
+      end
     end
   end
 

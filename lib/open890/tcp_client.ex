@@ -41,6 +41,11 @@ defmodule Open890.TCPClient do
       }}
   end
 
+  @impl true
+  def handle_call(:get_radio_state, _from, state) do
+    {:reply, {:ok, state.radio_state}, state}
+  end
+
   # Server API
   @impl true
   def handle_cast({:send_command, cmd}, state) do
@@ -261,21 +266,24 @@ defmodule Open890.TCPClient do
         end
 
         if (msg |> String.starts_with?("FA") && radio_state.active_receiver == :a) ||
-          (msg |> String.starts_with?("FB") && radio_state.active_receiver == :b) do
+          (msg |> String.starts_with?("FB") && radio_state.active_receiver == :b) #||
+            #(radio_state.band_scope_mode == :center && radio_state.rit_enabled && msg |> String.starts_with?("RF") )
+            do
 
-          {low, high} = radio_state.band_scope_edges
-          delta = radio_state.active_frequency_delta
-          active_receiver = radio_state.active_receiver
+          if radio_state.band_scope_edges do
+            {low, high} = radio_state.band_scope_edges
+            delta = radio_state.active_frequency_delta
+            active_receiver = radio_state.active_receiver
 
-          RadioConnection.broadcast_freq_delta(connection, %{
-            delta: delta,
-            vfo: active_receiver,
-            bs: %{low: low, high: high}
-          })
+            RadioConnection.broadcast_freq_delta(connection, %{
+              delta: delta,
+              vfo: active_receiver,
+              bs: %{low: low, high: high}
+            })
+          end
         end
 
         RadioConnection.broadcast_radio_state(connection, radio_state)
-
         %{state | radio_state: radio_state}
     end
   end

@@ -60,6 +60,26 @@ defmodule Open890.RadioConnection do
     repo().delete_all()
   end
 
+  def get_state!(%__MODULE__{} = conn) do
+    get_state(conn)
+    |> case do
+      {:ok, state} -> state
+      _ -> raise "State not available for conn: #{conn.id}"
+    end
+  end
+
+  def get_state(%__MODULE__{} = connection) do
+    connection
+    |> get_connection_pid()
+    |> case do
+      {:ok, pid} ->
+        pid |> GenServer.call(:get_radio_state)
+      _ ->
+        Logger.warn("Could not find pid for connection: #{connection.id}")
+        {:error, :not_found}
+    end
+  end
+
   def update_connection(%__MODULE__{} = conn, params) when is_map(params) do
     # TODO: this should use a changeset
     new_connection =
