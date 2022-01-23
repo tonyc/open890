@@ -1,6 +1,6 @@
 # open890 Changelog
 
-## 0.7.0
+## 0.7.0 - 2022-01-22
 * Added audio streaming from the radio. Click the "VOIP Audio" button at the top once the connection is started.
 * Added Cloudlog integration - syncs frequency/mode information to a Cloudlog instance.
     * See https://github.com/tonyc/open890/wiki/Cloudlog-Integration for more information
@@ -15,7 +15,7 @@
 * Implemented correct shift/width display for bandscope passband polygon
 * [Dev] 'make compile' changed to 'make build'
 
-## 0.6.2 - 2021-01-16
+## 0.6.2 - 2022-01-16
 * Fixes a display crash related to AM/FM modes
 
 ## 0.6.1 - 2021-12-28
