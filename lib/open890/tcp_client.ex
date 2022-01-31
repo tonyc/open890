@@ -2,7 +2,13 @@ defmodule Open890.TCPClient do
   use GenServer
   require Logger
 
-  @socket_opts [:binary, active: true, exit_on_close: true, send_timeout: 1000, send_timeout_close: true]
+  @socket_opts [
+    :binary,
+    active: true,
+    exit_on_close: true,
+    send_timeout: 1000,
+    send_timeout_close: true
+  ]
   @connect_timeout_ms 5000
 
   @enable_audio_scope true
@@ -34,11 +40,11 @@ defmodule Open890.TCPClient do
     send(self(), :connect_socket)
 
     {:ok,
-      %{
-        connection: connection,
-        kns_user: kns_user,
-        radio_state: %RadioState{}
-      }}
+     %{
+       connection: connection,
+       kns_user: kns_user,
+       radio_state: %RadioState{}
+     }}
   end
 
   @impl true
@@ -96,7 +102,10 @@ defmodule Open890.TCPClient do
 
       {:error, reason} ->
         broadcast_connection_state(state.connection, {:down, reason})
-        Logger.error("Unable to connect to radio: #{inspect(reason)}. Connection: #{inspect(state.connection)}")
+
+        Logger.error(
+          "Unable to connect to radio: #{inspect(reason)}. Connection: #{inspect(state.connection)}"
+        )
 
         {:stop, :shutdown, state}
     end
@@ -132,7 +141,8 @@ defmodule Open890.TCPClient do
 
   def handle_info(:enable_voip, state) do
     Logger.info("\n\n**** Enabling HQ VOIP stream\n\n")
-    state.socket |> send_command("##VP1") # high quality
+    # high quality
+    state.socket |> send_command("##VP1")
     # state.socket |> send_command("##VP2") # low quality
 
     {:noreply, state}
@@ -162,7 +172,8 @@ defmodule Open890.TCPClient do
   end
 
   def handle_msg("##CN0", %{socket: socket} = state) do
-    msg = "Unable to connect to radio: The KNS connection may already be in use by another application"
+    msg =
+      "Unable to connect to radio: The KNS connection may already be in use by another application"
 
     Logger.warn(msg)
     broadcast_connection_state(state.connection, {:down, :kns_in_use})
@@ -229,7 +240,11 @@ defmodule Open890.TCPClient do
     state
   end
 
-  def handle_msg(msg, %{socket: _socket, connection: connection, radio_state: radio_state} = state) when is_binary(msg) do
+  def handle_msg(
+        msg,
+        %{socket: _socket, connection: connection, radio_state: radio_state} = state
+      )
+      when is_binary(msg) do
     cond do
       # high speed filter/audio scope response
       msg |> String.starts_with?("##DD3") ->
@@ -265,11 +280,10 @@ defmodule Open890.TCPClient do
           Open890.Cloudlog.update(connection, radio_state)
         end
 
+        # ||
+        # (radio_state.band_scope_mode == :center && radio_state.rit_enabled && msg |> String.starts_with?("RF") )
         if (msg |> String.starts_with?("FA") && radio_state.active_receiver == :a) ||
-          (msg |> String.starts_with?("FB") && radio_state.active_receiver == :b) #||
-            #(radio_state.band_scope_mode == :center && radio_state.rit_enabled && msg |> String.starts_with?("RF") )
-            do
-
+             (msg |> String.starts_with?("FB") && radio_state.active_receiver == :b) do
           if radio_state.band_scope_edges do
             {low, high} = radio_state.band_scope_edges
             delta = radio_state.active_frequency_delta

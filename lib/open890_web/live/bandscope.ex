@@ -147,8 +147,8 @@ defmodule Open890Web.Live.Bandscope do
       "[" ->
         conn |> ConnectionCommands.freq_change(:down)
 
-      _ -> :ok
-
+      _ ->
+        :ok
     end
 
     {:noreply, socket}
@@ -169,7 +169,8 @@ defmodule Open890Web.Live.Bandscope do
       "s" ->
         conn |> ConnectionCommands.band_scope_shift()
 
-      _ -> :ok
+      _ ->
+        :ok
     end
 
     {:noreply, socket}
@@ -180,8 +181,6 @@ defmodule Open890Web.Live.Bandscope do
 
     {:noreply, socket}
   end
-
-
 
   def handle_event(event, params, socket) do
     Logger.warn("RadioLive.Bandscope: Unknown event: #{event}, params: #{inspect(params)}")

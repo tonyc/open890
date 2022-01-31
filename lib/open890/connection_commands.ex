@@ -17,7 +17,8 @@ defmodule Open890.ConnectionCommands do
     |> get_roofing_filter_info()
     |> get_band_scope_mode()
     |> get_band_scope_span()
-    |> get_band_scope_limits() # This needs to happen in this spot otherwise stuff breaks
+    # This needs to happen in this spot otherwise stuff breaks
+    |> get_band_scope_limits()
     |> get_band_scope_avg()
     |> get_band_scope_att()
     |> get_display_screen()
@@ -52,14 +53,14 @@ defmodule Open890.ConnectionCommands do
   def rit_xit_down(conn), do: conn |> cmd("RD")
   def clear_rit_xit(conn), do: conn |> cmd("RC")
 
-  #def set_rit_xit(conn, value) when is_integer(value) do
+  # def set_rit_xit(conn, value) when is_integer(value) do
   #  direction = if value < 0, do: "1", else: "0"
   #  value = abs(value)
   #          |> to_string()
   #          |> String.pad_leading(4, "0")
 
   #  conn |> cmd("RF#{direction}#{value}")
-  #end
+  # end
 
   def get_rit_xit(conn) do
     conn
@@ -132,9 +133,10 @@ defmodule Open890.ConnectionCommands do
   end
 
   def set_notch_pos(conn, value) do
-    value = value
-            |> to_string()
-            |> String.pad_leading(3, "0")
+    value =
+      value
+      |> to_string()
+      |> String.pad_leading(3, "0")
 
     conn |> cmd("BP#{value}")
   end
@@ -312,6 +314,7 @@ defmodule Open890.ConnectionCommands do
     |> Enum.each(fn c ->
       conn |> cmd(c)
     end)
+
     conn
   end
 

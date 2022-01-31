@@ -23,9 +23,10 @@ defmodule Open890.Application do
       {Phoenix.PubSub, name: Open890.PubSub},
       # Start the Endpoint (http/https)
       Open890Web.Endpoint,
-      {Open890.RadioConnectionSupervisor, strategy: :one_for_one, name: Open890.RadioConnectionSupervisor},
+      {Open890.RadioConnectionSupervisor,
+       strategy: :one_for_one, name: Open890.RadioConnectionSupervisor},
       {Open890.CloudlogSupervisor, strategy: :one_for_one, name: Open890.CloudlogSupervisor},
-      {Open890.UDPAudioServer, []},
+      {Open890.UDPAudioServer, []}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
@@ -58,15 +59,15 @@ defmodule Open890.Application do
   end
 
   def display_banner do
-    IO.puts              """
-                       ___ ___  ___
-   ___  ___  ___ ___  ( _ ) _ \\/ _ \\
-  / _ \\/ _ \\/ -_) _ \\/ _  \\_, / // /
-  \\___/ .__/\\__/_//_/\\___/___/\\___/
-     /_/
+    IO.puts("""
+                           ___ ___  ___
+       ___  ___  ___ ___  ( _ ) _ \\/ _ \\
+      / _ \\/ _ \\/ -_) _ \\/ _  \\_, / // /
+      \\___/ .__/\\__/_//_/\\___/___/\\___/
+         /_/
 
-  open890 is now running.
-  Access the web interface at http://localhost:4000
-"""
+      open890 is now running.
+      Access the web interface at http://localhost:4000
+    """)
   end
 end

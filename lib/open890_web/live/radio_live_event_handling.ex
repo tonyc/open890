@@ -64,7 +64,11 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
         end
       end
 
-      def handle_event("notch_changed", params, %{assigns: %{radio_connection: connection}} = socket) do
+      def handle_event(
+            "notch_changed",
+            params,
+            %{assigns: %{radio_connection: connection}} = socket
+          ) do
         connection |> Radio.set_notch_pos(params["value"])
 
         {:noreply, socket}
@@ -100,7 +104,6 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
 
         {:noreply, socket}
       end
-
 
       def handle_event("adjust_audio_gain", %{"is_up" => is_up} = params, socket) do
         audio_gain = socket.assigns.radio_state.audio_gain
@@ -148,6 +151,7 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
 
       def handle_event("adjust_rit_xit", %{"is_up" => is_up} = params, socket) do
         radio_connection = socket.assigns.radio_connection
+
         if is_up do
           radio_connection |> Radio.rit_xit_up()
         else
@@ -178,7 +182,6 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
 
         {:noreply, socket}
       end
-
 
       def handle_event(
             "sql_changed",
@@ -268,15 +271,14 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
             %{
               assigns: %{
                 radio_state: radio_state,
-                radio_connection: connection,
+                radio_connection: connection
               }
             } = socket
           ) do
-
-          %{
-            active_receiver: active_receiver,
-            band_scope_edges: {scope_low, scope_high}
-          } = radio_state
+        %{
+          active_receiver: active_receiver,
+          band_scope_edges: {scope_low, scope_high}
+        } = radio_state
 
         new_frequency =
           x
@@ -307,9 +309,6 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
       defp set_screen_id(socket, id) do
         socket |> assign(:display_screen_id, id)
       end
-
-
-
     end
   end
 end

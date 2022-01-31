@@ -26,7 +26,9 @@ defmodule Open890.UDPAudioServer do
     |> RTP.parse_packet()
     |> case do
       {:ok, %RTP{} = rtp} ->
-        Open890Web.Endpoint.broadcast("radio:audio_stream", "audio_data", %{payload: rtp.payload |> :binary.bin_to_list()})
+        Open890Web.Endpoint.broadcast("radio:audio_stream", "audio_data", %{
+          payload: rtp.payload |> :binary.bin_to_list()
+        })
 
       {:error, reason} ->
         Logger.warn("Error parsing packet: #{inspect(reason)}")
@@ -34,5 +36,4 @@ defmodule Open890.UDPAudioServer do
 
     {:noreply, state}
   end
-
 end

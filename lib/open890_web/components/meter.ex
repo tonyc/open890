@@ -1,5 +1,6 @@
 defmodule Open890Web.Components.Meter do
   use Phoenix.Component
+
   def meter(assigns) do
     ~H"""
       <div class="sMeterWrapper">
@@ -87,7 +88,7 @@ defmodule Open890Web.Components.Meter do
   end
 
   def pip_x_offset(x) do
-    (x * 5) - 1
+    x * 5 - 1
   end
 
   def meter_low_width(val) do
@@ -95,7 +96,6 @@ defmodule Open890Web.Components.Meter do
   end
 
   def meter_high_width(val) do
-    (val * 5) - 175
+    val * 5 - 175
   end
-
 end

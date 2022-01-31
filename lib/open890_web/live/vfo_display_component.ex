@@ -87,5 +87,4 @@ defmodule Open890Web.Live.VFODisplayComponent do
   def band_for(band_register_state, receiver) do
     band_register_state |> BandRegisterState.band_for(receiver)
   end
-
 end

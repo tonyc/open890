@@ -355,8 +355,9 @@ defmodule Open890.Extract do
   end
 
   def cw_delay(str) when is_binary(str) do
-    delay_ms = str
-    |> trim_to_integer(["SD"])
+    delay_ms =
+      str
+      |> trim_to_integer(["SD"])
 
     div(delay_ms, 50)
   end
@@ -509,19 +510,33 @@ defmodule Open890.Extract do
 
   def filter_lo_width(passband_id, filter_mode, mode) do
     case mode do
-      cw when cw in [:cw, :cw_r] -> get_cw_width(passband_id)
-      fsk when fsk in [:fsk, :fsk_r] -> get_fsk_width(passband_id)
-      psk when psk in [:psk, :psk_r] -> get_psk_width(passband_id)
-      am when am in [:am, :am_d] -> get_am_lo_cut(passband_id)
-      fm when fm in [:fm, :fm_d] -> get_fm_lo_cut(passband_id)
+      cw when cw in [:cw, :cw_r] ->
+        get_cw_width(passband_id)
+
+      fsk when fsk in [:fsk, :fsk_r] ->
+        get_fsk_width(passband_id)
+
+      psk when psk in [:psk, :psk_r] ->
+        get_psk_width(passband_id)
+
+      am when am in [:am, :am_d] ->
+        get_am_lo_cut(passband_id)
+
+      fm when fm in [:fm, :fm_d] ->
+        get_fm_lo_cut(passband_id)
+
       ssb when ssb in [:usb, :usb_d, :lsb, :lsb_d] ->
         if filter_mode == :hi_lo_cut do
           get_ssb_lo_cut(passband_id)
         else
           get_ssb_width(passband_id)
         end
+
       _ ->
-        Logger.warn("Unknown passband_id #{passband_id} for mode: #{mode} (filter_mode: #{filter_mode})")
+        Logger.warn(
+          "Unknown passband_id #{passband_id} for mode: #{mode} (filter_mode: #{filter_mode})"
+        )
+
         nil
     end
   end
@@ -537,17 +552,27 @@ defmodule Open890.Extract do
   def filter_hi_shift(passband_id, filter_mode, mode) do
     # psk and fsk don't shift
     case mode do
-      cw when cw in [:cw, :cw_r] -> calculate_cw_shift(passband_id)
-      am when am in [:am, :am_d] -> get_am_hi_cut(passband_id)
-      fm when fm in [:fm, :fm_d] -> get_fm_hi_cut(passband_id)
+      cw when cw in [:cw, :cw_r] ->
+        calculate_cw_shift(passband_id)
+
+      am when am in [:am, :am_d] ->
+        get_am_hi_cut(passband_id)
+
+      fm when fm in [:fm, :fm_d] ->
+        get_fm_hi_cut(passband_id)
+
       ssb when ssb in [:usb, :usb_d, :lsb, :lsb_d] ->
         if filter_mode == :hi_lo_cut do
           get_ssb_hi_cut(passband_id)
         else
           calculate_ssb_shift(passband_id)
         end
+
       _ ->
-        Logger.warn("Unknown passband_id #{passband_id} for mode: #{mode} (filter_mode: #{filter_mode})")
+        Logger.warn(
+          "Unknown passband_id #{passband_id} for mode: #{mode} (filter_mode: #{filter_mode})"
+        )
+
         nil
     end
   end
@@ -650,8 +675,7 @@ defmodule Open890.Extract do
     msg
     |> case do
       "0" <> rest -> String.to_integer(rest)
-      "1" <> rest -> -(String.to_integer(rest))
+      "1" <> rest -> -String.to_integer(rest)
     end
-
   end
 end

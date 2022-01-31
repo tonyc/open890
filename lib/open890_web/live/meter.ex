@@ -85,5 +85,4 @@ defmodule Open890Web.Live.Meter do
     Logger.warn("Live.Meter: Unknown event: #{event}, params: #{inspect(params)}")
     {:noreply, socket}
   end
-
 end

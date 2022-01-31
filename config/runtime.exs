@@ -1,9 +1,8 @@
 import Config
 
 if config_env() == :prod do
-
   # just always make a new secret_key_base
-  secret_key_base = :crypto.strong_rand_bytes(64) |> Base.encode64 |> binary_part(0, 64)
+  secret_key_base = :crypto.strong_rand_bytes(64) |> Base.encode64() |> binary_part(0, 64)
 
   config :open890, Open890Web.Endpoint,
     http: [

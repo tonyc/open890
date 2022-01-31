@@ -97,6 +97,7 @@ defmodule Open890Web.Components.Buttons do
       _ -> ""
     end
   end
+
   def pre_button(assigns) do
     ~H"""
       <.cycle_button_2 value={@value} values={%{0 => "PA1", 1 => "PA2", 2 => "PA0"}} fluid={assigns[:fluid]}>
@@ -125,7 +126,7 @@ defmodule Open890Web.Components.Buttons do
     values = %{
       :off => "BC1",
       :bc_1 => "BC2",
-      :bc_2 => "BC0",
+      :bc_2 => "BC0"
     }
 
     ~H"""
@@ -222,8 +223,6 @@ defmodule Open890Web.Components.Buttons do
     """
   end
 
-
-
   def format_rf_pre(level) do
     level
     |> case do
@@ -265,19 +264,23 @@ defmodule Open890Web.Components.Buttons do
   end
 
   def cmd_button_2(assigns) do
-    fluid_class = assigns |> Map.get(:fluid, false)
-    |> case do
-      true -> "fluid"
-      _ -> ""
-    end
+    fluid_class =
+      assigns
+      |> Map.get(:fluid, false)
+      |> case do
+        true -> "fluid"
+        _ -> ""
+      end
 
     assigned_classes = assigns[:classes] || ""
 
-    size_class = if ~w(mini tiny small medium large big huge massive) |> Enum.any?(fn size -> assigned_classes |> String.contains?(size) end) do
-      ""
-    else
-      "small"
-    end
+    size_class =
+      if ~w(mini tiny small medium large big huge massive)
+         |> Enum.any?(fn size -> assigned_classes |> String.contains?(size) end) do
+        ""
+      else
+        "small"
+      end
 
     classes = "ui #{size_class} black button #{assigned_classes} #{fluid_class}"
 
@@ -343,20 +346,19 @@ defmodule Open890Web.Components.Buttons do
     ref_level / 2.0 - 20
   end
 
-
   def band_scope_att_button(assigns) do
     down_values = %{
       0 => "BS83",
       1 => "BS80",
       2 => "BS81",
-      3 => "BS82",
+      3 => "BS82"
     }
 
     up_values = %{
       0 => "BS81",
       1 => "BS82",
       2 => "BS83",
-      3 => "BS80",
+      3 => "BS80"
     }
 
     ~H"""
@@ -378,20 +380,19 @@ defmodule Open890Web.Components.Buttons do
     end
   end
 
-
   def band_scope_avg_button(assigns) do
     down_values = %{
       0 => "BSA3",
       1 => "BSA0",
       2 => "BSA1",
-      3 => "BSA2",
+      3 => "BSA2"
     }
 
     up_values = %{
       0 => "BSA1",
       1 => "BSA2",
       2 => "BSA3",
-      3 => "BSA0",
+      3 => "BSA0"
     }
 
     ~H"""

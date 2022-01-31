@@ -151,5 +151,4 @@ defmodule Open890Web.RadioConnectionController do
   defp assign_bg_theme(conn, _options) do
     conn |> assign(:bg_theme, "light")
   end
-
 end

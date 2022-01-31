@@ -1,74 +1,80 @@
 defmodule Open890.RadioState do
   require Logger
 
-  alias Open890.{AntennaState, BandRegisterState, FilterState, NoiseBlankState, NotchState, TransverterState}
+  alias Open890.{
+    AntennaState,
+    BandRegisterState,
+    FilterState,
+    NoiseBlankState,
+    NotchState,
+    TransverterState
+  }
+
   alias Open890.Extract
   alias Open890Web.RadioViewHelpers
 
-  defstruct [
-    active_frequency: 0,
-    active_frequency_delta: 0,
-    active_if_filter: nil,
-    active_mode: :unknown,
-    active_receiver: :a,
-    active_transmitter: :a,
-    agc: nil,
-    agc_off: nil,
-    alc_meter: 0,
-    antenna_state: %AntennaState{},
-    apf_enabled: nil,
-    audio_gain: nil,
-    band_register_state: %BandRegisterState{},
-    band_scope_att: nil,
-    band_scope_avg: nil,
-    band_scope_edges: nil,
-    band_scope_fixed_span: nil,
-    band_scope_mode: nil,
-    band_scope_span: nil,
-    bc: nil,
-    comp_meter: 0,
-    cw_delay: nil,
-    cw_key_speed: nil,
-    data_speed: nil,
-    display_screen_id: 0,
-    filter_high_freq: nil,
-    filter_low_freq: nil,
-    filter_state: %FilterState{},
-    fine: nil,
-    id_meter: 0,
-    inactive_frequency: "",
-    inactive_mode: :unknown,
-    inactive_receiver: :b,
-    mic_gain: nil,
-    noise_blank_state: %NoiseBlankState{},
-    notch_state: %NotchState{},
-    nr: nil,
-    power_level: nil,
-    projected_active_receiver_location: "",
-    ref_level: 40,
-    rf_att: 0,
-    rf_gain: nil,
-    rf_pre: 0,
-    roofing_filter_data: %{a: nil, b: nil, c: nil},
-    s_meter: 0,
-    split_enabled: false,
-    squelch: nil,
-    ssb_data_filter_mode: nil,
-    ssb_filter_mode: nil,
-    swr_meter: 0,
-    temp_meter: 0,
-    transverter_state: %TransverterState{},
-    tx_state: :off,
-    vd_meter: 0,
-    vfo_a_frequency: nil,
-    vfo_b_frequency: nil,
-    vfo_memory_state: nil,
-    voip_available: nil,
-    voip_enabled: nil,
-    rit_enabled: false,
-    xit_enabled: false,
-    rit_xit_offset: 0,
-  ]
+  defstruct active_frequency: 0,
+            active_frequency_delta: 0,
+            active_if_filter: nil,
+            active_mode: :unknown,
+            active_receiver: :a,
+            active_transmitter: :a,
+            agc: nil,
+            agc_off: nil,
+            alc_meter: 0,
+            antenna_state: %AntennaState{},
+            apf_enabled: nil,
+            audio_gain: nil,
+            band_register_state: %BandRegisterState{},
+            band_scope_att: nil,
+            band_scope_avg: nil,
+            band_scope_edges: nil,
+            band_scope_fixed_span: nil,
+            band_scope_mode: nil,
+            band_scope_span: nil,
+            bc: nil,
+            comp_meter: 0,
+            cw_delay: nil,
+            cw_key_speed: nil,
+            data_speed: nil,
+            display_screen_id: 0,
+            filter_high_freq: nil,
+            filter_low_freq: nil,
+            filter_state: %FilterState{},
+            fine: nil,
+            id_meter: 0,
+            inactive_frequency: "",
+            inactive_mode: :unknown,
+            inactive_receiver: :b,
+            mic_gain: nil,
+            noise_blank_state: %NoiseBlankState{},
+            notch_state: %NotchState{},
+            nr: nil,
+            power_level: nil,
+            projected_active_receiver_location: "",
+            ref_level: 40,
+            rf_att: 0,
+            rf_gain: nil,
+            rf_pre: 0,
+            roofing_filter_data: %{a: nil, b: nil, c: nil},
+            s_meter: 0,
+            split_enabled: false,
+            squelch: nil,
+            ssb_data_filter_mode: nil,
+            ssb_filter_mode: nil,
+            swr_meter: 0,
+            temp_meter: 0,
+            transverter_state: %TransverterState{},
+            tx_state: :off,
+            vd_meter: 0,
+            vfo_a_frequency: nil,
+            vfo_b_frequency: nil,
+            vfo_memory_state: nil,
+            voip_available: nil,
+            voip_enabled: nil,
+            rit_enabled: false,
+            xit_enabled: false,
+            rit_xit_offset: 0
 
   def dispatch("FS00" <> _ = _msg, %__MODULE__{} = state) do
     %{state | fine: false}
@@ -103,7 +109,7 @@ defmodule Open890.RadioState do
   end
 
   def dispatch("RF" <> _ = msg, %__MODULE__{} = state) do
-    %{state | rit_xit_offset: Extract.rit_xit_offset(msg) }
+    %{state | rit_xit_offset: Extract.rit_xit_offset(msg)}
   end
 
   def dispatch("AP0" <> _ = msg, %__MODULE__{} = state) do
@@ -169,13 +175,15 @@ defmodule Open890.RadioState do
   def dispatch("XV" <> _ = msg, %__MODULE__{} = state) do
     value = msg |> Extract.transverter_enabled()
 
-    new_transverter_state = state.transverter_state
-    |> case do
-      %TransverterState{} = t_state ->
-        %{t_state | enabled: value}
-      _ ->
-        %TransverterState{enabled: value}
-    end
+    new_transverter_state =
+      state.transverter_state
+      |> case do
+        %TransverterState{} = t_state ->
+          %{t_state | enabled: value}
+
+        _ ->
+          %TransverterState{enabled: value}
+      end
 
     %{state | transverter_state: new_transverter_state}
   end
@@ -183,13 +191,15 @@ defmodule Open890.RadioState do
   def dispatch("XO" <> _ = msg, %__MODULE__{} = state) do
     value = msg |> Extract.transverter_offset()
 
-    new_transverter_state = state.transverter_state
-    |> case do
-      %TransverterState{} = xv_state ->
-        %{xv_state | offset: value}
-      _ ->
-        %TransverterState{offset: value}
-    end
+    new_transverter_state =
+      state.transverter_state
+      |> case do
+        %TransverterState{} = xv_state ->
+          %{xv_state | offset: value}
+
+        _ ->
+          %TransverterState{offset: value}
+      end
 
     %{state | transverter_state: new_transverter_state}
   end
@@ -201,13 +211,15 @@ defmodule Open890.RadioState do
   def dispatch("NB1" <> _ = msg, %__MODULE__{} = state) do
     enabled = msg |> Extract.nb_enabled()
 
-    new_nb_state = state.noise_blank_state
-    |> case do
-      %NoiseBlankState{} = nb_state ->
-        %{nb_state | nb_1_enabled: enabled}
+    new_nb_state =
+      state.noise_blank_state
+      |> case do
+        %NoiseBlankState{} = nb_state ->
+          %{nb_state | nb_1_enabled: enabled}
 
-      _ -> %NoiseBlankState{nb_1_enabled: enabled}
-    end
+        _ ->
+          %NoiseBlankState{nb_1_enabled: enabled}
+      end
 
     %{state | noise_blank_state: new_nb_state}
   end
@@ -215,13 +227,15 @@ defmodule Open890.RadioState do
   def dispatch("NB2" <> _ = msg, %__MODULE__{} = state) do
     enabled = msg |> Extract.nb_enabled()
 
-    new_nb_state = state.noise_blank_state
-    |> case do
-      %NoiseBlankState{} = nb_state ->
-        %{nb_state | nb_2_enabled: enabled}
+    new_nb_state =
+      state.noise_blank_state
+      |> case do
+        %NoiseBlankState{} = nb_state ->
+          %{nb_state | nb_2_enabled: enabled}
 
-      _ -> %NoiseBlankState{nb_2_enabled: enabled}
-    end
+        _ ->
+          %NoiseBlankState{nb_2_enabled: enabled}
+      end
 
     %{state | noise_blank_state: new_nb_state}
   end
@@ -230,14 +244,15 @@ defmodule Open890.RadioState do
   def dispatch("NT" <> _ = msg, %__MODULE__{} = state) do
     notch_enabled = msg |> Extract.notch_state()
 
-    new_notch_state = state.notch_state
-    |> case do
-      %NotchState{} = notch_state ->
-        %{notch_state | enabled: notch_enabled}
+    new_notch_state =
+      state.notch_state
+      |> case do
+        %NotchState{} = notch_state ->
+          %{notch_state | enabled: notch_enabled}
 
-      _ ->
-        %NotchState{enabled: notch_enabled}
-    end
+        _ ->
+          %NotchState{enabled: notch_enabled}
+      end
 
     %{state | notch_state: new_notch_state}
   end
@@ -246,13 +261,15 @@ defmodule Open890.RadioState do
   def dispatch("BP" <> _ = msg, %__MODULE__{} = state) do
     notch_frequency = Extract.notch_filter(msg)
 
-    new_notch_state = state.notch_state
-    |> case do
-      %NotchState{} = notch_state ->
-        %{notch_state | frequency: notch_frequency}
-      _ ->
-        %NotchState{frequency: notch_frequency}
-    end
+    new_notch_state =
+      state.notch_state
+      |> case do
+        %NotchState{} = notch_state ->
+          %{notch_state | frequency: notch_frequency}
+
+        _ ->
+          %NotchState{frequency: notch_frequency}
+      end
 
     %{state | notch_state: new_notch_state}
   end
@@ -261,13 +278,15 @@ defmodule Open890.RadioState do
   def dispatch("NW" <> _ = msg, %__MODULE__{} = state) do
     notch_width = Extract.notch_width(msg)
 
-    new_notch_state = state.notch_state
-    |> case do
-      %NotchState{} = notch_state ->
-        %{notch_state | width: notch_width}
-      _ ->
-        %NotchState{width: notch_width}
-    end
+    new_notch_state =
+      state.notch_state
+      |> case do
+        %NotchState{} = notch_state ->
+          %{notch_state | width: notch_width}
+
+        _ ->
+          %NotchState{width: notch_width}
+      end
 
     %{state | notch_state: new_notch_state}
   end
@@ -311,10 +330,7 @@ defmodule Open890.RadioState do
 
     case state.band_scope_mode do
       :fixed ->
-        %{state |
-          band_scope_edges: {bs_low, bs_high},
-          band_scope_fixed_span: span
-        }
+        %{state | band_scope_edges: {bs_low, bs_high}, band_scope_fixed_span: span}
 
       :auto_scroll ->
         %{state | band_scope_edges: {bs_low, bs_high}}
@@ -331,10 +347,11 @@ defmodule Open890.RadioState do
     state = %{state | band_scope_mode: scope_mode}
 
     if scope_mode == :center && !is_nil(state.band_scope_span) do
-      band_scope_edges = calculate_center_mode_edges(
-        state.active_frequency,
-        state.band_scope_span
-      )
+      band_scope_edges =
+        calculate_center_mode_edges(
+          state.active_frequency,
+          state.band_scope_span
+        )
 
       %{state | band_scope_edges: band_scope_edges}
     else
@@ -350,12 +367,14 @@ defmodule Open890.RadioState do
 
     case state.band_scope_mode do
       mode when mode in [:center, :auto_scroll] ->
-        band_scope_edges = calculate_center_mode_edges(
-          state.active_frequency,
-          state.band_scope_span
-        )
+        band_scope_edges =
+          calculate_center_mode_edges(
+            state.active_frequency,
+            state.band_scope_span
+          )
 
         %{state | band_scope_edges: band_scope_edges}
+
       _ ->
         state
     end
@@ -402,17 +421,15 @@ defmodule Open890.RadioState do
 
     state =
       if state.active_receiver == :a do
-        %{state |
-          active_frequency: frequency,
-          active_frequency_delta: delta
-        }
+        %{state | active_frequency: frequency, active_frequency_delta: delta}
       else
         %{state | inactive_frequency: frequency}
       end
 
     state =
       if state.band_scope_mode == :center && state.active_receiver == :a do
-        band_scope_edges = calculate_center_mode_edges(
+        band_scope_edges =
+          calculate_center_mode_edges(
             effective_active_frequency(state),
             state.band_scope_span
           )
@@ -431,27 +448,24 @@ defmodule Open890.RadioState do
 
     previous_active_frequency = effective_active_frequency(state) || 0
     delta = frequency - previous_active_frequency
-    #delta = (frequency + delta?) - previous_active_frequency
+    # delta = (frequency + delta?) - previous_active_frequency
 
     state =
       if state.active_receiver == :b do
-        %{state |
-          active_frequency: frequency,
-          active_frequency_delta: delta
-        }
+        %{state | active_frequency: frequency, active_frequency_delta: delta}
       else
         %{state | inactive_frequency: frequency}
       end
 
     state =
       if state.band_scope_mode == :center && state.active_receiver == :b do
-        band_scope_edges = calculate_center_mode_edges(
-          effective_active_frequency(state),
-          state.band_scope_span
-        )
+        band_scope_edges =
+          calculate_center_mode_edges(
+            effective_active_frequency(state),
+            state.band_scope_span
+          )
 
         %{state | band_scope_edges: band_scope_edges}
-
       else
         state
       end
@@ -474,20 +488,22 @@ defmodule Open890.RadioState do
   end
 
   def dispatch("FR0", %__MODULE__{} = state) do
-    %{state |
-      active_receiver: :a,
-      active_frequency: state.vfo_a_frequency,
-      inactive_receiver: :b,
-      inactive_frequency: state.vfo_b_frequency
+    %{
+      state
+      | active_receiver: :a,
+        active_frequency: state.vfo_a_frequency,
+        inactive_receiver: :b,
+        inactive_frequency: state.vfo_b_frequency
     }
   end
 
   def dispatch("FR1", %__MODULE__{} = state) do
-    %{state |
-      active_receiver: :b,
-      active_frequency: state.vfo_b_frequency,
-      inactive_receiver: :a,
-      inactive_frequency: state.vfo_a_frequency
+    %{
+      state
+      | active_receiver: :b,
+        active_frequency: state.vfo_b_frequency,
+        inactive_receiver: :a,
+        inactive_frequency: state.vfo_a_frequency
     }
   end
 
@@ -540,22 +556,21 @@ defmodule Open890.RadioState do
       filter_state: filter_state
     } = state
 
-    filter_mode = case active_mode do
-      ssb when ssb in [:usb, :lsb] -> ssb_filter_mode
-      data when data in [:usb_d, :lsb_d] -> ssb_data_filter_mode
-      _ -> :unknown
-    end
+    filter_mode =
+      case active_mode do
+        ssb when ssb in [:usb, :lsb] -> ssb_filter_mode
+        data when data in [:usb_d, :lsb_d] -> ssb_data_filter_mode
+        _ -> :unknown
+      end
 
     passband_id = Extract.passband_id(msg)
 
-    filter_hi_shift =
-      passband_id |> Extract.filter_hi_shift(filter_mode, active_mode)
+    filter_hi_shift = passband_id |> Extract.filter_hi_shift(filter_mode, active_mode)
 
     filter_state = %{filter_state | hi_shift: filter_hi_shift, hi_passband_id: passband_id}
 
     %{state | filter_state: filter_state}
     |> update_filter_hi_edge()
-
   end
 
   def dispatch("SL0" <> _ = msg, %__MODULE__{} = state) do
@@ -566,16 +581,16 @@ defmodule Open890.RadioState do
       filter_state: filter_state
     } = state
 
-    filter_mode = case active_mode do
-      ssb when ssb in [:usb, :lsb] -> ssb_filter_mode
-      data when data in [:usb_d, :lsb_d] -> ssb_data_filter_mode
-      _ -> :unknown
-    end
+    filter_mode =
+      case active_mode do
+        ssb when ssb in [:usb, :lsb] -> ssb_filter_mode
+        data when data in [:usb_d, :lsb_d] -> ssb_data_filter_mode
+        _ -> :unknown
+      end
 
     passband_id = Extract.passband_id(msg)
 
-    filter_lo_width =
-      passband_id |> Extract.filter_lo_width(filter_mode, active_mode)
+    filter_lo_width = passband_id |> Extract.filter_lo_width(filter_mode, active_mode)
 
     filter_state = %{filter_state | lo_width: filter_lo_width, lo_passband_id: passband_id}
 
@@ -615,8 +630,11 @@ defmodule Open890.RadioState do
 
     case active_mode do
       mode when active_mode in [:lsb, :usb, :cw, :cw_r] ->
-        offset_freq = RadioViewHelpers.offset_frequency(mode, active_frequency, filter_state.hi_shift)
+        offset_freq =
+          RadioViewHelpers.offset_frequency(mode, active_frequency, filter_state.hi_shift)
+
         %{state | filter_high_freq: offset_freq}
+
       _ ->
         state
     end
@@ -634,23 +652,29 @@ defmodule Open890.RadioState do
 
     case active_mode do
       mode when active_mode in [:lsb, :usb, :cw, :cw_r] ->
-        filter_low_freq = RadioViewHelpers.offset_frequency_reverse(mode, active_frequency, filter_state.lo_width)
-
+        filter_low_freq =
+          RadioViewHelpers.offset_frequency_reverse(mode, active_frequency, filter_state.lo_width)
 
         %{state | filter_low_freq: filter_low_freq}
+
       _ ->
         state
     end
   end
 
-  def get_active_receiver_frequency(%__MODULE__{active_receiver: active_receiver, vfo_a_frequency: vfo_a_frequency, vfo_b_frequency: vfo_b_frequency}) do
+  def get_active_receiver_frequency(%__MODULE__{
+        active_receiver: active_receiver,
+        vfo_a_frequency: vfo_a_frequency,
+        vfo_b_frequency: vfo_b_frequency
+      }) do
     case active_receiver do
       :a -> vfo_a_frequency
       :b -> vfo_b_frequency
     end
   end
 
-  def calculate_center_mode_edges(freq, span_khz) when is_integer(freq) and is_integer(span_khz) do
+  def calculate_center_mode_edges(freq, span_khz)
+      when is_integer(freq) and is_integer(span_khz) do
     span = span_khz * 1000
     half_span = span |> div(2)
 
@@ -750,5 +774,4 @@ defmodule Open890.RadioState do
       end
     end
   end
-
 end

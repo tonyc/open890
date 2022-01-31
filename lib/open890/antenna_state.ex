@@ -9,12 +9,13 @@ defmodule Open890.AntennaState do
   def extract(str) when is_binary(str) do
     str = str |> String.trim_leading("AN")
 
-    active_ant = String.at(str, 0)
-    |> case do
-      "1" -> :ant1
-      "2" -> :ant2
-      _ -> nil
-    end
+    active_ant =
+      String.at(str, 0)
+      |> case do
+        "1" -> :ant1
+        "2" -> :ant2
+        _ -> nil
+      end
 
     rx_ant_enabled = String.at(str, 1) == "1"
     drv_enabled = String.at(str, 2) == "1"
@@ -29,5 +30,4 @@ defmodule Open890.AntennaState do
   end
 
   def extract(_), do: %__MODULE__{}
-
 end

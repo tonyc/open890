@@ -78,16 +78,16 @@ defmodule Open890Web.Live.Radio do
 
     panel_open = params |> Map.get("panel", "true") == "true"
 
-    socket = socket
-    |> assign(active_tab: selected_tab)
-    |> assign(left_panel_open: panel_open)
+    socket =
+      socket
+      |> assign(active_tab: selected_tab)
+      |> assign(left_panel_open: panel_open)
 
     {:noreply, socket}
   end
 
   @impl true
   def handle_info(%Broadcast{event: "scope_data", payload: %{payload: audio_scope_data}}, socket) do
-
     {:noreply,
      socket
      |> push_event("scope_data", %{scope_data: audio_scope_data})
@@ -99,7 +99,6 @@ defmodule Open890Web.Live.Radio do
         %Broadcast{event: "band_scope_data", payload: %{payload: band_scope_data}},
         socket
       ) do
-
     {:noreply,
      socket
      |> push_event("band_scope_data", %{scope_data: band_scope_data})
@@ -113,15 +112,16 @@ defmodule Open890Web.Live.Radio do
 
   @impl true
   def handle_info(%Broadcast{event: "radio_state_data", payload: %{msg: radio_state}}, socket) do
-
-    formatted_frequency = RadioState.active_frequency(radio_state)
-                          |> RadioViewHelpers.format_raw_frequency()
+    formatted_frequency =
+      RadioState.active_frequency(radio_state)
+      |> RadioViewHelpers.format_raw_frequency()
 
     formatted_mode = radio_state.active_mode |> RadioViewHelpers.format_mode()
     page_title = "#{formatted_frequency} - #{formatted_mode}"
 
-    socket = assign(socket, :radio_state, radio_state)
-             |> assign(:page_title, page_title)
+    socket =
+      assign(socket, :radio_state, radio_state)
+      |> assign(:page_title, page_title)
 
     {:noreply, socket}
   end
@@ -134,15 +134,15 @@ defmodule Open890Web.Live.Radio do
   end
 
   def handle_info(%Broadcast{event: "freq_delta", payload: payload}, socket) do
-    socket = if socket.assigns.radio_state.band_scope_mode == :center do
-      socket |> push_event("freq_delta", payload)
-    else
-      socket
-    end
+    socket =
+      if socket.assigns.radio_state.band_scope_mode == :center do
+        socket |> push_event("freq_delta", payload)
+      else
+        socket
+      end
 
     {:noreply, socket}
   end
-
 
   def handle_info(%Broadcast{} = bc, socket) do
     Logger.warn("Unknown broadcast: #{inspect(bc)}")
@@ -169,8 +169,9 @@ defmodule Open890Web.Live.Radio do
       panelTab: socket.assigns.active_tab
     }
 
-    socket = socket
-    |> push_patch(to: Routes.radio_path(socket, :show, radio_conn.id, new_params))
+    socket =
+      socket
+      |> push_patch(to: Routes.radio_path(socket, :show, radio_conn.id, new_params))
 
     {:noreply, socket}
   end
@@ -191,8 +192,9 @@ defmodule Open890Web.Live.Radio do
       panelTab: tab_name
     }
 
-    socket = socket
-    |> push_patch(to: Routes.radio_path(socket, :show, radio_conn.id, new_params))
+    socket =
+      socket
+      |> push_patch(to: Routes.radio_path(socket, :show, radio_conn.id, new_params))
 
     {:noreply, socket}
   end
@@ -212,7 +214,6 @@ defmodule Open890Web.Live.Radio do
     {:noreply, socket}
   end
 
-
   def handle_event("window_keydown", %{"key" => key} = params, socket) do
     Logger.debug("window_keydown: #{inspect(params)}")
 
@@ -225,8 +226,8 @@ defmodule Open890Web.Live.Radio do
       "[" ->
         conn |> ConnectionCommands.freq_change(:down)
 
-      _ -> :ok
-
+      _ ->
+        :ok
     end
 
     {:noreply, socket}
@@ -252,7 +253,8 @@ defmodule Open890Web.Live.Radio do
       "s" ->
         conn |> ConnectionCommands.band_scope_shift()
 
-      _ -> :ok
+      _ ->
+        :ok
     end
 
     {:noreply, socket}
@@ -341,25 +343,27 @@ defmodule Open890Web.Live.Radio do
     is_up = params["dir"] == "up"
 
     if params["shift"] do
-          # adjust shift
-      new_passband_id = if is_up do
-        hi_shift_passband_id + 1
-      else
-        hi_shift_passband_id - 1
-      end
-      |> to_string()
-      |> String.pad_leading(4, "0")
+      # adjust shift
+      new_passband_id =
+        if is_up do
+          hi_shift_passband_id + 1
+        else
+          hi_shift_passband_id - 1
+        end
+        |> to_string()
+        |> String.pad_leading(4, "0")
 
       connection |> RadioConnection.cmd("SH#{new_passband_id}")
     else
       # width
-      new_passband_id = if is_up do
-        lo_width_passband_id + 1
-      else
-        lo_width_passband_id - 1
-      end
-      |> to_string()
-      |> String.pad_leading(3, "0")
+      new_passband_id =
+        if is_up do
+          lo_width_passband_id + 1
+        else
+          lo_width_passband_id - 1
+        end
+        |> to_string()
+        |> String.pad_leading(3, "0")
 
       connection |> RadioConnection.cmd("SL#{new_passband_id}")
     end

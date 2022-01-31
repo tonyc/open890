@@ -74,6 +74,7 @@ defmodule Open890.RadioConnection do
     |> case do
       {:ok, pid} ->
         pid |> GenServer.call(:get_radio_state)
+
       _ ->
         Logger.warn("Could not find pid for connection: #{connection.id}")
         {:error, :not_found}
@@ -93,8 +94,9 @@ defmodule Open890.RadioConnection do
         user_is_admin: params["user_is_admin"],
         auto_start: params["auto_start"],
         cloudlog_enabled: params["cloudlog_enabled"],
-        cloudlog_url: params["cloudlog_url"] |> to_string() |> String.trim() |> String.trim_trailing("/"),
-        cloudlog_api_key: params["cloudlog_api_key"] |> to_string() |> String.trim(),
+        cloudlog_url:
+          params["cloudlog_url"] |> to_string() |> String.trim() |> String.trim_trailing("/"),
+        cloudlog_api_key: params["cloudlog_api_key"] |> to_string() |> String.trim()
       })
 
     new_connection |> repo().update()
@@ -147,7 +149,8 @@ defmodule Open890.RadioConnection do
           {:error, {:already_started, _pid}} ->
             {:error, :already_started}
 
-          other -> other
+          other ->
+            other
         end
 
       _ ->
@@ -202,6 +205,7 @@ defmodule Open890.RadioConnection do
     |> case do
       {:ok, pid} ->
         pid |> GenServer.cast({:update, connection.id, radio_state})
+
       _ ->
         Logger.warn("update_cloudlog: no PID found for connection:#{connection.id}")
     end
@@ -253,11 +257,15 @@ defmodule Open890.RadioConnection do
   end
 
   def broadcast_audio_scope(%__MODULE__{id: connection_id}, audio_scope_data) do
-    Open890Web.Endpoint.broadcast("radio:audio_scope:#{connection_id}", "scope_data", %{payload: audio_scope_data})
+    Open890Web.Endpoint.broadcast("radio:audio_scope:#{connection_id}", "scope_data", %{
+      payload: audio_scope_data
+    })
   end
 
   def broadcast_radio_state(%__MODULE__{id: connection_id}, %RadioState{} = radio_state) do
-    Open890Web.Endpoint.broadcast("radio:state:#{connection_id}", "radio_state_data", %{msg: radio_state})
+    Open890Web.Endpoint.broadcast("radio:state:#{connection_id}", "radio_state_data", %{
+      msg: radio_state
+    })
   end
 
   def broadcast_band_scope_cleared(%__MODULE__{id: connection_id}) do

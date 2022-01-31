@@ -38,6 +38,7 @@ defmodule Open890Web.RadioViewHelpers do
   end
 
   def format_rit_xit(nil), do: "0"
+
   def format_rit_xit(val) when is_integer(val) do
     is_negative = val < 0
 
@@ -47,7 +48,6 @@ defmodule Open890Web.RadioViewHelpers do
     |> to_string()
     |> String.pad_trailing(padding, "0")
   end
-
 
   def s_meter_value_to_s_units(val) when is_integer(val) do
     cond do
@@ -188,14 +188,14 @@ defmodule Open890Web.RadioViewHelpers do
     end
   end
 
-
   def vfo_display_frequency(freq, %TransverterState{} = state) do
     state
     |> TransverterState.apply_offset(freq)
     |> format_raw_frequency()
   end
 
-  def str_if(condition, true_str, false_str \\ "") when is_boolean(condition) and is_binary(true_str) and is_binary(false_str) do
+  def str_if(condition, true_str, false_str \\ "")
+      when is_boolean(condition) and is_binary(true_str) and is_binary(false_str) do
     if condition do
       true_str
     else
@@ -256,11 +256,15 @@ defmodule Open890Web.RadioViewHelpers do
     case connection_state do
       :up ->
         ~e{<i class="linkify icon"></i>}
+
       :stopped ->
         ~e{<i class="unlink icon"></i>}
+
       {:down, _} ->
         ~e{}
-      _ -> ""
+
+      _ ->
+        ""
     end
   end
 
@@ -277,5 +281,4 @@ defmodule Open890Web.RadioViewHelpers do
       other -> other
     end
   end
-
 end

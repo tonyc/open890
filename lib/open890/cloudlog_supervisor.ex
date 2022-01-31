@@ -18,5 +18,4 @@ defmodule Open890.CloudlogSupervisor do
   def init(_init_arg) do
     DynamicSupervisor.init(strategy: :one_for_one)
   end
-
 end

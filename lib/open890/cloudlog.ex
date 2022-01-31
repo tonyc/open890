@@ -27,7 +27,7 @@ defmodule Open890.Cloudlog do
   end
 
   # public api
-  def update(%RadioConnection {} = radio_connection, %RadioState{} = radio_state) do
+  def update(%RadioConnection{} = radio_connection, %RadioState{} = radio_state) do
     radio_connection
     |> Map.get(:cloudlog_enabled, false)
     |> case do
@@ -37,8 +37,11 @@ defmodule Open890.Cloudlog do
         |> case do
           {:ok, pid} ->
             pid |> GenServer.cast({:update, radio_connection.id, radio_state})
+
           _ ->
-            Logger.warn("Cloudlog is enabled, but could not find process for connection:#{radio_connection.id}")
+            Logger.warn(
+              "Cloudlog is enabled, but could not find process for connection:#{radio_connection.id}"
+            )
         end
 
       _ ->
@@ -52,18 +55,22 @@ defmodule Open890.Cloudlog do
     case state.timer do
       nil ->
         timer = Process.send_after(self(), {:timer, radio_connection_id}, @timeout_ms)
-        state = state
-                |> Map.put(:timer, timer)
-                |> Map.put(:radio_state, radio_state)
+
+        state =
+          state
+          |> Map.put(:timer, timer)
+          |> Map.put(:radio_state, radio_state)
 
         {:noreply, state}
 
       timer ->
         Process.cancel_timer(timer)
         timer = Process.send_after(self(), {:timer, radio_connection_id}, @timeout_ms)
-        state = state
-                |> Map.put(:timer, timer)
-                |> Map.put(:radio_state, radio_state)
+
+        state =
+          state
+          |> Map.put(:timer, timer)
+          |> Map.put(:radio_state, radio_state)
 
         {:noreply, state}
     end
@@ -82,8 +89,9 @@ defmodule Open890.Cloudlog do
           frequency = radio_state |> RadioState.active_frequency()
           Logger.info("Pinging cloudlog: #{inspect(frequency)}, #{inspect(mode)}")
 
-          payload = payload(radio_connection, frequency, mode)
-          |> Poison.encode!()
+          payload =
+            payload(radio_connection, frequency, mode)
+            |> Poison.encode!()
 
           url = radio_api_url(radio_connection)
           headers = ["Content-Type": "application/json"]
@@ -95,7 +103,10 @@ defmodule Open890.Cloudlog do
               Logger.debug("Cloudlog response: #{inspect(response)}")
 
             {:ok, %HTTPoison.Response{body: body, status_code: status_code}} ->
-              Logger.warn("Received unexpected HTTP status: #{status_code} from Cloudlog, response body: #{body}")
+              Logger.warn(
+                "Received unexpected HTTP status: #{status_code} from Cloudlog, response body: #{body}"
+              )
+
             other ->
               Logger.warn("Unexpected response from cloudlog: #{inspect(other)} ")
           end
@@ -139,5 +150,4 @@ defmodule Open890.Cloudlog do
   def format_timestamp(time) do
     time |> Timex.format!("%Y/%m/%d %H:%M:%S", :strftime)
   end
-
 end

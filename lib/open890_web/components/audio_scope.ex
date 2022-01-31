@@ -76,18 +76,22 @@ defmodule Open890Web.Components.AudioScope do
     "translate(0 0)"
   end
 
-  def notch_transform(mode, filter_state, %NotchState{frequency: frequency}) when mode in [:cw, :cw_r] do
-    x_position = cond do
-      FilterState.width(filter_state) < 700 ->
-        cw_notch_transform_with_width(:narrow, frequency)
-      true ->
-        cw_notch_transform_with_width(:wide, frequency)
-    end
+  def notch_transform(mode, filter_state, %NotchState{frequency: frequency})
+      when mode in [:cw, :cw_r] do
+    x_position =
+      cond do
+        FilterState.width(filter_state) < 700 ->
+          cw_notch_transform_with_width(:narrow, frequency)
+
+        true ->
+          cw_notch_transform_with_width(:wide, frequency)
+      end
 
     "translate(#{x_position} 0)"
   end
 
-  def notch_transform(mode, _filter_state, %NotchState{frequency: _frequency}) when mode in [:usb, :lsb, :usb_d, :lsb_d] do
+  def notch_transform(mode, _filter_state, %NotchState{frequency: _frequency})
+      when mode in [:usb, :lsb, :usb_d, :lsb_d] do
     "translate(0, 0)"
   end
 
@@ -97,43 +101,48 @@ defmodule Open890Web.Components.AudioScope do
 
   def cw_notch_transform_with_width(:wide, frequency) do
     (frequency / 255)
-    |> Kernel.*(212) # scale to total percentage of scope width
-    |> Kernel./(3)   # middle 1/3 of the screen - there are six segments in wide mode
-    |> Kernel.+(70)  # a magic number I don't know where it comes from, but seems to look right
+    # scale to total percentage of scope width
+    |> Kernel.*(212)
+    # middle 1/3 of the screen - there are six segments in wide mode
+    |> Kernel./(3)
+    # a magic number I don't know where it comes from, but seems to look right
+    |> Kernel.+(70)
   end
 
   def data_filter_points(%FilterState{} = filter_state) do
     filter_width = FilterState.width(filter_state)
     half_width = round(filter_width / 2)
 
-    scope_width = if filter_width <= 500 do
-      500
-    else
-      3000
-    end
+    scope_width =
+      if filter_width <= 500 do
+        500
+      else
+        3000
+      end
 
     center_f = div(scope_width, 2)
 
     low = center_f - half_width
     high = center_f + half_width
 
-    [low_val, high_val] = [low, high]
-                          |> Enum.map(fn x ->
-                            x |> project_to_audioscope_limits(scope_width)
-                          end)
+    [low_val, high_val] =
+      [low, high]
+      |> Enum.map(fn x ->
+        x |> project_to_audioscope_limits(scope_width)
+      end)
 
     audio_scope_filter_points(low_val, high_val)
-
   end
 
   def cw_filter_points(%FilterState{} = filter_state) do
     filter_width = FilterState.width(filter_state)
     half_width = round(filter_width / 2)
 
-    scope_width = cond do
-      filter_width < 700 -> 500
-      true -> 1500
-    end
+    scope_width =
+      cond do
+        filter_width < 700 -> 500
+        true -> 1500
+      end
 
     half_shift = filter_state.hi_shift |> div(2)
 
@@ -155,11 +164,12 @@ defmodule Open890Web.Components.AudioScope do
     half_width = div(filter_width, 2)
 
     # if shift + (width /2) >= 3000, the display changes to a 5k width
-    scope_width = if shift + half_width > 3000 do
-      5000
-    else
-      3000
-    end
+    scope_width =
+      if shift + half_width > 3000 do
+        5000
+      else
+        3000
+      end
 
     center_f = div(scope_width, 2)
 
@@ -168,10 +178,11 @@ defmodule Open890Web.Components.AudioScope do
     low = center_f - half_width - shift_delta
     high = center_f + half_width - shift_delta
 
-    [low_val, high_val] = [low, high]
-                          |> Enum.map(fn x ->
-                            x |> project_to_audioscope_limits(scope_width)
-                          end)
+    [low_val, high_val] =
+      [low, high]
+      |> Enum.map(fn x ->
+        x |> project_to_audioscope_limits(scope_width)
+      end)
 
     audio_scope_filter_points(low_val, high_val)
   end
@@ -195,22 +206,34 @@ defmodule Open890Web.Components.AudioScope do
   end
 
   def audio_scope_filter_edges(mode, %FilterState{} = filter_state, ssb_filter_mode) do
-    points = case mode do
-      :am -> am_filter_points(filter_state)
-      :fm -> hi_lo_cut_filter_points(filter_state)
-      x when x in [:cw, :cw_r] -> cw_filter_points(filter_state)
-      x when x in [:fsk, :fsk_r, :psk, :psk_r] -> data_filter_points(filter_state)
-      x when x in [:usb, :usb_d, :lsb, :lsb_d] ->
-        if ssb_filter_mode == :hi_lo_cut do
-          hi_lo_cut_filter_points(filter_state)
-        else
-          shifted_ssb_filter_points(filter_state)
-        end
+    points =
+      case mode do
+        :am ->
+          am_filter_points(filter_state)
 
-      other ->
-        Logger.debug("Unimplemented case for audio_scope_filter_edges for mode #{inspect(other)}")
-        ""
-    end
+        :fm ->
+          hi_lo_cut_filter_points(filter_state)
+
+        x when x in [:cw, :cw_r] ->
+          cw_filter_points(filter_state)
+
+        x when x in [:fsk, :fsk_r, :psk, :psk_r] ->
+          data_filter_points(filter_state)
+
+        x when x in [:usb, :usb_d, :lsb, :lsb_d] ->
+          if ssb_filter_mode == :hi_lo_cut do
+            hi_lo_cut_filter_points(filter_state)
+          else
+            shifted_ssb_filter_points(filter_state)
+          end
+
+        other ->
+          Logger.debug(
+            "Unimplemented case for audio_scope_filter_edges for mode #{inspect(other)}"
+          )
+
+          ""
+      end
 
     ~e{
       <polyline id="audioScopeFilter" points="<%= points %>" />
@@ -245,30 +268,41 @@ defmodule Open890Web.Components.AudioScope do
 
   def filter_lo_width_label(mode, ssb_filter_mode) do
     case mode do
-      x when x in [:cw, :cw_r, :fsk, :fsk_r, :psk, :psk_r] -> "WIDTH"
-      x when x in [:am, :fm] -> "LC"
+      x when x in [:cw, :cw_r, :fsk, :fsk_r, :psk, :psk_r] ->
+        "WIDTH"
+
+      x when x in [:am, :fm] ->
+        "LC"
+
       x when x in [:usb, :usb_d, :lsb, :lsb_d] ->
         if ssb_filter_mode == :hi_lo_cut do
           "LC"
         else
           "WIDTH"
         end
-      _ -> ""
+
+      _ ->
+        ""
     end
   end
 
   def filter_hi_shift_label(mode, ssb_filter_mode) do
     case mode do
-      x when x in [:cw, :cw_r] -> "SHIFT"
-      x when x in [:am, :fm] -> "HC"
+      x when x in [:cw, :cw_r] ->
+        "SHIFT"
+
+      x when x in [:am, :fm] ->
+        "HC"
+
       x when x in [:usb, :usb_d, :lsb, :lsb_d] ->
         if ssb_filter_mode == :hi_lo_cut do
           "HC"
         else
           "SHIFT"
         end
-      _ -> ""
+
+      _ ->
+        ""
     end
   end
-
 end

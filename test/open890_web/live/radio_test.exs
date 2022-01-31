@@ -21,6 +21,7 @@ defmodule Open890Web.Live.RadioTest do
         "cloudlog_url" => nil,
         "cloudlog_api_key" => nil
       }
+
       {:ok, radio_connection} = RadioConnection.create(connection_params)
 
       {:ok, %{radio_connection: radio_connection}}
@@ -44,7 +45,10 @@ defmodule Open890Web.Live.RadioTest do
       {:ok, _view, _html} = live(conn, path)
     end
 
-    test "GET /connections/:id/audioscope works", %{radio_connection: radio_connection, conn: conn} do
+    test "GET /connections/:id/audioscope works", %{
+      radio_connection: radio_connection,
+      conn: conn
+    } do
       path = "/connections/#{radio_connection.id}/audioscope"
 
       conn = get(conn, path)
@@ -62,5 +66,4 @@ defmodule Open890Web.Live.RadioTest do
       {:ok, _view, _html} = live(conn, path)
     end
   end
-
 end

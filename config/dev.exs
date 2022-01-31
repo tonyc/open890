@@ -28,7 +28,7 @@ config :open890, Open890Web.Endpoint,
       cd: Path.expand("../assets", __DIR__),
       env: [{"NODE_ENV", "development"}]
     ]
-    #sass: {DartSass, :install_and_run, [:default, ~w(--embed-source-map --source-map-urls=absolute --watch)]}
+    # sass: {DartSass, :install_and_run, [:default, ~w(--embed-source-map --source-map-urls=absolute --watch)]}
   ]
 
 # ## SSL Support
@@ -63,8 +63,8 @@ config :open890, Open890Web.Endpoint,
       ~r"priv/gettext/.*(po)$",
       ~r"lib/open890_web/.*(ex)$",
       ~r"lib/open890/.*(ex)$"
-      #~r"lib/open890_web/(live|views)/.*(ex)$",
-      #~r"lib/open890_web/templates/.*(eex)$"
+      # ~r"lib/open890_web/(live|views)/.*(ex)$",
+      # ~r"lib/open890_web/templates/.*(eex)$"
     ]
   ]
 
