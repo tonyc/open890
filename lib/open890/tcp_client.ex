@@ -274,7 +274,7 @@ defmodule Open890.TCPClient do
           Logger.info("[DN] #{inspect(msg)}")
         end
 
-        radio_state = RadioState.dispatch(msg, radio_state)
+        radio_state = radio_state |> RadioState.dispatch(msg)
 
         if ["FA", "FB", "OM0", "FT"] |> Enum.any?(&String.starts_with?(msg, &1)) do
           Open890.Cloudlog.update(connection, radio_state)
