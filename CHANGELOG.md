@@ -1,5 +1,8 @@
 # open890 Changelog
 
+## 0.8.0 - Unreleased
+* Added "power" field to Cloudlog integration
+
 ## 0.7.0 - 2022-01-22
 * Added audio streaming from the radio. Click the "VOIP Audio" button at the top once the connection is started.
 * Added Cloudlog integration - syncs frequency/mode information to a Cloudlog instance.

@@ -90,7 +90,7 @@ defmodule Open890.Cloudlog do
           Logger.info("Pinging cloudlog: #{inspect(frequency)}, #{inspect(mode)}")
 
           payload =
-            payload(radio_connection, frequency, mode)
+            payload(radio_connection, %{frequency: frequency, mode: mode, power: radio_state.power_level})
             |> Poison.encode!()
 
           url = radio_api_url(radio_connection)
@@ -123,11 +123,12 @@ defmodule Open890.Cloudlog do
     "#{radio_connection.cloudlog_url}/index.php/api/radio"
   end
 
-  def payload(%RadioConnection{} = radio_connection, frequency, mode) do
+  def payload(%RadioConnection{} = radio_connection, %{frequency: frequency, mode: mode, power: power}) do
     %{
       key: radio_connection.cloudlog_api_key,
       radio: "#{radio_connection.name} via open890",
       frequency: frequency,
+      power: power |> to_string(),
       mode: map_mode(mode),
       timestamp: Timex.now() |> format_timestamp()
     }
