@@ -23,14 +23,14 @@
 
 <div class="two fields">
   <div class="field">
-    <%= label @f, :user_name, "User" %>
+    <%= label @f, :user_name, "KNS User" %>
     <div class="ui huge input">
       <%= text_input @f, :user_name, value: @radio_connection.user_name, required: true %>
     </div>
   </div>
 
   <div class="field">
-    <%= label @f, :user_pass, "Password" %>
+    <%= label @f, :user_pass, "KNS Password" %>
     <div class="ui huge input">
       <%= password_input @f, :password, value: @radio_connection.password, required: true %>
     </div>

@@ -1,17 +1,17 @@
 <div id="emptyState" class="ui centered middle aligned grid">
   <div class="row">
-    <div class="six wide center aligned column">
+    <div class="six wide left aligned column">
       <h1 class="appear">Welcome to open890!</h1>
     </div>
   </div>
   <div class="ui row">
-    <div class="six wide center aligned column">
+    <div class="six wide left aligned column">
       <div class="appear">
         <p>
-          It looks like you don't have any radio connections yet.
+          It looks like you don't have any radio connections yet.  Let's get started by setting one up!
         </p>
         <p>
-          Let's get started by setting one up!
+          Enter a connection name, the IP address of your radio, and the information that has been entered into the KNS menu (MENU ▶ KNS).
         </p>
       </div>
     </div>
