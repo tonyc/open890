@@ -27,7 +27,7 @@ defmodule Open890Web.Components.AudioScope do
             <line id="audioScopeTuneIndicator" class="carrier rx" x1="106" y1="5" x2="106" y2="60" />
 
             <%= if @notch_state.enabled do %>
-              <.notch_indicator notch_state={@notch_state} active_mode={@active_mode} filter_state={@filter_state} />
+              <.notch_indicator notch_state={@notch_state} active_mode={@active_mode} filter_state={@filter_state} filter_mode={@filter_mode} />
             <% end %>
           </g>
 
@@ -66,17 +66,17 @@ defmodule Open890Web.Components.AudioScope do
 
   def notch_indicator(assigns) do
     ~H"""
-      <g id="notchIndicatorGroup" transform={notch_transform(@active_mode, @filter_state, @notch_state)}>
+      <g id="notchIndicatorGroup" transform={notch_transform(@active_mode, @filter_mode, @filter_state, @notch_state)}>
         <line id="notchLocationIndicator" class="" x1="0" y1="5" x2="0" y2="45" />
       </g>
     """
   end
 
-  def notch_transform(_mode, _filter_state, %NotchState{frequency: nil}) do
+  def notch_transform(_mode, _filter_mode, _filter_state, %NotchState{frequency: nil}) do
     "translate(0 0)"
   end
 
-  def notch_transform(mode, filter_state, %NotchState{frequency: frequency})
+  def notch_transform(mode, _filter_mode, filter_state, %NotchState{frequency: frequency})
       when mode in [:cw, :cw_r] do
     x_position =
       cond do
@@ -90,9 +90,71 @@ defmodule Open890Web.Components.AudioScope do
     "translate(#{x_position} 0)"
   end
 
-  def notch_transform(mode, _filter_state, %NotchState{frequency: _frequency})
+  def notch_transform(mode, filter_mode, %FilterState{} = filter_state, %NotchState{
+        frequency: frequency
+      })
       when mode in [:usb, :lsb, :usb_d, :lsb_d] do
+    # This changes depending on SSB filter hi/lo mode config
+    #
+    # If SSB is set to hi/low cut, then the display changes to "wide" when HC > 3000
+    # If the SSB is set to shift/width, then?
+    #
+    # * TBD
+
+    x_position =
+      case filter_mode do
+        :shift_width ->
+          # filter_width = FilterState.width(filter_state)
+          # half_width = div(filter_width, 2)
+
+          half_width =
+            filter_state
+            |> FilterState.width()
+            |> div(2)
+
+          # if shift + (width /2) > 3000, the display changes to a 5k width
+          if filter_state.hi_shift + half_width > 3000 do
+            ssb_notch_transform_with_width(:wide, frequency)
+          else
+            ssb_notch_transform_with_width(:narrow, frequency)
+          end
+
+        :hi_lo_cut ->
+          cond do
+            FilterState.hi_cut(filter_state) < 3400 ->
+              ssb_notch_transform_with_width(:narrow, frequency)
+
+            true ->
+              ssb_notch_transform_with_width(:wide, frequency)
+          end
+
+        _other ->
+          0
+      end
+
+    "translate(#{x_position}, 0)"
+  end
+
+  def notch_transform(
+        _mode,
+        _filter_mode,
+        %FilterState{} = _filter_state,
+        %NotchState{} = _notch_state
+      ) do
     "translate(0, 0)"
+  end
+
+  def ssb_notch_transform_with_width(:narrow, frequency) do
+    frequency / 255 * 212
+  end
+
+  def ssb_notch_transform_with_width(:wide, frequency) do
+    (frequency / 255)
+    # scale to total percentage of scope width
+    |> Kernel.*(212)
+    # middle 1/3 of the screen - there are six segments in wide mode
+    |> Kernel.*(0.6)
+    |> IO.inspect(label: "x position")
   end
 
   def cw_notch_transform_with_width(:narrow, frequency) do

@@ -13,4 +13,3 @@ if config_env() == :prod do
     server: true,
     secret_key_base: secret_key_base
 end
-

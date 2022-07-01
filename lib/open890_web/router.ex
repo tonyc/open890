@@ -67,7 +67,10 @@ defmodule Open890Web.Router do
         password = auth_config["password"]
 
         if username == "" || password == "" do
-          Logger.warn("HTTP basic authentication IS NOT enabled. You enabled it, but supplied an empty username or password. Set these to non-empty strings to enable basic auth.")
+          Logger.warn(
+            "HTTP basic authentication IS NOT enabled. You enabled it, but supplied an empty username or password. Set these to non-empty strings to enable basic auth."
+          )
+
           conn
         else
           Logger.info("HTTP basic auth plug")
@@ -80,6 +83,5 @@ defmodule Open890Web.Router do
     else
       _ -> conn
     end
-
   end
 end
