@@ -60,7 +60,7 @@ defmodule Open890Web.Router do
   defp http_basic_auth(conn, _opts) do
     with {:ok, file} <- File.read("config/config.toml"),
          {:ok, config} <- Toml.decode(file) do
-      auth_config = config |> get_in(["http", "server", "basic_auth"]) || []
+      auth_config = config |> get_in(["http", "server", "basic_auth"]) || %{}
 
       if auth_config |> Map.get("enabled", false) do
         username = auth_config["username"]
