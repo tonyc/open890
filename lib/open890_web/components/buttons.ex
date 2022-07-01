@@ -4,6 +4,17 @@ defmodule Open890Web.Components.Buttons do
 
   import Open890Web.RadioViewHelpers
 
+  def ant_1_2_button(assigns) do
+    ~H"""
+
+    """
+  end
+
+  def rx_ant_button(assigns) do
+    ~H"""
+    """
+  end
+
   def agc_button(assigns) do
     values = %{slow: "GC3", med: "GC1", fast: "GC2"}
 

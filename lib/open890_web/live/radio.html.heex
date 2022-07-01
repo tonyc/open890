@@ -356,6 +356,15 @@
           <div class={tab_panel_classes("txrx", @active_tab)}>
             <div class="ui two column grid row">
               <div class="column">
+                <.ant_1_2_button value={@radio_state.antenna_state} fluid />
+              </div>
+              <div class="column">
+                <.ant_1_2_button value={@radio_state.antenna_state} fluid />
+              </div>
+            </div>
+
+            <div class="ui two column grid row">
+              <div class="column">
                 <.pre_button value={@radio_state.rf_pre} fluid />
               </div>
 
