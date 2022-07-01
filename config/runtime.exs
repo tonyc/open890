@@ -1,5 +1,4 @@
 import Config
-require Logger
 
 if config_env() == :prod do
   # just always make a new secret_key_base
@@ -13,20 +12,5 @@ if config_env() == :prod do
     url: [host: "localhost", port: 4000],
     server: true,
     secret_key_base: secret_key_base
-end
-
-# Read HTTP basic auth config
-with {:ok, file} <- File.read("config/config.toml"),
-     {:ok, config} <- Toml.decode(file) do
-  auth_config = config |> get_in(["http", "server", "auth"]) || []
-
-  config :open890, Open890Web, auth: [
-    enabled: auth_config["enabled"],
-    username: auth_config["http_basic_username"],
-    password: auth_config["http_basic_password"]
-  ]
-else
-  _reason ->
-    Logger.info("Could not read config/config.toml for http basic auth config")
 end
 
