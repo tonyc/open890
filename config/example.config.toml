@@ -6,6 +6,23 @@
 # required - don't change this unless instructed otherwise!
 version = "1.0.0"
 
+# Enable a username/password to access the web server.
+# This is completely separate from any KNS usernam you may set up
+# for a connection to a radio.
+#
+# Note that this does NOT mean the connection is encrypted in any way,
+# and only serves as a basic means to secure access to open890/your radio.
+#
+# The most secure option is to run open890 behind a VPN if accessing
+# it remotely.
+#
+# DO NOT ENABLE THIS WITHOUT CHANGING THE DEFAULT USERNAME AND PASSWORD!
+[http.server.auth]
+enabled = false
+http_basic_username = "CHANGE_ME_TO_SOMETHING_SECURE"
+http_basic_password = "ALSO_CHANGE_ME_TO_SOMETHING_SECURE"
+
+
 # Define your macros here.
 # Each macro will be displayed in order as a clickable button in the UI.
 #

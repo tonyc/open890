@@ -14,8 +14,12 @@ defmodule Open890Web.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :auth_required do
+    plug :http_basic_auth
+  end
+
   scope "/", Open890Web do
-    pipe_through :browser
+    pipe_through [:browser, :auth_required]
 
     get "/", PageController, :index
 
@@ -49,6 +53,19 @@ defmodule Open890Web.Router do
     scope "/" do
       pipe_through :browser
       live_dashboard "/dashboard", metrics: Open890Web.Telemetry
+    end
+  end
+
+  defp http_basic_auth(conn, _opts) do
+    auth_config = Application.get_env(:open890, Open890Web)[:auth] || %{}
+
+    if auth_config |> Keyword.get(:enabled, false) do
+      username = auth_config[:username]
+      password = auth_config[:password]
+
+      conn |> Plug.BasicAuth.basic_auth(username: username, password: password)
+    else
+      conn
     end
   end
 end
