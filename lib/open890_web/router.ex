@@ -60,18 +60,14 @@ defmodule Open890Web.Router do
   defp http_basic_auth(conn, _opts) do
     with {:ok, file} <- File.read("config/config.toml"),
          {:ok, config} <- Toml.decode(file) do
-      auth_config = config |> get_in(["http", "server", "auth"]) || []
-
-      auth_config |> IO.inspect(label: "auth config in router")
+      auth_config = config |> get_in(["http", "server", "basic_auth"]) || []
 
       if auth_config |> Map.get("enabled", false) do
-        username = auth_config["http_basic_username"]
-        password = auth_config["http_basic_password"]
-
-        [username, password] |> IO.inspect(label: "user/pass")
+        username = auth_config["username"]
+        password = auth_config["password"]
 
         if username == "" || password == "" do
-          Logger.warn("HTTP basic authentication is enabled, but you supplied a blank username or password. Please set these to non-empty strings to enable auth")
+          Logger.warn("HTTP basic authentication IS NOT enabled. You enabled it, but supplied an empty username or password. Set these to non-empty strings to enable basic auth.")
           conn
         else
           Logger.info("HTTP basic auth plug")
@@ -82,9 +78,7 @@ defmodule Open890Web.Router do
         conn
       end
     else
-      _other ->
-        Logger.info("Could not read config/config.toml for http basic auth config. This is not an error")
-        conn
+      _ -> conn
     end
 
   end
