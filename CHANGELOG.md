@@ -2,6 +2,8 @@
 
 ## 0.8.0 - Unreleased
 * Added "power" field to Cloudlog integration
+* Added HTTP basic authentication. See config/example.config.toml for more information.
+* Slightly reworked the "welcome" screen wording to describe where to set up KNS users.
 
 ## 0.7.0 - 2022-01-22
 * Added audio streaming from the radio. Click the "VOIP Audio" button at the top once the connection is started.
