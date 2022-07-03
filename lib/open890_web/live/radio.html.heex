@@ -354,10 +354,12 @@
       <div class="row">
         <div class="column">
           <div class={tab_panel_classes("ant", @active_tab)}>
-            <div class="ui two column grid row">
+            <div class="ui one column grid row">
               <div class="column">
                 <.ant_1_2_button value={@radio_state.antenna_state} fluid />
               </div>
+            </div>
+            <div class="ui two column grid row">
               <div class="column">
                 <.rx_ant_button value={@radio_state.antenna_state} fluid />
               </div>
