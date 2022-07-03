@@ -1,6 +1,7 @@
 # open890 Changelog
 
 ## 0.8.0 - Unreleased
+* Finished implementation of notch indicator in SSB mode.
 * Added "power" field to Cloudlog integration
 * Added HTTP basic authentication. See config/example.config.toml for more information.
 * Slightly reworked the "welcome" screen wording to describe where to set up KNS users.
