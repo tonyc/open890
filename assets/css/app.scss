@@ -292,10 +292,19 @@ nav {
 
   }
 
-  #notchLocationIndicator {
-    stroke-width: 1.1;
-    stroke: rgba(192, 207, 204, 1.0);
+  #notchIndicatorGroup {
+    stroke: rgba(128, 128, 128, 1.0);
+    stroke-width: 1px;
+
+    #notchTriangle {
+      fill: black;
+    }
+
+    #notchTriangleFill {
+      stroke: black;
+    }
   }
+
 
   #AudioScopeCanvas {
     border-bottom: 2px solid $kenwood-grey;

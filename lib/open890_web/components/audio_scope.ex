@@ -65,9 +65,14 @@ defmodule Open890Web.Components.AudioScope do
   end
 
   def notch_indicator(assigns) do
+    triangle_points = "-5,5 0,18 5,5"
+    # triangle_points = "0,#{tri_ofs+13} #{-tri_ofs},5 #{tri_ofs},5"
+
     ~H"""
       <g id="notchIndicatorGroup" transform={notch_transform(@active_mode, @filter_mode, @filter_state, @notch_state)}>
         <line id="notchLocationIndicator" class="" x1="0" y1="5" x2="0" y2="45" />
+        <polyline id="notchTriangle" points={triangle_points} />
+        <line id="notchTriangleFill" x1="-4" y1="5" x2="4" y2="5" />
       </g>
     """
   end
