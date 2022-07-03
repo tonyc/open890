@@ -94,19 +94,10 @@ defmodule Open890Web.Components.AudioScope do
         frequency: frequency
       })
       when mode in [:usb, :lsb, :usb_d, :lsb_d] do
-    # This changes depending on SSB filter hi/lo mode config
-    #
-    # If SSB is set to hi/low cut, then the display changes to "wide" when HC > 3000
-    # If the SSB is set to shift/width, then?
-    #
-    # * TBD
 
     x_position =
       case filter_mode do
         :shift_width ->
-          # filter_width = FilterState.width(filter_state)
-          # half_width = div(filter_width, 2)
-
           half_width =
             filter_state
             |> FilterState.width()
