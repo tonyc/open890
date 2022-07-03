@@ -33,7 +33,6 @@ let Hooks = {
   },
   Tabs: {
     mounted() {
-      console.log("tabs mounted")
       $('#ButtonTabs .item').tab();
     }
 

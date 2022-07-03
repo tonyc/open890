@@ -29,6 +29,7 @@ defmodule Open890.RadioState do
             band_scope_att: nil,
             band_scope_avg: nil,
             band_scope_edges: nil,
+            band_scope_expand: false,
             band_scope_fixed_span: nil,
             band_scope_mode: nil,
             band_scope_span: nil,
@@ -75,6 +76,10 @@ defmodule Open890.RadioState do
             rit_enabled: false,
             xit_enabled: false,
             rit_xit_offset: 0
+
+  def dispatch(%__MODULE__{} = state, "BSO" <> _ = msg) do
+    %{state | band_scope_expand: Extract.boolean(msg, prefix: "BSO") }
+  end
 
   def dispatch(%__MODULE__{} = state, "FS00" <> _ = _msg) do
     %{state | fine: false}

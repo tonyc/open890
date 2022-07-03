@@ -461,6 +461,12 @@
             </div>
 
             <div class="column">
+              <%= if @radio_state.band_scope_mode in [:center, :auto_scroll] do %>
+                <.band_scope_expand_button band_scope_expand={@radio_state.band_scope_expand} band_scope_mode={@radio_state.band_scope_mode} band_scope_edges={@radio_state.band_scope_edges} fluid />
+              <% end %>
+            </div>
+
+            <div class="column">
               <.waterfall_speed_control value={@waterfall_draw_interval} fluid />
             </div>
 

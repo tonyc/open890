@@ -489,6 +489,25 @@ defmodule Open890Web.Components.Buttons do
     """
   end
 
+  def band_scope_expand_button(assigns) do
+    values = %{
+      true => "BSO0",
+      false => "BSO1"
+    }
+
+    label = if assigns.band_scope_expand do
+      "ON"
+    else
+      "OFF"
+    end
+
+    ~H"""
+      <.cycle_button_2 value={@band_scope_expand} values={values} fluid>
+        Expand: <%= label %>
+      </.cycle_button_2>
+    """
+  end
+
   def waterfall_speed_control(assigns) do
     ~H"""
       <div class="ui small black fluid button">

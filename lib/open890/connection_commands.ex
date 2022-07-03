@@ -15,6 +15,7 @@ defmodule Open890.ConnectionCommands do
     |> get_filter_state()
     |> get_fine()
     |> get_roofing_filter_info()
+    |> get_band_scope_expand()
     |> get_band_scope_mode()
     |> get_band_scope_span()
     # This needs to happen in this spot otherwise stuff breaks
@@ -245,6 +246,10 @@ defmodule Open890.ConnectionCommands do
 
   def get_band_scope_mode(conn) do
     conn |> cmd("BS3")
+  end
+
+  def get_band_scope_expand(conn) do
+    conn |> cmd("BSO")
   end
 
   def get_s_meter(conn) do
