@@ -3,15 +3,89 @@ defmodule Open890Web.Components.Buttons do
   require Logger
 
   import Open890Web.RadioViewHelpers
+  alias Open890.{AntennaState, TransverterState}
 
   def ant_1_2_button(assigns) do
-    ~H"""
+    %AntennaState{} = ant_state = assigns.value
 
+    label = case ant_state.active_ant do
+      :ant1 -> "ANT 1"
+      _ -> "ANT 2"
+    end
+
+    cmd = ant_state
+    |> AntennaState.toggle_ant()
+    |> AntennaState.to_command()
+
+    ~H"""
+      <.cmd_button_2 cmd={cmd} fluid={assigns[:fluid]}><%= label %></.cmd_button_2>
     """
   end
 
   def rx_ant_button(assigns) do
+    %AntennaState{} = ant_state = assigns.value
+
+    enabled = if ant_state.rx_ant_enabled do
+      "ON"
+    else
+      "OFF"
+    end
+
+    cmd = ant_state
+    |> AntennaState.toggle_rx_ant()
+    |> AntennaState.to_command()
+
     ~H"""
+      <.cmd_button_2 cmd={cmd} fluid={assigns[:fluid]}>RX ANT <%= enabled %></.cmd_button_2>
+    """
+  end
+
+  def ant_out_button(assigns) do
+    %AntennaState{} = ant_state = assigns.value
+
+    enabled = if ant_state.ant_out_enabled do
+      "ON"
+    else
+      "OFF"
+    end
+
+    cmd = ant_state
+    |> AntennaState.toggle_ant_out()
+    |> AntennaState.to_command()
+    ~H"""
+      <.cmd_button_2 cmd={cmd} fluid={assigns[:fluid]}>ANT OUT <%= enabled %></.cmd_button_2>
+    """
+  end
+
+  def drv_button(assigns) do
+    %AntennaState{} = ant_state = assigns.value
+
+    enabled = if ant_state.drv_enabled do
+      "ON"
+    else
+      "OFF"
+    end
+
+    cmd = ant_state
+    |> AntennaState.toggle_drv()
+    |> AntennaState.to_command()
+
+    ~H"""
+      <.cmd_button_2 cmd={cmd} fluid={assigns[:fluid]}>DRV <%= enabled %></.cmd_button_2>
+    """
+  end
+
+  def xvtr_button(assigns) do
+    %TransverterState{} = xvtr_state = assigns.value
+
+    [next_command, label] = if xvtr_state.enabled do
+      ["XV0", "ON"]
+    else
+      ["XV1", "OFF"]
+    end
+
+    ~H"""
+      <.cmd_button_2 cmd={next_command} fluid={assigns[:fluid]}>XVTR <%= label %></.cmd_button_2>
     """
   end
 
