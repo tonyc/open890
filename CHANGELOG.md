@@ -1,6 +1,7 @@
 # open890 Changelog
 
 ## 0.8.0 - Unreleased
+* Added Antenna controls side tab: ANT1/2, RX ANT, ANT OUT, DRV, XVTR controls
 * Finished implementation of notch indicator in SSB mode.
 * Added "power" field to Cloudlog integration
 * Added HTTP basic authentication. See config/example.config.toml for more information.
