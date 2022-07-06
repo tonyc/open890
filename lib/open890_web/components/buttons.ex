@@ -244,6 +244,24 @@ defmodule Open890Web.Components.Buttons do
     end
   end
 
+  def ssb_shift_width_button(assigns) do
+    ~H"""
+      <%= if @active_mode in [:usb, :lsb] do %>
+        <%= if @ssb_filter_mode == :shift_width do %>
+          <.cmd_button_2 cmd="EX00611 000">SHIFT/WIDTH</.cmd_button_2>
+        <% else %>
+          <.cmd_button_2 cmd="EX00611 001">HI/LO CUT</.cmd_button_2>
+        <% end %>
+      <% else %>
+        <%= if @ssb_data_filter_mode == :shift_width do %>
+          <.cmd_button_2 cmd="EX00612 000">SHIFT/WIDTH</.cmd_button_2>
+        <% else %>
+          <.cmd_button_2 cmd="EX00612 001">HI/LO CUT</.cmd_button_2>
+        <% end %>
+      <% end %>
+    """
+  end
+
   def vfo_switch_button(assigns) do
     values = %{:a => "FR1", :b => "FR0"}
 

@@ -308,6 +308,13 @@
 
       <div class="row">
         <div class="column">
+          <%= if @radio_state.active_mode in [:usb, :lsb, :usb_d, :lsb_d] do %>
+            <.ssb_shift_width_button
+              active_mode={@radio_state.active_mode}
+              ssb_filter_mode={@radio_state.ssb_filter_mode}
+              ssb_data_filter_mode={@radio_state.ssb_data_filter_mode} />
+          <% end %>
+
           <div class="ui mini black buttons" style="margin-right: 2rem;">
             <.filter_buttons />
           </div>
