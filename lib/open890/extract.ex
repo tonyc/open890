@@ -9,7 +9,7 @@ defmodule Open890.Extract do
     "2" => :auto_scroll
   }
 
-  @ssb_lo_cut_lookup {
+  @ssb_lo_cut_lookup [
     0,
     50,
     100,
@@ -32,9 +32,9 @@ defmodule Open890.Extract do
     1800,
     1900,
     2000
-  }
+  ]
 
-  @ssb_width_lookup {
+  @ssb_width_lookup [
     50,
     80,
     100,
@@ -71,11 +71,11 @@ defmodule Open890.Extract do
     2800,
     2900,
     3000
-  }
+  ]
 
-  @am_lo_cut_lookup {0, 100, 200, 300}
+  @am_lo_cut_lookup [0, 100, 200, 300]
 
-  @fm_lo_cut_lookup {
+  @fm_lo_cut_lookup [
     0,
     50,
     100,
@@ -88,9 +88,9 @@ defmodule Open890.Extract do
     800,
     900,
     1000
-  }
+  ]
 
-  @cw_width_lookup {
+  @cw_width_lookup [
     50,
     80,
     100,
@@ -110,11 +110,11 @@ defmodule Open890.Extract do
     1500,
     2000,
     2500
-  }
+  ]
 
-  @fsk_width_lookup {250, 300, 350, 400, 450, 500, 1000, 1500}
+  @fsk_width_lookup [250, 300, 350, 400, 450, 500, 1000, 1500]
 
-  @psk_width_lookup {
+  @psk_width_lookup [
     50,
     80,
     100,
@@ -142,9 +142,9 @@ defmodule Open890.Extract do
     2600,
     2800,
     3000
-  }
+  ]
 
-  @ssb_hi_cut_lookup {
+  @ssb_hi_cut_lookup [
     600,
     700,
     800,
@@ -173,9 +173,9 @@ defmodule Open890.Extract do
     3400,
     4000,
     5000
-  }
+  ]
 
-  @am_hi_cut_lookup {
+  @am_hi_cut_lookup [
     2000,
     2100,
     2200,
@@ -190,9 +190,9 @@ defmodule Open890.Extract do
     3500,
     4000,
     5000
-  }
+  ]
 
-  @fm_hi_cut_lookup {
+  @fm_hi_cut_lookup [
     1000,
     1100,
     1200,
@@ -217,7 +217,7 @@ defmodule Open890.Extract do
     3400,
     4000,
     5000
-  }
+  ]
 
   @operating_modes %{
     "0" => :unused,
@@ -492,13 +492,13 @@ defmodule Open890.Extract do
     end
   end
 
-  def get_am_lo_cut(passband_id), do: am_lo_cut_lookup() |> elem(passband_id)
-  def get_cw_width(passband_id), do: cw_width_lookup() |> elem(passband_id)
-  def get_fm_lo_cut(passband_id), do: fm_lo_cut_lookup() |> elem(passband_id)
-  def get_fsk_width(passband_id), do: fsk_width_lookup() |> elem(passband_id)
-  def get_psk_width(passband_id), do: psk_width_lookup() |> elem(passband_id)
-  def get_ssb_lo_cut(passband_id), do: ssb_lo_cut_lookup() |> elem(passband_id)
-  def get_ssb_width(passband_id), do: ssb_width_lookup() |> elem(passband_id)
+  def get_am_lo_cut(passband_id), do: am_lo_cut_lookup() |> Enum.at(passband_id)
+  def get_cw_width(passband_id), do: cw_width_lookup() |> Enum.at(passband_id)
+  def get_fm_lo_cut(passband_id), do: fm_lo_cut_lookup() |> Enum.at(passband_id)
+  def get_fsk_width(passband_id), do: fsk_width_lookup() |> Enum.at(passband_id)
+  def get_psk_width(passband_id), do: psk_width_lookup() |> Enum.at(passband_id)
+  def get_ssb_lo_cut(passband_id), do: ssb_lo_cut_lookup() |> Enum.at(passband_id)
+  def get_ssb_width(passband_id), do: ssb_width_lookup() |> Enum.at(passband_id)
 
   defp am_lo_cut_lookup, do: @am_lo_cut_lookup
   defp cw_width_lookup, do: @cw_width_lookup
@@ -541,9 +541,14 @@ defmodule Open890.Extract do
     end
   end
 
-  def get_am_hi_cut(passband_id), do: am_hi_cut_lookup() |> elem(passband_id)
-  def get_fm_hi_cut(passband_id), do: fm_hi_cut_lookup() |> elem(passband_id)
-  def get_ssb_hi_cut(passband_id), do: ssb_hi_cut_lookup() |> elem(passband_id)
+  def get_am_hi_cut(passband_id), do: am_hi_cut_lookup() |> Enum.at(passband_id)
+  def get_fm_hi_cut(passband_id), do: fm_hi_cut_lookup() |> Enum.at(passband_id)
+  def get_ssb_hi_cut(passband_id) do
+    case ssb_hi_cut_lookup() |> Enum.at(passband_id) do
+      nil -> 0
+      other -> other
+    end
+  end
 
   defp am_hi_cut_lookup, do: @am_hi_cut_lookup
   defp fm_hi_cut_lookup, do: @fm_hi_cut_lookup
