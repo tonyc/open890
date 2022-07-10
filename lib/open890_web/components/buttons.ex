@@ -245,20 +245,26 @@ defmodule Open890Web.Components.Buttons do
   end
 
   def ssb_shift_width_button(assigns) do
+    [label, cmd] = case assigns.active_mode do
+      ssb when ssb in [:usb, :lsb] ->
+        case assigns.ssb_filter_mode do
+          :shift_width ->
+            ["SHIFT/WIDTH", "EX00611 000"]
+          _ ->
+            ["HI/LO CUT", "EX00611 001"]
+        end
+
+      _other ->
+        case assigns.ssb_data_filter_mode do
+          :shift_width ->
+            ["SHIFT/WIDTH", "EX00612 000"]
+          _ ->
+            ["HI/LO CUT", "EX00612 001"]
+        end
+    end
+
     ~H"""
-      <%= if @active_mode in [:usb, :lsb] do %>
-        <%= if @ssb_filter_mode == :shift_width do %>
-          <.cmd_button_2 cmd="EX00611 000">SHIFT/WIDTH</.cmd_button_2>
-        <% else %>
-          <.cmd_button_2 cmd="EX00611 001">HI/LO CUT</.cmd_button_2>
-        <% end %>
-      <% else %>
-        <%= if @ssb_data_filter_mode == :shift_width do %>
-          <.cmd_button_2 cmd="EX00612 000">SHIFT/WIDTH</.cmd_button_2>
-        <% else %>
-          <.cmd_button_2 cmd="EX00612 001">HI/LO CUT</.cmd_button_2>
-        <% end %>
-      <% end %>
+      <.cmd_button_2 cmd={cmd} classes="mini"><%= label %></.cmd_button_2>
     """
   end
 
