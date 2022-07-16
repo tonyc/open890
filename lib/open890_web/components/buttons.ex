@@ -244,30 +244,6 @@ defmodule Open890Web.Components.Buttons do
     end
   end
 
-  def ssb_shift_width_button(assigns) do
-    [label, cmd] = case assigns.active_mode do
-      ssb when ssb in [:usb, :lsb] ->
-        case assigns.ssb_filter_mode do
-          :shift_width ->
-            ["SHIFT/WIDTH", "EX00611 000"]
-          _ ->
-            ["HI/LO CUT", "EX00611 001"]
-        end
-
-      _other ->
-        case assigns.ssb_data_filter_mode do
-          :shift_width ->
-            ["SHIFT/WIDTH", "EX00612 000"]
-          _ ->
-            ["HI/LO CUT", "EX00612 001"]
-        end
-    end
-
-    ~H"""
-      <.cmd_button_2 cmd={cmd} classes="mini"><%= label %></.cmd_button_2>
-    """
-  end
-
   def vfo_switch_button(assigns) do
     values = %{:a => "FR1", :b => "FR0"}
 
@@ -324,11 +300,38 @@ defmodule Open890Web.Components.Buttons do
     """
   end
 
+  def ssb_shift_width_button(assigns) do
+    [label, cmd] = case assigns.active_mode do
+      ssb when ssb in [:usb, :lsb] ->
+        case assigns.ssb_filter_mode do
+          :shift_width ->
+            ["SHIFT/WIDTH", "EX00611 000"]
+          _ ->
+            ["HI/LO CUT", "EX00611 001"]
+        end
+
+      _other ->
+        case assigns.ssb_data_filter_mode do
+          :shift_width ->
+            ["SHIFT/WIDTH", "EX00612 000"]
+          _ ->
+            ["HI/LO CUT", "EX00612 001"]
+        end
+    end
+
+    ~H"""
+      <.cmd_button_2 cmd={cmd} classes="ui mini black"><%= label %></.cmd_button_2>
+    """
+  end
+
+
   def filter_buttons(assigns) do
     ~H"""
-      <.cmd_button_2 cmd="FL00">FIL A</.cmd_button_2>
-      <.cmd_button_2 cmd="FL01">FIL B</.cmd_button_2>
-      <.cmd_button_2 cmd="FL02">FIL C</.cmd_button_2>
+      <div class="ui mini black buttons">
+        <.cmd_button_2 cmd="FL00">FIL A</.cmd_button_2>
+        <.cmd_button_2 cmd="FL01">FIL B</.cmd_button_2>
+        <.cmd_button_2 cmd="FL02">FIL C</.cmd_button_2>
+      </div>
     """
   end
 

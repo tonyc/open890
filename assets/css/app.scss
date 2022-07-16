@@ -103,11 +103,14 @@ body.light {
   //border-style: dashed;
   //border-color: red;
 
+  &.dashed { border-style: dashed !important; }
+
   &.green { border-color: green !important; }
   &.orange { border-color: orange !important; }
   &.cyan { border-color: cyan !important; }
   &.pink { border-color: pink !important;}
   &.purple { border-color: purple !important;}
+  &.yellow { border-color: yellow !important;}
 
   .column {
     border: 1px dashed red;
@@ -173,11 +176,8 @@ nav {
   }
 }
 
-.sMeterWrapper, .audioScopeWrapper {
-  max-width: 350px;
-}
-
 .sMeterWrapper {
+  max-width: $scope-max-width;
   padding: 0.25rem;
   background-color: black;
   color: white;
@@ -251,8 +251,21 @@ nav {
   }
 }
 
+.scopeButtonsContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: $scope-max-width;
+}
+
+.audioScopeContainer {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .audioScopeWrapper {
-  float: right;
+  max-width: $scope-max-width;
+  // float: right;
 
   #audioScope, #AudioScopeCanvas {
     width: 100%;
