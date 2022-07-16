@@ -151,12 +151,16 @@ defmodule Open890Web.RadioViewHelpers do
   Offsets +freq+ by +amount+ in the opposite direction of +mode+'s sideband.
   The opposite of offset_frequency/3
   """
-  def offset_frequency_reverse(mode, freq, amount) when mode in [:usb, :cw] do
+  def offset_frequency_reverse(mode, freq, amount) when mode in [:usb, :cw] and is_integer(amount) do
     freq - amount
   end
 
-  def offset_frequency_reverse(mode, freq, amount) when mode in [:lsb, :cw_r] do
+  def offset_frequency_reverse(mode, freq, amount) when mode in [:lsb, :cw_r] and is_integer(amount) do
     freq + amount
+  end
+
+  def offset_frequency_reverse(_mode, freq, nil) do
+    freq
   end
 
   def debug_assigns(assigns, opts \\ []) do
