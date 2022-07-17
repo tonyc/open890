@@ -179,6 +179,7 @@
           <% end %>
         </div>
       </div>
+
       <div class="row">
         <div class="column">
           <%= if @radio_state.rf_gain do %>
@@ -186,6 +187,7 @@
           <% end %>
         </div>
       </div>
+
       <div class="row">
         <div class="column">
           <%= if @radio_state.squelch do %>
@@ -267,8 +269,13 @@
 
     </div>
 
-    <div class="four wide column">
-      <div class="row audioScopeContainer">
+    <div class="four wide column right-panel">
+
+
+      <div class="row">
+        <div class="right floated column audio-scope-panel">
+
+
           <AudioScope.audio_scope
             active_if_filter={@radio_state.active_if_filter}
             active_mode={@radio_state.active_mode}
@@ -277,39 +284,38 @@
             roofing_filter_data={@radio_state.roofing_filter_data}
             notch_state={@radio_state.notch_state}
             filter_mode={RadioState.filter_mode(@radio_state)}
-            theme={@theme} />
-      </div>
+            theme={@theme}></AudioScope.audio_scope>
 
-      <div class="row">
-
-        <div class="four wide column scopeButtonsContainer">
-          <%= if @radio_state.active_mode in [:usb, :lsb, :usb_d, :lsb_d] do %>
-            <.ssb_shift_width_button
-              active_mode={@radio_state.active_mode}
-              ssb_filter_mode={@radio_state.ssb_filter_mode}
-              ssb_data_filter_mode={@radio_state.ssb_data_filter_mode} />
-          <% end %>
-
-					<%# shared filter buttons %>
-          <.filter_buttons />
-
-          <%= if @radio_state.active_mode in [:cw, :cw_r, :fsk, :fsk_r] do %>
-            <%= if @radio_state.active_mode in [:cw, :cw_r] do %>
-              <div class="ui mini black buttons">
-                <.cmd_button_2 cmd="CA1">CW T</.cmd_button_2>
-              </div>
+          <div class="scopeButtonsContainer">
+            <%= if @radio_state.active_mode in [:usb, :lsb, :usb_d, :lsb_d] do %>
+              <.ssb_shift_width_button
+                active_mode={@radio_state.active_mode}
+                ssb_filter_mode={@radio_state.ssb_filter_mode}
+                ssb_data_filter_mode={@radio_state.ssb_data_filter_mode} />
             <% end %>
 
-            <div class="ui mini black buttons">
-              <.apf_button value={@radio_state.apf_enabled} />
-            </div>
-          <% end %>
-        </div>
+            <%# shared filter buttons %>
+            <.filter_buttons />
 
-      </div>
+            <%= if @radio_state.active_mode in [:cw, :cw_r, :fsk, :fsk_r] do %>
+              <%= if @radio_state.active_mode in [:cw, :cw_r] do %>
+                <div class="ui mini black buttons">
+                  <.cmd_button_2 cmd="CA1">CW T</.cmd_button_2>
+                </div>
+              <% end %>
 
+              <div class="ui mini black buttons">
+                <.apf_button value={@radio_state.apf_enabled} />
+              </div>
+            <% end %>
+          </div> <!-- scope buttons container -->
 
-    </div>
+        </div> <!-- column audio-scope-panel -->
+
+      </div> <!-- row -->
+
+    </div> <!-- right panel -->
+
   </div> <!-- row -->
 
   <div class="bandscopeContainer">

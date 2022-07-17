@@ -251,6 +251,7 @@ nav {
   }
 }
 
+
 .scopeButtonsContainer {
   display: flex;
   align-items: center;
@@ -258,14 +259,13 @@ nav {
   max-width: $scope-max-width;
 }
 
-.audioScopeContainer {
-  display: flex;
-  justify-content: flex-end;
+.audio-scope-panel {
+  max-width: $scope-max-width;
 }
 
+// this contains both the SVG and canvas
 .audioScopeWrapper {
   max-width: $scope-max-width;
-  // float: right;
 
   #audioScope, #AudioScopeCanvas {
     width: 100%;

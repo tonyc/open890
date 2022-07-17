@@ -2,9 +2,8 @@ defmodule Open890Web.RadioViewHelpers do
   require Logger
 
   import Phoenix.HTML
-  import Phoenix.HTML.Tag
 
-  alias Open890.{Menu, RadioState, TransverterState}
+  alias Open890.{Menu, TransverterState}
 
   def selected_theme?(theme, name) do
     if theme == name, do: "selected"
