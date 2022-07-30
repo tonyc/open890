@@ -287,7 +287,7 @@
             theme={@theme}></AudioScope.audio_scope>
 
           <div class="scopeButtonsContainer">
-            <%= if @radio_state.active_mode in [:usb, :lsb, :usb_d, :lsb_d] do %>
+            <%= if false && @radio_state.active_mode in [:usb, :lsb, :usb_d, :lsb_d] do %>
               <.ssb_shift_width_button
                 active_mode={@radio_state.active_mode}
                 ssb_filter_mode={@radio_state.ssb_filter_mode}

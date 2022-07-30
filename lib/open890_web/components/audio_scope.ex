@@ -150,7 +150,6 @@ defmodule Open890Web.Components.AudioScope do
     |> Kernel.*(212)
     # middle 1/3 of the screen - there are six segments in wide mode
     |> Kernel.*(0.6)
-    |> IO.inspect(label: "x position")
   end
 
   def cw_notch_transform_with_width(:narrow, frequency) do
