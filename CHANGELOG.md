@@ -1,6 +1,8 @@
 # open890 Changelog
 
 ## 0.8.0 - Unreleased
+* UI: Reworked some HTML & CSS for small layout improvements
+* [Dev] Updated esbuild config to include --watch flag, allowing CSS to be reloaded on the fly
 * Added Basic scope EXPAND functionality.
 * Added Antenna controls side tab: ANT1/2, RX ANT, ANT OUT, DRV, XVTR controls
 * Finished implementation of notch indicator in SSB mode.
