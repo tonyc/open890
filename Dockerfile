@@ -1,10 +1,11 @@
 # -- build stage --
-FROM elixir:1.11.4-alpine AS build
+FROM hexpm/elixir:1.12.3-erlang-23.1.2-alpine-3.12.1 as build
+
 ENV MIX_ENV=prod \
   LANG=C.UTF-8
 
 RUN apk update
-RUN apk add --no-cache make gcc libc-dev nodejs yarn
+RUN apk add --no-cache make gcc libc-dev nodejs yarn libgcc libstdc++
 
 # hex & rebar
 RUN mix local.hex --force && \
@@ -24,8 +25,7 @@ COPY mix.lock .
 RUN mix deps.get
 RUN mix deps.compile
 RUN yarn --cwd assets install
-RUN yarn --cwd assets run deploy
-RUN mix phx.digest
+RUN mix assets.deploy
 RUN mix release
 
 # -- application stage --
