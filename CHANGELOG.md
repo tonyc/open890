@@ -1,6 +1,8 @@
 # open890 Changelog
 
-## 0.8.0 - Unreleased
+## 0.9.0 - Unreleased
+
+## 0.8.0 - 2022-07-30
 * UI: Reworked some HTML & CSS for small layout improvements
 * [Dev] Updated esbuild config to include --watch flag, allowing CSS to be reloaded on the fly
 * Added Basic scope EXPAND functionality.
