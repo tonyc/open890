@@ -1,4 +1,4 @@
-.PHONY: all clean clean_elixir deps up install_tools yarn_install
+.PHONY: all clean clean_elixir deps up install_tools yarn_install build_docker run_docker
 
 all: clean build yarn_install
 
@@ -37,3 +37,9 @@ yarn_install: install_tools
 
 up: build yarn_install
 		mix phx.server
+
+build_docker:
+		docker build -t open890 .
+
+docker: build_docker
+		docker run -p 4000:4000 -it --rm open890:latest

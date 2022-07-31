@@ -20,15 +20,13 @@ See [Installing From Source](https://github.com/tonyc/open890/wiki/Installing-Fr
 
 If you are knowledgeable in Docker, you can use the supplied Dockerfile to run open890:
 
-Build the image:
+Build the image, and start a container using the image, exposing the internal server to your host:
 
-    docker build -t open890 .
-
-Start a container using the image, exposing the internal server to your host:
-
-    docker run -p 4000:4000 -it --rm open890:latest
+    make docker
 
 You should now be able to access http://localhost:4000
+
+If you would like to just build the image, you can run `make build_docker`.
 
 ## Binary releases
 

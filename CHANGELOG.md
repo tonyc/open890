@@ -2,6 +2,7 @@
 
 ## Unreleased
 * [Dev] Update Dockerfile so it builds and runs (#96)
+* [Dev] Added "make build_docker" and "make docker" Makefile targets for building and running the docker image, respectively
 
 ## 0.8.0 - 2022-07-30
 * UI: Reworked some HTML & CSS for small layout improvements
