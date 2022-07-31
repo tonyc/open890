@@ -23,6 +23,11 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GHCR_ACCESS_TOKEN }}
       -
+        name: Check out code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+      -
         name: Build and push
         uses: docker/build-push-action@v3
         with:
