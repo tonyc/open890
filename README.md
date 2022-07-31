@@ -25,7 +25,16 @@ or build & run your own image locally.
 At the moment, open890:latest reflects what is pushed to the `main` branch. Eventually,
 releases will be tagged as well.
 
-### Pull & run a published image
+### Run via docker-compose (preferred)
+
+    docker-compose up
+
+This will map two local directories, open890-db, and open890-config into the image. This will
+allow you to back-up your connection database, as well as drop in a config.toml file, and allow
+this data to persist across container restarts. You can change the location of these directories
+by adjusting the `volumes` setting in `docker-compose.yml`.
+
+### Pull & run a published image (manual)
 
     docker pull ghcr.io/tonyc/open890:latest
     docker run -p 4000:4000 -it --rm ghcr.io/tonyc/open890:latest
