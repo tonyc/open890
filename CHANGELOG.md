@@ -1,6 +1,7 @@
 # open890 Changelog
 
-## 0.9.0 - Unreleased
+## Unreleased
+* [Dev] Update Dockerfile so it builds and runs (#96)
 
 ## 0.8.0 - 2022-07-30
 * UI: Reworked some HTML & CSS for small layout improvements
