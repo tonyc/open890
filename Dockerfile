@@ -38,5 +38,8 @@ RUN mkdir /app
 COPY --from=build /app/_build/prod/rel/open890 /app
 
 WORKDIR /app
+
+EXPOSE 4000
+
 CMD ["/app/bin/open890", "start"]
 
