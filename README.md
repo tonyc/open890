@@ -18,7 +18,18 @@ See [Installing From Source](https://github.com/tonyc/open890/wiki/Installing-Fr
 
 ## Docker
 
-If you are knowledgeable in Docker, you can use the supplied Dockerfile to run open890:
+If you are knowledgeable in Docker, you can either pull a published image from the repository,
+or build & run your own image locally.
+
+At the moment, open890:latest reflects what is pushed to the `main` branch. Eventually,
+releases will be tagged as well.
+
+### Pull & run a published image
+
+    docker pull ghcr.io/tonyc/open890:latest
+    docker run -p 4000:4000 -it --rm ghcr.io/tonyc/open890:latest
+
+### Build your own Docker image locally
 
 Build the image, and start a container using the image, exposing the internal server to your host:
 
