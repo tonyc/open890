@@ -39,7 +39,11 @@ COPY --from=build /app/_build/prod/rel/open890 /app
 
 WORKDIR /app
 
+# web UI
 EXPOSE 4000
 
-CMD ["/app/bin/open890", "start"]
+# UDP audio server
+EXPOSE 60001
+
+CMD ["/app/bin/open890", "start_iex"]
 
