@@ -45,5 +45,5 @@ EXPOSE 4000
 # UDP audio server
 EXPOSE 60001
 
-CMD ["/app/bin/open890", "start_iex"]
+CMD ["/app/bin/open890", "start"]
 
