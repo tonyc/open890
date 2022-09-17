@@ -1,7 +1,7 @@
 defmodule Open890.Extract do
   require Logger
 
-  alias Open890.AntennaState
+  alias Open890.{AntennaState, MemoryChannel}
 
   @scope_modes %{
     "0" => :center,
@@ -237,6 +237,10 @@ defmodule Open890.Extract do
     "E" => :fm_d,
     "F" => :am_d
   }
+
+  def memory_channel(str) when is_binary(str) do
+    MemoryChannel.extract(str)
+  end
 
   def apf_enabled(str) when is_binary(str) do
     str |> String.trim_leading("AP0") == "1"
@@ -683,4 +687,5 @@ defmodule Open890.Extract do
       "1" <> rest -> -String.to_integer(rest)
     end
   end
+
 end

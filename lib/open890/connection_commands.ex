@@ -26,6 +26,7 @@ defmodule Open890.ConnectionCommands do
     |> get_rf_pre_att()
     |> get_ref_level()
     |> get_vfo_memory_state()
+    |> get_all_memory_channels()
     |> monitor_meters()
     |> get_data_speed()
     |> get_audio_gain()
@@ -124,6 +125,24 @@ defmodule Open890.ConnectionCommands do
 
   def get_vfo_memory_state(conn) do
     conn |> cmd("MV")
+  end
+
+  def get_all_memory_channels(conn) do
+    Logger.info("get_all_memory_channels")
+
+    (0..99)
+    |> Enum.map(fn x ->
+      x
+      |> to_string
+      |> String.pad_leading(3, "0")
+    end)
+    |> Enum.each(fn channel ->
+      Logger.info("retrieve memory channel #{channel}")
+      conn
+      |> cmd("MA0#{channel}")
+    end)
+
+    conn
   end
 
   def get_notch_states(conn) do

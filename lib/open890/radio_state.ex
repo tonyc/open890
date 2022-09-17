@@ -5,6 +5,7 @@ defmodule Open890.RadioState do
     AntennaState,
     BandRegisterState,
     FilterState,
+    MemoryChannel,
     NoiseBlankState,
     NotchState,
     TransverterState
@@ -77,8 +78,17 @@ defmodule Open890.RadioState do
             xit_enabled: false,
             rit_xit_offset: 0
 
+
   def dispatch(%__MODULE__{} = state, "BSO" <> _ = msg) do
     %{state | band_scope_expand: Extract.boolean(msg, prefix: "BSO") }
+  end
+
+  def dispatch(%__MODULE__{} = state, "MA0" <> _rest = msg) do
+    %MemoryChannel{} = memory_channel = Extract.memory_channel(msg)
+
+    memory_channel |> IO.inspect(label: "memory_channel")
+
+    state
   end
 
   def dispatch(%__MODULE__{} = state, "FS00" <> _ = _msg) do
