@@ -378,7 +378,9 @@ defmodule Open890.Extract do
     str
     |> String.trim_leading("OM0")
     |> String.trim_leading("OM1")
+    |> String.trim_trailing(" ")
     |> case do
+      "" -> :unknown
       mode -> @operating_modes |> Map.fetch!(mode)
     end
   end
