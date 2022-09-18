@@ -210,8 +210,6 @@
         </div>
 
         <div id="frequencyDisplay" class="ui row top aligned">
-          <%= case @radio_state.vfo_memory_state do %>
-          <% :vfo -> %>
             <div class="eight column row">
               <%= live_component Open890Web.Live.VFODisplayComponent,
                 active_frequency: RadioState.effective_active_frequency(@radio_state),
@@ -225,14 +223,6 @@
                 notch_state: @radio_state.notch_state,
                 band_register_state: @radio_state.band_register_state %>
             </div>
-          <% :memory -> %>
-            <div id="memoryDisplay" class="eight column row">
-              <div class="column">
-                <p>Memory display not implemented yet.</p>
-              </div>
-            </div>
-          <% _ -> %>
-          <% end %>
         </div> <!-- frequencyDisplay -->
 
         <div class="row equal width">

@@ -79,8 +79,8 @@ defmodule Open890Web.Live.VFODisplayComponent do
   def format_vfo_memory_state(state) do
     case state do
       :vfo -> "VFO"
-      :memory -> "MEM"
-      _ -> "UNKNOWN"
+      :memory -> "M.CH"
+      _ -> ""
     end
   end
 

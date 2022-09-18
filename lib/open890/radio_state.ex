@@ -6,6 +6,8 @@ defmodule Open890.RadioState do
     BandRegisterState,
     FilterState,
     MemoryChannel,
+    MemoryChannels,
+
     NoiseBlankState,
     NotchState,
     TransverterState
@@ -45,9 +47,12 @@ defmodule Open890.RadioState do
             filter_state: %FilterState{},
             fine: nil,
             id_meter: 0,
-            inactive_frequency: "",
+            inactive_frequency: 0,
             inactive_mode: :unknown,
             inactive_receiver: :b,
+            memory_channels: MemoryChannels.new,
+            memory_channel_frequency: nil,
+            memory_channel_inactive_frequency: nil,
             mic_gain: nil,
             noise_blank_state: %NoiseBlankState{},
             notch_state: %NotchState{},
@@ -79,17 +84,35 @@ defmodule Open890.RadioState do
             rit_xit_offset: 0
 
 
+  def dispatch(%__MODULE__{} = state, "MA70" <> _ = msg) do
+    memory_channel_freq = Extract.memory_channel_frequency(msg)
+
+    inactive_memory_channel_freq = case memory_channel_freq do
+      # when we extract a nil, it means we're displaying a blank memory channel
+      nil -> nil
+
+      # otherwise, just keep the previous inactive freq
+      _ -> state.memory_channel_inactive_frequency
+    end
+
+    %{state | memory_channel_frequency: memory_channel_freq, memory_channel_inactive_frequency: inactive_memory_channel_freq}
+  end
+
+  def dispatch(%__MODULE__{} = state, "MA71" <> _ = msg) do
+    %{state | memory_channel_inactive_frequency: Extract.memory_channel_frequency(msg)}
+  end
+
   def dispatch(%__MODULE__{} = state, "BSO" <> _ = msg) do
     %{state | band_scope_expand: Extract.boolean(msg, prefix: "BSO") }
   end
 
-  def dispatch(%__MODULE__{} = state, "MA0" <> _rest = msg) do
-    %MemoryChannel{} = memory_channel = Extract.memory_channel(msg)
-
-    memory_channel |> IO.inspect(label: "memory_channel")
-
-    state
-  end
+  # def dispatch(%__MODULE__{memory_channels: memory_channels} = state, "MA0" <> _rest = msg) do
+  #   %MemoryChannel{} = memory_channel = Extract.memory_channel(msg)
+  #   memory_channel |> IO.inspect(label: "memory_channel")
+  #   #new_memory_channels = memory_channels |> MemoryChannels.save(memory_channel)
+  #   state
+  #   #%{state | memory_channels: new_memory_channels}
+  # end
 
   def dispatch(%__MODULE__{} = state, "FS00" <> _ = _msg) do
     %{state | fine: false}
@@ -745,28 +768,40 @@ defmodule Open890.RadioState do
 
   # The final frequency that displays on the screen, taking RIT into account
   def effective_active_frequency(%__MODULE__{} = state) do
-    if state.active_frequency do
+    base_frequency = case state.vfo_memory_state do
+      :vfo -> state.active_frequency
+      :memory -> state.memory_channel_frequency
+      _ -> nil
+    end
+
+    if base_frequency do
       if state.rit_enabled && state.rit_xit_offset do
-        state.active_frequency + state.rit_xit_offset
+        base_frequency + state.rit_xit_offset
       else
-        state.active_frequency
+        base_frequency
       end
     else
-      nil
+      0
     end
   end
 
   # The final frequency display on the right side, taking in split and XIT state into account.
   # This is DIFFERENT from the position that the "T" banner displays on the bandscope.
   def effective_inactive_frequency(%__MODULE__{} = state) do
-    if state.inactive_frequency do
+    base_frequency = case state.vfo_memory_state do
+      :vfo -> state.inactive_frequency
+      :memory -> state.memory_channel_inactive_frequency
+      _ -> nil
+    end
+
+    if base_frequency do
       if state.split_enabled && state.xit_enabled && state.rit_xit_offset do
-        state.inactive_frequency + state.rit_xit_offset
+        base_frequency + state.rit_xit_offset
       else
-        state.inactive_frequency
+        base_frequency
       end
     else
-      nil
+      0
     end
   end
 

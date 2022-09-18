@@ -393,6 +393,16 @@ defmodule Open890.Extract do
     end
   end
 
+  def memory_channel_frequency(str) when is_binary(str) do
+    str
+    |> trim_all_leading(["MA70", "MA71"])
+    |> String.trim()
+    |> case do
+      "" -> nil
+      str -> str |> String.to_integer()
+    end
+  end
+
   # TODO: Convert this to return an integer frequency in Hz
   def frequency(str) when is_binary(str) do
     str |> trim_to_integer(["FA", "FB", "0"])
