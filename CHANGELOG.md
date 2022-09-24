@@ -4,6 +4,8 @@
 * Implemented memory channel display.
 * Relocated the SPLIT button next to RIT/XIT.
 * Made the SPLIT button appear yellow when activated.
+* Added keyboard shortcut: '\' to perform A/B
+* Added keyboard shortcut: '=' to perform A=B
 * Changed "SHIFT" keyboard shortcut to 'H', Toggle split assigned to 'S'.
 * Swapped the position of the A/B and A=B buttons.
 * [Dev] Update Dockerfile so it builds and runs (#96)

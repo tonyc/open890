@@ -356,6 +356,18 @@ defmodule Open890.ConnectionCommands do
     end
   end
 
+  def toggle_vfo(conn, %RadioState{active_receiver: active_receiver}) do
+    case active_receiver do
+      :a -> conn |> cmd("FR1")
+      :b -> conn |> cmd("FR0")
+      _ -> conn
+    end
+  end
+
+  def equalize_vfo(conn) do
+    conn |> cmd("VV")
+  end
+
   def band_scope_shift(conn) do
     conn |> cmd("BSE")
   end

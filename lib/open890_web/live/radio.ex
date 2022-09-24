@@ -248,13 +248,20 @@ defmodule Open890Web.Live.Radio do
     Logger.debug("live/radio.ex: window_keyup: #{inspect(params)}")
 
     conn = socket.assigns.radio_connection
+    radio_state = socket.assigns.radio_state
 
     case key do
       "s" ->
-        conn |> ConnectionCommands.toggle_split(socket.assigns.radio_state)
+        conn |> ConnectionCommands.toggle_split(radio_state)
 
       "h" ->
         conn |> ConnectionCommands.band_scope_shift()
+
+      "=" ->
+        conn |> ConnectionCommands.equalize_vfo()
+
+      "\\" ->
+        conn |> ConnectionCommands.toggle_vfo(radio_state)
 
       _ ->
         :ok
