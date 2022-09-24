@@ -61,7 +61,7 @@ defmodule Open890Web.Components.BandScope do
               </text>
             <% end %>
 
-            <%= if @active_frequency do %>
+            <%= if @effective_active_frequency do %>
               <text class="bandEdge mid" x="300" y="0"><%= @effective_active_frequency |> format_active_frequency() %></text>
             <% end %>
           </g>

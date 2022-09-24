@@ -846,6 +846,7 @@ defmodule Open890.RadioState do
   end
 
   def tx_banner_frequency(%__MODULE__{} = state) do
+    # TODO: FIXME: Change me to use effective_active or effective_inactive_frequency
     if state.split_enabled do
       if state.xit_enabled && state.rit_xit_offset do
         state.inactive_frequency + state.rit_xit_offset

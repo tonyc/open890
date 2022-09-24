@@ -121,7 +121,7 @@ defmodule Open890.ConnectionCommands do
   end
 
   def get_transverter_states(conn) do
-    conn |> run_commands(["XV", "XO"])
+    conn |> cmd(["XV", "XO"])
   end
 
   def get_vfo_memory_state(conn) do
@@ -129,7 +129,7 @@ defmodule Open890.ConnectionCommands do
   end
 
   def get_memory_channel_frequencies(conn) do
-    conn |> run_commands(["MA70", "MA71"])
+    conn |> cmd(["MA70", "MA71"])
   end
 
   # def get_all_memory_channels(conn) do
@@ -197,7 +197,7 @@ defmodule Open890.ConnectionCommands do
 
   def monitor_meters(conn) do
     cmds = ~w(RM11 RM21 RM51)
-    conn |> run_commands(cmds)
+    conn |> cmd(cmds)
   end
 
   def cw_decode_on(conn) do
@@ -299,12 +299,11 @@ defmodule Open890.ConnectionCommands do
 
   def get_roofing_filter_info(conn) do
     cmds = ~w(FL0 FL10 FL11 FL12)
-    conn |> run_commands(cmds)
+    conn |> cmd(cmds)
   end
 
   def get_rf_pre_att(conn) do
-    cmds = ~w(PA RA)
-    conn |> run_commands(cmds)
+    conn |> cmd(~w(PA RA))
   end
 
   def get_modes(conn) do
@@ -321,9 +320,7 @@ defmodule Open890.ConnectionCommands do
   end
 
   def get_filter_state(conn) do
-    cmds = ~w(SH0 SL0)
-
-    conn |> run_commands(cmds)
+    conn |> cmd(~w(SH0 SL0))
   end
 
   def get_filter_modes(conn) do
@@ -339,15 +336,6 @@ defmodule Open890.ConnectionCommands do
     conn |> cmd("EX00612")
   end
 
-  defp run_commands(conn, cmds) when is_list(cmds) do
-    cmds
-    |> Enum.each(fn c ->
-      conn |> cmd(c)
-    end)
-
-    conn
-  end
-
   def toggle_split(conn, %RadioState{split_enabled: split_enabled}) do
     if split_enabled do
       conn |> cmd("TB0")
@@ -356,11 +344,17 @@ defmodule Open890.ConnectionCommands do
     end
   end
 
-  def toggle_vfo(conn, %RadioState{active_receiver: active_receiver}) do
+  def toggle_vfo(conn, %RadioState{active_receiver: active_receiver, split_enabled: split_enabled}) do
+
     case active_receiver do
-      :a -> conn |> cmd("FR1")
-      :b -> conn |> cmd("FR0")
-      _ -> conn
+      :a ->
+        conn |> cmd("FR1")
+        if split_enabled, do: conn |> cmd("FT0")
+      :b ->
+        conn |> cmd("FR0")
+        if split_enabled, do: conn |> cmd("FT1")
+      _ ->
+        conn
     end
   end
 
@@ -370,6 +364,11 @@ defmodule Open890.ConnectionCommands do
 
   def band_scope_shift(conn) do
     conn |> cmd("BSE")
+  end
+
+  def cmd(conn, cmds) when is_list(cmds) do
+    cmds |> Enum.each(fn c -> conn |> cmd(c) end)
+    conn
   end
 
   @doc """
