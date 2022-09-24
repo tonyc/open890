@@ -45,7 +45,10 @@ defmodule Open890Web.Live.VFODisplayComponent do
 
 
           <div class="two wide center aligned column">
-            <%= live_component BandIndicatorComponent, active_receiver: @active_receiver %>
+            <%= live_component BandIndicatorComponent,
+              active_receiver: @active_receiver,
+              inactive_frequency: @inactive_frequency,
+              vfo_memory_state: @vfo_memory_state %>
           </div>
 
           <div class="seven wide left aligned column computer only tablet only">
