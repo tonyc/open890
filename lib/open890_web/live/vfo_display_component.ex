@@ -60,7 +60,7 @@ defmodule Open890Web.Live.VFODisplayComponent do
                 </div>
               </div>
 
-              <% if @vfo_memory_state == :vfo do %>
+              <%= if @vfo_memory_state == :vfo do %>
                 <div class="row">
                   <div class="eight wide left aligned column">
                   </div>

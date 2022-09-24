@@ -19,6 +19,10 @@ defmodule Open890.RadioState do
             active_mode: :unknown,
             active_receiver: :a,
             active_transmitter: :a,
+            memory_channel_frequency: nil,
+            memory_channel_inactive_frequency: nil,
+            memory_channel_active_mode: :unknown,
+            memory_channel_inactive_mode: :unknown,
             agc: nil,
             agc_off: nil,
             alc_meter: 0,
@@ -47,8 +51,6 @@ defmodule Open890.RadioState do
             inactive_frequency: 0,
             inactive_mode: :unknown,
             inactive_receiver: :b,
-            memory_channel_frequency: nil,
-            memory_channel_inactive_frequency: nil,
             mic_gain: nil,
             noise_blank_state: %NoiseBlankState{},
             notch_state: %NotchState{},
@@ -79,6 +81,19 @@ defmodule Open890.RadioState do
             xit_enabled: false,
             rit_xit_offset: 0
 
+  # vfo mode
+  def dispatch(%__MODULE__{} = state, "MV0" = msg) do
+    %{state | vfo_memory_state: Extract.vfo_memory_state(msg) }
+  end
+
+  # memory mode
+  def dispatch(%__MODULE__{} = state, "MV1" <> _ = msg) do
+    %{state |
+      vfo_memory_state: Extract.vfo_memory_state(msg),
+      # active_mode: nil,
+      # inactive_mode: nil,
+    }
+  end
 
   def dispatch(%__MODULE__{} = state, "MA70" <> _ = msg) do
     %{state |
@@ -86,7 +101,7 @@ defmodule Open890.RadioState do
 
       # clear out the inactive side because the radio doesn't specifically tell us it cleared out.
       # just wait for a new MA71 to tell us the inactive side.
-      memory_channel_inactive_frequency: nil
+      memory_channel_inactive_frequency: nil,
     }
   end
 
@@ -224,10 +239,6 @@ defmodule Open890.RadioState do
       end
 
     %{state | transverter_state: new_transverter_state}
-  end
-
-  def dispatch(%__MODULE__{} = state, "MV" <> _ = msg) do
-    %{state | vfo_memory_state: Extract.vfo_memory_state(msg)}
   end
 
   def dispatch(%__MODULE__{} = state, "NB1" <> _ = msg) do
@@ -529,13 +540,38 @@ defmodule Open890.RadioState do
     }
   end
 
-  # Primary operating mode changed
+  # active/operating mode
   def dispatch(%__MODULE__{} = state, "OM0" <> _ = msg) do
-    %{state | active_mode: Extract.operating_mode(msg)}
+    # check whether we're in vfo or memory moed
+    # if we're in vfo mode, set active_mode,
+    # if we're in memory mode, set memory_channel_active_mod
+
+    mode = Extract.operating_mode(msg)
+
+    case state.vfo_memory_state do
+      :vfo ->
+        %{state | active_mode: mode}
+      :memory ->
+        %{state | memory_channel_active_mode: mode}
+      _ ->
+        state
+    end
   end
 
+  # inactive operating mode
   def dispatch(%__MODULE__{} = state, "OM1" <> _ = msg) do
-    %{state | inactive_mode: Extract.operating_mode(msg)}
+    # check whether we're in vfo or memory moed
+    # if we're in vfo mode, set inactive_mode,
+    # if we're in memory mode, set memory_channel_inactive_mode
+    mode = Extract.operating_mode(msg)
+    case state.vfo_memory_state do
+      :vfo ->
+        %{state | inactive_mode: mode}
+      :memory ->
+        %{state | memory_channel_inactive_mode: mode}
+      _ ->
+        state
+    end
   end
 
   def dispatch(%__MODULE__{} = state, "PA" <> _ = msg) do
@@ -766,6 +802,22 @@ defmodule Open890.RadioState do
       end
     else
       0
+    end
+  end
+
+  def effective_active_mode(%__MODULE__{} = state) do
+    case state.vfo_memory_state do
+      :vfo -> state.active_mode
+      :memory -> state.memory_channel_active_mode
+      _ -> :unknown
+    end
+  end
+
+  def effective_inactive_mode(%__MODULE__{} = state) do
+    case state.vfo_memory_state do
+      :vfo -> state.inactive_mode
+      :memory -> state.memory_channel_inactive_mode
+      _ -> :unknown
     end
   end
 
