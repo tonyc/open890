@@ -97,6 +97,10 @@ body.light {
 //   color: #ccc;
 // }
 
+.split-button.enabled {
+  background-color: $kenwood-yellow !important;
+  color: black !important;
+}
 
 .debug {
   //border-width: 1px;

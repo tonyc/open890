@@ -232,13 +232,13 @@
 
           <div class="column">
             <%= if @radio_state.vfo_memory_state == :vfo do %>
-              <.vfo_equalize_button fluid />
+              <.vfo_switch_button value={@radio_state.active_receiver} fluid />
             <% end %>
           </div>
 
           <div class="column">
             <%= if @radio_state.vfo_memory_state == :vfo do %>
-              <.vfo_switch_button value={@radio_state.active_receiver} fluid />
+              <.vfo_equalize_button fluid />
             <% end %>
           </div>
 
@@ -249,10 +249,8 @@
 
         <div class="four column row">
           <div class="column"></div>
-          <div class="column">
-          </div>
-          <div class="column">
-          </div>
+          <div class="column"></div>
+          <div class="column"></div>
           <div class="column"></div>
         </div>
       </div>
