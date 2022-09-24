@@ -2,6 +2,7 @@ defmodule Open890.ConnectionCommands do
   require Logger
 
   alias Open890.RadioConnection
+  alias Open890.RadioState
 
   def get_initial_state(%RadioConnection{} = conn) do
     conn
@@ -345,6 +346,14 @@ defmodule Open890.ConnectionCommands do
     end)
 
     conn
+  end
+
+  def toggle_split(conn, %RadioState{split_enabled: split_enabled}) do
+    if split_enabled do
+      conn |> cmd("TB0")
+    else
+      conn |> cmd("TB1")
+    end
   end
 
   def band_scope_shift(conn) do

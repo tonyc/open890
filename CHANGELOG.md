@@ -4,6 +4,7 @@
 * Implemented memory channel display.
 * Relocated the SPLIT button next to RIT/XIT.
 * Made the SPLIT button appear yellow when activated.
+* Changed "SHIFT" keyboard shortcut to 'H', Toggle split assigned to 'S'.
 * Swapped the position of the A/B and A=B buttons.
 * [Dev] Update Dockerfile so it builds and runs (#96)
 * [Dev] Added "make build_docker" and "make docker" Makefile targets for building and running the docker image, respectively

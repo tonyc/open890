@@ -215,7 +215,7 @@ defmodule Open890Web.Live.Radio do
   end
 
   def handle_event("window_keydown", %{"key" => key} = params, socket) do
-    Logger.debug("window_keydown: #{inspect(params)}")
+    Logger.debug("live/radio.ex: window_keydown: #{inspect(params)}")
 
     conn = socket.assigns.radio_connection
 
@@ -234,7 +234,7 @@ defmodule Open890Web.Live.Radio do
   end
 
   def handle_event("window_keydown", params, socket) do
-    Logger.debug("window_keydown: #{inspect(params)}")
+    Logger.debug("live/radio.ex: window_keydown: #{inspect(params)}")
 
     {:noreply, socket}
   end
@@ -245,12 +245,15 @@ defmodule Open890Web.Live.Radio do
   end
 
   def handle_event("window_keyup", %{"key" => key} = params, socket) do
-    Logger.debug("window_keyup: #{inspect(params)}")
+    Logger.debug("live/radio.ex: window_keyup: #{inspect(params)}")
 
     conn = socket.assigns.radio_connection
 
     case key do
       "s" ->
+        conn |> ConnectionCommands.toggle_split(socket.assigns.radio_state)
+
+      "h" ->
         conn |> ConnectionCommands.band_scope_shift()
 
       _ ->
