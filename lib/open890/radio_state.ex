@@ -4,16 +4,13 @@ defmodule Open890.RadioState do
   alias Open890.{
     AntennaState,
     BandRegisterState,
+    Extract,
     FilterState,
-    MemoryChannel,
-    MemoryChannels,
-
     NoiseBlankState,
     NotchState,
     TransverterState
   }
 
-  alias Open890.Extract
   alias Open890Web.RadioViewHelpers
 
   defstruct active_frequency: 0,
@@ -50,7 +47,6 @@ defmodule Open890.RadioState do
             inactive_frequency: 0,
             inactive_mode: :unknown,
             inactive_receiver: :b,
-            memory_channels: MemoryChannels.new,
             memory_channel_frequency: nil,
             memory_channel_inactive_frequency: nil,
             mic_gain: nil,
@@ -85,17 +81,13 @@ defmodule Open890.RadioState do
 
 
   def dispatch(%__MODULE__{} = state, "MA70" <> _ = msg) do
-    memory_channel_freq = Extract.memory_channel_frequency(msg)
+    %{state |
+      memory_channel_frequency: Extract.memory_channel_frequency(msg),
 
-    inactive_memory_channel_freq = case memory_channel_freq do
-      # when we extract a nil, it means we're displaying a blank memory channel
-      nil -> nil
-
-      # otherwise, just keep the previous inactive freq
-      _ -> state.memory_channel_inactive_frequency
-    end
-
-    %{state | memory_channel_frequency: memory_channel_freq, memory_channel_inactive_frequency: inactive_memory_channel_freq}
+      # clear out the inactive side because the radio doesn't specifically tell us it cleared out.
+      # just wait for a new MA71 to tell us the inactive side.
+      memory_channel_inactive_frequency: nil
+    }
   end
 
   def dispatch(%__MODULE__{} = state, "MA71" <> _ = msg) do

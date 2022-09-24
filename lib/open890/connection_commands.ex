@@ -195,7 +195,7 @@ defmodule Open890.ConnectionCommands do
   end
 
   def monitor_meters(conn) do
-    cmds = ~w(RM11 RM21)
+    cmds = ~w(RM11 RM21 RM51)
     conn |> run_commands(cmds)
   end
 
