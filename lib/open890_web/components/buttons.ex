@@ -123,24 +123,6 @@ defmodule Open890Web.Components.Buttons do
     end
   end
 
-  def split_button(assigns) do
-    values = %{false => "TB1", true => "TB0"}
-
-    split_class = if assigns.value do
-      "split-button enabled"
-    else
-      ""
-    end
-
-    ~H"""
-      <%= if ! is_nil(@value) do %>
-        <.cycle_button_2 value={@value} values={values} fluid={@fluid} classes={split_class}>
-          SPLIT <%= on_off(@value) %>
-        </.cycle_button_2>
-      <% end %>
-    """
-  end
-
   def notch_button(assigns) do
     ~H"""
       <%= if @value do %>

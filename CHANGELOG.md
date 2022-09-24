@@ -2,6 +2,7 @@
 
 ## Unreleased
 * Implemented memory channel display.
+* Relocated the SPLIT button next to RIT/XIT.
 * Made the SPLIT button appear yellow when activated.
 * Swapped the position of the A/B and A=B buttons.
 * [Dev] Update Dockerfile so it builds and runs (#96)

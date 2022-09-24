@@ -203,8 +203,11 @@
 
         <div class="row">
           <div class="column">
-            <RitXit.rit_xit rit_enabled={@radio_state.rit_enabled} xit_enabled={@radio_state.xit_enabled}
-               offset={@radio_state.rit_xit_offset}
+            <RitXit.rit_xit
+              rit_enabled={@radio_state.rit_enabled}
+              xit_enabled={@radio_state.xit_enabled}
+              split_enabled={@radio_state.split_enabled}
+              offset={@radio_state.rit_xit_offset}
             />
           </div>
         </div>
@@ -242,9 +245,6 @@
             <% end %>
           </div>
 
-          <div class="column">
-            <.split_button value={@radio_state.split_enabled} fluid />
-          </div>
         </div>
 
         <div class="four column row">
