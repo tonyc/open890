@@ -26,15 +26,17 @@ defmodule Open890Web.Live.VFODisplayComponent do
               </div>
 
 
-              <div class="row">
-                <div class="eight wide left aligned column">
+              <%= if @vfo_memory_state == :vfo do %>
+                <div class="row">
+                  <div class="eight wide left aligned column">
+                  </div>
+                  <div class="eight wide right aligned column">
+                    <span class="bandRegister">
+                      BAND <span class="register inverted"><%= band_for(@band_register_state, @active_receiver) %></span>
+                    </span>
+                  </div>
                 </div>
-                <div class="eight wide right aligned column">
-                  <span class="bandRegister">
-                    BAND <span class="register inverted"><%= band_for(@band_register_state, @active_receiver) %></span>
-                  </span>
-                </div>
-              </div>
+              <% end %>
             </div>
 
           </div> <!-- // end left side grid -->
@@ -57,16 +59,18 @@ defmodule Open890Web.Live.VFODisplayComponent do
                   </div>
                 </div>
               </div>
-              <div class="row">
-                <div class="eight wide left aligned column">
-                &nbsp;
+
+              <% if @vfo_memory_state == :vfo do %>
+                <div class="row">
+                  <div class="eight wide left aligned column">
+                  </div>
+                  <div class="eight wide right aligned column">
+                    <span class="bandRegister">
+                      BAND <span class="register inverted"><%= band_for(@band_register_state, @inactive_receiver) %></span>
+                    </span>
+                  </div>
                 </div>
-                <div class="eight wide right aligned column">
-                  <span class="bandRegister">
-                    BAND <span class="register inverted"><%= band_for(@band_register_state, @inactive_receiver) %></span>
-                  </span>
-                </div>
-              </div>
+              <% end %>
 
             </div>
           </div>
