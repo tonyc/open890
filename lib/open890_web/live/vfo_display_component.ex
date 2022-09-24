@@ -30,11 +30,13 @@ defmodule Open890Web.Live.VFODisplayComponent do
                 <div class="eight wide left aligned column">
                 </div>
                 <div class="eight wide right aligned column">
-                  <%= if @vfo_memory_state == :vfo do %>
-                    <span class="bandRegister">
+                  <span class="bandRegister">
+                    <%= if @vfo_memory_state == :vfo do %>
                       BAND <span class="register inverted"><%= band_for(@band_register_state, @active_receiver) %></span>
-                    </span>
-                  <% end %>
+                    <% else %>
+                      &nbsp;
+                    <% end %>
+                  </span>
                 </div>
               </div>
             </div>
@@ -64,11 +66,13 @@ defmodule Open890Web.Live.VFODisplayComponent do
                 <div class="eight wide left aligned column">
                 </div>
                 <div class="eight wide right aligned column">
-                  <%= if @vfo_memory_state == :vfo do %>
-                    <span class="bandRegister">
+                  <span class="bandRegister">
+                    <%= if @vfo_memory_state == :vfo do %>
                       BAND <span class="register inverted"><%= band_for(@band_register_state, @inactive_receiver) %></span>
-                    </span>
-                  <% end %>
+                    <% else %>
+                      &nbsp;
+                    <% end %>
+                  </span>
                 </div>
               </div>
 

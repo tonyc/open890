@@ -333,6 +333,9 @@ nav {
 
 .vfos {
   .freq {
+    min-height: 3rem;
+    height: 3rem;
+    max-height: 3rem;
 
     font-family: $vfo-font;
     // font-weight: bold;
