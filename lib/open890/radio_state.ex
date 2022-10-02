@@ -858,8 +858,6 @@ defmodule Open890.RadioState do
         nil -> effective_active_frequency(state)
       end
     else
-      IO.puts "tx_banner_frequency: display the frequency"
-
       if state.split_enabled do
         if state.xit_enabled && state.rit_xit_offset do
           state.inactive_frequency + state.rit_xit_offset
