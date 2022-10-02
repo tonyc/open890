@@ -31,7 +31,7 @@ defmodule Open890Web.Live.VFODisplayComponent do
               </div>
 
 
-              <div class="row">
+              <div class="vfo-display-component__band-indicator row">
                 <div class="eight wide left aligned column"></div>
                 <div class="eight wide right aligned column">
                   <span class="bandRegister">
