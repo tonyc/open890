@@ -238,8 +238,8 @@ defmodule Open890.Extract do
     "F" => :am_d
   }
 
-  def memory_channel(str) when is_binary(str) do
-    MemoryChannel.extract(str)
+  def memory_channel_number(str) when is_binary(str) do
+    str |> trim_to_integer("MN")
   end
 
   def apf_enabled(str) when is_binary(str) do

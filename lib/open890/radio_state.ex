@@ -20,6 +20,7 @@ defmodule Open890.RadioState do
             active_receiver: :a,
             active_transmitter: :a,
             memory_channel_frequency: nil,
+            memory_channel_number: nil,
             memory_channel_inactive_frequency: nil,
             memory_channel_active_mode: :unknown,
             memory_channel_inactive_mode: :unknown,
@@ -80,6 +81,11 @@ defmodule Open890.RadioState do
             rit_enabled: false,
             xit_enabled: false,
             rit_xit_offset: 0
+
+  # memory channel number
+  def dispatch(%__MODULE__{} = state, "MN" <> _rest = msg) do
+    %{state | memory_channel_number: Extract.memory_channel_number(msg) }
+  end
 
   # vfo mode
   def dispatch(%__MODULE__{} = state, "MV0" = msg) do
