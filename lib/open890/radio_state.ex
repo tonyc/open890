@@ -1,6 +1,10 @@
 defmodule Open890.RadioState do
   require Logger
 
+  # FIXME: Change this to `use ExtractCommand`
+  require ExtractCommand
+  import ExtractCommand
+
   alias Open890.{
     AntennaState,
     BandRegisterState,
@@ -82,24 +86,34 @@ defmodule Open890.RadioState do
             xit_enabled: false,
             rit_xit_offset: 0
 
-  # memory channel number
-  def dispatch(%__MODULE__{} = state, "MN" <> _rest = msg) do
-    %{state | memory_channel_number: Extract.memory_channel_number(msg) }
-  end
+  extract "AG", :audio_gain
+  extract "AN", :antenna_state
+  extract "AP0", :apf_enabled
+  extract "BC", :bc
+  extract "BSA", :band_scope_avg
+  extract "BSC0", :ref_level
+  extract "DD0", :data_speed
+  extract "DS1", :display_screen_id
+  extract "MG", :mic_gain
+  extract "MN", :memory_channel_number
+  extract "MV0", :vfo_memory_state
+  extract "MV1", :vfo_memory_state
+  extract "NR", :nr
+  extract "PA", :rf_pre
+  extract "PC", :power_level
+  extract "RA", :rf_att
+  extract "RF", :rit_xit_offset
+  extract "RG", :rf_gain
+  extract "RM1", :alc_meter
+  extract "RM2", :swr_meter
+  extract "RM3", :comp_meter
+  extract "RM4", :id_meter
+  extract "RM5", :vd_meter
+  extract "RM6", :temp_meter
+  extract "SD", :cw_delay
+  extract "SM", :s_meter
+  extract "TB", :split_enabled
 
-  # vfo mode
-  def dispatch(%__MODULE__{} = state, "MV0" = msg) do
-    %{state | vfo_memory_state: Extract.vfo_memory_state(msg) }
-  end
-
-  # memory mode
-  def dispatch(%__MODULE__{} = state, "MV1" <> _ = msg) do
-    %{state |
-      vfo_memory_state: Extract.vfo_memory_state(msg),
-      # active_mode: nil,
-      # inactive_mode: nil,
-    }
-  end
 
   def dispatch(%__MODULE__{} = state, "MA70" <> _ = msg) do
     %{state |
@@ -151,18 +165,6 @@ defmodule Open890.RadioState do
     %{state | xit_enabled: Extract.boolean(msg, prefix: "XT")}
   end
 
-  def dispatch(%__MODULE__{} = state, "RF" <> _ = msg) do
-    %{state | rit_xit_offset: Extract.rit_xit_offset(msg)}
-  end
-
-  def dispatch(%__MODULE__{} = state, "AP0" <> _ = msg) do
-    %{state | apf_enabled: Extract.apf_enabled(msg)}
-  end
-
-  def dispatch(%__MODULE__{} = state, "TB" <> _ = msg) do
-    %{state | split_enabled: Extract.split_enabled(msg)}
-  end
-
   def dispatch(%__MODULE__{} = state, "SQ" <> _ = msg) do
     %{state | squelch: Extract.sql(msg)}
   end
@@ -173,18 +175,6 @@ defmodule Open890.RadioState do
 
   def dispatch(%__MODULE__{} = state, "GC" <> _ = msg) do
     %{state | agc: Extract.agc(msg), agc_off: false}
-  end
-
-  def dispatch(%__MODULE__{} = state, "NR" <> _ = msg) do
-    %{state | nr: Extract.nr(msg)}
-  end
-
-  def dispatch(%__MODULE__{} = state, "BC" <> _ = msg) do
-    %{state | bc: Extract.bc(msg)}
-  end
-
-  def dispatch(%__MODULE__{} = state, "MG" <> _ = msg) do
-    %{state | mic_gain: Extract.mic_gain(msg)}
   end
 
   def dispatch(%__MODULE__{} = state, "TX0") do
@@ -203,16 +193,8 @@ defmodule Open890.RadioState do
     %{state | tx_state: :off}
   end
 
-  def dispatch(%__MODULE__{} = state, "SD" <> _ = msg) do
-    %{state | cw_delay: Extract.cw_delay(msg)}
-  end
-
   def dispatch(%__MODULE__{} = state, "KS" <> _ = msg) do
     %{state | cw_key_speed: Extract.key_speed(msg)}
-  end
-
-  def dispatch(%__MODULE__{} = state, "AN" <> _ = msg) do
-    %{state | antenna_state: Extract.antenna_state(msg)}
   end
 
   def dispatch(%__MODULE__{} = state, "XV" <> _ = msg) do
@@ -330,30 +312,6 @@ defmodule Open890.RadioState do
     %{state | notch_state: new_notch_state}
   end
 
-  def dispatch(%__MODULE__{} = state, "PC" <> _ = msg) do
-    %{state | power_level: Extract.power_level(msg)}
-  end
-
-  def dispatch(%__MODULE__{} = state, "RG" <> _ = msg) do
-    %{state | rf_gain: Extract.rf_gain(msg)}
-  end
-
-  def dispatch(%__MODULE__{} = state, "AG" <> _ = msg) do
-    %{state | audio_gain: Extract.audio_gain(msg)}
-  end
-
-  def dispatch(%__MODULE__{} = state, "DD0" <> _ = msg) do
-    %{state | data_speed: Extract.data_speed(msg)}
-  end
-
-  def dispatch(%__MODULE__{} = state, "BSA" <> _ = msg) do
-    %{state | band_scope_avg: Extract.band_scope_avg(msg)}
-  end
-
-  def dispatch(%__MODULE__{} = state, "BSC0" <> _ = msg) do
-    %{state | ref_level: Extract.ref_level(msg)}
-  end
-
   def dispatch(%__MODULE__{} = state, "BSM0" <> _ = msg) do
     [bs_low, bs_high] = msg |> Extract.band_edges()
 
@@ -437,10 +395,6 @@ defmodule Open890.RadioState do
 
     band_register_state = %{state.band_register_state | vfo_b_band: band_register}
     %{state | band_register_state: band_register_state}
-  end
-
-  def dispatch(%__MODULE__{} = state, "DS1" <> _ = msg) do
-    %{state | display_screen_id: Extract.display_screen_id(msg)}
   end
 
   def dispatch(%__MODULE__{} = state, "EX00611" <> _ = msg) do
@@ -580,38 +534,6 @@ defmodule Open890.RadioState do
     end
   end
 
-  def dispatch(%__MODULE__{} = state, "PA" <> _ = msg) do
-    %{state | rf_pre: Extract.rf_pre(msg)}
-  end
-
-  def dispatch(%__MODULE__{} = state, "RA" <> _ = msg) do
-    %{state | rf_att: Extract.rf_att(msg)}
-  end
-
-  def dispatch(%__MODULE__{} = state, "RM1" <> _ = msg) do
-    %{state | alc_meter: Extract.alc_meter(msg)}
-  end
-
-  def dispatch(%__MODULE__{} = state, "RM2" <> _ = msg) do
-    %{state | swr_meter: Extract.swr_meter(msg)}
-  end
-
-  def dispatch(%__MODULE__{} = state, "RM3" <> _ = msg) do
-    %{state | comp_meter: Extract.comp_meter(msg)}
-  end
-
-  def dispatch(%__MODULE__{} = state, "RM4" <> _ = msg) do
-    %{state | id_meter: Extract.id_meter(msg)}
-  end
-
-  def dispatch(%__MODULE__{} = state, "RM5" <> _ = msg) do
-    %{state | vd_meter: Extract.vd_meter(msg)}
-  end
-
-  def dispatch(%__MODULE__{} = state, "RM6" <> _ = msg) do
-    %{state | temp_meter: Extract.temp_meter(msg)}
-  end
-
   def dispatch(%__MODULE__{} = state, "SH0" <> _ = msg) do
     %{
       ssb_filter_mode: ssb_filter_mode,
@@ -662,10 +584,6 @@ defmodule Open890.RadioState do
 
     %{state | filter_state: filter_state}
     |> update_filter_lo_edge()
-  end
-
-  def dispatch(%__MODULE__{} = state, "SM" <> _ = msg) do
-    %{state | s_meter: Extract.s_meter(msg)}
   end
 
   ## dispatch catchall - this needs to be the very last one
