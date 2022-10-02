@@ -16,7 +16,12 @@ defmodule Open890Web.Live.VFODisplayComponent do
                   <span class="modeIndicator indicator active"><%= format_mode(@active_mode) %></span>
                 </div>
                 <div class="two wide left aligned column">
-                  <span class="vfoMemIndicator indicator"><%= format_vfo_memory_state(@vfo_memory_state) %></span>
+                  <span class="vfoMemIndicator indicator">
+                    <%= format_vfo_memory_state(@vfo_memory_state) %>
+                    <%= if @vfo_memory_state == :memory do %>
+                      <span class="vfo-display-component__memory-channel-number"><%= format_memory_channel(@memory_channel_number) %></span>
+                    <% end %>
+                  </span>
                 </div>
                 <div class="twelve wide right aligned column">
                   <div class="freq active" phx-hook="ActiveVFO" id="ActiveVFO">
@@ -26,12 +31,8 @@ defmodule Open890Web.Live.VFODisplayComponent do
               </div>
 
 
-              <div class="vfo-display-component__band-indicator row">
-                <div class="eight wide left aligned column">
-                  <%= if @vfo_memory_state == :memory do %>
-                    <span class="vfo-display-component__memory-channel-number"><%= format_memory_channel(@memory_channel_number) %></span>
-                  <% end %>
-                </div>
+              <div class="row">
+                <div class="eight wide left aligned column"></div>
                 <div class="eight wide right aligned column">
                   <span class="bandRegister">
                     <%= if @vfo_memory_state == :vfo do %>
