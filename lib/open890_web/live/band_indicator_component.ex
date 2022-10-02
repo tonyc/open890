@@ -37,22 +37,21 @@ defmodule Open890Web.Live.BandIndicatorComponent do
               <span class="bandPointer">◀</span>
               <span class="receiverIndicator active">M</span>
               <span class="bandPointer">
-                <%= if @inactive_frequency != 0 do %>
-                  ▶
-                <% else %>
-
-                <% end %>
+                <%= inactive_frequency_indicator(@inactive_frequency) %>
               </span>
             </div>
           <% _ -> %>
         <% end %>
-
-
-
-
-
-
       </div>
     """
   end
+
+  def inactive_frequency_indicator(freq) do
+    if !is_nil(freq) do
+      "▶"
+    else
+      ""
+    end
+  end
+
 end
