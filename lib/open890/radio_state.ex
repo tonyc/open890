@@ -16,14 +16,17 @@ defmodule Open890.RadioState do
   defstruct active_frequency: 0,
             active_frequency_delta: 0,
             active_if_filter: nil,
-            active_mode: :unknown,
+            active_mode: nil,
             active_receiver: :a,
             active_transmitter: :a,
+            inactive_frequency: 0,
+            inactive_mode: nil,
+            inactive_receiver: :b,
             memory_channel_frequency: nil,
             memory_channel_number: nil,
             memory_channel_inactive_frequency: nil,
-            memory_channel_active_mode: :unknown,
-            memory_channel_inactive_mode: :unknown,
+            memory_channel_active_mode: nil,
+            memory_channel_inactive_mode: nil,
             agc: nil,
             agc_off: nil,
             alc_meter: 0,
@@ -49,9 +52,6 @@ defmodule Open890.RadioState do
             filter_state: %FilterState{},
             fine: nil,
             id_meter: 0,
-            inactive_frequency: 0,
-            inactive_mode: :unknown,
-            inactive_receiver: :b,
             mic_gain: nil,
             noise_blank_state: %NoiseBlankState{},
             notch_state: %NotchState{},
@@ -624,7 +624,7 @@ defmodule Open890.RadioState do
       case active_mode do
         ssb when ssb in [:usb, :lsb] -> ssb_filter_mode
         data when data in [:usb_d, :lsb_d] -> ssb_data_filter_mode
-        _ -> :unknown
+        _ -> nil
       end
 
     passband_id = Extract.passband_id(msg)
@@ -649,7 +649,7 @@ defmodule Open890.RadioState do
       case active_mode do
         ssb when ssb in [:usb, :lsb] -> ssb_filter_mode
         data when data in [:usb_d, :lsb_d] -> ssb_data_filter_mode
-        _ -> :unknown
+        _ -> nil
       end
 
     passband_id = Extract.passband_id(msg)
@@ -815,7 +815,7 @@ defmodule Open890.RadioState do
     case state.vfo_memory_state do
       :vfo -> state.active_mode
       :memory -> state.memory_channel_active_mode
-      _ -> :unknown
+      _ -> nil
     end
   end
 
@@ -823,7 +823,7 @@ defmodule Open890.RadioState do
     case state.vfo_memory_state do
       :vfo -> state.inactive_mode
       :memory -> state.memory_channel_inactive_mode
-      _ -> :unknown
+      _ -> nil
     end
   end
 

@@ -82,6 +82,8 @@ defmodule Open890Web.RadioViewHelpers do
     |> String.upcase()
   end
 
+  def format_mode(nil), do: ""
+
   def scope_data_to_svg(band_data, opts \\ []) when is_list(band_data) do
     max_value = opts[:max_value]
     scale_y = opts[:scale_y] || 1.0

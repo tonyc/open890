@@ -85,7 +85,7 @@ defmodule Open890.Cloudlog do
       {:ok, %RadioConnection{} = radio_connection} ->
         mode = radio_state.active_mode
 
-        if mode != :unknown do
+        if !is_nil(mode) do
           frequency = radio_state |> RadioState.active_frequency()
           Logger.info("Pinging cloudlog: #{inspect(frequency)}, #{inspect(mode)}")
 
