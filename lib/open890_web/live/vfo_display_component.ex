@@ -28,6 +28,9 @@ defmodule Open890Web.Live.VFODisplayComponent do
 
               <div class="vfo-display-component__band-indicator row">
                 <div class="eight wide left aligned column">
+                  <%= if @vfo_memory_state == :memory do %>
+                    <span class="vfo-display-component__memory-channel-number"><%= format_memory_channel(@memory_channel_number) %></span>
+                  <% end %>
                 </div>
                 <div class="eight wide right aligned column">
                   <span class="bandRegister">
@@ -94,6 +97,24 @@ defmodule Open890Web.Live.VFODisplayComponent do
       _ -> ""
     end
   end
+
+  def format_memory_channel(num) when num in 0..99 do
+    num
+    |> to_string()
+    |> String.pad_leading(2, "0")
+  end
+
+  def format_memory_channel(num) when num in 100..109 do
+    p_num = num - 100
+    "P#{p_num}"
+  end
+
+  def format_memory_channel(num) when num in 110..119 do
+    p_num = num - 110
+    "E#{p_num}"
+  end
+
+  def format_memory_channel(_), do: ""
 
   def band_for(band_register_state, receiver) do
     band_register_state |> BandRegisterState.band_for(receiver)
