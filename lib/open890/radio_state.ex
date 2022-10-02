@@ -86,12 +86,16 @@ defmodule Open890.RadioState do
             xit_enabled: false,
             rit_xit_offset: 0
 
+  extract "##KN2", :voip_available, as: :boolean
+  extract "##VP", :voip_enabled, as: :boolean
+
   extract "AG", :audio_gain
   extract "AN", :antenna_state
   extract "AP0", :apf_enabled
   extract "BC", :bc
   extract "BSA", :band_scope_avg
   extract "BSC0", :ref_level
+  extract "BSO", :band_scope_expand, as: :boolean
   extract "DD0", :data_speed
   extract "DS1", :display_screen_id
   extract "MG", :mic_gain
@@ -110,10 +114,12 @@ defmodule Open890.RadioState do
   extract "RM4", :id_meter
   extract "RM5", :vd_meter
   extract "RM6", :temp_meter
+  extract "RT", :rit_enabled, as: :boolean
   extract "SD", :cw_delay
   extract "SM", :s_meter
+  extract "SQ", :squelch
   extract "TB", :split_enabled
-
+  extract "XT", :xit_enabled, as: :boolean
 
   def dispatch(%__MODULE__{} = state, "MA70" <> _ = msg) do
     %{state |
@@ -129,10 +135,6 @@ defmodule Open890.RadioState do
     %{state | memory_channel_inactive_frequency: Extract.memory_channel_frequency(msg)}
   end
 
-  def dispatch(%__MODULE__{} = state, "BSO" <> _ = msg) do
-    %{state | band_scope_expand: Extract.boolean(msg, prefix: "BSO") }
-  end
-
   def dispatch(%__MODULE__{} = state, "FS00" <> _ = _msg) do
     %{state | fine: false}
   end
@@ -141,33 +143,6 @@ defmodule Open890.RadioState do
     %{state | fine: true}
   end
 
-  def dispatch(%__MODULE__{} = state, "##VP1" <> _ = _msg) do
-    %{state | voip_enabled: true}
-  end
-
-  def dispatch(%__MODULE__{} = state, "##VP0" <> _ = _msg) do
-    %{state | voip_enabled: false}
-  end
-
-  def dispatch(%__MODULE__{} = state, "##KN21" <> _ = _msg) do
-    %{state | voip_available: true}
-  end
-
-  def dispatch(%__MODULE__{} = state, "##KN20" <> _ = _msg) do
-    %{state | voip_available: false}
-  end
-
-  def dispatch(%__MODULE__{} = state, "RT" <> _ = msg) do
-    %{state | rit_enabled: Extract.boolean(msg, prefix: "RT")}
-  end
-
-  def dispatch(%__MODULE__{} = state, "XT" <> _ = msg) do
-    %{state | xit_enabled: Extract.boolean(msg, prefix: "XT")}
-  end
-
-  def dispatch(%__MODULE__{} = state, "SQ" <> _ = msg) do
-    %{state | squelch: Extract.sql(msg)}
-  end
 
   def dispatch(%__MODULE__{} = state, "GC0" <> _ = _msg) do
     %{state | agc_off: true}

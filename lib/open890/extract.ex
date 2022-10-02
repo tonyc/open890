@@ -610,7 +610,7 @@ defmodule Open890.Extract do
     str |> trim_to_integer("PA")
   end
 
-  def sql(str) when is_binary(str) do
+  def squelch(str) when is_binary(str) do
     str |> trim_to_integer("SQ")
   end
 
@@ -682,9 +682,9 @@ defmodule Open890.Extract do
     |> Enum.reduce(src, &String.trim_leading(&2, &1))
   end
 
-  def boolean(msg, opts \\ []) when is_binary(msg) and is_list(opts) do
+  def boolean(msg) when is_binary(msg) do
     msg
-    |> String.trim_leading(opts |> Keyword.get(:prefix, ""))
+    |> String.last()
     |> case do
       "1" -> true
       _ -> false
