@@ -8,4 +8,8 @@ defmodule Open890.TransverterState do
       freq
     end
   end
+
+  def apply_offset(%__MODULE__{} = _state, nil) do
+    nil
+  end
 end
