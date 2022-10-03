@@ -175,7 +175,7 @@
       <div class="row">
         <div class="column">
           <%= if @radio_state.audio_gain do %>
-            <Slider.slider label="AF" value={@radio_state.audio_gain} click="audio_gain_changed" wheel="adjust_audio_gain" />
+            <Slider.slider label="AF" value={@radio_state.audio_gain} click="audio_gain_changed" wheel="adjust_audio_gain" enabled={true} />
           <% end %>
         </div>
       </div>
@@ -183,7 +183,7 @@
       <div class="row">
         <div class="column">
           <%= if @radio_state.rf_gain do %>
-            <Slider.slider label="RF" value={@radio_state.rf_gain} click="rf_gain_changed" wheel="adjust_rf_gain" />
+            <Slider.slider label="RF" value={@radio_state.rf_gain} click="rf_gain_changed" wheel="adjust_rf_gain" enabled={true} />
           <% end %>
         </div>
       </div>
@@ -191,7 +191,7 @@
       <div class="row">
         <div class="column">
           <%= if @radio_state.squelch do %>
-            <Slider.slider label="SQL" value={@radio_state.squelch} click="sql_changed" wheel="adjust_sql" />
+            <Slider.slider label="SQL" value={@radio_state.squelch} click="sql_changed" wheel="adjust_sql" enabled={true} />
           <% end %>
         </div>
       </div>
@@ -399,7 +399,12 @@
 
             <div class="ui one column grid row">
               <div class="center aligned column">
-                <Slider.slider label="" value={@radio_state.notch_state.frequency} click="notch_changed" wheel="adjust_notch" enabled={@radio_state.notch_state.enabled} />
+                <Slider.slider
+                  label=""
+                  value={@radio_state.notch_state.frequency}
+                  click="notch_changed"
+                  wheel="adjust_notch"
+                  enabled={@radio_state.notch_state.enabled} />
               </div>
             </div>
           </div>

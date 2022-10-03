@@ -509,6 +509,10 @@ let Hooks = {
 
       this.el.addEventListener('wheel', (event) => {
         event.preventDefault();
+
+        if (this.el.dataset.enabled !== "true") {
+          return
+        }
         var isScrollUp = (event.deltaY < 0)
         this.pushEvent(this.wheelAction, {is_up: isScrollUp})
       })
@@ -517,6 +521,10 @@ let Hooks = {
         event.stopPropagation()
         event.preventDefault()
 
+        if (this.el.dataset.enabled !== "true") {
+          return
+        }
+
         let coords = this.getClickCoords(event)
         let x = Math.floor(coords.x)
 
@@ -524,6 +532,10 @@ let Hooks = {
       })
 
       this.el.addEventListener("mousemove", event => {
+        if (this.el.dataset.enabled !== "true") {
+          return;
+        }
+
         if (event.buttons && event.buttons == 1) {
           let coords = this.getClickCoords(event)
           let x = Math.floor(coords.x)
