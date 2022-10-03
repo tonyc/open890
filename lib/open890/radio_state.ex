@@ -96,6 +96,7 @@ defmodule Open890.RadioState do
   extract "BSA", :band_scope_avg
   extract "BSC0", :ref_level
   extract "BSO", :band_scope_expand, as: :boolean
+  extract "BS8", :band_scope_att
   extract "DD0", :data_speed
   extract "DS1", :display_screen_id
   extract "MG", :mic_gain
@@ -142,7 +143,6 @@ defmodule Open890.RadioState do
   def dispatch(%__MODULE__{} = state, "FS11" <> _ = _msg) do
     %{state | fine: true}
   end
-
 
   def dispatch(%__MODULE__{} = state, "GC0" <> _ = _msg) do
     %{state | agc_off: true}
@@ -350,10 +350,6 @@ defmodule Open890.RadioState do
       _ ->
         state
     end
-  end
-
-  def dispatch(%__MODULE__{} = state, "BS8" <> _ = msg) do
-    %{state | band_scope_att: Extract.band_scope_att(msg)}
   end
 
   # VFO A band register
