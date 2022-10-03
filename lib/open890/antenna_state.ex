@@ -31,10 +31,11 @@ defmodule Open890.AntennaState do
   def extract(_), do: %__MODULE__{}
 
   def to_command(%__MODULE__{} = state) do
-    p1 = case state.active_ant do
-      :ant1 -> "1"
-      _ -> "2"
-    end
+    p1 =
+      case state.active_ant do
+        :ant1 -> "1"
+        _ -> "2"
+      end
 
     p2 = state.rx_ant_enabled |> boolean_to_str()
     p3 = state.drv_enabled |> boolean_to_str()
@@ -47,7 +48,9 @@ defmodule Open890.AntennaState do
     case active_ant do
       :ant1 ->
         mod |> enable_ant_2()
-        _ -> mod |> enable_ant_1()
+
+      _ ->
+        mod |> enable_ant_1()
     end
   end
 
@@ -82,6 +85,7 @@ defmodule Open890.AntennaState do
       mod |> enable_drv()
     end
   end
+
   def enable_drv(%__MODULE__{} = mod) do
     %{mod | drv_enabled: true}
   end

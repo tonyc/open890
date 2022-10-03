@@ -195,7 +195,13 @@ defmodule Open890Web.Components.BandScope do
     """
   end
 
-  def shifted_passband_points(mode, %FilterState{lo_width: lo_width, hi_shift: hi_shift} = _filter_state, active_frequency, scope_edges) when is_integer(lo_width) and is_integer(hi_shift) do
+  def shifted_passband_points(
+        mode,
+        %FilterState{lo_width: lo_width, hi_shift: hi_shift} = _filter_state,
+        active_frequency,
+        scope_edges
+      )
+      when is_integer(lo_width) and is_integer(hi_shift) do
     half_width = (lo_width / 2) |> round()
 
     shift_direction =

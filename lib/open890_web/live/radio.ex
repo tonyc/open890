@@ -117,9 +117,10 @@ defmodule Open890Web.Live.Radio do
       |> RadioState.effective_active_frequency()
       |> RadioViewHelpers.format_raw_frequency()
 
-    formatted_mode = radio_state
-                     |> RadioState.effective_active_mode()
-                     |> RadioViewHelpers.format_mode()
+    formatted_mode =
+      radio_state
+      |> RadioState.effective_active_mode()
+      |> RadioViewHelpers.format_mode()
 
     page_title = "#{formatted_frequency} - #{formatted_mode}"
 

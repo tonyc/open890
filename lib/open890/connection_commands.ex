@@ -326,14 +326,15 @@ defmodule Open890.ConnectionCommands do
   end
 
   def toggle_vfo(conn, %RadioState{active_receiver: active_receiver, split_enabled: split_enabled}) do
-
     case active_receiver do
       :a ->
         conn |> cmd("FR1")
         if split_enabled, do: conn |> cmd("FT0")
+
       :b ->
         conn |> cmd("FR0")
         if split_enabled, do: conn |> cmd("FT1")
+
       _ ->
         conn
     end

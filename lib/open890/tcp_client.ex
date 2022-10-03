@@ -253,7 +253,6 @@ defmodule Open890.TCPClient do
           |> String.trim_leading("##DD3")
           |> parse_scope_data()
 
-
         RadioConnection.broadcast_audio_scope(connection, audio_scope_data)
 
         state
@@ -270,29 +269,28 @@ defmodule Open890.TCPClient do
         ## If expand mode is on:
         # For spans 5-100 khz, only render the middle 1/3 of samples received. For 200khz, render the middle 1/2. For 500 khz, just render all of what is received.
 
-        band_scope_data = if radio_state.band_scope_expand do
-          cond do
-            radio_state.band_scope_span <= 100 ->
-              # take middle 1/3 of samples, and triple them
-              band_scope_data
-              |> Enum.slice(213..427)
-              |> Enum.flat_map(fn x -> [x, x, x] end)
+        band_scope_data =
+          if radio_state.band_scope_expand do
+            cond do
+              radio_state.band_scope_span <= 100 ->
+                # take middle 1/3 of samples, and triple them
+                band_scope_data
+                |> Enum.slice(213..427)
+                |> Enum.flat_map(fn x -> [x, x, x] end)
 
-            radio_state.band_scope_span == 200 ->
-              # take the middle 1/2 and double them
-              band_scope_data
-              |> Enum.slice(160..500)
-              |> Enum.flat_map(fn x -> [x, x] end)
+              radio_state.band_scope_span == 200 ->
+                # take the middle 1/2 and double them
+                band_scope_data
+                |> Enum.slice(160..500)
+                |> Enum.flat_map(fn x -> [x, x] end)
 
-            200 ->
-              # spans over 200khz, just render everything
-              band_scope_data
+              200 ->
+                # spans over 200khz, just render everything
+                band_scope_data
+            end
+          else
+            band_scope_data
           end
-        else
-          band_scope_data
-        end
-
-
 
         RadioConnection.broadcast_band_scope(connection, band_scope_data)
 

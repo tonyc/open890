@@ -1,5 +1,6 @@
 defmodule ExtractCommand do
   alias Open890.Extract
+
   defmacro extract(cmd, attr, opts \\ []) do
     fun = opts |> Keyword.get(:as, attr)
 

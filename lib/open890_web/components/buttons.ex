@@ -8,14 +8,16 @@ defmodule Open890Web.Components.Buttons do
   def ant_1_2_button(assigns) do
     %AntennaState{} = ant_state = assigns.value
 
-    label = case ant_state.active_ant do
-      :ant1 -> "ANT 1"
-      _ -> "ANT 2"
-    end
+    label =
+      case ant_state.active_ant do
+        :ant1 -> "ANT 1"
+        _ -> "ANT 2"
+      end
 
-    cmd = ant_state
-    |> AntennaState.toggle_ant()
-    |> AntennaState.to_command()
+    cmd =
+      ant_state
+      |> AntennaState.toggle_ant()
+      |> AntennaState.to_command()
 
     ~H"""
       <.cmd_button_2 cmd={cmd} fluid={assigns[:fluid]}><%= label %></.cmd_button_2>
@@ -25,15 +27,17 @@ defmodule Open890Web.Components.Buttons do
   def rx_ant_button(assigns) do
     %AntennaState{} = ant_state = assigns.value
 
-    enabled = if ant_state.rx_ant_enabled do
-      "ON"
-    else
-      "OFF"
-    end
+    enabled =
+      if ant_state.rx_ant_enabled do
+        "ON"
+      else
+        "OFF"
+      end
 
-    cmd = ant_state
-    |> AntennaState.toggle_rx_ant()
-    |> AntennaState.to_command()
+    cmd =
+      ant_state
+      |> AntennaState.toggle_rx_ant()
+      |> AntennaState.to_command()
 
     ~H"""
       <.cmd_button_2 cmd={cmd} fluid={assigns[:fluid]}>RX ANT <%= enabled %></.cmd_button_2>
@@ -43,15 +47,18 @@ defmodule Open890Web.Components.Buttons do
   def ant_out_button(assigns) do
     %AntennaState{} = ant_state = assigns.value
 
-    enabled = if ant_state.ant_out_enabled do
-      "ON"
-    else
-      "OFF"
-    end
+    enabled =
+      if ant_state.ant_out_enabled do
+        "ON"
+      else
+        "OFF"
+      end
 
-    cmd = ant_state
-    |> AntennaState.toggle_ant_out()
-    |> AntennaState.to_command()
+    cmd =
+      ant_state
+      |> AntennaState.toggle_ant_out()
+      |> AntennaState.to_command()
+
     ~H"""
       <.cmd_button_2 cmd={cmd} fluid={assigns[:fluid]}>ANT OUT <%= enabled %></.cmd_button_2>
     """
@@ -60,15 +67,17 @@ defmodule Open890Web.Components.Buttons do
   def drv_button(assigns) do
     %AntennaState{} = ant_state = assigns.value
 
-    enabled = if ant_state.drv_enabled do
-      "ON"
-    else
-      "OFF"
-    end
+    enabled =
+      if ant_state.drv_enabled do
+        "ON"
+      else
+        "OFF"
+      end
 
-    cmd = ant_state
-    |> AntennaState.toggle_drv()
-    |> AntennaState.to_command()
+    cmd =
+      ant_state
+      |> AntennaState.toggle_drv()
+      |> AntennaState.to_command()
 
     ~H"""
       <.cmd_button_2 cmd={cmd} fluid={assigns[:fluid]}>DRV <%= enabled %></.cmd_button_2>
@@ -78,11 +87,12 @@ defmodule Open890Web.Components.Buttons do
   def xvtr_button(assigns) do
     %TransverterState{} = xvtr_state = assigns.value
 
-    [next_command, label] = if xvtr_state.enabled do
-      ["XV0", "ON"]
-    else
-      ["XV1", "OFF"]
-    end
+    [next_command, label] =
+      if xvtr_state.enabled do
+        ["XV0", "ON"]
+      else
+        ["XV1", "OFF"]
+      end
 
     ~H"""
       <.cmd_button_2 cmd={next_command} fluid={assigns[:fluid]}>XVTR <%= label %></.cmd_button_2>
@@ -289,29 +299,31 @@ defmodule Open890Web.Components.Buttons do
   end
 
   def ssb_shift_width_button(assigns) do
-    [label, cmd] = case assigns.active_mode do
-      ssb when ssb in [:usb, :lsb] ->
-        case assigns.ssb_filter_mode do
-          :shift_width ->
-            ["SHIFT/WIDTH", "EX00611 000"]
-          _ ->
-            ["HI/LO CUT", "EX00611 001"]
-        end
+    [label, cmd] =
+      case assigns.active_mode do
+        ssb when ssb in [:usb, :lsb] ->
+          case assigns.ssb_filter_mode do
+            :shift_width ->
+              ["SHIFT/WIDTH", "EX00611 000"]
 
-      _other ->
-        case assigns.ssb_data_filter_mode do
-          :shift_width ->
-            ["SHIFT/WIDTH", "EX00612 000"]
-          _ ->
-            ["HI/LO CUT", "EX00612 001"]
-        end
-    end
+            _ ->
+              ["HI/LO CUT", "EX00611 001"]
+          end
+
+        _other ->
+          case assigns.ssb_data_filter_mode do
+            :shift_width ->
+              ["SHIFT/WIDTH", "EX00612 000"]
+
+            _ ->
+              ["HI/LO CUT", "EX00612 001"]
+          end
+      end
 
     ~H"""
       <.cmd_button_2 cmd={cmd} classes="ui mini black"><%= label %></.cmd_button_2>
     """
   end
-
 
   def filter_buttons(assigns) do
     ~H"""
@@ -510,11 +522,12 @@ defmodule Open890Web.Components.Buttons do
       false => "BSO1"
     }
 
-    label = if assigns.band_scope_expand do
-      "ON"
-    else
-      "OFF"
-    end
+    label =
+      if assigns.band_scope_expand do
+        "ON"
+      else
+        "OFF"
+      end
 
     ~H"""
       <.cycle_button_2 value={@band_scope_expand} values={values} fluid>

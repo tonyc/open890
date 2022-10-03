@@ -123,12 +123,13 @@ defmodule Open890.RadioState do
   extract "XT", :xit_enabled, as: :boolean
 
   def dispatch(%__MODULE__{} = state, "MA70" <> _ = msg) do
-    %{state |
-      memory_channel_frequency: Extract.memory_channel_frequency(msg),
+    %{
+      state
+      | memory_channel_frequency: Extract.memory_channel_frequency(msg),
 
-      # clear out the inactive side because the radio doesn't specifically tell us it cleared out.
-      # just wait for a new MA71 to tell us the inactive side.
-      memory_channel_inactive_frequency: nil,
+        # clear out the inactive side because the radio doesn't specifically tell us it cleared out.
+        # just wait for a new MA71 to tell us the inactive side.
+        memory_channel_inactive_frequency: nil
     }
   end
 
@@ -482,8 +483,10 @@ defmodule Open890.RadioState do
     case state.vfo_memory_state do
       :vfo ->
         %{state | active_mode: mode}
+
       :memory ->
         %{state | memory_channel_active_mode: mode}
+
       _ ->
         state
     end
@@ -495,11 +498,14 @@ defmodule Open890.RadioState do
     # if we're in vfo mode, set inactive_mode,
     # if we're in memory mode, set memory_channel_inactive_mode
     mode = Extract.operating_mode(msg)
+
     case state.vfo_memory_state do
       :vfo ->
         %{state | inactive_mode: mode}
+
       :memory ->
         %{state | memory_channel_inactive_mode: mode}
+
       _ ->
         state
     end
@@ -685,11 +691,12 @@ defmodule Open890.RadioState do
 
   # The final frequency that displays on the screen, taking RIT into account
   def effective_active_frequency(%__MODULE__{} = state) do
-    base_frequency = case state.vfo_memory_state do
-      :vfo -> state.active_frequency
-      :memory -> state.memory_channel_frequency
-      _ -> nil
-    end
+    base_frequency =
+      case state.vfo_memory_state do
+        :vfo -> state.active_frequency
+        :memory -> state.memory_channel_frequency
+        _ -> nil
+      end
 
     if base_frequency do
       if state.rit_enabled && state.rit_xit_offset do
@@ -721,11 +728,12 @@ defmodule Open890.RadioState do
   # The final frequency display on the right side, taking in split and XIT state into account.
   # This is DIFFERENT from the position that the "T" banner displays on the bandscope.
   def effective_inactive_frequency(%__MODULE__{} = state) do
-    base_frequency = case state.vfo_memory_state do
-      :vfo -> state.inactive_frequency
-      :memory -> state.memory_channel_inactive_frequency
-      _ -> nil
-    end
+    base_frequency =
+      case state.vfo_memory_state do
+        :vfo -> state.inactive_frequency
+        :memory -> state.memory_channel_inactive_frequency
+        _ -> nil
+      end
 
     if base_frequency do
       if state.split_enabled && state.xit_enabled && state.rit_xit_offset do
@@ -743,7 +751,7 @@ defmodule Open890.RadioState do
   end
 
   def tx_banner_frequency(%__MODULE__{} = state) do
-    if state.vfo_memory_state == :memory  do
+    if state.vfo_memory_state == :memory do
       case effective_inactive_frequency(state) do
         val when is_integer(val) -> val
         nil -> effective_active_frequency(state)
@@ -764,5 +772,4 @@ defmodule Open890.RadioState do
       end
     end
   end
-
 end

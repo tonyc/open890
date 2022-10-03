@@ -99,7 +99,6 @@ defmodule Open890Web.Components.AudioScope do
         frequency: frequency
       })
       when mode in [:usb, :lsb, :usb_d, :lsb_d] do
-
     x_position =
       case filter_mode do
         :shift_width ->

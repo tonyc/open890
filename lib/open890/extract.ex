@@ -559,6 +559,7 @@ defmodule Open890.Extract do
 
   def get_am_hi_cut(passband_id), do: am_hi_cut_lookup() |> Enum.at(passband_id)
   def get_fm_hi_cut(passband_id), do: fm_hi_cut_lookup() |> Enum.at(passband_id)
+
   def get_ssb_hi_cut(passband_id) do
     case ssb_hi_cut_lookup() |> Enum.at(passband_id) do
       nil -> 0
@@ -699,5 +700,4 @@ defmodule Open890.Extract do
       "1" <> rest -> -String.to_integer(rest)
     end
   end
-
 end

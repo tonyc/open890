@@ -53,5 +53,4 @@ defmodule Open890Web.Live.BandIndicatorComponent do
       ""
     end
   end
-
 end
