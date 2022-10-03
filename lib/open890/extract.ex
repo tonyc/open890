@@ -550,7 +550,7 @@ defmodule Open890.Extract do
 
       _ ->
         Logger.warn(
-          "Unknown passband_id #{passband_id} for mode: #{mode} (filter_mode: #{filter_mode})"
+          "filter_lo_width: Unknown passband_id #{passband_id} for mode: #{mode} (filter_mode: #{filter_mode})"
         )
 
         nil

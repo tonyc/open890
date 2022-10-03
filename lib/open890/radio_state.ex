@@ -614,11 +614,12 @@ defmodule Open890.RadioState do
 
   def dispatch(%__MODULE__{} = state, "SH0" <> _ = msg) do
     %{
-      active_mode: active_mode,
       ssb_filter_mode: ssb_filter_mode,
       ssb_data_filter_mode: ssb_data_filter_mode,
       filter_state: filter_state
     } = state
+
+    active_mode = effective_active_mode(state)
 
     filter_mode =
       case active_mode do
@@ -639,11 +640,12 @@ defmodule Open890.RadioState do
 
   def dispatch(%__MODULE__{} = state, "SL0" <> _ = msg) do
     %{
-      active_mode: active_mode,
       ssb_filter_mode: ssb_filter_mode,
       ssb_data_filter_mode: ssb_data_filter_mode,
       filter_state: filter_state
     } = state
+
+    active_mode = effective_active_mode(state)
 
     filter_mode =
       case active_mode do
@@ -653,6 +655,7 @@ defmodule Open890.RadioState do
       end
 
     passband_id = Extract.passband_id(msg)
+
 
     filter_lo_width = passband_id |> Extract.filter_lo_width(filter_mode, active_mode)
 

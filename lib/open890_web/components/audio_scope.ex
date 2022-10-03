@@ -193,34 +193,32 @@ defmodule Open890Web.Components.AudioScope do
 
   def cw_filter_points(%FilterState{} = filter_state) do
     filter_width = FilterState.width(filter_state)
+    hi_shift = filter_state.hi_shift
 
-    case filter_width do
-      nil ->
-        Logger.warn("Got nil width from FilterState: #{inspect filter_state}")
-        ""
+    if is_nil(filter_width) || is_nil(hi_shift) do
+      ""
+    else
+      half_width = round(filter_width / 2)
 
-      other when is_integer(other) ->
-        half_width = round(filter_width / 2)
+      scope_width =
+        cond do
+          filter_width < 700 -> 500
+          true -> 1500
+        end
 
-        scope_width =
-          cond do
-            filter_width < 700 -> 500
-            true -> 1500
-          end
+      half_shift = hi_shift |> div(2)
 
-        half_shift = filter_state.hi_shift |> div(2)
+      distance = ((half_width |> project_to_audioscope_limits(scope_width)) / 2) |> round()
 
-        distance = ((half_width |> project_to_audioscope_limits(scope_width)) / 2) |> round()
+      half_shift_projected =
+        half_shift
+        |> project_to_audioscope_limits(scope_width)
+        |> round()
 
-        half_shift_projected =
-          half_shift
-          |> project_to_audioscope_limits(scope_width)
-          |> round()
+      low_val = 106 - distance + half_shift_projected
+      high_val = 106 + distance + half_shift_projected
 
-        low_val = 106 - distance + half_shift_projected
-        high_val = 106 + distance + half_shift_projected
-
-        audio_scope_filter_points(low_val, high_val)
+      audio_scope_filter_points(low_val, high_val)
     end
   end
 
