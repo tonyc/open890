@@ -113,10 +113,14 @@ defmodule Open890Web.Live.Radio do
   @impl true
   def handle_info(%Broadcast{event: "radio_state_data", payload: %{msg: radio_state}}, socket) do
     formatted_frequency =
-      RadioState.active_frequency(radio_state)
+      radio_state
+      |> RadioState.effective_active_frequency()
       |> RadioViewHelpers.format_raw_frequency()
 
-    formatted_mode = radio_state.active_mode |> RadioViewHelpers.format_mode()
+    formatted_mode = radio_state
+                     |> RadioState.effective_active_mode()
+                     |> RadioViewHelpers.format_mode()
+
     page_title = "#{formatted_frequency} - #{formatted_mode}"
 
     socket =
