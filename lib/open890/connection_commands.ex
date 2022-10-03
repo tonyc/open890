@@ -132,25 +132,6 @@ defmodule Open890.ConnectionCommands do
     conn |> cmd(["MA70", "MA71"])
   end
 
-  # def get_all_memory_channels(conn) do
-  #   Logger.info("get_all_memory_channels")
-
-  #   (0..99)
-  #   |> Enum.map(fn x ->
-  #     x
-  #     |> to_string
-  #     |> String.pad_leading(3, "0")
-  #   end)
-  #   |> Enum.each(fn channel ->
-  #     Logger.info("retrieve memory channel #{channel}")
-  #     conn |> cmd("MA0#{channel}")
-
-  #     Process.sleep(50)
-  #   end)
-
-  #   conn
-  # end
-
   def get_notch_states(conn) do
     conn
     |> cmd("NT")
