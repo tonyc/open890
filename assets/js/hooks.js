@@ -503,7 +503,6 @@ let Hooks = {
 
   Slider: {
     mounted() {
-      console.log("slider mounted")
       this.action = this.el.dataset.clickAction
       this.wheelAction = this.el.dataset.wheelAction;
 
@@ -556,8 +555,6 @@ let Hooks = {
 
   SpectrumScaleForm: {
     mounted() {
-      console.log("spectrum scale form")
-
       const key = 'bandscope.spectrum_scale'
       let val = localStorage.getItem(key)
 

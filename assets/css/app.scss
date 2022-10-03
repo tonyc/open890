@@ -725,6 +725,7 @@ svg#bandScope {
   cursor: pointer;
   
   &.disabled {
+    cursor: default;
     background-color: #333;
     .indicator {
       background-color: #666;
