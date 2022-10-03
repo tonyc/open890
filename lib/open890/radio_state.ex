@@ -656,7 +656,6 @@ defmodule Open890.RadioState do
 
     passband_id = Extract.passband_id(msg)
 
-
     filter_lo_width = passband_id |> Extract.filter_lo_width(filter_mode, active_mode)
 
     filter_state = %{filter_state | lo_width: filter_lo_width, lo_passband_id: passband_id}
