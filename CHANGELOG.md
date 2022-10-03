@@ -2,11 +2,10 @@
 
 ## Unreleased
 * Implemented memory channel display.
-* Relocated the SPLIT button next to RIT/XIT.
-* Made the SPLIT button appear yellow when activated.
+* Relocated the SPLIT button next to RIT/XIT, made the SPLIT button appear yellow when activated.
 * Added keyboard shortcut: '\' to perform A/B
 * Added keyboard shortcut: '=' to perform A=B
-* Changed keyboard shortcut: 's' toggles SPLIT, h' now performs "SHIFT"
+* Changed keyboard shortcut: 's' now toggles SPLIT, 'h' now performs "SHIFT"
 * Swapped the position of the A/B and A=B buttons.
 * [Dev] Update Dockerfile so it builds and runs (#96)
 * [Dev] Added "make build_docker" and "make docker" Makefile targets for building and running the docker image, respectively
