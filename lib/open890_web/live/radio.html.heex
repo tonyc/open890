@@ -397,13 +397,11 @@
               </div>
             </div>
 
-            <%= if @radio_state.notch_state.enabled do %>
-              <div class="ui one column grid row">
-                <div class="center aligned column">
-                  <Slider.slider label="" value={@radio_state.notch_state.frequency} click="notch_changed" wheel="adjust_notch" />
-                </div>
+            <div class="ui one column grid row">
+              <div class="center aligned column">
+                <Slider.slider label="" value={@radio_state.notch_state.frequency} click="notch_changed" wheel="adjust_notch" enabled={@radio_state.notch_state.enabled} />
               </div>
-            <% end %>
+            </div>
           </div>
 
           <div class={tab_panel_classes("scope", @active_tab)}>

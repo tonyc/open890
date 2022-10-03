@@ -717,13 +717,23 @@ svg#bandScope {
 
 .sliderWrapper {
   margin-top: 5px;
-  float: right;
+  margin: 0 auto;
   width: 255px;
-  // max-width: 300px;
   height: 1rem;
   background-color: $kenwood-grey;
 
   cursor: pointer;
+  
+  &.disabled {
+    background-color: #333;
+    .indicator {
+      background-color: #666;
+    }
+  }
+
+  &.labeled {
+    float: right;
+  }
 
   .indicator {
     position: relative;
