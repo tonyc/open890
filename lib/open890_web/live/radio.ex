@@ -106,6 +106,11 @@ defmodule Open890Web.Live.Radio do
   end
 
   @impl true
+  def handle_info(%Broadcast{event: "lock_state", payload: locked}, socket) do
+    {:noreply, socket |> push_event("lock_state", %{locked: locked})}
+  end
+
+  @impl true
   def handle_info(%Broadcast{event: "band_scope_cleared"}, socket) do
     {:noreply, socket |> push_event("clear_band_scope", %{})}
   end

@@ -202,13 +202,23 @@ let Hooks = {
     },
 
     mounted() {
+      let me = this;
+
       let scaleKey = 'bandscope.spectrum_scale'
       this.spectrumScale = localStorage.getItem(scaleKey) || 140
+      this.locked = false;
+
+      this.handleEvent("lock_state", (event) => {
+        console.log("band_scope: locked:", event)
+        me.locked = event.locked;
+      })
 
       this.el.addEventListener("wheel", event => {
         // This is duplicated in the BandScopeCanvas hook below
         event.preventDefault();
         console.log("VFO wheel", event)
+
+        if (me.locked) { return; }
 
         var isScrollUp = (event.deltaY < 0);
         var stepSize = 5;
@@ -239,12 +249,15 @@ let Hooks = {
       });
 
       this.el.addEventListener("mousemove", event => {
+        if (me.locked) { return; }
+
         if (event.buttons && event.buttons == 1) {
           this.tuneToClick(event)
         }
       })
 
       this.el.addEventListener("mousedown", (event) => {
+        if (me.locked) { return; }
         this.tuneToClick(event)
       })
     }
@@ -369,6 +382,7 @@ let Hooks = {
       this.canvas = this.el
       this.ctx = this.canvas.getContext("2d")
       this.drawInterval = this.el.dataset.drawInterval;
+      this.locked = false;
 
       this.maxVal = this.el.dataset.maxValue;
       this.width = this.el.getAttribute('width')
@@ -386,14 +400,22 @@ let Hooks = {
 
       this.clearScope()
 
+      this.handleEvent("lock_state", (event) => {
+        console.log("band_scope: canvas: lock_state:", event)
+        me.locked = event.locked;
+      })
+
       this.handleEvent("clear_band_scope", (event) => {
         this.clearScope()
       })
 
       this.el.addEventListener("wheel", event => {
         // this is duplicated in the BandScope hooks above
+
         event.preventDefault();
-        console.log("VFO wheel", event)
+        if (me.locked) { return; }
+
+        // console.log("VFO wheel", event)
 
         var isScrollUp = (event.deltaY < 0);
         var stepSize = 5;
@@ -412,12 +434,15 @@ let Hooks = {
       });
 
       this.el.addEventListener("mousemove", event => {
+        if (me.locked) { return; }
+
         if (event.buttons && event.buttons == 1) {
           this.tuneToClick(event)
         }
       })
 
       this.el.addEventListener("mousedown", event => {
+        if (me.locked) { return; }
         this.tuneToClick(event);
       })
 

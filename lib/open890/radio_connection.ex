@@ -242,6 +242,7 @@ defmodule Open890.RadioConnection do
     end
   end
 
+
   def broadcast_freq_delta(%__MODULE__{id: id} = _connection, args) do
     Open890Web.Endpoint.broadcast("connection:#{id}", "freq_delta", args)
   end
@@ -250,26 +251,31 @@ defmodule Open890.RadioConnection do
     Open890Web.Endpoint.broadcast("connection:#{id}", "connection_state", state)
   end
 
-  def broadcast_band_scope(%__MODULE__{id: connection_id}, band_scope_data) do
-    Open890Web.Endpoint.broadcast("radio:band_scope:#{connection_id}", "band_scope_data", %{
+  def broadcast_band_scope(%__MODULE__{id: id}, band_scope_data) do
+    Open890Web.Endpoint.broadcast("radio:band_scope:#{id}", "band_scope_data", %{
       payload: band_scope_data
     })
   end
 
-  def broadcast_audio_scope(%__MODULE__{id: connection_id}, audio_scope_data) do
-    Open890Web.Endpoint.broadcast("radio:audio_scope:#{connection_id}", "scope_data", %{
+  def broadcast_audio_scope(%__MODULE__{id: id}, audio_scope_data) do
+    Open890Web.Endpoint.broadcast("radio:audio_scope:#{id}", "scope_data", %{
       payload: audio_scope_data
     })
   end
 
-  def broadcast_radio_state(%__MODULE__{id: connection_id}, %RadioState{} = radio_state) do
-    Open890Web.Endpoint.broadcast("radio:state:#{connection_id}", "radio_state_data", %{
+  def broadcast_radio_state(%__MODULE__{id: id}, %RadioState{} = radio_state) do
+    Open890Web.Endpoint.broadcast("radio:state:#{id}", "radio_state_data", %{
       msg: radio_state
     })
   end
 
-  def broadcast_band_scope_cleared(%__MODULE__{id: connection_id}) do
-    Open890Web.Endpoint.broadcast("radio:band_scope:#{connection_id}", "band_scope_cleared", %{})
+  def broadcast_band_scope_cleared(%__MODULE__{id: id}) do
+    Open890Web.Endpoint.broadcast("radio:band_scope:#{id}", "band_scope_cleared", %{})
+  end
+
+  def broadcast_lock_state(%__MODULE__{id: id} = _connection, args) do
+    args |> IO.inspect(label: "broadcast_lock_state")
+    Open890Web.Endpoint.broadcast("radio:band_scope:#{id}", "lock_state", args)
   end
 
   # bundles up all the knowledge of which topics to subscribe a topic to

@@ -308,11 +308,22 @@ defmodule Open890.TCPClient do
 
         radio_state = radio_state |> RadioState.dispatch(msg)
 
+        # lock state
+        if msg |> String.starts_with?("LK") do
+
+          IO.puts("TCPClient: received lock state response")
+
+          lock_state = msg |> String.ends_with?("1")
+          |> IO.inspect(label: "lock state")
+
+          connection
+          |> RadioConnection.broadcast_lock_state(lock_state)
+        end
+
+
         if ["FA", "FB", "OM0", "FT"] |> Enum.any?(&String.starts_with?(msg, &1)) do
           Open890.Cloudlog.update(connection, radio_state)
         end
-
-        # ||
         # (radio_state.band_scope_mode == :center && radio_state.rit_enabled && msg |> String.starts_with?("RF") )
         if (msg |> String.starts_with?("FA") && radio_state.active_receiver == :a) ||
              (msg |> String.starts_with?("FB") && radio_state.active_receiver == :b) do
@@ -329,6 +340,7 @@ defmodule Open890.TCPClient do
           end
         end
 
+        # finally, broadcast the entire radio state to the views
         RadioConnection.broadcast_radio_state(connection, radio_state)
         %{state | radio_state: radio_state}
     end
