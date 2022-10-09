@@ -310,12 +310,7 @@ defmodule Open890.TCPClient do
 
         # lock state
         if msg |> String.starts_with?("LK") do
-
-          IO.puts("TCPClient: received lock state response")
-
           lock_state = msg |> String.ends_with?("1")
-          |> IO.inspect(label: "lock state")
-
           connection
           |> RadioConnection.broadcast_lock_state(lock_state)
         end
