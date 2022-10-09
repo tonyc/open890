@@ -8,6 +8,7 @@ defmodule Open890.RadioState do
   alias Open890.{
     AntennaState,
     BandRegisterState,
+    ConnectionCommands,
     Extract,
     FilterState,
     NoiseBlankState,
@@ -41,9 +42,9 @@ defmodule Open890.RadioState do
             band_scope_att: nil,
             band_scope_avg: nil,
             band_scope_edges: nil,
+            band_scope_fixed_edges: nil,
             band_scope_expand: false,
             band_scope_fixed_range_number: nil,
-            band_scope_fixed_span: nil,
             band_scope_mode: nil,
             band_scope_span: nil,
             bc: nil,
@@ -291,25 +292,34 @@ defmodule Open890.RadioState do
     %{state | notch_state: new_notch_state}
   end
 
+  # band_scope_edges, band_scope_fixed_edges
   def dispatch(%__MODULE__{} = state, "BSM0" <> _ = msg) do
     [bs_low, bs_high] = msg |> Extract.band_edges()
 
-    [low_int, high_int] =
-      [bs_low, bs_high]
-      |> Enum.map(&Kernel.div(&1, 1000))
+    # [low_int, high_int] =
+    #   [bs_low, bs_high]
+    #   |> Enum.map(&Kernel.div(&1, 1000))
 
-    span =
-      (high_int - low_int)
-      |> to_string()
-      |> String.trim_leading("0")
-      |> String.to_integer()
+    # span =
+    #   (high_int - low_int)
+    #   |> to_string()
+    #   |> String.trim_leading("0")
+    #   |> String.to_integer()
+
+    edges = {bs_low, bs_high}
 
     case state.band_scope_mode do
       :fixed ->
-        %{state | band_scope_edges: {bs_low, bs_high}, band_scope_fixed_span: span}
+        edges
+        |> IO.inspect(label: "BSM0, we are in fixed mode, setting band_scope_edges and band_scope_fixed_edges")
+
+        %{state |
+          band_scope_fixed_edges: edges,
+          band_scope_edges: edges,
+        }
 
       :auto_scroll ->
-        %{state | band_scope_edges: {bs_low, bs_high}}
+        %{state | band_scope_edges: edges}
 
       _ ->
         state
@@ -322,7 +332,8 @@ defmodule Open890.RadioState do
 
     state = %{state | band_scope_mode: scope_mode}
 
-    if scope_mode == :center && !is_nil(state.band_scope_span) do
+    state = if scope_mode == :center && !is_nil(state.band_scope_span) do
+      IO.puts("we're now in center mode, calculating edges from span")
       band_scope_edges =
         calculate_center_mode_edges(
           state.active_frequency,
@@ -333,6 +344,9 @@ defmodule Open890.RadioState do
     else
       state
     end
+
+    state
+    |> IO.inspect(label: "BS3 state", limit: :infinity)
   end
 
   # band_scope_span
@@ -651,6 +665,7 @@ defmodule Open890.RadioState do
   def effective_band_edges(%__MODULE__{} = state) do
     case state.band_scope_mode do
       :center -> effective_center_mode_edges(state)
+      :fixed -> state.band_scope_fixed_edges
       _ -> state.band_scope_edges
     end
   end

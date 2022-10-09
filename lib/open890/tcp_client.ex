@@ -302,6 +302,10 @@ defmodule Open890.TCPClient do
           Logger.info("[DN] #{inspect(msg)}")
         end
 
+        if msg |> String.starts_with?("BS31") do
+          connection |> ConnectionCommands.get_band_scope_limits()
+        end
+
         radio_state = radio_state |> RadioState.dispatch(msg)
 
         if ["FA", "FB", "OM0", "FT"] |> Enum.any?(&String.starts_with?(msg, &1)) do
