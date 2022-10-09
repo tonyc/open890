@@ -209,7 +209,6 @@ let Hooks = {
       this.locked = false;
 
       this.handleEvent("lock_state", (event) => {
-        console.log("band_scope: locked:", event)
         me.locked = event.locked;
       })
 
@@ -401,7 +400,6 @@ let Hooks = {
       this.clearScope()
 
       this.handleEvent("lock_state", (event) => {
-        console.log("band_scope: canvas: lock_state:", event)
         me.locked = event.locked;
       })
 
