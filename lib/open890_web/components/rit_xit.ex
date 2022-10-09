@@ -7,9 +7,9 @@ defmodule Open890Web.Components.RitXit do
     ~H"""
       <div class="ui grid">
         <div class="row">
-          <div class="column three wide"></div>
+          <div class="column two wide"></div>
 
-          <div class="four wide right aligned column">
+          <div class="five wide right aligned column">
             <span class="indicator">
               <%= if @rit_enabled do %>
                 <.cmd_button_2 cmd="RT0" classes="mini grey rit_xit">RIT</.cmd_button_2>
@@ -29,6 +29,13 @@ defmodule Open890Web.Components.RitXit do
                 <.cmd_button_2 cmd="TB0" classes="mini split-button enabled">SPLIT</.cmd_button_2>
               <% else %>
                 <.cmd_button_2 cmd="TB1" classes="mini inverted secondary split-button">SPLIT</.cmd_button_2>
+              <% end %>
+            </span>
+            <span class="indicator">
+              <%= if @lock_enabled do %>
+                <.cmd_button_2 cmd="LK0" classes="mini lock-button enabled">LOCK</.cmd_button_2>
+              <% else %>
+                <.cmd_button_2 cmd="LK1" classes="mini inverted secondary lock-button">LOCK</.cmd_button_2>
               <% end %>
             </span>
           </div>

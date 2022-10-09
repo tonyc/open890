@@ -254,7 +254,13 @@ defmodule Open890Web.Components.Buttons do
 
   def vfo_equalize_button(assigns) do
     ~H"""
-      <.cmd_button_2 cmd="VV" fluid={assigns[:fluid]}>A=B</.cmd_button_2>
+      <.cmd_button_2 cmd="VV" fluid={assigns[:fluid]}>A = B</.cmd_button_2>
+    """
+  end
+
+  def memory_transfer_button(assigns) do
+    ~H"""
+      <.cmd_button_2 cmd="SV" classes="ui small black button fluid">M &gt; V</.cmd_button_2>
     """
   end
 
@@ -421,7 +427,15 @@ defmodule Open890Web.Components.Buttons do
   def scope_range_button(assigns) do
     ~H"""
       <%= if @band_scope_mode == :fixed do %>
-        <div class="ui small black fluid button">Range: (fixme)</div>
+        <.cycle_button_2 value={@band_scope_fixed_range_number} values={
+          %{
+            1 => "BS52",
+            2 => "BS53",
+            3 => "BS51",
+          }
+        } fluid>
+          Range: <%= @band_scope_fixed_range_number %>
+        </.cycle_button_2>
       <% else %>
           <.cycle_button_2 value={@band_scope_span} values={
             %{

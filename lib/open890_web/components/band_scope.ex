@@ -79,7 +79,7 @@ defmodule Open890Web.Components.BandScope do
               <.carrier_line mode="rx" label="R" frequency={@rx_banner_frequency} band_scope_edges={@band_scope_edges} split_enabled={@split_enabled} />
             <% end %>
 
-            <rect id="bandscopeBackground" x="0" y="0" height="150" width="1280" pointer-events="visibleFill" phx-hook="BandScope" />
+            <rect id="bandscopeBackground" x="0" y="0" height="150" width="1280" pointer-events="visibleFill" phx-hook="BandScope" data-locked={@lock_enabled} />
           </g>
 
         </svg>

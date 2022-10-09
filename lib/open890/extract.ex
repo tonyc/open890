@@ -280,6 +280,10 @@ defmodule Open890.Extract do
     str |> trim_to_integer(["BU0", "BU1"])
   end
 
+  def band_scope_fixed_range_number(str) when is_binary(str) do
+    str |> trim_to_integer("BS5")
+  end
+
   def transverter_enabled(str) when is_binary(str) do
     str
     |> String.trim_leading("XV")
@@ -344,6 +348,7 @@ defmodule Open890.Extract do
   def vfo_memory_state(str) when is_binary(str) do
     str
     |> String.trim_leading("MV")
+    |> IO.inspect(label: "VFO memory state")
     |> case do
       "0" -> :vfo
       _ -> :memory

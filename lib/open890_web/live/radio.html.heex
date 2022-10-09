@@ -206,8 +206,9 @@
             <RitXit.rit_xit
               rit_enabled={@radio_state.rit_enabled}
               xit_enabled={@radio_state.xit_enabled}
-              split_enabled={@radio_state.split_enabled}
               offset={@radio_state.rit_xit_offset}
+              split_enabled={@radio_state.split_enabled}
+              lock_enabled={@radio_state.lock_enabled}
             />
           </div>
         </div>
@@ -236,15 +237,19 @@
           </div>
 
           <div class="column">
+            <%= if @radio_state.vfo_memory_state == :memory do %>
+              <.memory_transfer_button fluid />
+            <% end %>
+
             <%= if @radio_state.vfo_memory_state == :vfo do %>
-              <.vfo_switch_button value={@radio_state.active_receiver} fluid />
+              <div class="ui buttons">
+                <.vfo_switch_button value={@radio_state.active_receiver} fluid />
+                <.vfo_equalize_button fluid />
+              </div>
             <% end %>
           </div>
 
           <div class="column">
-            <%= if @radio_state.vfo_memory_state == :vfo do %>
-              <.vfo_equalize_button fluid />
-            <% end %>
           </div>
 
         </div>
@@ -413,8 +418,13 @@
             <div class="column">
               <.scope_mode_button fluid band_scope_mode={@radio_state.band_scope_mode} />
             </div>
+
             <div class="column">
-              <.scope_range_button fluid band_scope_mode={@radio_state.band_scope_mode} band_scope_span={@radio_state.band_scope_span} />
+              <.scope_range_button fluid
+                band_scope_mode={@radio_state.band_scope_mode}
+                band_scope_span={@radio_state.band_scope_span}
+                band_scope_fixed_range_number={@radio_state.band_scope_fixed_range_number}
+              />
             </div>
 
             <%= if @radio_state.band_scope_mode == :auto_scroll do %>
@@ -499,6 +509,7 @@
          theme={@theme}
          draw_interval={@waterfall_draw_interval}
          spectrum_scale={@spectrum_scale}
+         lock_enabled={@radio_state.lock_enabled}
        />
     </div>
   </div>

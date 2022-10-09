@@ -23,6 +23,7 @@ defmodule Open890.ConnectionCommands do
     |> get_band_scope_limits()
     |> get_band_scope_avg()
     |> get_band_scope_att()
+    |> get_band_scope_fixed_range_number()
     |> get_display_screen()
     |> get_rf_pre_att()
     |> get_ref_level()
@@ -48,6 +49,7 @@ defmodule Open890.ConnectionCommands do
     |> get_voip_available()
     |> get_voip_state()
     |> get_rit_xit()
+    |> get_lock()
   end
 
   def get_fine(conn), do: conn |> cmd("FS")
@@ -65,6 +67,8 @@ defmodule Open890.ConnectionCommands do
   #  conn |> cmd("RF#{direction}#{value}")
   # end
 
+  def get_lock(conn), do: conn |> cmd("LK")
+
   def get_rit_xit(conn) do
     conn
     |> cmd("RT")
@@ -76,9 +80,7 @@ defmodule Open890.ConnectionCommands do
   def get_voip_state(conn), do: conn |> cmd("##VP")
   def start_voip(conn), do: conn |> cmd("##VP1")
   def stop_voip(conn), do: conn |> cmd("##VP0")
-
   def get_apf_state(conn), do: conn |> cmd("AP0")
-
   def get_split(conn), do: conn |> cmd("TB")
 
   def get_squelch(conn) do
@@ -248,6 +250,10 @@ defmodule Open890.ConnectionCommands do
 
   def get_band_scope_limits(conn) do
     conn |> cmd("BSM0")
+  end
+
+  def get_band_scope_fixed_range_number(conn) do
+    conn |> cmd("BS5")
   end
 
   def get_band_scope_mode(conn) do

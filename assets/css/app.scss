@@ -97,6 +97,11 @@ body.light {
 //   color: #ccc;
 // }
 
+.lock-button.enabled {
+  background-color: orange !important;
+  color: black !important;
+}
+
 .split-button.enabled {
   background-color: $kenwood-yellow !important;
   color: black !important;

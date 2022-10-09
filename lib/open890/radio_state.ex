@@ -42,6 +42,7 @@ defmodule Open890.RadioState do
             band_scope_avg: nil,
             band_scope_edges: nil,
             band_scope_expand: false,
+            band_scope_fixed_range_number: nil,
             band_scope_fixed_span: nil,
             band_scope_mode: nil,
             band_scope_span: nil,
@@ -56,6 +57,7 @@ defmodule Open890.RadioState do
             filter_state: %FilterState{},
             fine: nil,
             id_meter: 0,
+            lock_enabled: false,
             mic_gain: nil,
             noise_blank_state: %NoiseBlankState{},
             notch_state: %NotchState{},
@@ -96,13 +98,14 @@ defmodule Open890.RadioState do
   extract "BSA", :band_scope_avg
   extract "BSC0", :ref_level
   extract "BSO", :band_scope_expand, as: :boolean
+  extract "BS5", :band_scope_fixed_range_number
   extract "BS8", :band_scope_att
   extract "DD0", :data_speed
   extract "DS1", :display_screen_id
+  extract "LK", :lock_enabled, as: :boolean
   extract "MG", :mic_gain
   extract "MN", :memory_channel_number
-  extract "MV0", :vfo_memory_state
-  extract "MV1", :vfo_memory_state
+  extract "MV", :vfo_memory_state
   extract "NR", :nr
   extract "PA", :rf_pre
   extract "PC", :power_level
