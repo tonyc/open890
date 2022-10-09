@@ -1,6 +1,8 @@
 # open890 Changelog
 
 ## Unreleased
+* Implemented LOCK button
+* Finished FIXED mode RANGE button (#93)
 * Refined notch control slider UX, disabled the slider when notch is turned off.
 * Implemented memory channel display.
 * Relocated the SPLIT button next to RIT/XIT, made the SPLIT button appear yellow when activated.
