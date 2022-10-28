@@ -1,7 +1,7 @@
 defmodule Open890.Extract do
   require Logger
 
-  alias Open890.{AntennaState, MemoryChannel}
+  alias Open890.{AntennaState, TunerState}
 
   @scope_modes %{
     "0" => :center,
@@ -345,10 +345,23 @@ defmodule Open890.Extract do
     end
   end
 
+  def tuner_state(str) when is_binary(str) do
+    tuner_data = str |> String.trim_leading("AC")
+
+    tuner_rx_enabled = tuner_data |> String.at(0) == "1"
+    tuner_tx_enabled = tuner_data |> String.at(1) == "1"
+    tuning_active = tuner_data |> String.at(2) == "1"
+
+    %TunerState{
+      rx_enabled: tuner_rx_enabled,
+      tx_enabled: tuner_tx_enabled,
+      tuning_active: tuning_active
+    }
+  end
+
   def vfo_memory_state(str) when is_binary(str) do
     str
     |> String.trim_leading("MV")
-    |> IO.inspect(label: "VFO memory state")
     |> case do
       "0" -> :vfo
       _ -> :memory

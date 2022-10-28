@@ -37,6 +37,7 @@ defmodule Open890.ConnectionCommands do
     |> get_notch_states()
     |> get_transverter_states()
     |> get_antenna_state()
+    |> get_atu_state()
     |> get_cw_key_data()
     |> get_agc()
     |> get_mic_gain()
@@ -76,6 +77,7 @@ defmodule Open890.ConnectionCommands do
     |> cmd("RF")
   end
 
+  def get_atu_state(conn), do: conn |> cmd("AC")
   def get_voip_available(conn), do: conn |> cmd("##KN2")
   def get_voip_state(conn), do: conn |> cmd("##VP")
   def start_voip(conn), do: conn |> cmd("##VP1")

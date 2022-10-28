@@ -12,7 +12,8 @@ defmodule Open890.RadioState do
     FilterState,
     NoiseBlankState,
     NotchState,
-    TransverterState
+    TransverterState,
+    TunerState,
   }
 
   alias Open890Web.RadioViewHelpers
@@ -77,6 +78,7 @@ defmodule Open890.RadioState do
             swr_meter: 0,
             temp_meter: 0,
             transverter_state: %TransverterState{},
+            tuner_state: %TunerState{},
             tx_state: :off,
             vd_meter: 0,
             vfo_a_frequency: nil,
@@ -124,6 +126,10 @@ defmodule Open890.RadioState do
   extract "SQ", :squelch
   extract "TB", :split_enabled
   extract "XT", :xit_enabled, as: :boolean
+
+  def dispatch(%__MODULE__{} = state, "AC" <> _rest = msg) do
+    %{ state | tuner_state: Extract.tuner_state(msg) }
+  end
 
   def dispatch(%__MODULE__{} = state, "MA70" <> _ = msg) do
     %{
