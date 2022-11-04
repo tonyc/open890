@@ -38,7 +38,7 @@ defmodule Open890Web.Components.Buttons do
     |> TunerState.to_command()
 
     ~H"""
-      <.cmd_button_2 cmd={cmd} fluid={assigns[:fluid]}>AT <%= enabled %></.cmd_button_2>
+      <.cmd_button_2 cmd={cmd} fluid={assigns[:fluid]}>ATU <%= enabled %></.cmd_button_2>
     """
   end
 
