@@ -3,7 +3,7 @@ defmodule Open890Web.Components.Buttons do
   require Logger
 
   import Open890Web.RadioViewHelpers
-  alias Open890.{AntennaState, TransverterState}
+  alias Open890.{AntennaState, TransverterState, TunerState}
 
   def ant_1_2_button(assigns) do
     %AntennaState{} = ant_state = assigns.value
@@ -21,6 +21,24 @@ defmodule Open890Web.Components.Buttons do
 
     ~H"""
       <.cmd_button_2 cmd={cmd} fluid={assigns[:fluid]}><%= label %></.cmd_button_2>
+    """
+  end
+
+  def at_button(assigns) do
+    %TunerState{} = tuner_state = assigns.value
+
+    enabled = if tuner_state.tx_enabled do
+      "ON"
+    else
+      "OFF"
+    end
+
+    cmd = tuner_state
+    |> TunerState.toggle_tuner_state()
+    |> TunerState.to_command()
+
+    ~H"""
+      <.cmd_button_2 cmd={cmd} fluid={assigns[:fluid]}>AT <%= enabled %></.cmd_button_2>
     """
   end
 
