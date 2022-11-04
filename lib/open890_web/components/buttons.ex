@@ -24,7 +24,32 @@ defmodule Open890Web.Components.Buttons do
     """
   end
 
-  def at_button(assigns) do
+  def send_button(assigns) do
+    tx_state = assigns.value
+
+    cmd = case tx_state do
+      :off -> "TX0"
+      _ -> "RX"
+    end
+
+    ~H"""
+      <.cmd_button_2 cmd={cmd} fluid={assigns[:fluid]}>SEND</.cmd_button_2>
+    """
+  end
+
+  def atu_tune_button(assigns) do
+    %TunerState{} = tuner_state = assigns.value
+
+    cmd = tuner_state
+    |> TunerState.toggle_tuning()
+    |> TunerState.to_command()
+
+    ~H"""
+      <.cmd_button_2 cmd={cmd} fluid={assigns[:fluid]}>TUNE</.cmd_button_2>
+    """
+  end
+
+  def atu_button(assigns) do
     %TunerState{} = tuner_state = assigns.value
 
     enabled = if tuner_state.tx_enabled do

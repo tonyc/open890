@@ -322,8 +322,8 @@
       <div class="row">
         <div class="column">
           <div class="ui secondary inverted pointing three item menu">
-            <a class={tab_classes("ant", @active_tab)} phx-click="set_tab" phx-value-tab="ant">Ant. Ctrl</a>
-            <a class={tab_classes("txrx", @active_tab)} phx-click="set_tab" phx-value-tab="txrx">TX/RX</a>
+            <a class={tab_classes("ant", @active_tab)} phx-click="set_tab" phx-value-tab="ant">TX/ANT</a>
+            <a class={tab_classes("txrx", @active_tab)} phx-click="set_tab" phx-value-tab="txrx">RX</a>
             <a class={tab_classes("scope", @active_tab)} phx-click="set_tab" phx-value-tab="scope">Scope</a>
           </div>
         </div>
@@ -337,11 +337,21 @@
       <div class="row">
         <div class="column">
           <div class={tab_panel_classes("ant", @active_tab)}>
-            <div class="ui one column grid row">
+            <div class="ui two column grid row">
+              <div class="column">
+                <.atu_button value={@radio_state.tuner_state} fluid />
+              </div>
+              <div class="column">
+                <.atu_tune_button value={@radio_state.tuner_state} fluid />
+              </div>
               <div class="column">
                 <.ant_1_2_button value={@radio_state.antenna_state} fluid />
               </div>
+              <div class="column">
+                <.send_button value={@radio_state.tx_state} fluid />
+              </div>
             </div>
+
             <div class="ui two column grid row">
               <div class="column">
                 <.rx_ant_button value={@radio_state.antenna_state} fluid />
@@ -360,11 +370,6 @@
           </div>
 
           <div class={tab_panel_classes("txrx", @active_tab)}>
-            <div class="ui two column grid row">
-              <div class="column">
-                <.at_button value={@radio_state.tuner_state} fluid />
-              </div>
-            </div>
 
             <div class="ui two column grid row">
               <div class="column">
