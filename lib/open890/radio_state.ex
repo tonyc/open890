@@ -93,6 +93,7 @@ defmodule Open890.RadioState do
   extract "##KN2", :voip_available, as: :boolean
   extract "##VP", :voip_enabled, as: :boolean
 
+  extract "AC", :tuner_state
   extract "AG", :audio_gain
   extract "AN", :antenna_state
   extract "AP0", :apf_enabled
@@ -126,10 +127,6 @@ defmodule Open890.RadioState do
   extract "SQ", :squelch
   extract "TB", :split_enabled
   extract "XT", :xit_enabled, as: :boolean
-
-  def dispatch(%__MODULE__{} = state, "AC" <> _rest = msg) do
-    %{ state | tuner_state: Extract.tuner_state(msg) }
-  end
 
   def dispatch(%__MODULE__{} = state, "MA70" <> _ = msg) do
     %{
