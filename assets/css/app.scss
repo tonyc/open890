@@ -874,23 +874,27 @@ svg#bandScope {
 
 
 .bandscopePanel.left {
-  margin-right: 0;
+  margin-right: 1rem;
   padding: 1rem;
-  // border-top: 2px solid $kenwood-button-bg;
-  // border-bottom: 2px solid $kenwood-button-bg;
-  // border-left: 2px solid $kenwood-button-bg;
+  padding-top: 0rem;
   width: $panel-width;
+  max-width: $panel-width;
+  min-width: $panel-width;
 }
 
 .bandscopePanel.toggle {
+  height: 100%;
+  float: left;
+  position: relative;
+
   margin-right: 1rem;
   margin-left: 0;
   padding: 0;
-  position: relative;
-  float: left;
+
   width: $panel-toggle-width;
-  border-radius: $border-radius-small;
-  height: 100%;
+  min-width: $panel-toggle-width;
+  max-width: $panel-toggle-width;
+
   background-color: $kenwood-button-bg;
 
   &:hover {
