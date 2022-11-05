@@ -1,7 +1,10 @@
 # open890 Changelog
 
 ## Unreleased
-* Implemented LOCK button
+* Renamed ANT tab to TX/ANT
+* Added ATU/TUNE/SEND buttons, located on the TX/ANT tab
+* Added TX indicator (under VFO) and ATU state indicator at top of display
+* Added LOCK button
 * Finished FIXED mode RANGE button (#93)
 * Refined notch control slider UX, disabled the slider when notch is turned off.
 * Implemented memory channel display.
