@@ -2,19 +2,22 @@ defmodule Open890Web.Live.VFODisplayComponent do
   use Open890Web, :live_component
 
   alias Open890Web.Live.BandIndicatorComponent
+  alias Open890Web.Components.{TxIndicator}
   alias Open890.{BandRegisterState}
 
   def render(assigns) do
-    ~L"""
+    ~H"""
       <div class="vfos ui stackable compact grid ">
         <div class="row compact">
           <div class="seven wide column">
             <div class="ui grid">
 
               <div class="row">
+
                 <div class="two wide left aligned column">
                   <span class="modeIndicator indicator active"><%= format_mode(@active_mode) %></span>
                 </div>
+
                 <div class="two wide left aligned column">
                   <span class="vfoMemIndicator indicator">
                     <%= format_vfo_memory_state(@vfo_memory_state) %>
@@ -23,6 +26,7 @@ defmodule Open890Web.Live.VFODisplayComponent do
                     <% end %>
                   </span>
                 </div>
+
                 <div class="twelve wide right aligned column">
                   <div class="freq active" phx-hook="ActiveVFO" id="ActiveVFO">
                     <%= vfo_display_frequency(@active_frequency, @transverter_state) %>
@@ -30,9 +34,12 @@ defmodule Open890Web.Live.VFODisplayComponent do
                 </div>
               </div>
 
-
               <div class="vfo-display-component__band-indicator row">
-                <div class="eight wide left aligned column"></div>
+                <div class="eight wide left aligned column">
+                  <%= if !@split_enabled do %>
+                    <TxIndicator.tx_indicator state={@tx_state} />
+                  <% end %>
+                </div>
                 <div class="eight wide right aligned column">
                   <span class="bandRegister">
                     <%= if @vfo_memory_state == :vfo do %>
@@ -71,6 +78,9 @@ defmodule Open890Web.Live.VFODisplayComponent do
 
               <div class="vfo-display-component__band-row-indicator row">
                 <div class="eight wide left aligned column">
+                  <%= if @split_enabled do %>
+                    <TxIndicator.tx_indicator state={@tx_state} />
+                  <% end %>
                 </div>
                 <div class="eight wide right aligned column">
                   <span class="bandRegister">

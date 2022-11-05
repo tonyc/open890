@@ -219,14 +219,16 @@
                 active_frequency: RadioState.effective_active_frequency(@radio_state),
                 active_mode: RadioState.effective_active_mode(@radio_state),
                 active_receiver: @radio_state.active_receiver,
-                inactive_receiver: @radio_state.inactive_receiver,
+                band_register_state: @radio_state.band_register_state,
                 inactive_frequency: RadioState.effective_inactive_frequency(@radio_state),
                 inactive_mode: RadioState.effective_inactive_mode(@radio_state),
-                transverter_state: @radio_state.transverter_state,
-                vfo_memory_state: @radio_state.vfo_memory_state,
+                inactive_receiver: @radio_state.inactive_receiver,
+                memory_channel_number: @radio_state.memory_channel_number,
                 notch_state: @radio_state.notch_state,
-                band_register_state: @radio_state.band_register_state,
-                memory_channel_number: @radio_state.memory_channel_number
+                split_enabled: @radio_state.split_enabled,
+                transverter_state: @radio_state.transverter_state,
+                tx_state: @radio_state.tx_state,
+                vfo_memory_state: @radio_state.vfo_memory_state
               %>
             </div>
         </div> <!-- frequencyDisplay -->
@@ -269,7 +271,6 @@
 
       <div class="row">
         <div class="right floated column audio-scope-panel">
-
 
           <AudioScope.audio_scope
             active_if_filter={@radio_state.active_if_filter}

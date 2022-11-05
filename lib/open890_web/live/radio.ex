@@ -8,7 +8,7 @@ defmodule Open890Web.Live.Radio do
   alias Open890.{ConnectionCommands, Extract, RadioConnection, RadioState}
   alias Open890Web.Live.{BandButtonsComponent, RadioSocketState}
 
-  alias Open890Web.Components.{AudioScope, BandScope, Meter, RitXit, Slider}
+  alias Open890Web.Components.{AudioScope, BandScope, Meter, RitXit, Slider, TxIndicator}
   import Open890Web.Components.Buttons
 
   @impl true

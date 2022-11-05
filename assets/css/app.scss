@@ -908,3 +908,23 @@ svg#bandScope {
 .hidden {
   display: none;
 }
+
+.txIndicator {
+  font-weight: bold;
+  font-size: medium;
+  border-radius: 5px;
+  padding: 0;
+  margin: 0;
+
+  padding: 0.1rem 0.6rem;
+
+
+  border: 1px solid red;
+  color: red;
+  background-color: black;
+
+  &.active {
+    background-color: red;
+    color: black;
+  }
+}
