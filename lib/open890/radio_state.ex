@@ -48,6 +48,7 @@ defmodule Open890.RadioState do
             band_scope_mode: nil,
             band_scope_span: nil,
             bc: nil,
+            busy_enabled: false,
             comp_meter: 0,
             cw_delay: nil,
             cw_key_speed: nil,
@@ -103,6 +104,7 @@ defmodule Open890.RadioState do
   extract "BSO", :band_scope_expand, as: :boolean
   extract "BS5", :band_scope_fixed_range_number
   extract "BS8", :band_scope_att
+  extract "BY", :busy_enabled, as: :boolean
   extract "DD0", :data_speed
   extract "DS1", :display_screen_id
   extract "LK", :lock_enabled, as: :boolean

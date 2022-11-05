@@ -12,6 +12,7 @@ defmodule Open890Web.Live.Radio do
     AtuIndicator,
     AudioScope,
     BandScope,
+    BusyTxIndicator,
     LockButton,
     Meter,
     RitXit,

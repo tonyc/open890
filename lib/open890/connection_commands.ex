@@ -24,6 +24,7 @@ defmodule Open890.ConnectionCommands do
     |> get_band_scope_avg()
     |> get_band_scope_att()
     |> get_band_scope_fixed_range_number()
+    |> get_busy_led_state()
     |> get_display_screen()
     |> get_rf_pre_att()
     |> get_ref_level()
@@ -53,6 +54,7 @@ defmodule Open890.ConnectionCommands do
     |> get_lock()
   end
 
+  def get_busy_led_state(conn), do: conn |> cmd("BY")
   def get_fine(conn), do: conn |> cmd("FS")
 
   def rit_xit_up(conn), do: conn |> cmd("RU")

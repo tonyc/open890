@@ -7,7 +7,7 @@ defmodule Open890Web.Live.VFODisplayComponent do
 
   def render(assigns) do
     ~H"""
-      <div class="vfos ui stackable compact grid ">
+      <div class="vfos ui stackable compact grid">
         <div class="row compact">
           <div class="seven wide column">
             <div class="ui grid">
@@ -63,7 +63,7 @@ defmodule Open890Web.Live.VFODisplayComponent do
           </div>
 
           <div class="seven wide left aligned column computer only tablet only">
-            <div class="ui grid">
+            <div class="ui compact grid">
               <div class="row">
                 <div class="four wide left aligned column">
                   <span class="vfoMemIndicator indicator inactive"></span>

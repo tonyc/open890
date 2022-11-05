@@ -393,6 +393,7 @@ nav {
 
   &.enabled {
     color: black !important;
+    background-color: $kenwood-led-green !important;
   }
 }
 
@@ -948,4 +949,26 @@ svg#bandScope {
 // segments along the very top of the display - usually for small bits of text
 .top-indicator {
   white-space: nowrap;
+}
+
+.busyTxIndicator {
+  width: 100%;
+  display: block;
+  height: 0.5rem;
+  border-radius: $border-radius-tiny;
+
+  &.tx {
+    background-color: red;
+  }
+
+  &.rx {
+    // background-color: #16ab39;
+    background-color: $kenwood-led-green;
+  }
+
+  &.off {
+    // background-color: #16ab39;
+    background-color: $kenwood-grey;
+  }
+
 }

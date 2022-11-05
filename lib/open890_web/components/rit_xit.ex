@@ -17,7 +17,7 @@ defmodule Open890Web.Components.RitXit do
     ~H"""
       <span class="indicator">
         <%= if @enabled do %>
-          <.cmd_button_2 cmd="RT0" classes="mini enabled green rit_button">RIT</.cmd_button_2>
+          <.cmd_button_2 cmd="RT0" classes="mini rit_button enabled">RIT</.cmd_button_2>
         <% else %>
           <.cmd_button_2 cmd="RT1" classes="mini inverted secondary rit_button">RIT</.cmd_button_2>
         <% end %>
@@ -29,7 +29,7 @@ defmodule Open890Web.Components.RitXit do
     ~H"""
       <span class="indicator">
         <%= if @enabled do %>
-          <.cmd_button_2 cmd="XT0" classes="mini enabled green xit_button">XIT</.cmd_button_2>
+          <.cmd_button_2 cmd="XT0" classes="mini xit_button enabled">XIT</.cmd_button_2>
         <% else %>
           <.cmd_button_2 cmd="XT1" classes="mini inverted secondary xit_button">XIT</.cmd_button_2>
         <% end %>
