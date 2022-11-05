@@ -54,6 +54,10 @@
   float: left;
 }
 
+.no-wrap {
+  white-space: nowrap;
+}
+
 
 h1.title {
   padding-bottom: 2rem;
@@ -929,21 +933,15 @@ svg#bandScope {
   }
 }
 
-.atu_indicator {
-  // the container of the component below
-  text-align: center;
-}
-
+// ATU indicator component
 .atuIndicator {
-  // the actual indicator component
-  // width: 100%;
-  // word-wrap: no-wrap;
-  // text-align: center;
-
   .segment {
     display: inline-block;
-    min-width: 2rem;
-    max-width: 2rem;
-    
+    width: 2rem;
   }
+}
+
+// segments along the very top of the display - usually for small bits of text
+.top-indicator {
+  white-space: nowrap;
 }
