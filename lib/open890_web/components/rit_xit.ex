@@ -3,59 +3,47 @@ defmodule Open890Web.Components.RitXit do
   alias Open890Web.{RadioViewHelpers}
   import Open890Web.Components.Buttons
 
-  def rit_xit(assigns) do
+  def offset_indicator(assigns) do
     ~H"""
-      <div class="ui grid">
-        <div class="row">
-          <div class="column two wide"></div>
-
-          <div class="five wide right aligned column">
-            <span class="indicator">
-              <%= if @lock_enabled do %>
-                <.cmd_button_2 cmd="LK0" classes="mini lock-button enabled">LOCK</.cmd_button_2>
-              <% else %>
-                <.cmd_button_2 cmd="LK1" classes="mini inverted secondary lock-button">LOCK</.cmd_button_2>
-              <% end %>
-            </span>
-            <span class="indicator">
-              <%= if @split_enabled do %>
-                <.cmd_button_2 cmd="TB0" classes="mini split-button enabled">SPLIT</.cmd_button_2>
-              <% else %>
-                <.cmd_button_2 cmd="TB1" classes="mini inverted secondary split-button">SPLIT</.cmd_button_2>
-              <% end %>
-            </span>
-            <span class="indicator">
-              <%= if @rit_enabled do %>
-                <.cmd_button_2 cmd="RT0" classes="mini grey rit_xit">RIT</.cmd_button_2>
-              <% else %>
-                <.cmd_button_2 cmd="RT1" classes="mini inverted secondary rit_xit">RIT</.cmd_button_2>
-              <% end %>
-            </span>
-            <span class="indicator">
-              <%= if @xit_enabled do %>
-                <.cmd_button_2 cmd="XT0" classes="mini grey rit_xit">XIT</.cmd_button_2>
-              <% else %>
-                <.cmd_button_2 cmd="XT1" classes="mini inverted secondary rit_xit">XIT</.cmd_button_2>
-              <% end %>
-            </span>
-          </div>
-
-          <div class="column two wide right aligned">
-            <span class={rit_xit_offset_class(@rit_enabled, @xit_enabled)} phx-hook="RitXitControl" id="RitXitControl">
-              <%= @offset |> RadioViewHelpers.format_rit_xit() %>
-            </span>
-
-          </div>
-          <div class="column seven wide">
-            <.cmd_button_2 cmd="RC">CLR</.cmd_button_2>
-          </div>
-        </div>
-
-      </div>
+      <span
+        class={offset_class(@rit_enabled, @xit_enabled)}
+        phx-hook="RitXitControl" id="RitXitControl">
+        <%= @offset |> RadioViewHelpers.format_rit_xit() %>
+      </span>
     """
   end
 
-  def rit_xit_offset_class(rit_enabled, xit_enabled) do
+  def rit_button(assigns) do
+    ~H"""
+      <span class="indicator">
+        <%= if @enabled do %>
+          <.cmd_button_2 cmd="RT0" classes="mini grey rit_xit">RIT</.cmd_button_2>
+        <% else %>
+          <.cmd_button_2 cmd="RT1" classes="mini inverted secondary rit_xit">RIT</.cmd_button_2>
+        <% end %>
+      </span>
+    """
+  end
+
+  def xit_button(assigns) do
+    ~H"""
+      <span class="indicator">
+        <%= if @enabled do %>
+          <.cmd_button_2 cmd="XT0" classes="mini grey rit_xit">XIT</.cmd_button_2>
+        <% else %>
+          <.cmd_button_2 cmd="XT1" classes="mini inverted secondary rit_xit">XIT</.cmd_button_2>
+        <% end %>
+      </span>
+    """
+  end
+
+  def clear_button(assigns) do
+    ~H"""
+      <.cmd_button_2 cmd="RC">CLR</.cmd_button_2>
+    """
+  end
+
+  def offset_class(rit_enabled, xit_enabled) do
     if rit_enabled || xit_enabled do
       "rit_xit_offset hover-pointer active"
     else

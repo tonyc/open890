@@ -210,14 +210,20 @@
       <div class="ui grid wide">
 
         <div class="row">
-          <div class="column">
-            <RitXit.rit_xit
+          <div class="seven wide right aligned column">
+            <LockButton.lock_button enabled={@radio_state.lock_enabled} />
+            <SplitButton.split_button enabled={@radio_state.split_enabled} />
+          </div>
+          <div class="two wide center aligned column">
+            <RitXit.offset_indicator
               rit_enabled={@radio_state.rit_enabled}
               xit_enabled={@radio_state.xit_enabled}
-              offset={@radio_state.rit_xit_offset}
-              split_enabled={@radio_state.split_enabled}
-              lock_enabled={@radio_state.lock_enabled}
-            />
+              offset={@radio_state.rit_xit_offset} />
+          </div>
+          <div class="seven wide left aligned column">
+            <RitXit.rit_button enabled={@radio_state.rit_enabled} />
+            <RitXit.xit_button enabled={@radio_state.xit_enabled} />
+            <RitXit.clear_button />
           </div>
         </div>
 
