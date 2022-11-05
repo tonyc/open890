@@ -17,7 +17,7 @@ defmodule Open890Web.Components.RitXit do
     ~H"""
       <span class="indicator">
         <%= if @enabled do %>
-          <.cmd_button_2 cmd="RT0" classes="mini grey rit_xit">RIT</.cmd_button_2>
+          <.cmd_button_2 cmd="RT0" classes="mini green rit_xit">RIT</.cmd_button_2>
         <% else %>
           <.cmd_button_2 cmd="RT1" classes="mini inverted secondary rit_xit">RIT</.cmd_button_2>
         <% end %>
@@ -29,7 +29,7 @@ defmodule Open890Web.Components.RitXit do
     ~H"""
       <span class="indicator">
         <%= if @enabled do %>
-          <.cmd_button_2 cmd="XT0" classes="mini grey rit_xit">XIT</.cmd_button_2>
+          <.cmd_button_2 cmd="XT0" classes="mini green rit_xit">XIT</.cmd_button_2>
         <% else %>
           <.cmd_button_2 cmd="XT1" classes="mini inverted secondary rit_xit">XIT</.cmd_button_2>
         <% end %>
@@ -39,7 +39,7 @@ defmodule Open890Web.Components.RitXit do
 
   def clear_button(assigns) do
     ~H"""
-      <.cmd_button_2 cmd="RC">CLR</.cmd_button_2>
+      <.cmd_button_2 cmd="RC" classes="mini inverted secondary">CL</.cmd_button_2>
     """
   end
 
