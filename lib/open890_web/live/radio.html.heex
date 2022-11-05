@@ -36,13 +36,6 @@
     </div>
   <% end %>
   <!-- top bar -->
-  <div class="row">
-  	<div class="seven wide column"></div>
-    <div class="center aligned two wide column">
-      <BusyTxIndicator.busy_tx tx_state={@radio_state.tx_state} busy_enabled={@radio_state.busy_enabled} />
-    </div>
-  	<div class="seven wide column"></div>
-  </div>
 
   <div class="computer only tablet only row topBar">
     <div class="four wide column">
@@ -216,6 +209,14 @@
     <div class="eight wide column">
 
       <div class="ui grid">
+        <div class="row">
+          <div class="six wide column"></div>
+          <div class="four wide column">
+            <BusyTxIndicator.busy_tx tx_state={@radio_state.tx_state} busy_enabled={@radio_state.busy_enabled} />
+          </div>
+          <div class="six wide column"></div>
+        </div>
+
         <div class="row">
           <div class="seven wide right aligned column">
             <LockButton.lock_button enabled={@radio_state.lock_enabled} />

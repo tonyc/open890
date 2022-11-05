@@ -892,6 +892,8 @@ svg#bandScope {
   margin-left: 0;
   padding: 0;
 
+  border-radius: $border-radius-small;
+
   width: $panel-toggle-width;
   min-width: $panel-toggle-width;
   max-width: $panel-toggle-width;
