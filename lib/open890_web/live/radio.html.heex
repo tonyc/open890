@@ -257,40 +257,22 @@
 
         <div class="row equal width">
           <div class="column">
+            <.memory_transfer_button fluid />
+          </div>
+          <div class="column">
             <.vfo_mem_button value={@radio_state.vfo_memory_state} fluid />
           </div>
-
           <div class="column">
-            <%= if @radio_state.vfo_memory_state == :memory do %>
-              <.memory_transfer_button fluid />
-            <% end %>
-
-            <%= if @radio_state.vfo_memory_state == :vfo do %>
-              <div class="ui buttons">
-                <.vfo_switch_button value={@radio_state.active_receiver} fluid />
-                <.vfo_equalize_button fluid />
-              </div>
-            <% end %>
+            <.vfo_switch_button value={@radio_state.active_receiver} fluid />
           </div>
-
           <div class="column">
+            <.vfo_equalize_button fluid />
           </div>
-
-        </div>
-
-        <div class="four column row">
-          <div class="column"></div>
-          <div class="column"></div>
-          <div class="column"></div>
-          <div class="column"></div>
         </div>
       </div>
-
     </div>
 
     <div class="four wide column right-panel">
-
-
       <div class="row">
         <div class="right floated column audio-scope-panel">
 
