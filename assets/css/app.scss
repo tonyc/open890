@@ -928,3 +928,22 @@ svg#bandScope {
     color: black;
   }
 }
+
+.atu_indicator {
+  // the container of the component below
+  text-align: center;
+}
+
+.atuIndicator {
+  // the actual indicator component
+  // width: 100%;
+  // word-wrap: no-wrap;
+  // text-align: center;
+
+  .segment {
+    display: inline-block;
+    min-width: 2rem;
+    max-width: 2rem;
+    
+  }
+}

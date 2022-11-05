@@ -26,7 +26,6 @@
         </div>
         <div class="content">
           <%= live_component BandButtonsComponent %>
-        </div>
         <div class="actions">
           <div id="BandModalClose" class="ui icon button" phx-click="toggle_band_selector">
             <i class="close icon"></i>
@@ -40,10 +39,19 @@
   <div class="computer only tablet only row topBar">
     <div class="four wide column">
       <div class="ui grid">
-        <div class="four wide column"><%= @radio_state.antenna_state.active_ant |> to_string() |> String.upcase() %></div>
-        <div class="four wide column"><%= if @radio_state.antenna_state.rx_ant_enabled, do: "RX ANT" %></div>
-        <div class="four wide column"><%= if @radio_state.antenna_state.ant_out_enabled, do: "ANT OUT" %></div>
-        <div class="four wide column">
+        <div class="four wide column ant_indicator">
+          <%= if @radio_state.antenna_state.rx_ant_enabled, do: "RX" %>
+          <%= @radio_state.antenna_state.active_ant |> to_string() |> String.upcase() %>
+        </div>
+        <div class="four wide column atu_indicator">
+          <%= if @radio_state.tuner_state.tx_enabled do %>
+            <AtuIndicator.atu_indicator rx_enabled={@radio_state.tuner_state.rx_enabled} />
+          <% end %>
+        </div>
+        <div class="four wide column ant_out_indicator">
+          <%= if @radio_state.antenna_state.ant_out_enabled, do: "ANT OUT" %>
+        </div>
+        <div class="four wide column agc_indicator">
           <%= if @radio_state.agc do %>
             AGC<%= format_agc_topbar(@radio_state.agc_off, @radio_state.agc) %>
           <% end %>
