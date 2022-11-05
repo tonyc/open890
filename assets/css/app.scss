@@ -388,8 +388,12 @@ nav {
 
 }
 
-button.rit_xit {
+.rit_button, .xit_button {
   width: 4rem;
+
+  &.enabled {
+    color: black !important;
+  }
 }
 
 button.rit_xit_clr {
@@ -406,10 +410,6 @@ button.rit_xit_clr {
   &.inactive {
     color: $secondary-color;
   }
-}
-
-#frequencyDisplay {
-  //height: 3.5vmax;
 }
 
 #scopeDetails {
