@@ -3,16 +3,16 @@
 ## 1.0.0 - TBD
 1.0.0 represents over 26 months of part-time work on open890. I hope you enjoy it!
 
+* Implemented memory channel display.
+* Added ATU/TUNE/SEND buttons, located on the TX/ANT tab
+* Added TX indicator (under VFO) and ATU state indicator at top of display
+* Added LOCK button
 * Added Busy/TX indicator above RIT offset
 * Added the ability to set the hostname that the server binds to. This allows you to access open890 with a specific hostname (e.g. "asus890server"). Set OPEN890_HOST as an environment variable, and then start open890.
 * BREAKING CHANGE: Renamed the PORT env var to OPEN890_PORT. This controls the TCP port that open890 binds to.
 * Renamed ANT tab to TX/ANT
-* Added ATU/TUNE/SEND buttons, located on the TX/ANT tab
-* Added TX indicator (under VFO) and ATU state indicator at top of display
-* Added LOCK button
 * Finished FIXED mode RANGE button (#93)
 * Refined notch control slider UX, disabled the slider when notch is turned off.
-* Implemented memory channel display.
 * Relocated the SPLIT button next to RIT/XIT, made the SPLIT button appear yellow when activated.
 * Added keyboard shortcut: '\' to perform A/B
 * Added keyboard shortcut: '=' to perform A=B
