@@ -1,7 +1,7 @@
 # open890 Changelog
 
 ## 1.0.0 - TBD
-1.0.0 represents over 26 months of part-time work on open890. I hope you enjoy it!
+1.0.0 represents hundreds of hours over 26 months of part-time work. I hope you enjoy it!
 
 * Implemented memory channel display.
 * Added ATU/TUNE/SEND buttons, located on the TX/ANT tab
