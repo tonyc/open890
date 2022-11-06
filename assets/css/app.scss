@@ -717,22 +717,35 @@ svg#bandScope {
 
 
 .slider {
-  margin-bottom: 0.5rem;
-  width: 300px;
-  display: block;
+  display: inline-block;
+  margin: 0 auto;
+  padding-top: 0.5rem;
+  width: 100%;
+  max-width: 350px;
+  padding-right: 0.5rem;
 
   .label {
+    display: inline-block;
+    font-weight: bold;
+    margin-right: 1rem;
+    text-align: right;
     width: 3rem;
   }
+
+  &.padded-top {
+    margin-top: 0.5rem;
+  }
+
 }
 
 .sliderWrapper {
-  margin-top: 5px;
-  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 0.3rem;
   width: 255px;
-  height: 1rem;
+  height: 0.8rem;
   background-color: $kenwood-grey;
-
+  border-radius: $border-radius-medium;
   cursor: pointer;
   
   &.disabled {
@@ -748,6 +761,7 @@ svg#bandScope {
   }
 
   .indicator {
+    border-radius: $border-radius-medium;
     position: relative;
     top: 0;
     left: 0;

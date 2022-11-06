@@ -2,9 +2,11 @@ defmodule Open890Web.Components.Slider do
   use Phoenix.Component
 
   def slider(assigns) do
+    labeled = !is_nil(assigns[:label]) && assigns[:label] != ""
+
     ~H"""
-      <div class="slider">
-        <%= if !is_nil(@label) && @label != "" do %>
+      <div class={component_classes(assigns)}>
+        <%= if labeled do %>
           <span class="label"><%= @label %></span>
         <% end %>
         <div class={wrapper_class(assigns)} phx-hook="Slider" data-click-action={@click} data-wheel-action={@wheel} id={id_for(@label)}
@@ -29,10 +31,23 @@ defmodule Open890Web.Components.Slider do
     "#{label}Slider"
   end
 
+  def component_classes(assigns) do
+    top_padded = assigns |> Map.get(:padded_top, false)
+
+    component_classes = ["slider"]
+
+    component_classes = if top_padded do
+      component_classes ++ ["padded-top"]
+    else
+      component_classes
+    end
+
+    Enum.join(component_classes, " ")
+  end
+
   def wrapper_class(assigns) do
     label = assigns.label
     enabled = assigns |> Map.get(:enabled, true)
-
     wrapper_classes = ["sliderWrapper"]
 
     wrapper_classes = if !is_nil(label) && label != "" do
