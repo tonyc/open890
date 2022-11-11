@@ -1,0 +1,77 @@
+name: build_macos
+on:
+  push:
+    branches: build-macos
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-macos:
+    # needs: [create_release]
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Set output
+        id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+      - name: Install OTP and Elixir
+        uses: actions/setup-elixir@v1
+        with:
+          otp-version: 23.3.4.6
+          elixir-version: 1.12.3
+          experimental-otp: true
+      - name: Install NodeJS
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.15.3
+      - name: Install Dependencies
+        if: steps.mix-cache.outputs.cache-hit != 'true'
+        run: |
+          mix local.rebar --force
+          mix local.hex --force
+          mix deps.get --only prod
+      - name: Compile Web Assets
+        run: |
+          yarn install --cwd assets
+          mix assets.deploy
+        env:
+          MIX_ENV: prod
+          SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
+      - name: mix release
+        run: |
+          mix release
+        env:
+          MIX_ENV: prod
+          SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
+      - name: Compress files
+        uses: master-atul/tar-action@v1.0.2
+        with:
+          command: c
+          cwd: ./_build/prod/rel
+          files: |
+            ./open890
+          outPath: /tmp/open890-${{ steps.vars.outputs.tag }}-macos-intel.tar.gz
+      - name: Output release checksum
+        run: |
+          echo "::set-output name=sha256_linux::$(sha256sum /tmp/open890-${{ steps.vars.outputs.tag }}-macos-intel.x64.tar.gz)"
+      # - name: Upload Release Asset
+      #   id: upload-release-asset
+      #   uses: svenstaro/upload-release-action@v2
+      #   with:
+      #     repo_token: ${{ secrets.GITHUB_TOKEN }}
+      #     file: /tmp/open890-${{ steps.vars.outputs.tag }}-macos-intel.tar.gz
+      #     asset_name: open890-${{ steps.vars.outputs.tag }}-macos-intel.tar.gz
+      #     tag: ${{ steps.vars.outputs.tag }}
+      # - name: Upload Release Asset to S3
+      #   id: upload-release-asset-s3
+      #   run: |
+      #     aws s3 cp /tmp/open890-${{ steps.vars.outputs.tag }}-macos-intel.tar.gz s3://${{ secrets.AWS_S3_BUCKET }}/${{ secrets.AWS_S3_BUCKET_PATH }}
+      #   env:
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     AWS_DEFAULT_REGION: ${{ secrets.AWS_S3_REGION }}
+      #     AWS_EC2_METADATA_DISABLED: true
