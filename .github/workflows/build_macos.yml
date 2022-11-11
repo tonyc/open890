@@ -32,7 +32,7 @@ jobs:
       - name: Cache asdf Erlang build to S3
         run: |
           tar zcvf /tmp/asdf-erlang-install-macos.tar.gz ~/.asdf/installs/erlang/
-          aws s3 cp /tmp/asdf-erlang-install-macos.tar.gz s3://{{ secrets.AWS_BUCKET }}/build_tmp/
+          aws s3 cp /tmp/asdf-erlang-install-macos.tar.gz s3://${{ secrets.AWS_BUCKET }}/build_tmp/
       - name: Install Dependencies
         if: steps.mix-cache.outputs.cache-hit != 'true'
         run: |
