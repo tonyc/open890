@@ -21,7 +21,6 @@ jobs:
       - name: Install asdf via homebrew
         run: |
           brew install asdf
-          echo '. /usr/local/opt/asdf/libexec/asdf.sh' >> ~/.bash_profile
       # - name: Download pre-built erlang and use if exists
       #   continue-on-error: true
       #   run: |
@@ -43,11 +42,13 @@ jobs:
       - name: Install Dependencies
         if: steps.mix-cache.outputs.cache-hit != 'true'
         run: |
+          export PATH=~/.asdf/shims:$PATH
           mix local.rebar --force
           mix local.hex --force
           mix deps.get --only prod
       - name: Compile Web Assets
         run: |
+          export PATH=~/.asdf/shims:$PATH
           yarn install --cwd assets
           mix assets.deploy
         env:
@@ -55,6 +56,7 @@ jobs:
           SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
       - name: mix release
         run: |
+          export PATH=~/.asdf/shims:$PATH
           mix release
         env:
           MIX_ENV: prod
