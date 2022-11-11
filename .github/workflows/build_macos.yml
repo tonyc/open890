@@ -18,6 +18,9 @@ jobs:
       - name: Set output
         id: vars
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+      - name: Install asdf via homebrew
+        run: |
+          brew install asdf
       - name: Install OTP and Elixir via asdf
         run: |
           make install_tools
