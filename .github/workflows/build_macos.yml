@@ -18,16 +18,9 @@ jobs:
       - name: Set output
         id: vars
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
-      - name: Install OTP and Elixir
-        uses: actions/setup-elixir@v1
-        with:
-          otp-version: 23.3.4.6
-          elixir-version: 1.12.3
-          experimental-otp: true
-      - name: Install NodeJS
-        uses: actions/setup-node@v1
-        with:
-          node-version: 14.15.3
+      - name: Install OTP and Elixir via asdf
+        run: |
+          make install_tools
       - name: Install Dependencies
         if: steps.mix-cache.outputs.cache-hit != 'true'
         run: |
