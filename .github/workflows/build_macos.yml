@@ -21,9 +21,10 @@ jobs:
       - name: Install asdf via homebrew
         run: |
           brew install asdf
+          echo '. /usr/local/opt/asdf/libexec/asdf.sh' >> ~/.bash_profile
       # - name: Download pre-built erlang and use if exists
       #   run: |
-      #     curl -o /tmp/asdf-erlang-install-macos.tar.gz https://bla
+      #     aws s3 cp s3://${{ secrets.AWS_S3_BUCKET }}/build_tmp/asdf-erlang-install-macos.tar.gz /tmp
       #     cd ~/.asdf/installs
       #     tar zxvf /tmp/asdf-erlang-install-macos.tar.gz
       - name: Install OTP and Elixir via asdf
@@ -31,18 +32,16 @@ jobs:
           make install_tools
       - name: Cache asdf Erlang build to S3
         run: |
-          tar zcvf /tmp/asdf-erlang-install-macos.tar.gz ~/.asdf/installs/erlang/
-          aws s3 cp /tmp/asdf-erlang-install-macos.tar.gz s3://${{ secrets.AWS_BUCKET }}/build_tmp/
+          cd ~/.asdf/installs/erlang && tar zcvf /tmp/asdf-erlang-install-macos.tar.gz ~/.asdf/installs/erlang/
+          aws s3 cp /tmp/asdf-erlang-install-macos.tar.gz s3://${{ secrets.AWS_S3_BUCKET }}/build_tmp/
       - name: Install Dependencies
         if: steps.mix-cache.outputs.cache-hit != 'true'
         run: |
-          export PATH=~/.asdf/shims:$PATH
           mix local.rebar --force
           mix local.hex --force
           mix deps.get --only prod
       - name: Compile Web Assets
         run: |
-          export PATH=~/.asdf/shims:$PATH
           yarn install --cwd assets
           mix assets.deploy
         env:
@@ -50,7 +49,6 @@ jobs:
           SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
       - name: mix release
         run: |
-          export PATH=~/.asdf/shims:$PATH
           mix release
         env:
           MIX_ENV: prod
