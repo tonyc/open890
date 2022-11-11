@@ -30,6 +30,7 @@ jobs:
       - name: Install OTP and Elixir via asdf
         run: |
           make install_tools
+          asdf reshim erlang
       # - name: Cache asdf Erlang build to S3
       #   run: |
       #     cd ~/.asdf/installs/erlang && tar zcvf /tmp/asdf-erlang-install-macos.tar.gz ~/.asdf/installs/erlang/
