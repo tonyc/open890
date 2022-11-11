@@ -23,6 +23,7 @@ jobs:
           brew install asdf
           echo '. /usr/local/opt/asdf/libexec/asdf.sh' >> ~/.bash_profile
       # - name: Download pre-built erlang and use if exists
+      #   continue-on-error: true
       #   run: |
       #     aws s3 cp s3://${{ secrets.AWS_S3_BUCKET }}/build_tmp/asdf-erlang-install-macos.tar.gz /tmp
       #     cd ~/.asdf/installs
@@ -34,6 +35,11 @@ jobs:
         run: |
           cd ~/.asdf/installs/erlang && tar zcvf /tmp/asdf-erlang-install-macos.tar.gz ~/.asdf/installs/erlang/
           aws s3 cp /tmp/asdf-erlang-install-macos.tar.gz s3://${{ secrets.AWS_S3_BUCKET }}/build_tmp/
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_S3_REGION }}
+          AWS_EC2_METADATA_DISABLED: true
       - name: Install Dependencies
         if: steps.mix-cache.outputs.cache-hit != 'true'
         run: |
