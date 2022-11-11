@@ -30,15 +30,15 @@ jobs:
       - name: Install OTP and Elixir via asdf
         run: |
           make install_tools
-      - name: Cache asdf Erlang build to S3
-        run: |
-          cd ~/.asdf/installs/erlang && tar zcvf /tmp/asdf-erlang-install-macos.tar.gz ~/.asdf/installs/erlang/
-          aws s3 cp /tmp/asdf-erlang-install-macos.tar.gz s3://${{ secrets.AWS_S3_BUCKET }}/build_tmp/
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_S3_REGION }}
-          AWS_EC2_METADATA_DISABLED: true
+      # - name: Cache asdf Erlang build to S3
+      #   run: |
+      #     cd ~/.asdf/installs/erlang && tar zcvf /tmp/asdf-erlang-install-macos.tar.gz ~/.asdf/installs/erlang/
+      #     aws s3 cp /tmp/asdf-erlang-install-macos.tar.gz s3://${{ secrets.AWS_S3_BUCKET }}/build_tmp/
+      #   env:
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     AWS_DEFAULT_REGION: ${{ secrets.AWS_S3_REGION }}
+      #     AWS_EC2_METADATA_DISABLED: true
       - name: Install Dependencies
         if: steps.mix-cache.outputs.cache-hit != 'true'
         run: |
