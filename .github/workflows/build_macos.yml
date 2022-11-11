@@ -21,9 +21,18 @@ jobs:
       - name: Install asdf via homebrew
         run: |
           brew install asdf
+      # - name: Download pre-built erlang and use if exists
+      #   run: |
+      #     curl -o /tmp/asdf-erlang-install-macos.tar.gz https://bla
+      #     cd ~/.asdf/installs
+      #     tar zxvf /tmp/asdf-erlang-install-macos.tar.gz
       - name: Install OTP and Elixir via asdf
         run: |
           make install_tools
+      - name: Cache asdf Erlang build to S3
+        run: |
+          tar zcvf /tmp/asdf-erlang-install-macos.tar.gz ~/.asdf/installs/erlang/
+          aws s3 cp /tmp/asdf-erlang-install-macos.tar.gz s3://{{ secrets.AWS_BUCKET }}/build_tmp/
       - name: Install Dependencies
         if: steps.mix-cache.outputs.cache-hit != 'true'
         run: |
