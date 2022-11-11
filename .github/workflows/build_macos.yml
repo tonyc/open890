@@ -22,7 +22,6 @@ jobs:
         run: |
           brew install asdf
           mkdir -p ~/.asdf/installs/erlang
-          echo 'export PATH=~/.asdf/shims:$PATH' >> ~/.bash_profile
       - name: Action-cache asdf erlang build
         uses: actions/cache@v3
         with:
@@ -44,11 +43,13 @@ jobs:
       - name: Install Dependencies
         if: steps.mix-cache.outputs.cache-hit != 'true'
         run: |
+          export PATH=~/.asdf/shims:$PATH
           mix local.rebar --force
           mix local.hex --force
           mix deps.get --only prod
       - name: Compile Web Assets
         run: |
+          export PATH=~/.asdf/shims:$PATH
           yarn install --cwd assets
           mix assets.deploy
         env:
@@ -56,6 +57,7 @@ jobs:
           SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
       - name: mix release
         run: |
+          export PATH=~/.asdf/shims:$PATH
           mix release
         env:
           MIX_ENV: prod
