@@ -20,7 +20,7 @@ jobs:
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
       - name: Install asdf via homebrew
         run: |
-          brew install asdf
+          brew install asdf coreutils automake autoconf openssl libyaml readline libxslt libtool
           mkdir -p ~/.asdf/installs/erlang
       - name: Action-cache asdf erlang build
         uses: actions/cache@v3
