@@ -2,9 +2,35 @@ defmodule Open890Web.Components.Meter do
   use Phoenix.Component
 
   def meter(assigns) do
+      # digital_meter(assigns)
+      analog_meter(assigns)
+  end
+
+  def analog_meter(assigns) do
+    # @s_meter is the 0-70 value
+    meter = assigns[:s_meter] || 0
+
     ~H"""
-      <div class="sMeterWrapper">
-        <svg id="sMeter" class="" viewbox="0 0 350 35">
+      <div class="sMeterWrapper analog">
+        <svg id="sMeter" class="analog" viewbox="0 0 350 115">
+
+          <g transform="">
+            <line class="needle" x1="175" y1="5" x2="175" y2="155" transform={needle_rotate(meter)} />
+          </g>
+        </svg>
+      </div>
+    """
+  end
+
+  def needle_rotate(value) do
+    angle = (90 / 70.0 * value) - 45
+    "rotate(#{angle}, 175, 155)"
+  end
+
+  def digital_meter(assigns) do
+    ~H"""
+      <div class="sMeterWrapper digital">
+        <svg id="sMeter" class="digital" viewbox="0 0 350 35">
           <mask id="m">
             <%= for x <- (0..70) do %>
               <rect x={pip_x_offset(x)} y="-3" width="2" height="25" fill="white" />

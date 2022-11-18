@@ -208,6 +208,15 @@ nav {
     fill: $kenwood-cyan;
   }
 
+  #sMeter.analog {
+    background-color: $kenwood-grey;
+    .needle {
+      stroke-width: 2.5px;
+      stroke: red;
+      transition: transform 0.1s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+  }
+
   #sMeterLegend {
     line {
       stroke-width: 1px;
