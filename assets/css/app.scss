@@ -209,11 +209,26 @@ nav {
   }
 
   #sMeter.analog {
-    background-color: $kenwood-grey;
+    border: 2px solid $kenwood-grid;
+    border-radius: 8px;
+    background-color: black;
+
+    text.legend {
+      fill: white !important;
+      font-size: 11px;
+      text-align: center;
+    }
+
     .needle {
       stroke-width: 2.5px;
-      stroke: red;
+      stroke: $kenwood-red;
       transition: transform 0.1s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .scale {
+      stroke-width: 1.5px;
+      stroke: white;
+      fill: none;
     }
   }
 

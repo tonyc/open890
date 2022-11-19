@@ -1,6 +1,10 @@
 defmodule Open890Web.Components.Meter do
   use Phoenix.Component
 
+  # range of motion in degrees of the analog needle
+  @needle_angle_range 90
+  @needle_pivot_y 155
+
   def meter(assigns) do
       # digital_meter(assigns)
       analog_meter(assigns)
@@ -9,23 +13,75 @@ defmodule Open890Web.Components.Meter do
   def analog_meter(assigns) do
     # @s_meter is the 0-70 value
     meter = assigns[:s_meter] || 0
+    meter_width = 272
+    half_width = meter_width / 2
+
+    smeter_cx = half_width
+    smeter_cy = 375
 
     ~H"""
       <div class="sMeterWrapper analog">
-        <svg id="sMeter" class="analog" viewbox="0 0 350 115">
+        <svg id="sMeter" class="analog" viewbox="0 0 272 108">
+
+          <g class="sMeterLegend">
+            <!-- s-meter -->
+
+            <circle class="scale smeter" cx={half_width} cy={smeter_cy} r="345" />
+            <text class="legend" y="42" x={half_width - 122}>S</text>
+
+            <g>
+              <text class="legend" y="15" x={half_width - 3}>9</text>
+              <line class="scale" x1={half_width} y1="30" x2={half_width} y2="20" />
+            </g>
+
+            <g transform={rotate(-16.5, smeter_cx, smeter_cy)}>
+              <text class="legend" y="15" x={half_width - 3}>1</text>
+              <line class="scale" x1={half_width} y1="30" x2={half_width} y2="20" />
+            </g>
+
+            <g transform={rotate(-12, smeter_cx, smeter_cy)}>
+              <text class="legend" y="15" x={half_width - 3}>3</text>
+              <line class="scale" x1={half_width} y1="30" x2={half_width} y2="20" />
+            </g>
+
+            <g transform={rotate(-8, smeter_cx, smeter_cy)}>
+              <text class="legend" y="15" x={half_width - 3}>5</text>
+              <line class="scale" x1={half_width} y1="30" x2={half_width} y2="20" />
+            </g>
+
+            <g transform={rotate(-4, smeter_cx, smeter_cy)}>
+              <text class="legend" y="15" x={half_width - 3}>7</text>
+              <line class="scale" x1={half_width} y1="30" x2={half_width} y2="20" />
+            </g>
+            <!--
+            <circle class="scale po" cx={half_width} cy="380" r="345" />
+            <circle class="scale swr" cx={half_width} cy="390" r="345" />
+            <circle class="scale id" cx={half_width} cy="405" r="345" />
+            <circle class="scale comp" cx={half_width} cy="410" r="345" />
+            -->
+          </g>
 
           <g transform="">
-            <line class="needle" x1="175" y1="5" x2="175" y2="155" transform={needle_rotate(meter)} />
+            <line class="needle" x1={half_width} y1="5" x2={half_width} y2="155" transform={needle_rotate(meter, meter_width)} />
           </g>
         </svg>
       </div>
     """
   end
 
-  def needle_rotate(value) do
-    angle = (90 / 70.0 * value) - 45
-    "rotate(#{angle}, 175, 155)"
+  def rotate(deg, x, y) do
+    "rotate(#{deg}, #{x}, #{y})"
   end
+
+  def needle_rotate(value, meter_width) do
+    angle = (needle_angle_range() / 70.0 * value) - (needle_angle_range() / 2.0)
+    x_offset = meter_width / 2
+
+    "rotate(#{angle}, #{x_offset}, #{needle_pivot_y()})"
+  end
+
+  def needle_angle_range, do: @needle_angle_range
+  def needle_pivot_y, do: @needle_pivot_y
 
   def digital_meter(assigns) do
     ~H"""
