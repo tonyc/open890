@@ -79,31 +79,31 @@ defmodule Open890Web.Components.Meter do
             </g>
 
             <g transform={rotate(2.625, smeter_cx, smeter_cy)}>
-              <line class="scale high" x1={middle} y1="30" x2={middle} y2="25" />
+              <line class="scale high" x1={middle} y1="29.5" x2={middle} y2="25" />
             </g>
 
             <g transform={rotate(5.25, smeter_cx, smeter_cy)}>
               <text class="legend high" y="15" x={middle - 9}>+20</text>
-              <line class="scale high major" x1={middle} y1="30" x2={middle} y2="20" />
+              <line class="scale high major" x1={middle} y1="29.5" x2={middle} y2="20" />
             </g>
 
             <g transform={rotate(8.125, smeter_cx, smeter_cy)}>
-              <line class="scale high" x1={middle} y1="30" x2={middle} y2="25" />
+              <line class="scale high" x1={middle} y1="29.5" x2={middle} y2="25" />
             </g>
 
             <g transform={rotate(11, smeter_cx, smeter_cy)}>
               <text class="legend high" y="15" x={middle - 9}>+40</text>
-              <line class="scale high major" x1={middle} y1="30" x2={middle} y2="20" />
+              <line class="scale high major" x1={middle} y1="29.5" x2={middle} y2="20" />
             </g>
 
             <g transform={rotate(14.5, smeter_cx, smeter_cy)}>
-              <line class="scale high" x1={middle} y1="30" x2={middle} y2="25" />
+              <line class="scale high" x1={middle} y1="29.5" x2={middle} y2="25" />
             </g>
 
 
             <g transform={rotate(18, smeter_cx, smeter_cy)}>
               <text class="legend high" y="15" x={middle - 12}>+60 dB</text>
-              <line class="scale high major" x1={middle} y1="30" x2={middle} y2="20" />
+              <line class="scale high major" x1={middle} y1="29.5" x2={middle} y2="20" />
             </g>
             <!--
             <circle class="scale po" cx={half_width} cy="380" r="345" />
@@ -114,7 +114,7 @@ defmodule Open890Web.Components.Meter do
           </g>
 
           <g transform="">
-            <line class="needle dropshadow" x1={middle} y1="5" x2={middle} y2="155" filter="url(#dropshadow)">
+            <line class="needle dropshadow" x1={middle} y1="2" x2={middle} y2="155" filter="url(#dropshadow)">
               <animateTransform
                 attributeName="transform"
                 attributeType="XML"
@@ -122,11 +122,11 @@ defmodule Open890Web.Components.Meter do
                 from={needle_rotate(meter_old, meter_width)}
                 to={needle_rotate(meter, meter_width)}
                 calcMode="paced"
-                dur="0.5s"
+                dur="1s"
                 fill="freeze"
               />
             </line>
-            <line class="needle" x1={middle} y1="5" x2={middle} y2="155">
+            <line class="needle" x1={middle} y1="2" x2={middle} y2="155">
               <animateTransform
                 attributeName="transform"
                 attributeType="XML"
@@ -134,7 +134,7 @@ defmodule Open890Web.Components.Meter do
                 from={needle_rotate(meter_old, meter_width)}
                 to={needle_rotate(meter, meter_width)}
                 calcMode="paced"
-                dur="0.5s"
+                dur="1s"
                 fill="freeze"
               />
             </line>
