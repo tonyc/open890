@@ -72,6 +72,7 @@ defmodule Open890.RadioState do
             rf_pre: 0,
             roofing_filter_data: %{a: nil, b: nil, c: nil},
             s_meter: 0,
+            s_meter_old: 0,
             split_enabled: false,
             squelch: nil,
             ssb_data_filter_mode: nil,
@@ -125,10 +126,19 @@ defmodule Open890.RadioState do
   extract "RM6", :temp_meter
   extract "RT", :rit_enabled, as: :boolean
   extract "SD", :cw_delay
-  extract "SM", :s_meter
+  # extract "SM", :s_meter
   extract "SQ", :squelch
   extract "TB", :split_enabled
   extract "XT", :xit_enabled, as: :boolean
+
+  def dispatch(%__MODULE__{} = state, "SM" <> _ = msg) do
+    s_meter_old = state.s_meter
+
+    %{ state |
+      s_meter: Extract.s_meter(msg),
+      s_meter_old: s_meter_old
+    }
+  end
 
   def dispatch(%__MODULE__{} = state, "MA70" <> _ = msg) do
     %{

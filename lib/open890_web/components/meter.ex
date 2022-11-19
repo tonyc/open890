@@ -13,45 +13,97 @@ defmodule Open890Web.Components.Meter do
   def analog_meter(assigns) do
     # @s_meter is the 0-70 value
     meter = assigns[:s_meter] || 0
+    meter_old = assigns[:s_meter_old] || 0
     meter_width = 272
-    half_width = meter_width / 2
+    middle = meter_width / 2
 
-    smeter_cx = half_width
+    smeter_cx = middle
     smeter_cy = 375
 
     ~H"""
       <div class="sMeterWrapper analog">
         <svg id="sMeter" class="analog" viewbox="0 0 272 108">
+          <defs>
+            <filter id="dropshadow" filterunits="userSpaceOnUse" x="0" y="0" width="100%" height="100%">
+              <fegaussianblur in="sourceAlpha" stddeviation="3" />
+            </filter>
+          </defs>
 
           <g class="sMeterLegend">
-            <!-- s-meter -->
+            <circle class="scale smeter" cx={middle} cy={smeter_cy} r="345" />
 
-            <circle class="scale smeter" cx={half_width} cy={smeter_cy} r="345" />
-            <text class="legend" y="42" x={half_width - 122}>S</text>
-
-            <g>
-              <text class="legend" y="15" x={half_width - 3}>9</text>
-              <line class="scale" x1={half_width} y1="30" x2={half_width} y2="20" />
+            <g transform={rotate(-18, smeter_cx, smeter_cy)}>
+              <text class="legend" y="15" x={middle - 8}>S</text>
+              <line class="scale" x1={middle} y1="30" x2={middle} y2="20" />
             </g>
 
             <g transform={rotate(-16.5, smeter_cx, smeter_cy)}>
-              <text class="legend" y="15" x={half_width - 3}>1</text>
-              <line class="scale" x1={half_width} y1="30" x2={half_width} y2="20" />
+              <text class="legend" y="15" x={middle - 3}>1</text>
+              <line class="scale major" x1={middle} y1="30" x2={middle} y2="20" />
+            </g>
+
+            <g transform={rotate(-14.25, smeter_cx, smeter_cy)}>
+              <line class="scale" x1={middle} y1="30" x2={middle} y2="25" />
             </g>
 
             <g transform={rotate(-12, smeter_cx, smeter_cy)}>
-              <text class="legend" y="15" x={half_width - 3}>3</text>
-              <line class="scale" x1={half_width} y1="30" x2={half_width} y2="20" />
+              <text class="legend" y="15" x={middle - 3}>3</text>
+              <line class="scale major" x1={middle} y1="30" x2={middle} y2="20" />
+            </g>
+
+            <g transform={rotate(-10, smeter_cx, smeter_cy)}>
+              <line class="scale" x1={middle} y1="30" x2={middle} y2="25" />
             </g>
 
             <g transform={rotate(-8, smeter_cx, smeter_cy)}>
-              <text class="legend" y="15" x={half_width - 3}>5</text>
-              <line class="scale" x1={half_width} y1="30" x2={half_width} y2="20" />
+              <text class="legend" y="15" x={middle - 3}>5</text>
+              <line class="scale major" x1={middle} y1="30" x2={middle} y2="20" />
+            </g>
+
+            <g transform={rotate(-6, smeter_cx, smeter_cy)}>
+              <line class="scale" x1={middle} y1="30" x2={middle} y2="25" />
             </g>
 
             <g transform={rotate(-4, smeter_cx, smeter_cy)}>
-              <text class="legend" y="15" x={half_width - 3}>7</text>
-              <line class="scale" x1={half_width} y1="30" x2={half_width} y2="20" />
+              <text class="legend" y="15" x={middle - 3}>7</text>
+              <line class="scale major" x1={middle} y1="30" x2={middle} y2="20" />
+            </g>
+
+            <g transform={rotate(-2, smeter_cx, smeter_cy)}>
+              <line class="scale" x1={middle} y1="30" x2={middle} y2="25" />
+            </g>
+
+            <g>
+              <text class="legend" y="15" x={middle - 3}>9</text>
+              <line class="scale major" x1={middle} y1="30" x2={middle} y2="20" />
+            </g>
+
+            <g transform={rotate(2.625, smeter_cx, smeter_cy)}>
+              <line class="scale high" x1={middle} y1="30" x2={middle} y2="25" />
+            </g>
+
+            <g transform={rotate(5.25, smeter_cx, smeter_cy)}>
+              <text class="legend high" y="15" x={middle - 9}>+20</text>
+              <line class="scale high major" x1={middle} y1="30" x2={middle} y2="20" />
+            </g>
+
+            <g transform={rotate(8.125, smeter_cx, smeter_cy)}>
+              <line class="scale high" x1={middle} y1="30" x2={middle} y2="25" />
+            </g>
+
+            <g transform={rotate(11, smeter_cx, smeter_cy)}>
+              <text class="legend high" y="15" x={middle - 9}>+40</text>
+              <line class="scale high major" x1={middle} y1="30" x2={middle} y2="20" />
+            </g>
+
+            <g transform={rotate(14.5, smeter_cx, smeter_cy)}>
+              <line class="scale high" x1={middle} y1="30" x2={middle} y2="25" />
+            </g>
+
+
+            <g transform={rotate(18, smeter_cx, smeter_cy)}>
+              <text class="legend high" y="15" x={middle - 12}>+60 dB</text>
+              <line class="scale high major" x1={middle} y1="30" x2={middle} y2="20" />
             </g>
             <!--
             <circle class="scale po" cx={half_width} cy="380" r="345" />
@@ -62,7 +114,43 @@ defmodule Open890Web.Components.Meter do
           </g>
 
           <g transform="">
-            <line class="needle" x1={half_width} y1="5" x2={half_width} y2="155" transform={needle_rotate(meter, meter_width)} />
+            <line class="needle dropshadow" x1={middle} y1="5" x2={middle} y2="155" filter="url(#dropshadow)">
+              <animateTransform
+                attributeName="transform"
+                attributeType="XML"
+                type="rotate"
+                from={needle_rotate(meter_old, meter_width)}
+                to={needle_rotate(meter, meter_width)}
+                calcMode="paced"
+                dur="0.5s"
+                fill="freeze"
+              />
+            </line>
+            <line class="needle" x1={middle} y1="5" x2={middle} y2="155">
+              <animateTransform
+                attributeName="transform"
+                attributeType="XML"
+                type="rotate"
+                from={needle_rotate(meter_old, meter_width)}
+                to={needle_rotate(meter, meter_width)}
+                calcMode="paced"
+                dur="0.5s"
+                fill="freeze"
+              />
+            </line>
+            <!--
+            <line class="needle alt" x1={half_width} y1="5" x2={half_width} y2="155">
+              <animateTransform
+                attributeName="transform"
+                attributeType="XML"
+                type="rotate"
+                from={needle_rotate(meter_old, meter_width)}
+                to={needle_rotate(meter, meter_width)}
+                fill="freeze"
+                dur="1s"
+              />
+            </line>
+            -->
           </g>
         </svg>
       </div>
@@ -77,7 +165,9 @@ defmodule Open890Web.Components.Meter do
     angle = (needle_angle_range() / 70.0 * value) - (needle_angle_range() / 2.0)
     x_offset = meter_width / 2
 
-    "rotate(#{angle}, #{x_offset}, #{needle_pivot_y()})"
+    # "rotate(#{angle}, #{x_offset}, #{needle_pivot_y()})"
+
+    [angle, x_offset, needle_pivot_y()] |> Enum.join(" ")
   end
 
   def needle_angle_range, do: @needle_angle_range

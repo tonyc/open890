@@ -208,27 +208,56 @@ nav {
     fill: $kenwood-cyan;
   }
 
+  // meter vars
+  // $meter-bg: antiquewhite;
+  // $meter-legend: black;
+
+  $meter-border-color: $kenwood-grid;
+  $meter-bg-color: rgb(27, 28, 29);
+  $meter-legend-color: white;
+  $meter-needle-color: $kenwood-red;
+  $meter-needle-width: 2px;
+
   #sMeter.analog {
-    border: 2px solid $kenwood-grid;
+    border: 2px solid $meter-border-color;
     border-radius: 8px;
-    background-color: black;
+    background-color: $meter-bg-color;
 
     text.legend {
-      fill: white !important;
+      fill: $meter-legend-color;
       font-size: 11px;
       text-align: center;
+
+      &.high { fill: red; }
     }
 
     .needle {
-      stroke-width: 2.5px;
-      stroke: $kenwood-red;
-      transition: transform 0.1s cubic-bezier(0.22, 1, 0.36, 1);
+      stroke-width: $meter-needle-width;
+      stroke: $meter-needle-color;
+      // transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+
+      &.alt {
+        stroke: $kenwood-cyan;
+      }
+    }
+
+    .dropshadow {
+      stroke-width: $meter-needle-width;
+      stroke: black;
     }
 
     .scale {
       stroke-width: 1.5px;
-      stroke: white;
+      stroke: $meter-legend-color;
       fill: none;
+
+      &.major {
+        stroke-width: 2.5px;
+      }
+
+      &.high {
+        stroke: red;
+      }
     }
   }
 
