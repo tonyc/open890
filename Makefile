@@ -38,6 +38,9 @@ yarn_install: install_tools
 up: build yarn_install
 		mix phx.server
 
+run:
+	mix phx.server
+
 build_docker:
 		docker build -t open890 .
 
