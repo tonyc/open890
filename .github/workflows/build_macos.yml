@@ -29,7 +29,7 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('.tool-versions') }}
       - name: Install OTP and Elixir via asdf
         env:
-          KERL_CONFIGURE_OPTIONS: "--disable-dynamic-ssl-lib --without-javac --with-ssl=/usr/local/Cellar/openssl@3/3.0.5"
+          KERL_CONFIGURE_OPTIONS: "--disable-dynamic-ssl-lib --without-javac --with-ssl=$(brew --prefix openssl@1.1)"
         run: |
           make install_tools
           asdf reshim erlang
