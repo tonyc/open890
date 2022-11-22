@@ -31,7 +31,7 @@ jobs:
         env:
           KERL_CONFIGURE_OPTIONS: "--disable-dynamic-ssl-lib --without-javac --with-ssl=$(brew --prefix openssl@1.1)"
         run: |
-          ls -laR /usr/local/Cellar/openssl
+          ls -laR /usr/local/Cellar/openssl*
           brew ls --versions openssl
           make install_tools
           asdf reshim erlang
