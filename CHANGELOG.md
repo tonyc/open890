@@ -1,5 +1,8 @@
 # open890 Changelog
 
+## 1.0.1 - 2022-11-23
+* Fixed broken band selector modal dialog
+
 ## 1.0.0 - 2022-11-06
 1.0.0 represents hundreds of hours over 26 months of part-time work. I hope you enjoy it!
 
