@@ -1,5 +1,8 @@
 # open890 Changelog
 
+## 1.0.3 - 2022-11-25
+* Fixed error on the pop-out standalone bandscope.
+
 ## 1.0.2 - 2022-11-24
 * Fixed 12m/24MHz band button using incorrect command.
 
