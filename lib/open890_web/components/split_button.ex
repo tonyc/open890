@@ -6,9 +6,9 @@ defmodule Open890Web.Components.SplitButton do
     ~H"""
       <span class="indicator">
         <%= if @enabled do %>
-          <.cmd_button_2 cmd="TB0" classes="mini split-button enabled">SPLIT</.cmd_button_2>
+          <.cmd_button cmd="TB0" classes="mini split-button enabled">SPLIT</.cmd_button>
         <% else %>
-          <.cmd_button_2 cmd="TB1" classes="mini inverted secondary split-button">SPLIT</.cmd_button_2>
+          <.cmd_button cmd="TB1" classes="mini inverted secondary split-button">SPLIT</.cmd_button>
         <% end %>
       </span>
     """

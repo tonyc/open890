@@ -6,9 +6,9 @@ defmodule Open890Web.Components.LockButton do
     ~H"""
       <span class="indicator">
         <%= if @enabled do %>
-          <.cmd_button_2 cmd="LK0" classes="mini lock-button enabled">LOCK</.cmd_button_2>
+          <.cmd_button cmd="LK0" classes="mini lock-button enabled">LOCK</.cmd_button>
         <% else %>
-          <.cmd_button_2 cmd="LK1" classes="mini inverted secondary lock-button">LOCK</.cmd_button_2>
+          <.cmd_button cmd="LK1" classes="mini inverted secondary lock-button">LOCK</.cmd_button>
         <% end %>
       </span>
     """

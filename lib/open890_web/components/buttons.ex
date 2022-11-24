@@ -20,7 +20,7 @@ defmodule Open890Web.Components.Buttons do
       |> AntennaState.to_command()
 
     ~H"""
-      <.cmd_button_2 cmd={cmd} fluid={assigns[:fluid]}><%= label %></.cmd_button_2>
+      <.cmd_button cmd={cmd} fluid={assigns[:fluid]}><%= label %></.cmd_button>
     """
   end
 
@@ -33,7 +33,7 @@ defmodule Open890Web.Components.Buttons do
     end
 
     ~H"""
-      <.cmd_button_2 cmd={cmd} fluid={assigns[:fluid]}>SEND</.cmd_button_2>
+      <.cmd_button cmd={cmd} fluid={assigns[:fluid]}>SEND</.cmd_button>
     """
   end
 
@@ -45,7 +45,7 @@ defmodule Open890Web.Components.Buttons do
     |> TunerState.to_command()
 
     ~H"""
-      <.cmd_button_2 cmd={cmd} fluid={assigns[:fluid]}>TUNE</.cmd_button_2>
+      <.cmd_button cmd={cmd} fluid={assigns[:fluid]}>TUNE</.cmd_button>
     """
   end
 
@@ -63,7 +63,7 @@ defmodule Open890Web.Components.Buttons do
     |> TunerState.to_command()
 
     ~H"""
-      <.cmd_button_2 cmd={cmd} fluid={assigns[:fluid]}>ATU <%= enabled %></.cmd_button_2>
+      <.cmd_button cmd={cmd} fluid={assigns[:fluid]}>ATU <%= enabled %></.cmd_button>
     """
   end
 
@@ -83,7 +83,7 @@ defmodule Open890Web.Components.Buttons do
       |> AntennaState.to_command()
 
     ~H"""
-      <.cmd_button_2 cmd={cmd} fluid={assigns[:fluid]}>RX ANT <%= enabled %></.cmd_button_2>
+      <.cmd_button cmd={cmd} fluid={assigns[:fluid]}>RX ANT <%= enabled %></.cmd_button>
     """
   end
 
@@ -103,7 +103,7 @@ defmodule Open890Web.Components.Buttons do
       |> AntennaState.to_command()
 
     ~H"""
-      <.cmd_button_2 cmd={cmd} fluid={assigns[:fluid]}>ANT OUT <%= enabled %></.cmd_button_2>
+      <.cmd_button cmd={cmd} fluid={assigns[:fluid]}>ANT OUT <%= enabled %></.cmd_button>
     """
   end
 
@@ -123,7 +123,7 @@ defmodule Open890Web.Components.Buttons do
       |> AntennaState.to_command()
 
     ~H"""
-      <.cmd_button_2 cmd={cmd} fluid={assigns[:fluid]}>DRV <%= enabled %></.cmd_button_2>
+      <.cmd_button cmd={cmd} fluid={assigns[:fluid]}>DRV <%= enabled %></.cmd_button>
     """
   end
 
@@ -138,7 +138,7 @@ defmodule Open890Web.Components.Buttons do
       end
 
     ~H"""
-      <.cmd_button_2 cmd={next_command} fluid={assigns[:fluid]}>XVTR <%= label %></.cmd_button_2>
+      <.cmd_button cmd={next_command} fluid={assigns[:fluid]}>XVTR <%= label %></.cmd_button>
     """
   end
 
@@ -161,9 +161,9 @@ defmodule Open890Web.Components.Buttons do
   def agc_off_button(assigns) do
     ~H"""
       <%= if @agc_off do %>
-        <.cmd_button_2 cmd={cmd_for_agc(@agc)} fluid={assigns[:fluid]}>AGC OFF</.cmd_button_2>
+        <.cmd_button cmd={cmd_for_agc(@agc)} fluid={assigns[:fluid]}>AGC OFF</.cmd_button>
       <% else %>
-        <.cmd_button_2 cmd="GC0" fluid={assigns[:fluid]}>AGC ON</.cmd_button_2>
+        <.cmd_button cmd="GC0" fluid={assigns[:fluid]}>AGC ON</.cmd_button>
       <% end %>
     """
   end
@@ -297,13 +297,13 @@ defmodule Open890Web.Components.Buttons do
 
   def vfo_equalize_button(assigns) do
     ~H"""
-      <.cmd_button_2 cmd="VV" fluid={assigns[:fluid]}>A = B</.cmd_button_2>
+      <.cmd_button cmd="VV" fluid={assigns[:fluid]}>A = B</.cmd_button>
     """
   end
 
   def memory_transfer_button(assigns) do
     ~H"""
-      <.cmd_button_2 cmd="SV" classes="ui small black button fluid">M &gt; V</.cmd_button_2>
+      <.cmd_button cmd="SV" classes="ui small black button fluid">M &gt; V</.cmd_button>
     """
   end
 
@@ -370,16 +370,16 @@ defmodule Open890Web.Components.Buttons do
       end
 
     ~H"""
-      <.cmd_button_2 cmd={cmd} classes="ui mini black"><%= label %></.cmd_button_2>
+      <.cmd_button cmd={cmd} classes="ui mini black"><%= label %></.cmd_button>
     """
   end
 
   def filter_buttons(assigns) do
     ~H"""
       <div class="ui mini black buttons">
-        <.cmd_button_2 cmd="FL00">FIL A</.cmd_button_2>
-        <.cmd_button_2 cmd="FL01">FIL B</.cmd_button_2>
-        <.cmd_button_2 cmd="FL02">FIL C</.cmd_button_2>
+        <.cmd_button cmd="FL00">FIL A</.cmd_button>
+        <.cmd_button cmd="FL01">FIL B</.cmd_button>
+        <.cmd_button cmd="FL02">FIL C</.cmd_button>
       </div>
     """
   end
@@ -408,9 +408,9 @@ defmodule Open890Web.Components.Buttons do
     extra = assigns_to_attributes(assigns, [:values, :value])
 
     ~H"""
-      <.cmd_button_2 cmd={cmd} {extra}>
+      <.cmd_button cmd={cmd} {extra}>
         <%= render_slot(@inner_block) %>
-      </.cmd_button_2>
+      </.cmd_button>
     """
   end
 
@@ -418,13 +418,13 @@ defmodule Open890Web.Components.Buttons do
     %{label: label, cmd: cmd} = assigns[:values] |> Map.get(assigns[:value])
 
     ~H"""
-      <.cmd_button_2 cmd={cmd} fluid={assigns[:fluid]}>
+      <.cmd_button cmd={cmd} fluid={assigns[:fluid]}>
         <%= render_slot(@inner_block) %> <%= label %>
-      </.cmd_button_2>
+      </.cmd_button>
     """
   end
 
-  def cmd_button_2(assigns) do
+  def cmd_button(assigns) do
     fluid_class =
       assigns
       |> Map.get(:fluid, false)
