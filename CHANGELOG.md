@@ -1,6 +1,6 @@
 # open890 Changelog
 
-## 1.0.2 - 2022-11-23
+## 1.0.2 - 2022-11-24
 * Fixed 12m/24MHz band button using incorrect command.
 
 ## 1.0.1 - 2022-11-23
