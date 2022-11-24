@@ -33,7 +33,7 @@ defmodule Open890Web.Live.BandButtonsComponent do
               </div>
               <div class="row">
                 <div class="column"><.cmd_button_2 cmd="BU006" class="huge" fluid>21</.cmd_button_2></div>
-                <div class="column"><.cmd_button_2 cmd="BU006" class="huge" fluid>24</.cmd_button_2></div>
+                <div class="column"><.cmd_button_2 cmd="BU007" class="huge" fluid>24</.cmd_button_2></div>
                 <div class="column"><.cmd_button_2 cmd="BU008" class="huge" fluid>28</.cmd_button_2></div>
               </div>
               <div class="row">
