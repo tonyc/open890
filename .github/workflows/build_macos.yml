@@ -92,7 +92,7 @@ jobs:
         id: upload-release-asset-s3
         # aws s3 cp /tmp/open890-${{ steps.vars.outputs.tag }}-macos-intel.tar.gz s3://${{ secrets.AWS_S3_BUCKET }}/${{ secrets.AWS_S3_BUCKET_PATH }}
         run: |
-          aws s3 cp /tmp/open890-macos-intel.tar.gz s3://${{ secrets.AWS_S3_BUCKET }}/${{ secrets.AWS_S3_BUCKET_PATH }}
+          aws s3 cp /tmp/open890-${{ steps.vars.outputs.tag }}-macos-intel.tar.gz s3://${{ secrets.AWS_S3_BUCKET }}/${{ secrets.AWS_S3_BUCKET_PATH }}
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
