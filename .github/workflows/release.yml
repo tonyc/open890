@@ -90,7 +90,7 @@ jobs:
           AWS_DEFAULT_REGION: ${{ secrets.AWS_S3_REGION }}
           AWS_EC2_METADATA_DISABLED: true
 
-  build-macos:
+  release-macos:
     needs: [create_release]
     runs-on: macos-latest
     steps:
@@ -157,8 +157,7 @@ jobs:
           cwd: ./_build/prod/rel
           files: |
             ./open890
-          outPath: /tmp/open890-macos-intel.tar.gz
-          # outPath: /tmp/open890-${{ steps.vars.outputs.tag }}-macos-intel.tar.gz
+          outPath: /tmp/open890-${{ steps.vars.outputs.tag }}-macos-intel.tar.gz
       - name: Output release checksum
         run: |
           echo "::set-output name=sha256_linux::$(sha256sum /tmp/open890-${{ steps.vars.outputs.tag }}-macos-intel.tar.gz)"
