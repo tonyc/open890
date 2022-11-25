@@ -1,5 +1,8 @@
 # open890 Changelog
 
+## Unreleased
+* Added experimental MacOS binary build support
+
 ## 1.0.3 - 2022-11-25
 * Fixed error on the pop-out standalone bandscope.
 
