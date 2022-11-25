@@ -17,7 +17,10 @@ clean_node_deps:
 install_tools : install_asdf_plugins
 		asdf install
 
-install_asdf_plugins:
+require_asdf:
+		@if ! command -v asdf > /dev/null; then echo "'asdf' not detected. Please install asdf (https://asdf-vm.com/) to build."; exit 1; fi;
+
+install_asdf_plugins: require_asdf
 		@asdf plugin-list | grep erlang || asdf plugin-add erlang
 		@asdf plugin-list | grep elixir || asdf plugin-add elixir
 		@asdf plugin-list | grep nodejs || asdf plugin-add nodejs
