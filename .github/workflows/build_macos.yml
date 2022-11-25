@@ -23,6 +23,9 @@ jobs:
           brew install asdf coreutils automake autoconf libyaml readline libxslt libtool
           brew install openssl@1.1
           mkdir -p ~/.asdf/installs/erlang
+      - name: Show openssl prefix
+        run: |
+          brew --prefix openssl@1.1
       - name: Action-cache asdf erlang build
         uses: actions/cache@v3
         with:
