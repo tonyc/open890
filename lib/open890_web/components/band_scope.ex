@@ -1,6 +1,5 @@
 defmodule Open890Web.Components.BandScope do
   use Phoenix.Component
-  import Phoenix.HTML
   require Logger
 
   alias Open890.FilterState

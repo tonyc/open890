@@ -8,7 +8,7 @@ defmodule Open890Web.Live.Bandscope do
   alias Open890.{ConnectionCommands, RadioConnection, RadioState}
   alias Open890Web.Live.{RadioSocketState}
 
-  alias Open890Web.Components.{BandScope, BandscopeButtons}
+  alias Open890Web.Components.{BandScope}
 
   def mount(:not_mounted_at_router, session, socket) do
     mount(%{"id" => session["id"]}, session, socket)

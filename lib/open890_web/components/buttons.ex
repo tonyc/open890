@@ -516,14 +516,7 @@ defmodule Open890Web.Components.Buttons do
   end
 
   def band_scope_att_button(assigns) do
-    down_values = %{
-      0 => "BS83",
-      1 => "BS80",
-      2 => "BS81",
-      3 => "BS82"
-    }
-
-    up_values = %{
+    values = %{
       0 => "BS81",
       1 => "BS82",
       2 => "BS83",
@@ -532,7 +525,7 @@ defmodule Open890Web.Components.Buttons do
 
     ~H"""
       <%= if @band_scope_att do %>
-        <.cycle_button_2 value={@band_scope_att} values={up_values} fluid>
+        <.cycle_button_2 value={@band_scope_att} values={values} fluid>
           ATT: <%= format_band_scope_att(@band_scope_att) %>
         </.cycle_button_2>
       <% end %>
@@ -550,14 +543,7 @@ defmodule Open890Web.Components.Buttons do
   end
 
   def band_scope_avg_button(assigns) do
-    down_values = %{
-      0 => "BSA3",
-      1 => "BSA0",
-      2 => "BSA1",
-      3 => "BSA2"
-    }
-
-    up_values = %{
+    values = %{
       0 => "BSA1",
       1 => "BSA2",
       2 => "BSA3",
@@ -566,7 +552,7 @@ defmodule Open890Web.Components.Buttons do
 
     ~H"""
       <%= if @band_scope_avg do %>
-        <.cycle_button_2 value={@band_scope_avg} values={up_values} fluid>
+        <.cycle_button_2 value={@band_scope_avg} values={values} fluid>
           Averaging: <%= @band_scope_avg %>
         </.cycle_button_2>
       <% end %>
