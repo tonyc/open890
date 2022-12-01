@@ -32,7 +32,8 @@ defmodule Open890Web.Components.BandScope do
 
           <g transform="translate(0 20)">
             <%= band_scope_vertical_grid(@band_scope_mode, freq: @effective_active_frequency, span: @band_scope_span, edges: @band_scope_edges) %>
-            <%= band_scope_horizontal_grid() %>
+
+            <.band_scope_horizontal_grid />
 
             <polygon id="bandSpectrum" class="spectrum" vector-effect="non-scaling-stroke" points={RadioViewHelpers.scope_data_to_svg(@band_scope_data, max_value: 140, scale_y: @spectrum_scale)}  />
           </g>
@@ -183,14 +184,14 @@ defmodule Open890Web.Components.BandScope do
     end
   end
 
-  def band_scope_horizontal_grid do
+  def band_scope_horizontal_grid(assigns) do
     offset = 140 / 8
 
-    ~e{
+    ~H"""
       <%= for i <- (0..7) do %>
-        <line class="bandscopeGrid horizontal" x1="0" y1="<%= i * offset %>" x2="640" y2="<%= i * offset %>" />
+        <line class="bandscopeGrid horizontal" x1="0" y1={i * offset} x2="640" y2={i * offset} />
       <% end %>
-    }
+    """
   end
 
   def passband_polygon(
