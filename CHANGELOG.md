@@ -1,6 +1,9 @@
 # open890 Changelog
 
 ## Unreleased
+* Implemented fixed scope mode vertical bandscope grid lines.
+* [Dev] Cleaned up several compilation warnings
+* [Dev] Converted deprecated ~e{} Phoenix Liveview sigil to ~H function components
 * Added experimental MacOS binary build support
 
 ## 1.0.3 - 2022-11-25
