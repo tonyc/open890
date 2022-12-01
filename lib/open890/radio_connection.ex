@@ -242,7 +242,6 @@ defmodule Open890.RadioConnection do
     end
   end
 
-
   def broadcast_freq_delta(%__MODULE__{id: id} = _connection, args) do
     Open890Web.Endpoint.broadcast("connection:#{id}", "freq_delta", args)
   end

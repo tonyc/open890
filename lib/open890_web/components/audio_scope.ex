@@ -294,9 +294,7 @@ defmodule Open890Web.Components.AudioScope do
         end
 
       other ->
-        Logger.debug(
-          "Unimplemented case for audio_scope_filter_edges for mode #{inspect(other)}"
-        )
+        Logger.debug("Unimplemented case for audio_scope_filter_edges for mode #{inspect(other)}")
 
         ""
     end

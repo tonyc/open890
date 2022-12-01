@@ -14,7 +14,6 @@ defmodule Open890.TunerState do
     p3 = state.tuning_active |> boolean_to_str()
 
     ["AC", "1", p2, p3] |> Enum.join()
-
   end
 
   defp boolean_to_str(true), do: "1"

@@ -8,14 +8,15 @@ defmodule Open890Web.Components.BusyTxIndicator do
   end
 
   def class_for_state(assigns \\ %{}) do
-    led_state = if assigns[:tx_state] != :off do
-      :tx
-    else
-      case assigns[:busy_enabled] do
-        true -> :rx
-        _ -> :off
+    led_state =
+      if assigns[:tx_state] != :off do
+        :tx
+      else
+        case assigns[:busy_enabled] do
+          true -> :rx
+          _ -> :off
+        end
       end
-    end
 
     "busyTxIndicator #{led_state}"
   end

@@ -10,5 +10,4 @@ defmodule Open890Web.Components.AtuIndicator do
       </div>
     """
   end
-
 end

@@ -36,11 +36,12 @@ defmodule Open890Web.Components.Slider do
 
     component_classes = ["slider"]
 
-    component_classes = if top_padded do
-      component_classes ++ ["padded-top"]
-    else
-      component_classes
-    end
+    component_classes =
+      if top_padded do
+        component_classes ++ ["padded-top"]
+      else
+        component_classes
+      end
 
     Enum.join(component_classes, " ")
   end
@@ -50,18 +51,19 @@ defmodule Open890Web.Components.Slider do
     enabled = assigns |> Map.get(:enabled, true)
     wrapper_classes = ["sliderWrapper"]
 
-    wrapper_classes = if !is_nil(label) && label != "" do
-      wrapper_classes ++ ["labeled"]
-    else
-      wrapper_classes
-    end
+    wrapper_classes =
+      if !is_nil(label) && label != "" do
+        wrapper_classes ++ ["labeled"]
+      else
+        wrapper_classes
+      end
 
-    wrapper_classes = if enabled do
-      wrapper_classes ++ ["enabled"]
-    else
-      wrapper_classes ++ ["disabled"]
-    end
-
+    wrapper_classes =
+      if enabled do
+        wrapper_classes ++ ["enabled"]
+      else
+        wrapper_classes ++ ["disabled"]
+      end
 
     Enum.join(wrapper_classes, " ")
   end

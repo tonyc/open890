@@ -111,7 +111,7 @@ defmodule Open890Web.Components.BandScope do
   end
 
   def auto_scroll_mode_vertical_grid(assigns) do
-    values = (1..9) |> Enum.map(fn x -> x * 64 end)
+    values = 1..9 |> Enum.map(fn x -> x * 64 end)
 
     ~H"""
       <%= for value <- values do %>
@@ -142,7 +142,7 @@ defmodule Open890Web.Components.BandScope do
 
     first_marker = round_up_to_step(low_edge, span_step_hz)
 
-    (0..9)
+    0..9
     |> Enum.map(fn i ->
       first_marker + i * span_step_hz
     end)
@@ -159,12 +159,13 @@ defmodule Open890Web.Components.BandScope do
     """
   end
 
-  def compute_fixed_mode_grid_values({low_edge, high_edge} = edges) when is_integer(low_edge) and is_integer(high_edge) do
+  def compute_fixed_mode_grid_values({low_edge, high_edge} = edges)
+      when is_integer(low_edge) and is_integer(high_edge) do
     span_step_hz = (high_edge - low_edge) |> fixed_mode_step_hz()
 
     first_marker = round_up_to_step(low_edge, span_step_hz)
 
-    (first_marker..high_edge//span_step_hz)
+    first_marker..high_edge//span_step_hz
     |> Enum.map(fn f ->
       project_to_bandscope_limits(f, edges)
     end)
@@ -176,13 +177,13 @@ defmodule Open890Web.Components.BandScope do
 
   def fixed_mode_step_hz(span_hz) do
     case div(span_hz, 1000) do
-      x when x in (5..9) -> 500
-      x when x in (10..19) -> 1000
-      x when x in (20..29) -> 2000
-      x when x in (30..49) -> 3000
-      x when x in (50..99) -> 5000
-      x when x in (100..199) -> 10000
-      x when x in (200..499) -> 20000
+      x when x in 5..9 -> 500
+      x when x in 10..19 -> 1000
+      x when x in 20..29 -> 2000
+      x when x in 30..49 -> 3000
+      x when x in 50..99 -> 5000
+      x when x in 100..199 -> 10000
+      x when x in 200..499 -> 20000
       500 -> 50000
       _ -> 1000
     end

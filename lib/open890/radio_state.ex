@@ -13,7 +13,7 @@ defmodule Open890.RadioState do
     NoiseBlankState,
     NotchState,
     TransverterState,
-    TunerState,
+    TunerState
   }
 
   alias Open890Web.RadioViewHelpers
@@ -304,10 +304,7 @@ defmodule Open890.RadioState do
 
     case state.band_scope_mode do
       :fixed ->
-        %{state |
-          band_scope_fixed_edges: edges,
-          band_scope_edges: edges,
-        }
+        %{state | band_scope_fixed_edges: edges, band_scope_edges: edges}
 
       :auto_scroll ->
         %{state | band_scope_edges: edges}
@@ -323,17 +320,18 @@ defmodule Open890.RadioState do
 
     state = %{state | band_scope_mode: scope_mode}
 
-    state = if scope_mode == :center && !is_nil(state.band_scope_span) do
-      band_scope_edges =
-        calculate_center_mode_edges(
-          state.active_frequency,
-          state.band_scope_span
-        )
+    state =
+      if scope_mode == :center && !is_nil(state.band_scope_span) do
+        band_scope_edges =
+          calculate_center_mode_edges(
+            state.active_frequency,
+            state.band_scope_span
+          )
 
-      %{state | band_scope_edges: band_scope_edges}
-    else
-      state
-    end
+        %{state | band_scope_edges: band_scope_edges}
+      else
+        state
+      end
 
     state
   end

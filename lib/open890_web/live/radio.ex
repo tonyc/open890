@@ -17,7 +17,7 @@ defmodule Open890Web.Live.Radio do
     Meter,
     RitXit,
     Slider,
-    SplitButton,
+    SplitButton
   }
 
   import Open890Web.Components.Buttons
