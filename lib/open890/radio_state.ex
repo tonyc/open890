@@ -567,9 +567,9 @@ defmodule Open890.RadioState do
     |> update_filter_lo_edge()
   end
 
-  ## dispatch catchall - this needs to be the very last one
+  # dispatch catchall - this needs to be the very last one
   def dispatch(%__MODULE__{} = state, msg) do
-    Logger.debug("Dispatch: unknown message: #{inspect(msg)}")
+    Logger.debug("RadioState.dispatch: unhandled message: #{inspect(msg)}")
 
     state
   end
