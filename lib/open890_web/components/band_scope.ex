@@ -31,7 +31,7 @@ defmodule Open890Web.Components.BandScope do
           </defs>
 
           <g transform="translate(0 20)">
-            <%= band_scope_vertical_grid(@band_scope_mode, freq: @effective_active_frequency, span: @band_scope_span) %>
+            <%= band_scope_vertical_grid(@band_scope_mode, freq: @effective_active_frequency, span: @band_scope_span, edges: @band_scope_edges) %>
             <%= band_scope_horizontal_grid() %>
 
             <polygon id="bandSpectrum" class="spectrum" vector-effect="non-scaling-stroke" points={RadioViewHelpers.scope_data_to_svg(@band_scope_data, max_value: 140, scale_y: @spectrum_scale)}  />
@@ -143,12 +143,44 @@ defmodule Open890Web.Components.BandScope do
     end
   end
 
-  def band_scope_vertical_grid(:fixed, _) do
-    ""
+  def band_scope_vertical_grid(:fixed, opts) when is_list(opts) do
+    {low_edge, high_edge} = edges = opts |> Keyword.fetch!(:edges)
+
+    span_hz = high_edge - low_edge
+    span_khz = div(span_hz, 1000)
+
+    span_step_hz = fixed_mode_step_hz(span_khz)
+
+    first_marker = round_up_to_step(low_edge, span_step_hz)
+
+    values = (first_marker..high_edge//span_step_hz)
+    |> Enum.map(fn f ->
+      project_to_bandscope_limits(f, edges)
+    end)
+
+    ~e{
+      <%= for value <- values do %>
+        <line class="bandscopeGrid vertical" x1="<%= value %>" y1="0" x2="<%= value %>" y2="640" />
+      <% end %>
+    }
   end
 
   def band_scope_vertical_grid(_, _) do
     ""
+  end
+
+  def fixed_mode_step_hz(span) do
+    case span do
+      x when x in (5..9) -> 500
+      x when x in (10..19) -> 1000
+      x when x in (20..29) -> 2000
+      x when x in (30..49) -> 3000
+      x when x in (50..99) -> 5000
+      x when x in (100..199) -> 10000
+      x when x in (200..499) -> 20000
+      500 -> 50000
+      _ -> 1000
+    end
   end
 
   def band_scope_horizontal_grid do
