@@ -132,11 +132,11 @@ defmodule Open890Web.RadioViewHelpers do
   Offsets +freq+ by +amount+ in the direction of the +mode+'s sideband.
   For USB and CW, this means higher in frequency. For LSB/CW-R, lower in frequency.
   """
-  def offset_frequency(mode, freq, amount) when mode in [:usb, :usb_d, :cw] do
+  def offset_frequency(mode, freq, amount) when is_integer(amount) and mode in [:usb, :usb_d, :cw] do
     freq + amount
   end
 
-  def offset_frequency(mode, freq, amount) when mode in [:lsb, :lsb_d, :cw_r] do
+  def offset_frequency(mode, freq, amount) when is_integer(amount) and mode in [:lsb, :lsb_d, :cw_r] do
     freq - amount
   end
 
