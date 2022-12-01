@@ -31,7 +31,18 @@ defmodule Open890Web.Components.BandScope do
           </defs>
 
           <g transform="translate(0 20)">
-            <%= band_scope_vertical_grid(@band_scope_mode, freq: @effective_active_frequency, span: @band_scope_span, edges: @band_scope_edges) %>
+
+            <%= if @band_scope_mode == :fixed do %>
+              <.fixed_mode_vertical_grid edges={@band_scope_edges} />
+            <% end %>
+
+            <%= if @band_scope_mode == :auto_scroll do %>
+              <.auto_scroll_mode_vertical_grid />
+            <% end %>
+
+            <%= if @band_scope_mode == :center do %>
+              <.center_mode_vertical_grid freq={@effective_active_frequency} span={@band_scope_span} />
+            <% end %>
 
             <.band_scope_horizontal_grid />
 
@@ -100,72 +111,68 @@ defmodule Open890Web.Components.BandScope do
     """
   end
 
-  def band_scope_vertical_grid(:auto_scroll, _) do
-    offset = 64
+  def auto_scroll_mode_vertical_grid(assigns) do
+    values = (1..9) |> Enum.map(fn x -> x * 64 end)
 
-    ~e{
-      <%= for i <- (1..9) do %>
-        <line class="bandscopeGrid vertical" x1="<%= i * offset %>" y1="0" x2="<%= i * offset %>" y2="640" />
+    ~H"""
+      <%= for value <- values do %>
+        <line class="bandscopeGrid vertical" x1={value} y1="0" x2={value} y2="640" />
       <% end %>
-    }
+    """
   end
 
-  def band_scope_vertical_grid(:center, opts) when is_list(opts) do
-    freq = opts |> Keyword.fetch!(:freq)
-    span = opts |> Keyword.fetch!(:span)
-
-    if is_nil(span) do
-      ""
-    else
-      span_hz = span * 1000
-      span_step_hz = div(span_hz, 10)
-      half_span = div(span_hz, 2)
-
-      low_edge = freq - half_span
-      high_edge = freq + half_span
-
-      first_marker = round_up_to_step(low_edge, span_step_hz)
-
-      values =
-        0..9
-        |> Enum.map(fn i ->
-          first_marker + i * span_step_hz
-          # first_marker_projected + (i * grid_offset)
-        end)
-        |> Enum.map(fn f ->
-          project_to_bandscope_limits(f, {low_edge, high_edge})
-        end)
-
-      ~e{
-        <%= for i <- (0..9) do %>
-          <line class="bandscopeGrid vertical" x1="<%= Enum.at(values, i) %>" y1="0" x2="<%= Enum.at(values, i) %>" y2="640" />
-        <% end %>
-      }
-    end
+  def center_mode_vertical_grid(assigns) do
+    ~H"""
+      <%= for value <- compute_center_mode_grid_values(@freq, @span) do %>
+        <line class="bandscopeGrid vertical" x1={value} y1="0" x2={value} y2="640" />
+      <% end %>
+    """
   end
 
-  def band_scope_vertical_grid(:fixed, opts) when is_list(opts) do
-    {low_edge, high_edge} = edges = opts |> Keyword.fetch!(:edges)
+  def compute_center_mode_grid_values(_freq, nil) do
+    []
+  end
 
-    # FIXME: This could fail if high_Edge or low_edge are nil
+  def compute_center_mode_grid_values(freq, span) do
+    span_hz = span * 1000
+    span_step_hz = div(span_hz, 10)
+    half_span = div(span_hz, 2)
+
+    low_edge = freq - half_span
+    high_edge = freq + half_span
+
+    first_marker = round_up_to_step(low_edge, span_step_hz)
+
+    (0..9)
+    |> Enum.map(fn i ->
+      first_marker + i * span_step_hz
+    end)
+    |> Enum.map(fn f ->
+      project_to_bandscope_limits(f, {low_edge, high_edge})
+    end)
+  end
+
+  def fixed_mode_vertical_grid(assigns) do
+    ~H"""
+      <%= for value <- compute_fixed_mode_grid_values(@edges) do %>
+        <line class="bandscopeGrid vertical" x1={value} y1="0" x2={value} y2="640" />
+      <% end %>
+    """
+  end
+
+  def compute_fixed_mode_grid_values({low_edge, high_edge} = edges) when is_integer(low_edge) and is_integer(high_edge) do
     span_step_hz = (high_edge - low_edge) |> fixed_mode_step_hz()
 
     first_marker = round_up_to_step(low_edge, span_step_hz)
 
-    values = (first_marker..high_edge//span_step_hz)
+    (first_marker..high_edge//span_step_hz)
     |> Enum.map(fn f ->
       project_to_bandscope_limits(f, edges)
     end)
-
-    ~e{
-      <%= for value <- values do %>
-        <line class="bandscopeGrid vertical" x1="<%= value %>" y1="0" x2="<%= value %>" y2="640" />
-      <% end %>
-    }
   end
 
-  def band_scope_vertical_grid(_, _) do
-    ""
+  def compute_fixed_mode_grid_values(_) do
+    []
   end
 
   def fixed_mode_step_hz(span_hz) do
