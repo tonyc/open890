@@ -1,9 +1,7 @@
 defmodule Open890Web.RadioViewHelpers do
   require Logger
 
-  import Phoenix.HTML
-
-  alias Open890.{Menu, TransverterState}
+  alias Open890.{TransverterState}
 
   def selected_theme?(theme, name) do
     if theme == name, do: "selected"
@@ -118,17 +116,17 @@ defmodule Open890Web.RadioViewHelpers do
     end
   end
 
-  def center_carrier_line do
-    tri_ofs = 10
+  # def center_carrier_line do
+  #   tri_ofs = 10
 
-    ~e{
-      <line id="active_receiver_line" class="primaryCarrier" x1="320" y1="0" x2="320" y2="150" />
-      <g id="rxTriangleGroup">
-        <polygon class="rx triangle" points="320,<%= tri_ofs %> <%= 320 - tri_ofs %>,0 <%= 320 + tri_ofs %>,0" />
-        <text class="rx triangleText" x="<%= 320 - 3 %>" y="7">R</text>
-      </g>
-    }
-  end
+  #   ~e{
+  #     <line id="active_receiver_line" class="primaryCarrier" x1="320" y1="0" x2="320" y2="150" />
+  #     <g id="rxTriangleGroup">
+  #       <polygon class="rx triangle" points="320,<%= tri_ofs %> <%= 320 - tri_ofs %>,0 <%= 320 + tri_ofs %>,0" />
+  #       <text class="rx triangleText" x="<%= 320 - 3 %>" y="7">R</text>
+  #     </g>
+  #   }
+  # end
 
   @doc """
   Offsets +freq+ by +amount+ in the direction of the +mode+'s sideband.
@@ -171,28 +169,6 @@ defmodule Open890Web.RadioViewHelpers do
     |> Map.drop([:__changed__, :socket])
     |> Map.drop(opts |> Keyword.get(:except, []))
     |> inspect(pretty: true, limit: :infinity, charlists: :as_lists)
-  end
-
-  def render_menu_items(id) do
-    Menu.get(id)
-    |> case do
-      {:ok, menu} ->
-        ~e{
-          <%= for item <- menu.items do %>
-          <a class="item" phx-click="open_menu_by_id", phx-value-id="<%= item.menu_id%>">
-            <%= item.title %>
-            &mdash;
-            <em><%= item.info %></em>
-            <div class="ui label"><%= item.num %></div>
-          </a>
-          <% end %>
-        }
-
-      _ ->
-        ~e{
-          <a class="item">Unknown menu</a>
-        }
-    end
   end
 
   def vfo_display_frequency(freq, %TransverterState{} = state) do
@@ -256,22 +232,6 @@ defmodule Open890Web.RadioViewHelpers do
       {:down, _} -> true
       nil -> true
       _ -> false
-    end
-  end
-
-  def connection_status_icon(connection_state) do
-    case connection_state do
-      :up ->
-        ~e{<i class="linkify icon"></i>}
-
-      :stopped ->
-        ~e{<i class="unlink icon"></i>}
-
-      {:down, _} ->
-        ~e{}
-
-      _ ->
-        ""
     end
   end
 

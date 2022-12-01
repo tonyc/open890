@@ -1,7 +1,6 @@
 defmodule Open890Web.Components.AudioScope do
   require Logger
   use Phoenix.Component
-  import Phoenix.HTML
 
   alias Open890Web.RadioViewHelpers
   alias Open890.{FilterState, NotchState}
@@ -21,7 +20,7 @@ defmodule Open890Web.Components.AudioScope do
             <polygon id="audioSpectrum" class="spectrum" points={RadioViewHelpers.scope_data_to_svg(@audio_scope_data, max_value: 60)} vector-effect="non-scaling-stroke" />
 
             <%= if @active_if_filter && @roofing_filter_data[@active_if_filter] do %>
-              <%= audio_scope_filter_edges(@active_mode, @filter_state, @filter_mode) %>
+              <.audio_scope_filter_edges mode={@active_mode} filter_state={@filter_state} filter_mode={@filter_mode} />
             <% end %>
 
             <line id="audioScopeTuneIndicator" class="carrier rx" x1="106" y1="5" x2="106" y2="60" />
@@ -267,39 +266,40 @@ defmodule Open890Web.Components.AudioScope do
     audio_scope_filter_points(projected_low, projected_hi)
   end
 
-  def audio_scope_filter_edges(mode, %FilterState{} = filter_state, ssb_filter_mode) do
-    points =
-      case mode do
-        :am ->
-          am_filter_points(filter_state)
+  def audio_scope_filter_edges(assigns) do
+    ~H"""
+      <polyline id="audioScopeFilter" points={audio_scope_points(@mode, @filter_state, @filter_mode)} />
+    """
+  end
 
-        :fm ->
+  def audio_scope_points(mode, %FilterState{} = filter_state, filter_mode) do
+    case mode do
+      :am ->
+        am_filter_points(filter_state)
+
+      :fm ->
+        hi_lo_cut_filter_points(filter_state)
+
+      x when x in [:cw, :cw_r] ->
+        cw_filter_points(filter_state)
+
+      x when x in [:fsk, :fsk_r, :psk, :psk_r] ->
+        data_filter_points(filter_state)
+
+      x when x in [:usb, :usb_d, :lsb, :lsb_d] ->
+        if filter_mode == :hi_lo_cut do
           hi_lo_cut_filter_points(filter_state)
+        else
+          shifted_ssb_filter_points(filter_state)
+        end
 
-        x when x in [:cw, :cw_r] ->
-          cw_filter_points(filter_state)
+      other ->
+        Logger.debug(
+          "Unimplemented case for audio_scope_filter_edges for mode #{inspect(other)}"
+        )
 
-        x when x in [:fsk, :fsk_r, :psk, :psk_r] ->
-          data_filter_points(filter_state)
-
-        x when x in [:usb, :usb_d, :lsb, :lsb_d] ->
-          if ssb_filter_mode == :hi_lo_cut do
-            hi_lo_cut_filter_points(filter_state)
-          else
-            shifted_ssb_filter_points(filter_state)
-          end
-
-        other ->
-          Logger.debug(
-            "Unimplemented case for audio_scope_filter_edges for mode #{inspect(other)}"
-          )
-
-          ""
-      end
-
-    ~e{
-      <polyline id="audioScopeFilter" points="<%= points %>" />
-    }
+        ""
+    end
   end
 
   def am_filter_points(%FilterState{lo_width: lo_width, hi_shift: hi_shift}) do
