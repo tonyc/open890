@@ -53,15 +53,54 @@ If you would like to just build the image, you can run `make build_docker`.
 
 Platform/architecture-specific binary releases are available from [releases](https://github.com/tonyc/open890/releases/latest).
 
-### Raspberry Pi
+### Windows
 
-Binary builds are not available for Raspberry Pi due to CPU architecture differences. You will need to install from source (see above)
-in order to get open890 running on a RPi.
+  * Download the Windows release .zip file, and extract it somewhere useful.
+  * Navigate to where you expanded open890
+  * Double click the `open890.bat` file in the main folder.
+
+You will probably see several security warnings as described below. After getting through those, access the web interface at http://localhost:4000 with your 
+favorite web browser.
+
+#### "Windows Protected your PC"
+
+Since I haven't paid for a certificate to sign binaries, Windows will loudly complain about an unknown developer.
+
+ * Click "More Info" and choose "Run anyway". 
+
+If you are concerned about the safety of the files, **only ever download direct from the Github releases page**, and additionally, compare the MD5 checksum from the release notes with the file you have. An internet search for "Windows MD5 tool" will yield several results if you are concerned.
+
+#### Windows Security Alert
+
+On first run, you will likely receive a warning from Windows stating, "Windows Defender Firewall has blocked some features of this app" - For one or more of the following files:
+
+ * erl.exe
+
+This is due to open890's client-server architecture, and it needs permission to open a port (4000) for the local webserver. Only choose the "private network" option for open890.
+
+### Mac OS
+
+MacOS users will need to enable the "Allow applications from any developer" security feature.
+
+#### Mac OS 13 (Ventura) and later:
+
+* Open Terminal.app and run the following command:
+
+```
+sudo spctl --master-disable
+```
+
+You may be prompted for your account password to authenticate.
+
+* Now navigate to Settings -> Privay & Security -> Allow applications downloaded from: Anywhere
+
+#### MacOS 12 and earlier:
+
+Navigate to Settings -> Privacy & Security -> Allow applications downloaded from: Anywhere
 
 ### Linux (Ubuntu)
 
-Linux binaries are supported to run on 64-bit Ubuntu 20.04, although other modern Linux releases may work (or not).
-
+Linux binaries are supported to run on 64-bit Ubuntu 20.04, although other modern Linux releases may or may not work due to dependencies.
 
 Download the release `.tar.gz`
 
@@ -82,29 +121,10 @@ although the correct packages may not be available in your OS distribution's pac
 
 If all else fails, install from source.
 
-### Windows
+### Raspberry Pi
 
-  * Download the Windows release .zip file, and extract it somewhere useful.
-  * Navigate to where you expanded open890
-  * Double click the `open890.bat` file in the main folder.
-
-You will probably see several security warnings as described below. After getting through those, access the web interface at http://localhost:4000 with your favorite web browser.
-
-#### "Windows Protected your PC"
-
-Since I haven't paid for a certificate to sign binaries, Windows will loudly complain about an unknown developer.
-
- * Click "More Info" and choose "Run anyway". 
-
-If you are concerned about the safety of the files, **only ever download direct from the Github releases page**, and additionally, compare the MD5 checksum from the release notes with the file you have. An internet search for "Windows MD5 tool" will yield several results if you are concerned.
-
-#### Windows Security Alert
-
-On first run, you will likely receive a warning from Windows stating, "Windows Defender Firewall has blocked some features of this app" - For one or more of the following files:
-
- * erl.exe
-
-This is due to open890's client-server architecture, and it needs permission to open a port (4000) for the local webserver. Only choose the "private network" option for open890.
+Binary builds are not available for Raspberry Pi due to CPU architecture differences. You will need to install from source (see above)
+in order to get open890 running on a RPi.
 
 ## Network Safety/Security
 
@@ -112,7 +132,16 @@ open890 runs a web server on port `4000` and binds to `0.0.0.0` (all interfaces)
 
 Please note that the web interface **is not secured with a password**, and it assumes that you will run it on a trusted network. This is equivalent to running a computer with ARCP-890 left running. Again, if you are not OK with this, please do not run open890.
 
-Future releases may incorporate a basic level of authentication to access the web interface, or allow the IP address/port binding to be changed.
+If you wish to require a basic password, edit `config/config.toml` (you may need to copy `example.config.toml` first), and uncomment or add the following section:
+
+```toml
+[http.server.basic_auth]
+enabled = true
+username = "someUserName"
+password = "aReallyHardPasswordToGuess"
+```
+
+Upon starting open890, you will be prompted for this username and password. Again, **this is only basic authentication and the connection is not encrypted**. If you want to truly secure access, run open890 behind a firewall and use a VPN to access the system.
 
 ## Getting Help
 
