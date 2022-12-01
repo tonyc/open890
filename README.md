@@ -80,7 +80,8 @@ This is due to open890's client-server architecture, and it needs permission to 
 
 ### Mac OS
 
-MacOS users will need to enable the "Allow applications from any developer" security feature.
+
+MacOS users will need to enable the "Allow applications from any developer" security feature as described below:
 
 #### Mac OS 13 (Ventura) and later:
 
@@ -97,6 +98,15 @@ You may be prompted for your account password to authenticate.
 #### MacOS 12 and earlier:
 
 Navigate to Settings -> Privacy & Security -> Allow applications downloaded from: Anywhere
+
+
+#### All MacOS versions:
+
+After changing the security setting:
+
+* Download an unzip the MacOS binary build to somewhere useful (i.e. your Desktop)
+* Run `open890.zsh` (Ventura). If you are on an earlier version of MacOS, `open890.sh` may also work.
+
 
 ### Linux (Ubuntu)
 
