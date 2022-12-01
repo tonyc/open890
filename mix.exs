@@ -6,7 +6,7 @@ defmodule Open890.MixProject do
     [
       app: @app,
       version: "0.1.0",
-      elixir: "~> 1.12",
+      elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
@@ -58,16 +58,15 @@ defmodule Open890.MixProject do
       {:jason, "~> 1.0"},
       {:poison, "~> 5.0"},
       {:mix_test_watch, "~> 1.0", only: [:dev], runtime: false},
-      {:phoenix, "~> 1.6.0-rc.0", override: true},
+      {:phoenix, "~> 1.6", override: true},
       {:phoenix_html, "~> 3.0"},
       {:phoenix_live_dashboard, "~> 0.6.0"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_live_view, "~> 0.17.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:sobelow, "~> 0.11", only: [:dev, :test]},
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 0.5"},
-      {:timex, "~> 3.7.6"},
+      {:timex, "~> 3.7"},
       {:toml, "~> 0.6.2"},
       {:uniq, "~> 0.4.1"}
     ]
