@@ -147,10 +147,8 @@ defmodule Open890Web.Components.BandScope do
   def band_scope_vertical_grid(:fixed, opts) when is_list(opts) do
     {low_edge, high_edge} = edges = opts |> Keyword.fetch!(:edges)
 
-    span_hz = high_edge - low_edge
-    span_khz = div(span_hz, 1000)
-
-    span_step_hz = fixed_mode_step_hz(span_khz)
+    # FIXME: This could fail if high_Edge or low_edge are nil
+    span_step_hz = (high_edge - low_edge) |> fixed_mode_step_hz()
 
     first_marker = round_up_to_step(low_edge, span_step_hz)
 
@@ -170,8 +168,8 @@ defmodule Open890Web.Components.BandScope do
     ""
   end
 
-  def fixed_mode_step_hz(span) do
-    case span do
+  def fixed_mode_step_hz(span_hz) do
+    case div(span_hz, 1000) do
       x when x in (5..9) -> 500
       x when x in (10..19) -> 1000
       x when x in (20..29) -> 2000
