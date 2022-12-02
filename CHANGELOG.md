@@ -1,6 +1,9 @@
 # open890 Changelog
 
 ## Unreleased
+* [Dev] Removed dependency on Timex
+* [Dev] Upgraded to latest released version of Phoenix 1.16 to prepare for further update
+* [Dev] Tools update: new versions of Elixir, Erlang, and NodeJS required to build
 * Implemented fixed scope mode vertical bandscope grid lines.
 * [Dev] Cleaned up several compilation warnings
 * [Dev] Converted deprecated ~e{} Phoenix Liveview sigil to ~H function components
