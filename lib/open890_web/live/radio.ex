@@ -39,7 +39,7 @@ defmodule Open890Web.Live.Radio do
         socket |> assign(:__ui_macros, macros)
       else
         reason ->
-          Logger.warn(
+          Logger.info(
             "Could not load config/config.toml: #{inspect(reason)}. This is not currently an error."
           )
 
