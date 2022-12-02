@@ -11,7 +11,7 @@ Write-Output "Waiting for c:\erlang\bin\erl.exe..."
 while (!(Test-Path "c:\erlang\bin\erl.exe")) { Start-Sleep 5 }
 
 Write-Output "Downloading Elixir"
-$WebClient.DownloadFile("https://github.com/elixir-lang/elixir/releases/download/v$env:ELIXIR_VERSION/Precompiled.zip", "$env:TEMP\elixir.zip")
+$WebClient.DownloadFile("https://github.com/elixir-lang/elixir/releases/download/v$env:ELIXIR_VERSION/elixir-otp-24.zip", "$env:TEMP\elixir.zip")
 
 Write-Output "Extracting Elixir"
 Expand-Archive -DestinationPath c:\elixir $env:TEMP\elixir.zip -Force
