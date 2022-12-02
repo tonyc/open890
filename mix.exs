@@ -63,7 +63,7 @@ defmodule Open890.MixProject do
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 0.5"},
       {:toml, "~> 0.6.2"},
-      {:uuid, "~> 1.1"},
+      {:uniq, "~> 0.5"},
     ]
   end
 
