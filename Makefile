@@ -14,9 +14,6 @@ clean_static_assets:
 clean_node_deps:
 		rm -rf assets/node_modules
 
-install_tools : install_asdf_plugins
-		asdf install
-
 require_asdf:
 		@if ! command -v asdf > /dev/null; then echo "'asdf' not detected. Please install asdf (https://asdf-vm.com/) to build."; exit 1; fi;
 
@@ -25,6 +22,9 @@ install_asdf_plugins: require_asdf
 		@asdf plugin-list | grep elixir || asdf plugin-add elixir
 		@asdf plugin-list | grep nodejs || asdf plugin-add nodejs
 		@asdf plugin-list | grep yarn || asdf plugin-add yarn
+
+install_tools : install_asdf_plugins
+		asdf install
 
 install_elixir_deps: install_tools
 		mix deps.get
