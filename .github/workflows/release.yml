@@ -61,7 +61,7 @@ jobs:
           MIX_ENV: prod
           SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
       - name: Compress files
-        uses: master-atul/tar-action@v1.0.2
+        uses: master-atul/tar-action@v1.1.2
         with:
           command: c
           cwd: ./_build/prod/rel
@@ -150,7 +150,7 @@ jobs:
           MIX_ENV: prod
           SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
       - name: Compress files
-        uses: master-atul/tar-action@v1.0.2
+        uses: master-atul/tar-action@v1.1.2
         with:
           command: c
           cwd: ./_build/prod/rel
