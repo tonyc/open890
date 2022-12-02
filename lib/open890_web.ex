@@ -90,7 +90,6 @@ defmodule Open890Web do
       # Import basic rendering functionality (render, render_layout, etc)
       import Phoenix.View
 
-      import Open890Web.ErrorHelpers
       import Open890Web.Gettext
       alias Open890Web.Router.Helpers, as: Routes
 
