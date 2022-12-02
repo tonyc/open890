@@ -56,7 +56,6 @@ defmodule Open890.MixProject do
       {:gettext, "~> 0.11"},
       {:httpoison, "~> 1.8.0"},
       {:jason, "~> 1.0"},
-      {:poison, "~> 5.0"},
       {:mix_test_watch, "~> 1.0", only: [:dev], runtime: false},
       {:phoenix, "~> 1.6", override: true},
       {:phoenix_html, "~> 3.0"},

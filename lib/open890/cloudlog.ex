@@ -95,7 +95,7 @@ defmodule Open890.Cloudlog do
               mode: mode,
               power: radio_state.power_level
             })
-            |> Poison.encode!()
+            |> Jason.encode!()
 
           url = radio_api_url(radio_connection)
           headers = ["Content-Type": "application/json"]
@@ -103,7 +103,7 @@ defmodule Open890.Cloudlog do
           HTTPoison.post(url, payload, headers)
           |> case do
             {:ok, %HTTPoison.Response{body: body, status_code: 200}} ->
-              response = Poison.decode!(body)
+              response = Jason.decode!(body)
               Logger.debug("Cloudlog response: #{inspect(response)}")
 
             {:ok, %HTTPoison.Response{body: body, status_code: status_code}} ->
