@@ -66,7 +66,6 @@ defmodule Open890.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 0.5"},
-      {:timex, "~> 3.7"},
       {:toml, "~> 0.6.2"},
       {:uniq, "~> 0.4.1"}
     ]

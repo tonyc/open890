@@ -138,7 +138,7 @@ defmodule Open890.Cloudlog do
       frequency: frequency,
       power: power |> to_string(),
       mode: map_mode(mode),
-      timestamp: Timex.now() |> format_timestamp()
+      timestamp: DateTime.utc_now() |> format_timestamp()
     }
   end
 
@@ -157,6 +157,6 @@ defmodule Open890.Cloudlog do
   end
 
   def format_timestamp(time) do
-    time |> Timex.format!("%Y/%m/%d %H:%M:%S", :strftime)
+    time |> Calendar.strftime("%Y/%m/%d %H:%M:%S")
   end
 end
