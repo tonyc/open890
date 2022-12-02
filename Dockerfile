@@ -1,5 +1,5 @@
 # -- build stage --
-FROM hexpm/elixir:1.12.3-erlang-23.1.2-alpine-3.12.1 as build
+FROM hexpm/elixir:1.14.2-erlang-24.3.4.2-alpine-3.15.4 as build
 
 ENV MIX_ENV=prod \
   LANG=C.UTF-8
@@ -29,7 +29,7 @@ RUN mix assets.deploy
 RUN mix release
 
 # -- application stage --
-FROM alpine:3.13
+FROM alpine:3.15
 ENV LANG=C.UTF-8
 
 RUN apk add ncurses-dev

@@ -35,13 +35,12 @@ jobs:
       - name: Install OTP and Elixir
         uses: actions/setup-elixir@v1
         with:
-          otp-version: 23.3.4.6
-          elixir-version: 1.12.3
-          experimental-otp: true
+          otp-version: 24.3
+          elixir-version: 1.14.2
       - name: Install NodeJS
         uses: actions/setup-node@v1
         with:
-          node-version: 14.15.3
+          node-version: 18.12.1
       - name: Install Dependencies
         if: steps.mix-cache.outputs.cache-hit != 'true'
         run: |
@@ -191,8 +190,8 @@ jobs:
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
       - name: Install Erlang and Elixir
         env:
-          ERLANG_VERSION: 23.3.4.6
-          ELIXIR_VERSION: 1.12.3
+          ERLANG_VERSION: 24.3
+          ELIXIR_VERSION: 1.14.2
         run: |
           build_scripts\win64\install_elixir.ps1;
           echo "c:\erlang\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append;
