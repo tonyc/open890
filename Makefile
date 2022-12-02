@@ -5,8 +5,7 @@ all: clean build yarn_install
 clean : clean_elixir clean_static_assets clean_node_deps
 
 clean_elixir:
-		mix clean --deps
-		rm -rf deps/
+		rm -rf deps/ _build/
 
 clean_static_assets:
 		rm -rf priv/static_assets
