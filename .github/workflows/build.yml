@@ -100,9 +100,13 @@ jobs:
           mix local.rebar --force
           mix local.hex --force
           mix deps.get
+      - name: Compile
+        run: |
+          export PATH=~/.asdf/shims:$PATH
           mix compile
       - name: Test
         run: |
+          export PATH=~/.asdf/shims:$PATH
           mix test
         env:
           MIX_ENV: test
