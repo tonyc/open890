@@ -1,7 +1,7 @@
 # open890 Changelog
 
 ## Unreleased
-* [Dev] Removed dependency on 'timex' and 'poison' packages.
+* [Dev] Removed dependency on 'timex', 'poison', 'elixir_math' packages.
 * [Dev] Upgraded to latest released version of Phoenix 1.16 to prepare for further update
 * [Dev] Tools update: new versions of Elixir, Erlang, and NodeJS required to build
 * Implemented fixed scope mode vertical bandscope grid lines.
