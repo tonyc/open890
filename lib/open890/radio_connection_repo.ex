@@ -4,7 +4,7 @@ defmodule Open890.RadioConnectionRepo do
   require Logger
 
   alias Open890.RadioConnection
- alias Uniq.UUID
+  alias Uniq.UUID
 
   def all do
     table_name()

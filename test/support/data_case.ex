@@ -34,5 +34,4 @@ defmodule Open890.DataCase do
 
     :ok
   end
-
 end
