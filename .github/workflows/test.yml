@@ -30,7 +30,11 @@ jobs:
           mix deps.get
       - name: Compile
         run: |
-          mix clean
+          mix compile
+        env:
+          MIX_ENV: test
+      - name: Test
+        run: |
           mix test
         env:
           MIX_ENV: test
