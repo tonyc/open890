@@ -38,6 +38,11 @@ jobs:
         env:
           MIX_ENV: prod
           SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
+      - name: Test
+        run: |
+          mix test
+        env:
+          MIX_ENV: test
       - name: mix release
         run: |
           mix release
@@ -99,6 +104,11 @@ jobs:
         env:
           MIX_ENV: prod
           SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
+      - name: Test
+        run: |
+          mix test
+        env:
+          MIX_ENV: test
       - name: mix release
         run: |
           export PATH=~/.asdf/shims:$PATH
@@ -143,6 +153,11 @@ jobs:
         env:
           MIX_ENV: prod
           SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
+      - name: Test
+        run: |
+          mix test
+        env:
+          MIX_ENV: test
       - name: mix release
         run: |
           mix release
