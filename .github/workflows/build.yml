@@ -108,7 +108,6 @@ jobs:
           SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
 
   build-windows:
-    needs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
