@@ -15,7 +15,7 @@ jobs:
           ref: ${{ github.head_ref }}
       - name: Set output
         id: vars
-        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+        run: echo "{tag}={GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
       - name: Install OTP and Elixir
         uses: erlef/setup-beam@v1
         with:
@@ -60,9 +60,6 @@ jobs:
           files: |
             ./open890
           outPath: /tmp/open890-${{ steps.vars.outputs.tag }}-ubuntu-x64.tar.gz
-      - name: Output release checksum
-        run: |
-          echo "::set-output name=sha256_linux::$(sha256sum /tmp/open890-${{ steps.vars.outputs.tag }}-ubuntu.x64.tar.gz)"
 
   build-macos:
     runs-on: macos-latest
@@ -72,7 +69,7 @@ jobs:
           ref: ${{ github.head_ref }}
       - name: Set output
         id: vars
-        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+        run: echo "{tag}={GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
       - name: Install asdf via homebrew
         run: |
           brew install asdf coreutils automake autoconf libyaml readline libxslt libtool
@@ -132,7 +129,7 @@ jobs:
       - name: Set output
         shell: bash
         id: vars
-        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+        run: echo "{tag}={GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
       - name: Install Erlang and Elixir
         env:
           ERLANG_VERSION: 24.3.4
