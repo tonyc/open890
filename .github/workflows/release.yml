@@ -31,7 +31,9 @@ jobs:
           ref: ${{ github.head_ref }}
       - name: Set output
         id: vars
-        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+        run: |
+          echo "TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
+          cat $GITHUB_OUTPUT
       - name: Install OTP and Elixir
         uses: erlef/setup-beam@v1
         with:
@@ -67,22 +69,19 @@ jobs:
           cwd: ./_build/prod/rel
           files: |
             ./open890
-          outPath: /tmp/open890-${{ steps.vars.outputs.tag }}-ubuntu-x64.tar.gz
-      - name: Output release checksum
-        run: |
-          echo "::set-output name=sha256_linux::$(sha256sum /tmp/open890-${{ steps.vars.outputs.tag }}-ubuntu.x64.tar.gz)"
+          outPath: /tmp/open890-${{ steps.vars.outputs.TAG }}-ubuntu-x64.tar.gz
       - name: Upload Release Asset
         id: upload-release-asset
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: /tmp/open890-${{ steps.vars.outputs.tag }}-ubuntu-x64.tar.gz
-          asset_name: open890-${{ steps.vars.outputs.tag }}-ubuntu-x64.tar.gz
+          file: /tmp/open890-${{ steps.vars.outputs.TAG }}-ubuntu-x64.tar.gz
+          asset_name: open890-${{ steps.vars.outputs.TAG }}-ubuntu-x64.tar.gz
           tag: ${{ steps.vars.outputs.tag }}
       - name: Upload Release Asset to S3
         id: upload-release-asset-s3
         run: |
-          aws s3 cp /tmp/open890-${{ steps.vars.outputs.tag }}-ubuntu-x64.tar.gz s3://${{ secrets.AWS_S3_BUCKET }}/${{ secrets.AWS_S3_BUCKET_PATH }}
+          aws s3 cp /tmp/open890-${{ steps.vars.outputs.TAG }}-ubuntu-x64.tar.gz s3://${{ secrets.AWS_S3_BUCKET }}/${{ secrets.AWS_S3_BUCKET_PATH }}
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -98,7 +97,9 @@ jobs:
           ref: ${{ github.head_ref }}
       - name: Set output
         id: vars
-        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+        run: |
+          echo "TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
+          cat $GITHUB_OUTPUT
       - name: Install asdf via homebrew
         run: |
           brew install asdf coreutils automake autoconf libyaml readline libxslt libtool
@@ -156,22 +157,22 @@ jobs:
           cwd: ./_build/prod/rel
           files: |
             ./open890
-          outPath: /tmp/open890-${{ steps.vars.outputs.tag }}-macos-intel.tar.gz
+          outPath: /tmp/open890-${{ steps.vars.outputs.TAG }}-macos-intel.tar.gz
       - name: Output release checksum
         run: |
-          echo "::set-output name=sha256_linux::$(sha256sum /tmp/open890-${{ steps.vars.outputs.tag }}-macos-intel.tar.gz)"
+          echo "::set-output name=sha256_linux::$(sha256sum /tmp/open890-${{ steps.vars.outputs.TAG }}-macos-intel.tar.gz)"
       - name: Upload Release Asset
         id: upload-release-asset
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: /tmp/open890-${{ steps.vars.outputs.tag }}-macos-intel.tar.gz
-          asset_name: open890-${{ steps.vars.outputs.tag }}-macos-intel.tar.gz
-          tag: ${{ steps.vars.outputs.tag }}
+          file: /tmp/open890-${{ steps.vars.outputs.TAG }}-macos-intel.tar.gz
+          asset_name: open890-${{ steps.vars.outputs.TAG }}-macos-intel.tar.gz
+          tag: ${{ steps.vars.outputs.TAG }}
       - name: Upload Release Asset to S3
         id: upload-release-asset-s3
         run: |
-          aws s3 cp /tmp/open890-${{ steps.vars.outputs.tag }}-macos-intel.tar.gz s3://${{ secrets.AWS_S3_BUCKET }}/${{ secrets.AWS_S3_BUCKET_PATH }}
+          aws s3 cp /tmp/open890-${{ steps.vars.outputs.TAG }}-macos-intel.tar.gz s3://${{ secrets.AWS_S3_BUCKET }}/${{ secrets.AWS_S3_BUCKET_PATH }}
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -188,7 +189,9 @@ jobs:
       - name: Set output
         shell: bash
         id: vars
-        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+        run: |
+          echo "TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
+          cat $GITHUB_OUTPUT
       - name: Install Erlang and Elixir
         env:
           ERLANG_VERSION: 24.3.4
@@ -224,21 +227,20 @@ jobs:
       - name: Compress files
         run: |
           cd _build\prod\rel
-          7z a ..\..\..\open890-${{ steps.vars.outputs.tag }}-windows-x64.zip open890\
+          7z a ..\..\..\open890-${{ steps.vars.outputs.TAG }}-windows-x64.zip open890\
           cd ..\..\..
-          echo "::set-output name=sha256_win64::$(Get-FileHash open890-${{ steps.vars.outputs.tag }}-windows-x64.zip).Hash"
       - name: Upload Release Asset
         id: upload-release-asset
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: open890-${{ steps.vars.outputs.tag }}-windows-x64.zip
-          asset_name: open890-${{ steps.vars.outputs.tag }}-windows-x64.zip
-          tag: ${{ steps.vars.outputs.tag }}
+          file: open890-${{ steps.vars.outputs.TAG }}-windows-x64.zip
+          asset_name: open890-${{ steps.vars.outputs.TAG }}-windows-x64.zip
+          tag: ${{ steps.vars.outputs.TAG }}
       - name: Upload Release Asset to S3
         id: upload-release-asset-s3
         run: |
-          aws s3 cp open890-${{ steps.vars.outputs.tag }}-windows-x64.zip s3://${{ secrets.AWS_S3_BUCKET }}/${{ secrets.AWS_S3_BUCKET_PATH }}
+          aws s3 cp open890-${{ steps.vars.outputs.TAG }}-windows-x64.zip s3://${{ secrets.AWS_S3_BUCKET }}/${{ secrets.AWS_S3_BUCKET_PATH }}
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
