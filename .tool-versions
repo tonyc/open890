@@ -1,4 +1,4 @@
 elixir 1.14.2-otp-24
-erlang 24.3
+erlang 24.3.4
 nodejs 18.12.1
 yarn 1.22.11
