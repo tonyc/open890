@@ -1,0 +1,152 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+
+  build-ubuntu:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Set output
+        id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+      - name: Install OTP and Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          otp-version: 24.3.4
+          elixir-version: 1.14.2
+      - name: Install NodeJS
+        uses: actions/setup-node@v1
+        with:
+          node-version: 18.12.1
+      - name: Install Dependencies
+        if: steps.mix-cache.outputs.cache-hit != 'true'
+        run: |
+          mix local.rebar --force
+          mix local.hex --force
+          mix deps.get --only prod
+      - name: Compile Web Assets
+        run: |
+          yarn install --cwd assets
+          mix assets.deploy
+        env:
+          MIX_ENV: prod
+          SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
+      - name: mix release
+        run: |
+          mix release
+        env:
+          MIX_ENV: prod
+          SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
+      - name: Compress files
+        uses: master-atul/tar-action@v1.0.2
+        with:
+          command: c
+          cwd: ./_build/prod/rel
+          files: |
+            ./open890
+          outPath: /tmp/open890-${{ steps.vars.outputs.tag }}-ubuntu-x64.tar.gz
+      - name: Output release checksum
+        run: |
+          echo "::set-output name=sha256_linux::$(sha256sum /tmp/open890-${{ steps.vars.outputs.tag }}-ubuntu.x64.tar.gz)"
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Set output
+        id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+      - name: Install asdf via homebrew
+        run: |
+          brew install asdf coreutils automake autoconf libyaml readline libxslt libtool
+          brew install openssl@1.1
+          mkdir -p ~/.asdf/installs/erlang
+      - name: Show openssl prefix
+        run: |
+          brew --prefix openssl@1.1
+      - name: Action-cache asdf erlang build
+        uses: actions/cache@v3
+        with:
+          path: ~/.asdf/installs/erlang
+          key: ${{ runner.os }}-${{ hashFiles('.tool-versions') }}
+      - name: Install OTP and Elixir via asdf
+        env:
+          KERL_CONFIGURE_OPTIONS: "--disable-dynamic-ssl-lib --without-javac --with-ssl=/usr/local/opt/openssl@1.1"
+        run: |
+          make install_tools
+          asdf reshim erlang
+      - name: Install Dependencies
+        if: steps.mix-cache.outputs.cache-hit != 'true'
+        run: |
+          export PATH=~/.asdf/shims:$PATH
+          mix local.rebar --force
+          mix local.hex --force
+          mix deps.get --only prod
+      - name: Compile Web Assets
+        run: |
+          export PATH=~/.asdf/shims:$PATH
+          yarn install --cwd assets
+          mix assets.deploy
+        env:
+          MIX_ENV: prod
+          SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
+      - name: mix release
+        run: |
+          export PATH=~/.asdf/shims:$PATH
+          mix release
+        env:
+          MIX_ENV: prod
+          SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
+
+  build-windows:
+    needs:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Set output
+        shell: bash
+        id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+      - name: Install Erlang and Elixir
+        env:
+          ERLANG_VERSION: 24.3.4
+          ELIXIR_VERSION: 1.14.2
+        run: |
+          build_scripts\win64\install_elixir.ps1;
+          echo "c:\erlang\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append;
+          echo "c:\elixir\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append;
+      - name: Install Dependencies
+        run: |
+          mix local.rebar --force
+          mix local.hex --force
+          mix deps.get --only prod
+      - name: Install node dependencies
+        working-directory: assets
+        run: |
+          yarn install --cwd assets
+        env:
+          MIX_ENV: prod
+          SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
+      - name: mix assets.deploy.windows
+        run: |
+          mix assets.deploy.windows
+        env:
+          MIX_ENV: prod
+          SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
+      - name: mix release
+        run: |
+          mix release
+        env:
+          MIX_ENV: prod
+          SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
