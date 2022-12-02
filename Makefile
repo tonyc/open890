@@ -5,7 +5,8 @@ all: clean build yarn_install
 clean : clean_elixir clean_static_assets clean_node_deps
 
 clean_elixir:
-		rm -rf deps/ _build/
+		mix clean --deps
+		rm -rf deps/
 
 clean_static_assets:
 		rm -rf priv/static_assets
@@ -17,10 +18,10 @@ require_asdf:
 		@if ! command -v asdf > /dev/null; then echo "'asdf' not detected. Please install asdf (https://asdf-vm.com/) to build."; exit 1; fi;
 
 install_asdf_plugins: require_asdf
-		@asdf plugin-list | grep erlang || asdf plugin-add erlang
-		@asdf plugin-list | grep elixir || asdf plugin-add elixir
-		@asdf plugin-list | grep nodejs || asdf plugin-add nodejs
-		@asdf plugin-list | grep yarn || asdf plugin-add yarn
+		(asdf plugin-list | grep erlang && asdf plugin-update erlang) || asdf plugin-add erlang
+		(asdf plugin-list | grep elixir && asdf plugin-update elixir) || asdf plugin-add elixir
+		(asdf plugin-list | grep nodejs && asdf plugin-update nodejs) || asdf plugin-add nodejs
+		(asdf plugin-list | grep yarn && asdf plugin-update yarn) || asdf plugin-add yarn
 
 install_tools : install_asdf_plugins
 		asdf install
