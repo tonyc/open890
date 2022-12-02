@@ -23,7 +23,7 @@ install_asdf_plugins: require_asdf
 		(asdf plugin-list | grep yarn && asdf plugin-update yarn) || asdf plugin-add yarn
 
 install_tools : install_asdf_plugins
-		asdf install
+		KERL_CONFIGURE_OPTIONS="--without-javac --without-fop --without-odbc" asdf install
 
 install_elixir_deps: install_tools
 		mix deps.get
