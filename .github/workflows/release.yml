@@ -177,6 +177,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: ${{ secrets.AWS_S3_REGION }}
           AWS_EC2_METADATA_DISABLED: true
+
   release-windows:
     needs: [create_release]
     runs-on: windows-latest
