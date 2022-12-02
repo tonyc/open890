@@ -49,7 +49,6 @@ defmodule Open890.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:ecto, "~> 3.5"},
       {:esbuild, "~> 0.2", runtime: Mix.env() == :dev},
       {:floki, ">= 0.30.0", only: :test},
       {:gettext, "~> 0.11"},
@@ -58,14 +57,13 @@ defmodule Open890.MixProject do
       {:mix_test_watch, "~> 1.0", only: [:dev], runtime: false},
       {:phoenix, "~> 1.6", override: true},
       {:phoenix_html, "~> 3.0"},
-      {:phoenix_live_dashboard, "~> 0.6.0"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_live_view, "~> 0.17.0"},
       {:plug_cowboy, "~> 2.0"},
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 0.5"},
       {:toml, "~> 0.6.2"},
-      {:uniq, "~> 0.4.1"}
+      {:uuid, "~> 1.1"},
     ]
   end
 
