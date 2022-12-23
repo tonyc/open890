@@ -70,6 +70,9 @@ defmodule Open890Web.Components.BandScope do
               <text class="bandEdge high" x="635" y="0">
                 <%= @band_scope_edges |> format_band_scope_high() %>
               </text>
+              <text class="bandEdge span" x="450" y="0">
+                Span: <%= effective_span(@band_scope_edges) %> kHz
+              </text>
             <% end %>
 
             <%= if @effective_active_frequency do %>
@@ -119,6 +122,12 @@ defmodule Open890Web.Components.BandScope do
       <% end %>
     """
   end
+
+  def effective_span({low, high}) when is_integer(low) and is_integer(high) do
+    (high - low) / 1000 |> trunc()
+  end
+
+  def effective_span(_), do: nil
 
   def center_mode_vertical_grid(assigns) do
     ~H"""

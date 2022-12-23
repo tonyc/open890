@@ -1,6 +1,7 @@
 # open890 Changelog
 
 ## Unreleased
+* Added Span kHz readout on main bandscope
 * Fixed a startup crash related to not knowing the filter width when displaying the audio filter edges.
 * Added favicon/browser tab icons (#106)
 * Fixed incorrectly-shifted passband polygon for FSK/PSK modes (#97)
