@@ -1,6 +1,7 @@
 # open890 Changelog
 
 ## Unreleased
+* Added favicon/browser tab icons (#106)
 * Fixed incorrectly-shifted passband polygon for FSK/PSK modes (#97)
 * [Dev] Removed dependency on 'timex', 'poison', 'elixir_math', 'ecto', 'phoenix_live_dashboard' packages.
 * [Dev] Upgraded to latest released version of Phoenix 1.16 to prepare for further update
