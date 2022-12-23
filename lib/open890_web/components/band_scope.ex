@@ -242,15 +242,19 @@ defmodule Open890Web.Components.BandScope do
       when is_integer(lo_width) and is_integer(hi_shift) do
     half_width = (lo_width / 2) |> round()
 
+    hi_shift = case mode do
+      x when x in [:fsk, :fsk_r, :psk, :psk_r] ->
+        0 # no shift in FSK/PSK
+      _ ->
+        hi_shift
+    end
+
     shift_direction =
       case mode do
-        x when x in [:cw_r, :fsk_r, :psk_r] ->
-          -1
+        x when x in [:fsk, :fsk_r, :psk, :psk_r] ->
+          0 # no shift in FSK/PSK
 
-        x when x in [:psk, :fsk] ->
-          -1
-
-        x when x in [:lsb, :lsb_d] ->
+        x when x in [:cw_r, :lsb, :lsb_d] ->
           -1
 
         x when x in [:usb, :usb_d, :cw] ->
