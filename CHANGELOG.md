@@ -1,6 +1,7 @@
 # open890 Changelog
 
 ## Unreleased
+* Fixed a startup crash related to not knowing the filter width when displaying the audio filter edges.
 * Added favicon/browser tab icons (#106)
 * Fixed incorrectly-shifted passband polygon for FSK/PSK modes (#97)
 * [Dev] Removed dependency on 'timex', 'poison', 'elixir_math', 'ecto', 'phoenix_live_dashboard' packages.
