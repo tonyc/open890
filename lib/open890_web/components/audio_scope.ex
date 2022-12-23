@@ -164,6 +164,10 @@ defmodule Open890Web.Components.AudioScope do
     |> Kernel.+(70)
   end
 
+  def data_filter_points(%{FilterState{lo_width: nil} = _filter_state}) do
+    ""
+  end
+
   def data_filter_points(%FilterState{} = filter_state) do
     filter_width = FilterState.width(filter_state)
     half_width = round(filter_width / 2)
