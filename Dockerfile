@@ -32,7 +32,7 @@ RUN mix release
 FROM alpine:3.15
 ENV LANG=C.UTF-8
 
-RUN apk add ncurses-dev
+RUN apk add ncurses-dev libgcc libstdc++
 RUN mkdir /app
 
 COPY --from=build /app/_build/prod/rel/open890 /app
