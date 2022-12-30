@@ -37,7 +37,10 @@ by adjusting the `volumes` setting in `docker-compose.yml`.
 ### Pull & run a published image (manual)
 
     docker pull ghcr.io/tonyc/open890:latest
-    docker run -p 4000:4000 -it --rm ghcr.io/tonyc/open890:latest
+    docker run -p 4000:4000 -p 60001:60001/udp -it --rm ghcr.io/tonyc/open890:latest
+
+
+Port 4000 is for the main web interface, UDP port 60001 is for the UDP audio server for audio streaming.
 
 ### Build your own Docker image locally
 
