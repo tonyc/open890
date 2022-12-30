@@ -5,6 +5,7 @@ services:
     image: "ghcr.io/tonyc/open890:latest"
     ports:
       - "4000:4000"
+      - "60001:60001/udp"
     volumes:
       - "./open890-db:/app/db"
       - "./open890-config:/app/config"
