@@ -674,7 +674,7 @@ defmodule Open890.RadioState do
   end
 
   def filter_mode(%__MODULE__{} = radio_state) do
-    case radio_state.active_mode do
+    case effective_active_mode(radio_state) do
       ssb when ssb in [:usb, :lsb] ->
         radio_state.ssb_filter_mode
 
