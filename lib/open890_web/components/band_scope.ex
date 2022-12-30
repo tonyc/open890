@@ -124,7 +124,7 @@ defmodule Open890Web.Components.BandScope do
   end
 
   def effective_span({low, high}) when is_integer(low) and is_integer(high) do
-    (high - low) / 1000 |> trunc()
+    ((high - low) / 1000) |> trunc()
   end
 
   def effective_span(_), do: nil
@@ -251,17 +251,21 @@ defmodule Open890Web.Components.BandScope do
       when is_integer(lo_width) and is_integer(hi_shift) do
     half_width = (lo_width / 2) |> round()
 
-    hi_shift = case mode do
-      x when x in [:fsk, :fsk_r, :psk, :psk_r] ->
-        0 # no shift in FSK/PSK
-      _ ->
-        hi_shift
-    end
+    hi_shift =
+      case mode do
+        x when x in [:fsk, :fsk_r, :psk, :psk_r] ->
+          # no shift in FSK/PSK
+          0
+
+        _ ->
+          hi_shift
+      end
 
     shift_direction =
       case mode do
         x when x in [:fsk, :fsk_r, :psk, :psk_r] ->
-          0 # no shift in FSK/PSK
+          # no shift in FSK/PSK
+          0
 
         x when x in [:cw_r, :lsb, :lsb_d] ->
           -1

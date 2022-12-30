@@ -80,7 +80,7 @@ defmodule Open890Web.Live.Radio do
           socket |> redirect(to: "/connections")
       end
 
-      {:ok, socket}
+    {:ok, socket}
   end
 
   @impl true

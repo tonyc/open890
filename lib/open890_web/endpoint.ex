@@ -24,7 +24,8 @@ defmodule Open890Web.Endpoint do
     at: "/",
     from: :open890,
     gzip: false,
-    only: ~w(assets css fonts images js favicon.ico favicon-16x16.png favicon-32x32.png apple-touch-icon.png android-chrome-192x192.png android-chrome-512x512.png site.webmanifest robots.txt)
+    only:
+      ~w(assets css fonts images js favicon.ico favicon-16x16.png favicon-32x32.png apple-touch-icon.png android-chrome-192x192.png android-chrome-512x512.png site.webmanifest robots.txt)
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
