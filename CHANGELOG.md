@@ -1,6 +1,9 @@
 # open890 Changelog
 
 ## Unreleased
+* Radio screen now redirects to connection list when it can't find the requested connection ID.
+* Resolved an issue where the audio scope filter edges disappear when stopping and restarting a connection (#105)
+* Updated docker-compose.yml and documentation to forward UDP port 60001, to allow audio streaming when using the Docker image (#108)
 * Added Span kHz readout on main bandscope
 * Fixed a startup crash related to not knowing the filter width when displaying the audio filter edges.
 * Added favicon/browser tab icons (#106)

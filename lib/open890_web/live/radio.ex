@@ -77,10 +77,10 @@ defmodule Open890Web.Live.Radio do
 
         {:error, reason} ->
           Logger.warn("Could not find radio connection id: #{connection_id}: #{inspect(reason)}")
-          socket
+          socket |> redirect(to: "/connections")
       end
 
-    {:ok, socket}
+      {:ok, socket}
   end
 
   @impl true
