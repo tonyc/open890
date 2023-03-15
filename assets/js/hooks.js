@@ -410,8 +410,6 @@ let Hooks = {
         event.preventDefault();
         if (me.locked) { return; }
 
-        // console.log("VFO wheel", event)
-
         var isScrollUp = (event.deltaY < 0);
         var stepSize = 5;
 

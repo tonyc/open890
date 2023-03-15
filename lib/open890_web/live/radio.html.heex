@@ -488,7 +488,7 @@
       <!-- macros -->
       <%= if @__ui_macros != %{} do %>
         <h4>Macros</h4>
-        <div class="ui one column grid row">
+        <div class="ui two column grid row">
           <%= for %{"label" => name} <- @__ui_macros do %>
             <div class="column">
               <div class="ui black fluid button" phx-click="run_macro" phx-value-name={name}><%= name %></div>
