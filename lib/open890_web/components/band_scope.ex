@@ -319,7 +319,7 @@ defmodule Open890Web.Components.BandScope do
           shifted_passband_points(mode, filter_state, active_frequency, scope_edges)
 
         _ ->
-          Logger.debug("Unknown mode/filter mode combination: #{mode}/#{filter_mode}")
+          Logger.debug("Unknown mode/filter mode combination: #{inspect mode}/#{inspect filter_mode}")
           ""
       end
 

@@ -110,7 +110,7 @@ defmodule Open890.RadioState do
   extract "LK", :lock_enabled, as: :boolean
   extract "MG", :mic_gain
   extract "MN", :memory_channel_number
-  extract "MV", :vfo_memory_state
+  # extract "MV", :vfo_memory_state
   extract "NR", :nr
   extract "PA", :rf_pre
   extract "PC", :power_level
@@ -129,6 +129,15 @@ defmodule Open890.RadioState do
   extract "SQ", :squelch
   extract "TB", :split_enabled
   extract "XT", :xit_enabled, as: :boolean
+
+  def dispatch(%__MODULE__{} = state, "MV" <> _ = msg) do
+    # FIXME: somehow we need to always query the operating mode, because the radio does not always send the mode
+    # when switching between vfo/memory if it matches
+    vfo_memory_state = Extract.vfo_memory_state(msg)
+    |> IO.inspect(label: "new vfo_memory_state")
+
+    %{ state | vfo_memory_state: vfo_memory_state }
+  end
 
   def dispatch(%__MODULE__{} = state, "MA70" <> _ = msg) do
     %{
@@ -478,9 +487,9 @@ defmodule Open890.RadioState do
 
   # active/operating mode
   def dispatch(%__MODULE__{} = state, "OM0" <> _ = msg) do
-    # check whether we're in vfo or memory moed
+    # check whether we're in vfo or memory mode
     # if we're in vfo mode, set active_mode,
-    # if we're in memory mode, set memory_channel_active_mod
+    # if we're in memory mode, set memory_channel_active_mode
 
     mode = Extract.operating_mode(msg)
 
@@ -510,7 +519,8 @@ defmodule Open890.RadioState do
       :memory ->
         %{state | memory_channel_inactive_mode: mode}
 
-      _ ->
+      other ->
+        Logger.warn("Unknown vfo_memory_state: #{inspect other}")
         state
     end
   end
@@ -718,7 +728,9 @@ defmodule Open890.RadioState do
     case state.vfo_memory_state do
       :vfo -> state.active_mode
       :memory -> state.memory_channel_active_mode
-      _ -> nil
+      other ->
+        Logger.warn("Unknown vfo_memory_state: #{inspect other}")
+        nil
     end
   end
 
