@@ -215,7 +215,6 @@ let Hooks = {
       this.el.addEventListener("wheel", event => {
         // This is duplicated in the BandScopeCanvas hook below
         event.preventDefault();
-        console.log("VFO wheel", event)
 
         if (me.locked) { return; }
 
@@ -228,7 +227,6 @@ let Hooks = {
           stepSize = 3
         }
 
-
         if (isScrollUp) {
           if (event.shiftKey) {
             this.pushEvent("step_tune_up", {stepSize: stepSize})
@@ -237,7 +235,6 @@ let Hooks = {
 
           }
         } else {
-
           if (event.shiftKey) {
             this.pushEvent("step_tune_down", {stepSize: stepSize})
           } else {
@@ -425,9 +422,18 @@ let Hooks = {
         }
 
         if (isScrollUp) {
-          this.pushEvent("step_tune_up", {stepSize: stepSize})
+          if (event.shiftKey) {
+            this.pushEvent("step_tune_up", {stepSize: stepSize})
+          } else {
+            this.pushEvent("multi_ch", {is_up: true})
+
+          }
         } else {
-          this.pushEvent("step_tune_down", {stepSize: stepSize})
+          if (event.shiftKey) {
+            this.pushEvent("step_tune_down", {stepSize: stepSize})
+          } else {
+            this.pushEvent("multi_ch", {is_up: false})
+          }
         }
       });
 
