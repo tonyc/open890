@@ -50,9 +50,6 @@ let ColorMap = {
 
   },
 
-
-
-
 }
 
 export default ColorMap
