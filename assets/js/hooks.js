@@ -6,7 +6,7 @@ function PCMPlayer(t){this.init(t)}PCMPlayer.prototype.init=function(t){this.opt
 
 let Hooks = {
   ScopeWheelEvent: {
-    wheel(me, event) => {
+    wheel(me, event) {
 
       event.preventDefault();
       if (me.locked) { return; }
