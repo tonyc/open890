@@ -62,15 +62,7 @@ let Hooks = {
     mounted() {
       this.el.addEventListener("click", event => {
         console.log("bandmodal clicked")
-        // if (this.el == event.target) {
-        //   event.stopPropagation();
-        // }
       })
-
-      // window.document.querySelector("#BandModalClose").addEventLister("click", event => {
-      //   event.preventDefault()
-      //   console.log("BandModalClose click")
-      // })
     }
 
   },
@@ -145,31 +137,7 @@ let Hooks = {
           }
         }
       })
-
-      //this.el.addEventListener("mousedown", (event) => {
-      //  event.preventDefault();
-      //  me.dragStartCoord = event.x;
-
-      //  console.log("RIT/XIT mouseDown", event.x)
-      //})
-
-
-      //this.el.addEventListener("mouseup", (event) => {
-      //  event.preventDefault();
-
-
-      //  console.log("RIT/XIT mouseUp", event.x)
-      //})
-
-      //this.el.addEventListener("mousemove", event => {
-      //  event.preventDefault();
-
-      //  if (event.buttons && event.buttons == 1) {
-      //    console.log("rit/xit drag", event)
-      //  }
-      //})
     },
-
 
   },
 
