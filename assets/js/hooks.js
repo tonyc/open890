@@ -7,8 +7,8 @@ function PCMPlayer(t){this.init(t)}PCMPlayer.prototype.init=function(t){this.opt
 let Hooks = {
   ScopeWheelEvent: {
     wheel(me, event) {
-
       event.preventDefault();
+
       if (me.locked) { return; }
 
       var isScrollUp = (event.deltaY < 0);
@@ -22,19 +22,18 @@ let Hooks = {
 
       if (isScrollUp) {
         if (event.shiftKey) {
-          this.pushEvent("step_tune_up", {stepSize: stepSize})
+          me.pushEvent("step_tune_up", {stepSize: stepSize})
         } else {
-          this.pushEvent("multi_ch", {is_up: true})
+          me.pushEvent("multi_ch", {is_up: true})
 
         }
       } else {
         if (event.shiftKey) {
-          this.pushEvent("step_tune_down", {stepSize: stepSize})
+          me.pushEvent("step_tune_down", {stepSize: stepSize})
         } else {
-          this.pushEvent("multi_ch", {is_up: false})
+          me.pushEvent("multi_ch", {is_up: false})
         }
       }
-
     }
   },
   AudioStream: {
@@ -245,7 +244,7 @@ let Hooks = {
       })
 
       this.el.addEventListener("wheel", event => {
-        ScopeWheelEvent.wheel(me, event);
+        Hooks.ScopeWheelEvent.wheel(me, event);
       });
 
       this.el.addEventListener("mousemove", event => {
@@ -409,7 +408,7 @@ let Hooks = {
       })
 
       this.el.addEventListener("wheel", event => {
-        ScopeWheelEvent.wheel(me, event);
+        Hooks.ScopeWheelEvent.wheel(me, event);
       });
 
       this.el.addEventListener("mousemove", event => {
