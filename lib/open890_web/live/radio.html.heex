@@ -22,7 +22,7 @@
         <div class="header">
           <h1 class="ui huge header activeFrequency tip">
             <%= @radio_state.active_frequency |> format_raw_frequency() %>
-            <div class="ui sub header activeMode tip"><%= @radio_state.active_mode |> format_mode() %></div>
+            <div class="ui sub header activeMode tip"><%= RadioState.effective_active_mode(@radio_state) |> format_mode() %></div>
           </h1>
         </div>
         <div class="content">
@@ -157,7 +157,7 @@
     <div class="four wide column">
       <div class="ui grid">
         <div class="eight wide column left aligned top-indicator">
-          <%= if @radio_state.active_mode in [:cw, :cw_r] && @radio_state.cw_key_speed do %>
+          <%= if RadioState.effective_active_mode(@radio_state) in [:cw, :cw_r] && @radio_state.cw_key_speed do %>
             <%= @radio_state.cw_key_speed %>WPM
           <% else %>
             <%= if @radio_state.mic_gain do %>
@@ -166,7 +166,7 @@
           <% end %>
         </div>
         <div class="eight wide column right aligned top-indicator">
-          <%= if @radio_state.active_mode in [:cw, :cw_r] && @radio_state.cw_delay do %>
+          <%= if RadioState.effective_active_mode(@radio_state) in [:cw, :cw_r] && @radio_state.cw_delay do %>
             <%= if @radio_state.cw_delay == 0, do: "FULL-BK", else: "DELAY: #{@radio_state.cw_delay}" %>
           <% end %>
         </div>
@@ -283,9 +283,9 @@
             theme={@theme}></AudioScope.audio_scope>
 
           <div class="scopeButtonsContainer">
-            <%= if false && @radio_state.active_mode in [:usb, :lsb, :usb_d, :lsb_d] do %>
+            <%= if false && RadioState.effective_active_mode(@radio_state) in [:usb, :lsb, :usb_d, :lsb_d] do %>
               <.ssb_shift_width_button
-                active_mode={@radio_state.active_mode}
+                active_mode={RadioState.effective_active_mode(@radio_state)}
                 ssb_filter_mode={@radio_state.ssb_filter_mode}
                 ssb_data_filter_mode={@radio_state.ssb_data_filter_mode} />
             <% end %>
@@ -293,8 +293,8 @@
             <%# shared filter buttons %>
             <.filter_buttons />
 
-            <%= if @radio_state.active_mode in [:cw, :cw_r, :fsk, :fsk_r] do %>
-              <%= if @radio_state.active_mode in [:cw, :cw_r] do %>
+            <%= if RadioState.effective_active_mode(@radio_state) in [:cw, :cw_r, :fsk, :fsk_r] do %>
+              <%= if RadioState.effective_active_mode(@radio_state) in [:cw, :cw_r] do %>
                 <div class="ui mini black buttons">
                   <.cmd_button cmd="CA1">CW T</.cmd_button>
                 </div>
@@ -394,7 +394,7 @@
               </div>
 
               <div class="column">
-                <.bc_button value={@radio_state.bc} active_mode={@radio_state.active_mode} fluid />
+                <.bc_button value={@radio_state.bc} active_mode={RadioState.effective_active_mode(@radio_state)} fluid />
               </div>
 
               <div class="column">
@@ -508,7 +508,7 @@
          rx_banner_frequency={RadioState.rx_banner_frequency(@radio_state)}
          tx_banner_frequency={RadioState.tx_banner_frequency(@radio_state)}
 
-         active_mode={@radio_state.active_mode}
+         active_mode={RadioState.effective_active_mode(@radio_state)}
          filter_mode={RadioState.filter_mode(@radio_state)}
          band_scope_mode={@radio_state.band_scope_mode}
          band_scope_data={@band_scope_data}
