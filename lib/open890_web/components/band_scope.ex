@@ -65,10 +65,10 @@ defmodule Open890Web.Components.BandScope do
           <g transform="translate(0 8)">
             <%= if @band_scope_edges do %>
               <text class="bandEdge low" x="5" y="0">
-                <%= @band_scope_edges |> format_band_scope_low() %>
+                <%= format_band_scope_low(@band_scope_edges) %>
               </text>
               <text class="bandEdge high" x="635" y="0">
-                <%= @band_scope_edges |> format_band_scope_high() %>
+                <%= format_band_scope_high(@band_scope_edges) %>
               </text>
               <text class="bandEdge span" x="450" y="0">
                 Span: <%= effective_span(@band_scope_edges) %> kHz
