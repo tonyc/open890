@@ -1,6 +1,7 @@
 # open890 Changelog
 
 ## Unreleased
+* Fixed incorrect passband polygon in certain cases when in memory mode. (#105)
 * Fixed inconsistent mousewheel steps when overing over spectrum vs. waterfall.
 * Made the MACRO button section two columns.
 * Radio screen now redirects to connection list when it can't find the requested connection ID.
