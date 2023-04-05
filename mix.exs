@@ -25,7 +25,7 @@ defmodule Open890.MixProject do
   end
 
   def version do
-    "dev"
+    "0.0.0-dev"
   end
 
   defp release do
