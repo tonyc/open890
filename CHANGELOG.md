@@ -1,6 +1,6 @@
 # open890 Changelog
 
-## Unreleased
+## 1.0.4 - 2023-04-05
 * Fixed incorrect passband polygon in certain cases when in memory mode. (#105)
 * Fixed inconsistent mousewheel steps when overing over spectrum vs. waterfall.
 * Made the MACRO button section two columns.
