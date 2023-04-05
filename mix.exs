@@ -2,6 +2,8 @@ defmodule Open890.MixProject do
   use Mix.Project
   @app :open890
 
+  def version, do: "0.0.0-dev"
+
   def project do
     [
       app: @app,
@@ -22,10 +24,6 @@ defmodule Open890.MixProject do
       ],
       releases: [{:open890, release()}]
     ]
-  end
-
-  def version do
-    "0.0.0-dev"
   end
 
   defp release do
