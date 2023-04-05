@@ -5,7 +5,7 @@ defmodule Open890.MixProject do
   def project do
     [
       app: @app,
-      version: "0.1.0",
+      version: version(),
       elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
@@ -22,6 +22,10 @@ defmodule Open890.MixProject do
       ],
       releases: [{:open890, release()}]
     ]
+  end
+
+  def version do
+    "dev"
   end
 
   defp release do
