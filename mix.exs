@@ -2,7 +2,7 @@ defmodule Open890.MixProject do
   use Mix.Project
   @app :open890
 
-  def version, do: "1.0.4"
+  def version, do: "0.0.0-dev"
 
   def project do
     [
