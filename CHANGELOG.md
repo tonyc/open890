@@ -1,7 +1,7 @@
 # open890 Changelog
 
 ## Unreleased
-* TBD
+* Added MHz button indicator (#112)
 
 ## 1.0.4 - 2023-04-05
 * Fixed incorrect passband polygon in certain cases when in memory mode. (#105)

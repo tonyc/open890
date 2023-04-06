@@ -53,6 +53,7 @@ defmodule Open890.ConnectionCommands do
     |> get_voip_state()
     |> get_rit_xit()
     |> get_lock()
+    |> get_mhz()
   end
 
   def get_busy_led_state(conn), do: conn |> cmd("BY")
@@ -70,6 +71,8 @@ defmodule Open890.ConnectionCommands do
 
   #  conn |> cmd("RF#{direction}#{value}")
   # end
+
+  def get_mhz(conn), do: conn |> cmd("MH")
 
   def get_lock(conn), do: conn |> cmd("LK")
 

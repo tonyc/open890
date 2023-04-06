@@ -15,6 +15,7 @@ defmodule Open890Web.Live.Radio do
     BusyTxIndicator,
     LockButton,
     Meter,
+    MhzButton,
     RitXit,
     Slider,
     SplitButton

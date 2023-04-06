@@ -60,6 +60,7 @@ defmodule Open890.RadioState do
             fine: nil,
             id_meter: 0,
             lock_enabled: false,
+            mhz_enabled: false,
             mic_gain: nil,
             noise_blank_state: %NoiseBlankState{},
             notch_state: %NotchState{},
@@ -109,6 +110,7 @@ defmodule Open890.RadioState do
   extract "DS1", :display_screen_id
   extract "LK", :lock_enabled, as: :boolean
   extract "MG", :mic_gain
+  extract "MH", :mhz_enabled, as: :boolean
   extract "MN", :memory_channel_number
   # extract "MV", :vfo_memory_state
   extract "NR", :nr
