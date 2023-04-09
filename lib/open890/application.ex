@@ -15,6 +15,8 @@ defmodule Open890.Application do
   def start(_type, _args) do
     {:ok, _filename} = RadioConnectionRepo.init()
 
+    Logger.debug("Open890.Application.start")
+
     children = [
       {Registry, [keys: :unique, name: @connection_registry]},
       # Start the Telemetry supervisor
@@ -26,7 +28,7 @@ defmodule Open890.Application do
       {Open890.RadioConnectionSupervisor,
        strategy: :one_for_one, name: Open890.RadioConnectionSupervisor},
       {Open890.CloudlogSupervisor, strategy: :one_for_one, name: Open890.CloudlogSupervisor},
-      {Open890.UDPAudioServer, []}
+      # {Open890.UDPAudioServer, []}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
