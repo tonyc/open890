@@ -1,6 +1,7 @@
 # open890 Changelog
 
 ## Unreleased
+* Fix crash related to turning Mic Gain all the way up to 100 (#115)
 * Added MHz button indicator (#112)
 
 ## 1.0.4 - 2023-04-05
