@@ -169,7 +169,7 @@ If you encounter a bug, please [open a discussion](https://groups.io/g/open890).
 
 ## Donors
 
-The following people have graciously donated monetarily to open890, in alphabetical order. If you would like to donate, please contact Tony at tcollen at gmail.com
+The following people have graciously donated monetarily to open890, and opted-in to be listed here, in alphabetical order. If you would like to donate, please contact Tony at tcollen at gmail.com
 
 * Guy Bujold, VE2CXA
 * Willi Föckeler, DK6DT
