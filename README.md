@@ -167,6 +167,16 @@ If you encounter a bug, please [open a discussion](https://groups.io/g/open890).
 * Make your changes in a branch in your own repo
 * Open a pull request!
 
+## Donors
+
+The following people have graciously donated monetarily to open890, in alphabetical order. If you would like to donate, please contact Tony at tcollen at gmail.com
+
+* Guy Bujold, VE2CXA
+* Willi Föckeler, DK6DT
+* Philip Hartwell, VK6GX
+* Rick Lapp, KC2FD
+* Jeff Sloane, KE6L
+
 ## Legal mumbo-jumbo
 
 This project is licensed under the MIT license. Please see [MIT-LICENSE](MIT-LICENSE) for more details.
