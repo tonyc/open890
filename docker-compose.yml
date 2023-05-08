@@ -9,4 +9,7 @@ services:
     volumes:
       - "./open890-db:/app/db"
       - "./open890-config:/app/config"
+    environment:
+      # change the following line if you run into the "check_origin" issue or need to otherwise change the hostname open890 listens for
+      - "OPEN890_HOST=localhost"
 
