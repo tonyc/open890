@@ -47,6 +47,10 @@ defmodule Open890Web.Components.BandScope do
 
             <polygon id="bandSpectrum" class="spectrum" vector-effect="non-scaling-stroke" points={RadioViewHelpers.scope_data_to_svg(@band_scope_data, max_value: 140, scale_y: @spectrum_scale)}  />
 
+            <%= for marker <- @markers do %>
+              <.marker freq={marker} />
+            <% end %>
+
 
           </g>
 
@@ -160,6 +164,16 @@ defmodule Open890Web.Components.BandScope do
     |> Enum.map(fn f ->
       project_to_bandscope_limits(f, {low_edge, high_edge})
     end)
+  end
+
+  def marker(assigns) do
+    marker = assigns[:marker]
+
+    projected_marker = project_to_bandscope_limits(marker, {})
+
+    ~H"""
+      <line class="marker user vertical" x1={} y1="0" x2={} y2={"640"} />
+    """
   end
 
   def fixed_mode_vertical_grid(assigns) do
