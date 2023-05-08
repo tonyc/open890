@@ -288,6 +288,7 @@ defmodule Open890Web.Live.Radio do
         marker = UserMarker.create(freq)
 
         socket = assign(socket, :markers, old_markers ++ [marker])
+        RadioConnection.add_user_marker(conn, marker)
 
         Logger.debug("Place marker: #{inspect marker}")
         Logger.debug("markers: #{inspect(socket.assigns.markers)}")
@@ -295,8 +296,13 @@ defmodule Open890Web.Live.Radio do
 
       "c" ->
         Logger.debug("Clear all markers")
+        RadioConnection.clear_user_markers(conn)
         socket = assign(socket, :markers, [])
         Logger.debug("markers: #{inspect(socket.assigns.markers)}")
+        socket
+
+      "t" ->
+        conn |> ConnectionCommands.cw_tune()
         socket
 
       "=" ->

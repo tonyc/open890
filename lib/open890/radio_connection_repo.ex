@@ -92,7 +92,8 @@ defmodule Open890.RadioConnectionRepo do
       user_is_admin: user_is_admin,
       cloudlog_enabled: cloudlog_enabled,
       cloudlog_url: cloudlog_url |> to_string() |> String.trim() |> String.trim_trailing("/"),
-      cloudlog_api_key: cloudlog_api_key |> to_string() |> String.trim()
+      cloudlog_api_key: cloudlog_api_key |> to_string() |> String.trim(),
+      user_markers: []
     }
     |> insert()
   end

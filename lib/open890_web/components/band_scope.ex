@@ -173,10 +173,13 @@ defmodule Open890Web.Components.BandScope do
     freq = marker.freq
     band_scope_edges = assigns[:band_scope_edges]
 
-    marker_x = project_to_bandscope_limits(freq, band_scope_edges)
+    x = project_to_bandscope_limits(freq, band_scope_edges)
 
     ~H"""
-      <line class="marker user vertical" x1={marker_x} y1="0" x2={marker_x} y2={"640"} />
+      <g class="user_marker_group" transform="translate(0 0)">
+        <line class="marker user vertical" x1={x} y1="0" x2={x} y2={"640"} />
+        <rect class="marker_delete" x={x-3} y="-2" height="4" width="6" pointer-events="visibleFill" phx-click="delete-user-marker" phx-value-id={marker.id}/>
+      </g>
     """
   end
 

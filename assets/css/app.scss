@@ -994,8 +994,24 @@ svg#bandScope {
   }
 }
 
-.marker.user {
-  stroke: $kenwood-cyan;
-  stroke-width: 0.5pt;
-  stroke-dasharray: 0;
+.user_marker_group {
+  .marker.user {
+    stroke: $kenwood-cyan;
+    stroke-width: 0.5pt;
+    stroke-dasharray: 0;
+  }
+
+  .marker_delete {
+    fill: $kenwood-grey;
+
+    &:hover {
+      fill: $kenwood-red; 
+    }
+  }
+
+  .marker_delete_label {
+    fill: white;
+    font-size: 2px;
+  }
 }
+

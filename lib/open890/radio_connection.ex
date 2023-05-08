@@ -17,13 +17,14 @@ defmodule Open890.RadioConnection do
             type: nil,
             cloudlog_enabled: false,
             cloudlog_url: nil,
-            cloudlog_api_key: nil
+            cloudlog_api_key: nil,
+            user_markers: []
 
   require Logger
 
   alias Open890.{CloudlogSupervisor, RadioConnectionSupervisor}
   alias Open890.RadioConnectionRepo, as: Repo
-  alias Open890.RadioState
+  alias Open890.{RadioState, UserMarker}
 
   def tcp_port(%__MODULE__{} = connection) do
     connection
@@ -43,6 +44,23 @@ defmodule Open890.RadioConnection do
   end
 
   def first, do: all() |> Enum.at(0)
+
+  def add_user_marker(%__MODULE__{id: id} = connection, %UserMarker{} = marker) do
+    Logger.debug("RadioConnection.add_user_marker: conn=#{inspect id}, marker=#{inspect marker}")
+
+    # the problem here is that the old connection struct seemingly doesn't even
+    # have a :user_markers key, despite it being in the struct. it's like it's completely
+    # frozen in the previous state when coming from dets, keys and all
+
+    # connection = put_in(connection, :user_markers, user_markers(connection) ++ [marker])
+    # repo().update(connection)
+    :ok
+  end
+
+  def clear_user_markers(%__MODULE__{} = connection) do
+    # repo().update(%{connection | user_markers: []})
+    :ok
+  end
 
   def create(params) when is_map(params) do
     params |> repo().insert()
