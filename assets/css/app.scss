@@ -992,5 +992,10 @@ svg#bandScope {
     // background-color: #16ab39;
     background-color: $kenwood-grey;
   }
+}
 
+.marker.user {
+  stroke: $kenwood-cyan;
+  stroke-width: 0.5pt;
+  stroke-dasharray: 0;
 }

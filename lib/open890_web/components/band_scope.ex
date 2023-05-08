@@ -46,12 +46,12 @@ defmodule Open890Web.Components.BandScope do
             <.band_scope_horizontal_grid />
 
             <polygon id="bandSpectrum" class="spectrum" vector-effect="non-scaling-stroke" points={RadioViewHelpers.scope_data_to_svg(@band_scope_data, max_value: 140, scale_y: @spectrum_scale)}  />
+          </g>
 
+          <g transform="translate(0 15)">
             <%= for marker <- @markers do %>
-              <.marker freq={marker} />
+              <.marker freq={marker} band_scope_edges={@band_scope_edges} />
             <% end %>
-
-
           </g>
 
           <%= if @tx_banner_frequency && @band_scope_edges do %>
@@ -167,12 +167,14 @@ defmodule Open890Web.Components.BandScope do
   end
 
   def marker(assigns) do
-    marker = assigns[:marker]
+    freq = assigns[:freq]
+    Logger.debug("Marker freq: #{freq}")
+    band_scope_edges = assigns[:band_scope_edges]
 
-    projected_marker = project_to_bandscope_limits(marker, {})
+    marker_x = project_to_bandscope_limits(freq, band_scope_edges)
 
     ~H"""
-      <line class="marker user vertical" x1={} y1="0" x2={} y2={"640"} />
+      <line class="marker user vertical" x1={marker_x} y1="0" x2={marker_x} y2={"640"} />
     """
   end
 
