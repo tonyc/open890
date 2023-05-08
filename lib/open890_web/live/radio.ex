@@ -5,7 +5,7 @@ defmodule Open890Web.Live.Radio do
   use Open890Web.Live.RadioLiveEventHandling
 
   alias Phoenix.Socket.Broadcast
-  alias Open890.{ConnectionCommands, Extract, RadioConnection, RadioState}
+  alias Open890.{ConnectionCommands, Extract, RadioConnection, RadioState, UserMarker}
   alias Open890Web.Live.{BandButtonsComponent, RadioSocketState}
 
   alias Open890Web.Components.{
@@ -285,9 +285,11 @@ defmodule Open890Web.Live.Radio do
         freq = RadioState.effective_active_frequency(radio_state)
         old_markers = socket.assigns.markers
 
-        socket = assign(socket, :markers, old_markers ++ [freq])
+        marker = UserMarker.create(freq)
 
-        Logger.debug("Place marker: #{freq}")
+        socket = assign(socket, :markers, old_markers ++ [marker])
+
+        Logger.debug("Place marker: #{inspect marker}")
         Logger.debug("markers: #{inspect(socket.assigns.markers)}")
         socket
 

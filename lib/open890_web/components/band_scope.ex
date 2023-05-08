@@ -50,7 +50,7 @@ defmodule Open890Web.Components.BandScope do
 
           <g transform="translate(0 15)">
             <%= for marker <- @markers do %>
-              <.marker freq={marker} band_scope_edges={@band_scope_edges} />
+              <.marker marker={marker} band_scope_edges={@band_scope_edges} />
             <% end %>
           </g>
 
@@ -167,8 +167,10 @@ defmodule Open890Web.Components.BandScope do
   end
 
   def marker(assigns) do
-    freq = assigns[:freq]
-    Logger.debug("Marker freq: #{freq}")
+    marker = assigns[:marker]
+    Logger.debug("Render marker: #{inspect marker}")
+
+    freq = marker.freq
     band_scope_edges = assigns[:band_scope_edges]
 
     marker_x = project_to_bandscope_limits(freq, band_scope_edges)
