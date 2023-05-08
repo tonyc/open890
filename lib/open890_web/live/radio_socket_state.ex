@@ -10,6 +10,7 @@ defmodule Open890Web.Live.RadioSocketState do
     {:debug, false},
     {:display_band_selector, false},
     {:left_panel_open, true},
+    {:markers, []},
     {:projected_active_receiver_location, ""},
     {:radio_connection, nil},
     {:radio_state, %RadioState{}},

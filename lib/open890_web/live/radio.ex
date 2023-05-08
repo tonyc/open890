@@ -272,21 +272,41 @@ defmodule Open890Web.Live.Radio do
     conn = socket.assigns.radio_connection
     radio_state = socket.assigns.radio_state
 
-    case key do
+    socket = case key do
       "s" ->
         conn |> ConnectionCommands.toggle_split(radio_state)
+        socket
 
       "h" ->
         conn |> ConnectionCommands.band_scope_shift()
+        socket
+
+      "m" ->
+        freq = RadioState.effective_active_frequency(radio_state)
+        old_markers = socket.assigns.markers
+
+        socket = assign(socket, :markers, old_markers ++ [freq])
+
+        Logger.debug("Place marker: #{freq}")
+        Logger.debug("markers: #{inspect(socket.assigns.markers)}")
+        socket
+
+      "c" ->
+        Logger.debug("Clear all markers")
+        socket = assign(socket, :markers, [])
+        Logger.debug("markers: #{inspect(socket.assigns.markers)}")
+        socket
 
       "=" ->
         conn |> ConnectionCommands.equalize_vfo()
+        socket
 
       "\\" ->
         conn |> ConnectionCommands.toggle_vfo(radio_state)
+        socket
 
       _ ->
-        :ok
+        socket
     end
 
     {:noreply, socket}
