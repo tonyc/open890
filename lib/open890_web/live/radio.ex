@@ -389,9 +389,9 @@ defmodule Open890Web.Live.Radio do
 
       KeyboardEntryState.ClearMarkers ->
         key_to_colors = %{
-          "r" => "red",
-          "g" => "green",
-          "b" => "blue"
+          "r" => :red,
+          "g" => :green,
+          "b" => :blue
         }
 
         socket = case key do
@@ -401,12 +401,13 @@ defmodule Open890Web.Live.Radio do
               if marker_key == "c" do
                 true
               else
-                color == key_to_colors.fetch(marker_key)
+                color == key_to_colors[marker_key]
               end
             end)
 
+            Logger.info("New markers: #{inspect new_markers}")
+
             assign(socket, :markers, new_markers)
-            socket
 
           _ ->
             socket
