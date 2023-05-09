@@ -1,5 +1,4 @@
 defmodule Open890.KeyboardEntryState do
-
   defmodule Normal do
   end
 
@@ -8,5 +7,4 @@ defmodule Open890.KeyboardEntryState do
 
   defmodule ClearMarkers do
   end
-
 end

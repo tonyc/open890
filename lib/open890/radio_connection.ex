@@ -46,7 +46,9 @@ defmodule Open890.RadioConnection do
   def first, do: all() |> Enum.at(0)
 
   def add_user_marker(%__MODULE__{id: id} = connection, %UserMarker{} = marker) do
-    Logger.debug("RadioConnection.add_user_marker: conn=#{inspect id}, marker=#{inspect marker}")
+    Logger.debug(
+      "RadioConnection.add_user_marker: conn=#{inspect(id)}, marker=#{inspect(marker)}"
+    )
 
     # the problem here is that the old connection struct seemingly doesn't even
     # have a :user_markers key, despite it being in the struct. it's like it's completely

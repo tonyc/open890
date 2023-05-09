@@ -6,6 +6,7 @@ defmodule Open890.ConnectionCommands do
 
   def get_initial_state(%RadioConnection{} = conn) do
     Logger.debug("*** GET INITIAL STATE ***")
+
     conn
     |> get_active_receiver()
     |> get_vfo_a_freq()

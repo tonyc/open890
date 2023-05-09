@@ -135,10 +135,11 @@ defmodule Open890.RadioState do
   def dispatch(%__MODULE__{} = state, "MV" <> _ = msg) do
     # FIXME: somehow we need to always query the operating mode, because the radio does not always send the mode
     # when switching between vfo/memory if it matches
-    vfo_memory_state = Extract.vfo_memory_state(msg)
-    |> IO.inspect(label: "new vfo_memory_state")
+    vfo_memory_state =
+      Extract.vfo_memory_state(msg)
+      |> IO.inspect(label: "new vfo_memory_state")
 
-    %{ state | vfo_memory_state: vfo_memory_state }
+    %{state | vfo_memory_state: vfo_memory_state}
   end
 
   def dispatch(%__MODULE__{} = state, "MA70" <> _ = msg) do
@@ -522,7 +523,7 @@ defmodule Open890.RadioState do
         %{state | memory_channel_inactive_mode: mode}
 
       other ->
-        Logger.warn("Unknown vfo_memory_state: #{inspect other}")
+        Logger.warn("Unknown vfo_memory_state: #{inspect(other)}")
         state
     end
   end
@@ -728,10 +729,14 @@ defmodule Open890.RadioState do
 
   def effective_active_mode(%__MODULE__{} = state) do
     case state.vfo_memory_state do
-      :vfo -> state.active_mode
-      :memory -> state.memory_channel_active_mode
+      :vfo ->
+        state.active_mode
+
+      :memory ->
+        state.memory_channel_active_mode
+
       other ->
-        Logger.warn("Unknown vfo_memory_state: #{inspect other}")
+        Logger.warn("Unknown vfo_memory_state: #{inspect(other)}")
         nil
     end
   end
