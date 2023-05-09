@@ -283,7 +283,6 @@ defmodule Open890Web.Live.Radio do
 
       marker_key when marker_key in ["r", "g", "b"] ->
         freq = RadioState.effective_active_frequency(radio_state)
-        old_markers = socket.assigns.markers
 
         marker = UserMarker.create(freq)
         marker = case marker_key do
@@ -292,11 +291,10 @@ defmodule Open890Web.Live.Radio do
           "b" -> UserMarker.blue(marker)
         end
 
-        socket = assign(socket, :markers, old_markers ++ [marker])
+        socket = assign(socket, :markers, socket.assigns.markers ++ [marker])
         RadioConnection.add_user_marker(socket.assigns.radio_connection, marker)
-
         Logger.debug("Place marker: #{inspect marker}")
-        Logger.debug("markers: #{inspect(socket.assigns.markers)}")
+
         socket
 
       "c" ->

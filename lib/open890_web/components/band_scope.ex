@@ -167,13 +167,9 @@ defmodule Open890Web.Components.BandScope do
   end
 
   def marker(assigns) do
-    marker = assigns[:marker]
-    Logger.debug("Render marker: #{inspect marker}")
+    marker = assigns.marker
 
-    freq = marker.freq
-    band_scope_edges = assigns[:band_scope_edges]
-
-    x = project_to_bandscope_limits(freq, band_scope_edges)
+    x = project_to_bandscope_limits(marker.freq, assigns.band_scope_edges)
     classes = "marker user vertical #{marker.color}"
 
     ~H"""
