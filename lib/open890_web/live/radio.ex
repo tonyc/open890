@@ -391,11 +391,12 @@ defmodule Open890Web.Live.Radio do
         key_to_colors = %{
           "r" => :red,
           "g" => :green,
-          "b" => :blue
+          "b" => :blue,
+          "m" => :white
         }
 
         socket = case key do
-          marker_key when marker_key in ["r", "g", "b", "c"] ->
+          marker_key when marker_key in ["r", "g", "b", "c", "m"] ->
             existing_markers = socket.assigns.markers
             new_markers = Enum.reject(existing_markers, fn %UserMarker{color: color}  ->
               if marker_key == "c" do
