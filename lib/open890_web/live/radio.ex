@@ -281,23 +281,23 @@ defmodule Open890Web.Live.Radio do
         conn |> ConnectionCommands.band_scope_shift()
         socket
 
-      "m" ->
+      marker_key when marker_key in ["r", "g", "b"] ->
         freq = RadioState.effective_active_frequency(radio_state)
         old_markers = socket.assigns.markers
-        new_marker = UserMarker.create(freq) |> UserMarker.green()
-        save_markers(socket, old_markers, new_marker)
 
-      "r" ->
-        freq = RadioState.effective_active_frequency(radio_state)
-        old_markers = socket.assigns.markers
-        new_marker = UserMarker.create(freq) |> UserMarker.red()
-        save_markers(socket, old_markers, new_marker)
+        marker = UserMarker.create(freq)
+        marker = case marker_key do
+          "r" -> UserMarker.red(marker)
+          "g" -> UserMarker.green(marker)
+          "b" -> UserMarker.blue(marker)
+        end
 
-      "b" ->
-        freq = RadioState.effective_active_frequency(radio_state)
-        old_markers = socket.assigns.markers
-        new_marker = UserMarker.create(freq) |> UserMarker.blue()
-        save_markers(socket, old_markers, new_marker)
+        socket = assign(socket, :markers, old_markers ++ [marker])
+        RadioConnection.add_user_marker(socket.assigns.radio_connection, marker)
+
+        Logger.debug("Place marker: #{inspect marker}")
+        Logger.debug("markers: #{inspect(socket.assigns.markers)}")
+        socket
 
       "c" ->
         Logger.debug("Clear all markers")
@@ -458,15 +458,6 @@ defmodule Open890Web.Live.Radio do
   def handle_event(event, params, socket) do
     Logger.warn("Live.Radio: Unknown event: #{event}, params: #{inspect(params)}")
     {:noreply, socket}
-  end
-
-  defp save_markers(socket, old_markers, marker) do
-    socket = assign(socket, :markers, old_markers ++ [marker])
-    RadioConnection.add_user_marker(socket.assigns.radio_connection, marker)
-
-    Logger.debug("Place marker: #{inspect marker}")
-    Logger.debug("markers: #{inspect(socket.assigns.markers)}")
-    socket
   end
 
   defp close_modals(socket) do
