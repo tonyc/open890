@@ -17,6 +17,7 @@ defmodule Open890Web.Live.RadioSocketState do
     {:spectrum_scale, 1.0},
     {:theme, "kenwood"},
     {:waterfall_draw_interval, 1},
+    {:markers, []},
     {:__ui_macros, %{}}
   ]
 

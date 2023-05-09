@@ -1,4 +1,4 @@
-<div id="radio" class={radio_classes(@debug)} phx-window-keydown="window_keydown" phx-window-keyup="window_keyup">
+<div id="radio" class={radio_classes(@debug)} _phx-hook="RadioKeyboard" _tabindex="0" phx-window-keydown="window_keydown" phx-window-keyup="window_keyup">
 
   <%#-- disabled --%>
   <%= if false && @display_screen_id != 0 do %>

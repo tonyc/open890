@@ -57,6 +57,10 @@ defmodule Open890.RadioConnection do
     :ok
   end
 
+  def delete_user_marker(%__MODULE__{} = connection, user_marker_id) do
+    :ok
+  end
+
   def clear_user_markers(%__MODULE__{} = connection) do
     # repo().update(%{connection | user_markers: []})
     :ok

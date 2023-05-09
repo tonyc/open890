@@ -284,15 +284,20 @@ defmodule Open890Web.Live.Radio do
       "m" ->
         freq = RadioState.effective_active_frequency(radio_state)
         old_markers = socket.assigns.markers
+        new_marker = UserMarker.create(freq) |> UserMarker.green()
+        save_markers(socket, old_markers, new_marker)
 
-        marker = UserMarker.create(freq)
+      "r" ->
+        freq = RadioState.effective_active_frequency(radio_state)
+        old_markers = socket.assigns.markers
+        new_marker = UserMarker.create(freq) |> UserMarker.red()
+        save_markers(socket, old_markers, new_marker)
 
-        socket = assign(socket, :markers, old_markers ++ [marker])
-        RadioConnection.add_user_marker(conn, marker)
-
-        Logger.debug("Place marker: #{inspect marker}")
-        Logger.debug("markers: #{inspect(socket.assigns.markers)}")
-        socket
+      "b" ->
+        freq = RadioState.effective_active_frequency(radio_state)
+        old_markers = socket.assigns.markers
+        new_marker = UserMarker.create(freq) |> UserMarker.blue()
+        save_markers(socket, old_markers, new_marker)
 
       "c" ->
         Logger.debug("Clear all markers")
@@ -325,6 +330,7 @@ defmodule Open890Web.Live.Radio do
 
     {:noreply, socket}
   end
+
 
   def handle_event("start_connection", _params, socket) do
     RadioConnection.start(socket.assigns.radio_connection.id)
@@ -431,9 +437,36 @@ defmodule Open890Web.Live.Radio do
     {:noreply, socket}
   end
 
+  def handle_event("delete_user_marker", %{"id" => marker_id} = _params, socket) do
+    Logger.info("delete_user_marker, id: #{inspect marker_id}")
+
+    conn = socket.assigns.radio_connection
+    RadioConnection.delete_user_marker(conn, marker_id)
+
+    # This block of code should go into RadioConnection.delete_user_marker(),
+    # It should return the list of remaining markers for the socket.
+    updated_markers = socket.assigns.markers
+    |> Enum.reject(fn %UserMarker{id: id} ->
+      id == marker_id
+    end)
+
+    socket = assign(socket, :markers, updated_markers)
+
+    {:noreply, socket}
+  end
+
   def handle_event(event, params, socket) do
     Logger.warn("Live.Radio: Unknown event: #{event}, params: #{inspect(params)}")
     {:noreply, socket}
+  end
+
+  defp save_markers(socket, old_markers, marker) do
+    socket = assign(socket, :markers, old_markers ++ [marker])
+    RadioConnection.add_user_marker(socket.assigns.radio_connection, marker)
+
+    Logger.debug("Place marker: #{inspect marker}")
+    Logger.debug("markers: #{inspect(socket.assigns.markers)}")
+    socket
   end
 
   defp close_modals(socket) do

@@ -996,9 +996,16 @@ svg#bandScope {
 
 .user_marker_group {
   .marker.user {
-    stroke: $kenwood-cyan;
+    stroke: $kenwood-grey;
     stroke-width: 0.5pt;
-    stroke-dasharray: 0;
+
+    &:hover {
+      stroke: white;;
+    }
+
+    &.green { stroke: $elecraft-green; }
+    &.red { stroke: $kenwood-red; }
+    &.blue { stroke: $kenwood-cyan; }
   }
 
   .marker_delete {
