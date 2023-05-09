@@ -18,4 +18,8 @@ defmodule Open890.UserMarker do
   def blue(%__MODULE__{} = m) do
     %{m | color: :blue}
   end
+
+  def white(%__MODULE__{} = m) do
+    %{m | color: :white}
+  end
 end

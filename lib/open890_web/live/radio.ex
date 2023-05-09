@@ -345,7 +345,7 @@ defmodule Open890Web.Live.Radio do
           Logger.info("keyboard state: :markers")
 
           socket = case key do
-            marker_key when marker_key in ["r", "g", "b"] ->
+            marker_key when marker_key in ["r", "g", "b", "m"] ->
               freq = RadioState.effective_active_frequency(radio_state)
 
               marker = UserMarker.create(freq)
@@ -353,6 +353,7 @@ defmodule Open890Web.Live.Radio do
                 "r" -> UserMarker.red(marker)
                 "g" -> UserMarker.green(marker)
                 "b" -> UserMarker.blue(marker)
+                "m" -> UserMarker.white(marker)
               end
 
               socket = assign(socket, :markers, socket.assigns.markers ++ [marker])

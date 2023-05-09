@@ -1006,6 +1006,7 @@ svg#bandScope {
     &.green { stroke: $elecraft-green; }
     &.red { stroke: $kenwood-red; }
     &.blue { stroke: $kenwood-cyan; }
+    &.white{ stroke: white; }
   }
 
   .marker_delete {
