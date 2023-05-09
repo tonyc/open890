@@ -181,6 +181,30 @@ defmodule Open890Web.Live.Radio do
     {:noreply, socket}
   end
 
+  def handle_info(:expire_keyboard_state, socket) do
+    Logger.info(":expire_keyboard_state")
+
+    case socket.assigns.keyboard_entry_timer do
+      nil ->
+        Logger.debug("handle_info: :expire_keyboard_state: wanted to cancel a nil timer")
+        {:noreply, socket}
+
+      timer ->
+        Logger.info(":expire_keyboard_state: canceling timer")
+
+        Process.cancel_timer(timer)
+
+        Logger.info(":expire_keyboard_state: transition to :normal")
+
+        socket = socket
+        |> assign(keyboard_entry_timer: nil)
+        |> assign(keyboard_entry_state: :normal)
+
+        {:noreply, socket}
+    end
+
+  end
+
   def handle_event("toggle_panel", _params, socket) do
     new_state = !socket.assigns.left_panel_open
 
@@ -272,52 +296,91 @@ defmodule Open890Web.Live.Radio do
     conn = socket.assigns.radio_connection
     radio_state = socket.assigns.radio_state
 
-    socket = case key do
-      "s" ->
-        conn |> ConnectionCommands.toggle_split(radio_state)
-        socket
+    socket = case socket.assigns.keyboard_entry_state do
+      :normal ->
+        Logger.info("keyboard state: normal")
 
-      "h" ->
-        conn |> ConnectionCommands.band_scope_shift()
-        socket
+        case key do
+          "s" ->
+            conn |> ConnectionCommands.toggle_split(radio_state)
+            socket
 
-      marker_key when marker_key in ["r", "g", "b"] ->
-        freq = RadioState.effective_active_frequency(radio_state)
+          "m" ->
+            Logger.info("transition keyboard state to :markers")
 
-        marker = UserMarker.create(freq)
-        marker = case marker_key do
-          "r" -> UserMarker.red(marker)
-          "g" -> UserMarker.green(marker)
-          "b" -> UserMarker.blue(marker)
+            timer = Process.send_after(self(), :expire_keyboard_state, 2000)
+
+            socket
+            |> assign(:keyboard_entry_state, :markers)
+            |> assign(:keyboard_entry_timer, timer)
+
+          "h" ->
+            conn |> ConnectionCommands.band_scope_shift()
+            socket
+
+          "c" ->
+            Logger.debug("Clear all markers")
+            RadioConnection.clear_user_markers(conn)
+            socket = assign(socket, :markers, [])
+            Logger.debug("markers: #{inspect(socket.assigns.markers)}")
+            socket
+
+          "t" ->
+            conn |> ConnectionCommands.cw_tune()
+            socket
+
+          "=" ->
+            conn |> ConnectionCommands.equalize_vfo()
+            socket
+
+          "\\" ->
+            conn |> ConnectionCommands.toggle_vfo(radio_state)
+            socket
+
+          _ ->
+            socket
         end
 
-        socket = assign(socket, :markers, socket.assigns.markers ++ [marker])
-        RadioConnection.add_user_marker(socket.assigns.radio_connection, marker)
-        Logger.debug("Place marker: #{inspect marker}")
+        :markers ->
+          Logger.info("keyboard state: :markers")
 
-        socket
+          socket = case key do
+            marker_key when marker_key in ["r", "g", "b"] ->
+              freq = RadioState.effective_active_frequency(radio_state)
 
-      "c" ->
-        Logger.debug("Clear all markers")
-        RadioConnection.clear_user_markers(conn)
-        socket = assign(socket, :markers, [])
-        Logger.debug("markers: #{inspect(socket.assigns.markers)}")
-        socket
+              marker = UserMarker.create(freq)
+              marker = case marker_key do
+                "r" -> UserMarker.red(marker)
+                "g" -> UserMarker.green(marker)
+                "b" -> UserMarker.blue(marker)
+              end
 
-      "t" ->
-        conn |> ConnectionCommands.cw_tune()
-        socket
+              socket = assign(socket, :markers, socket.assigns.markers ++ [marker])
+              RadioConnection.add_user_marker(socket.assigns.radio_connection, marker)
+              Logger.debug("Place marker: #{inspect marker}")
 
-      "=" ->
-        conn |> ConnectionCommands.equalize_vfo()
-        socket
+              # now cancel the timer if it exists
+              case socket.assigns.keyboard_entry_timer do
+                nil ->
+                  Logger.debug("attempted to cancel nil keyboard state timer")
+                  socket
 
-      "\\" ->
-        conn |> ConnectionCommands.toggle_vfo(radio_state)
-        socket
+                timer ->
+                  Logger.debug("canceling keyboard state timer: #{inspect timer}")
+                  Process.cancel_timer(timer)
 
-      _ ->
-        socket
+              end
+
+              # Always transition to :normal after placing a marker
+              socket
+              |> assign(:keyboard_entry_state, :normal)
+              |> assign(:keyboard_entry_timer, nil)
+
+            _ ->
+              socket
+          end
+
+      socket
     end
 
     {:noreply, socket}

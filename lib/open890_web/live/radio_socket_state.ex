@@ -10,6 +10,8 @@ defmodule Open890Web.Live.RadioSocketState do
     {:debug, false},
     {:display_band_selector, false},
     {:left_panel_open, true},
+    {:keyboard_entry_state, :normal},
+    {:keyboard_entry_timer, nil},
     {:markers, []},
     {:projected_active_receiver_location, ""},
     {:radio_connection, nil},
@@ -17,7 +19,6 @@ defmodule Open890Web.Live.RadioSocketState do
     {:spectrum_scale, 1.0},
     {:theme, "kenwood"},
     {:waterfall_draw_interval, 1},
-    {:markers, []},
     {:__ui_macros, %{}}
   ]
 
