@@ -306,7 +306,6 @@ defmodule Open890Web.Live.Radio do
 
           "m" ->
             Logger.info("transition keyboard state to PlaceMarker")
-
             timer = Process.send_after(self(), :expire_keyboard_state, 2000)
 
             socket
@@ -317,6 +316,7 @@ defmodule Open890Web.Live.Radio do
             conn |> ConnectionCommands.band_scope_shift()
             socket
 
+
           "c" ->
             Logger.info("transition keyboard state to ClearMarkers")
             timer = Process.send_after(self(), :expire_keyboard_state, 2000)
@@ -324,11 +324,6 @@ defmodule Open890Web.Live.Radio do
             socket
             |> assign(:keyboard_entry_state, KeyboardEntryState.ClearMarkers)
             |> assign(:keyboard_entry_timer, timer)
-
-            #RadioConnection.clear_user_markers(conn)
-            #socket = assign(socket, :markers, [])
-            #Logger.debug("markers: #{inspect(socket.assigns.markers)}")
-            #socket
 
           "t" ->
             conn |> ConnectionCommands.cw_tune()
@@ -363,20 +358,12 @@ defmodule Open890Web.Live.Radio do
             RadioConnection.add_user_marker(socket.assigns.radio_connection, marker)
             Logger.debug("Place marker: #{inspect marker}")
 
-            # now cancel the timer if it exists
-            case socket.assigns.keyboard_entry_timer do
-              nil ->
-                Logger.debug("attempted to cancel nil keyboard state timer")
-                socket
-
-              timer ->
-                Logger.debug("canceling keyboard state timer: #{inspect timer}")
-                Process.cancel_timer(timer)
-
+            if !is_nil(socket.assigns.keyboard_entry_timer) do
+              Process.cancel_timer(socket.assigns.keyboard_entry_timer)
             end
 
-            # Always transition to :normal after placing a marker
             Logger.info("Transitioning to KeyboardEntryState.Normal")
+
             socket
             |> assign(:keyboard_entry_state, KeyboardEntryState.Normal)
             |> assign(:keyboard_entry_timer, nil)
