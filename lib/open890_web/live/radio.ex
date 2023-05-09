@@ -346,82 +346,85 @@ defmodule Open890Web.Live.Radio do
             socket
         end
 
-        KeyboardEntryState.PlaceMarker ->
-          socket = case key do
-            marker_key when marker_key in ["r", "g", "b", "m"] ->
-              freq = RadioState.effective_active_frequency(radio_state)
+      KeyboardEntryState.PlaceMarker ->
+        socket = case key do
+          marker_key when marker_key in ["r", "g", "b", "m"] ->
+            freq = RadioState.effective_active_frequency(radio_state)
 
-              marker = UserMarker.create(freq)
-              marker = case marker_key do
-                "r" -> UserMarker.red(marker)
-                "g" -> UserMarker.green(marker)
-                "b" -> UserMarker.blue(marker)
-                "m" -> UserMarker.white(marker)
-              end
+            marker = UserMarker.create(freq)
+            marker = case marker_key do
+              "r" -> UserMarker.red(marker)
+              "g" -> UserMarker.green(marker)
+              "b" -> UserMarker.blue(marker)
+              "m" -> UserMarker.white(marker)
+            end
 
-              socket = assign(socket, :markers, socket.assigns.markers ++ [marker])
-              RadioConnection.add_user_marker(socket.assigns.radio_connection, marker)
-              Logger.debug("Place marker: #{inspect marker}")
+            socket = assign(socket, :markers, socket.assigns.markers ++ [marker])
+            RadioConnection.add_user_marker(socket.assigns.radio_connection, marker)
+            Logger.debug("Place marker: #{inspect marker}")
 
-              # now cancel the timer if it exists
-              case socket.assigns.keyboard_entry_timer do
-                nil ->
-                  Logger.debug("attempted to cancel nil keyboard state timer")
-                  socket
+            # now cancel the timer if it exists
+            case socket.assigns.keyboard_entry_timer do
+              nil ->
+                Logger.debug("attempted to cancel nil keyboard state timer")
+                socket
 
-                timer ->
-                  Logger.debug("canceling keyboard state timer: #{inspect timer}")
-                  Process.cancel_timer(timer)
+              timer ->
+                Logger.debug("canceling keyboard state timer: #{inspect timer}")
+                Process.cancel_timer(timer)
 
-              end
+            end
 
-              # Always transition to :normal after placing a marker
-              Logger.info("Transitioning to KeyboardEntryState.Normal")
-              socket
-              |> assign(:keyboard_entry_state, KeyboardEntryState.Normal)
-              |> assign(:keyboard_entry_timer, nil)
+            # Always transition to :normal after placing a marker
+            Logger.info("Transitioning to KeyboardEntryState.Normal")
+            socket
+            |> assign(:keyboard_entry_state, KeyboardEntryState.Normal)
+            |> assign(:keyboard_entry_timer, nil)
 
-            _ ->
-              socket
-          end
-
-        KeyboardEntryState.ClearMarkers ->
-          key_to_colors = %{
-            "r" => "red",
-            "g" => "green",
-            "b" => "blue"
-          }
-
-          socket = case key do
-            marker_key when marker_key in ["r", "g", "b", "c"] ->
-              existing_markers = socket.assigns.markers
-              new_markers = Enum.reject(existing_markers, fn %UserMarker{color: color}  ->
-                if marker_key == "c" do
-                  true
-                else
-                  color == key_to_colors.fetch(marker_key)
-                end
-              end)
-
-              assign(socket, :markers, new_markers)
-              socket
-
-            _ ->
-              socket
-          end
+          _ ->
+            socket
+        end
 
         socket
+
+      KeyboardEntryState.ClearMarkers ->
+        key_to_colors = %{
+          "r" => "red",
+          "g" => "green",
+          "b" => "blue"
+        }
+
+        socket = case key do
+          marker_key when marker_key in ["r", "g", "b", "c"] ->
+            existing_markers = socket.assigns.markers
+            new_markers = Enum.reject(existing_markers, fn %UserMarker{color: color}  ->
+              if marker_key == "c" do
+                true
+              else
+                color == key_to_colors.fetch(marker_key)
+              end
+            end)
+
+            assign(socket, :markers, new_markers)
+            socket
+
+          _ ->
+            socket
+        end
+
+        Logger.info("Clear markers: canceling timer")
+
+        if !is_nil(socket.assigns.keyboard_entry_timer) do
+          Process.cancel_timer(socket.assigns.keyboard_entry_timer)
+        end
+
+        Logger.info("Clear markers: transitioning to KeyboardEntryState.Normal")
+
+        socket
+        |> assign(:keyboard_entry_state, KeyboardEntryState.Normal)
+        |> assign(:keyboard_entry_timer, :nil)
     end
 
-    Logger.info("Clear markers: canceling timer")
-
-    if !is_nil(socket.assigns.keyboard_entry_timer) do
-      Process.cancel_timer(socket.assigns.keyboard_entry_timer)
-    end
-
-    Logger.info("Clear markers: transitioning to KeyboardEntryState.Normal")
-    socket = assign(socket, :keyboard_entry_state, KeyboardEntryState.Normal)
-             |> assign(:keyboard_entry_timer, :nil)
 
     {:noreply, socket}
   end
