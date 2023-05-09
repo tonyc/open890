@@ -5,7 +5,7 @@ defmodule Open890Web.Live.Radio do
   use Open890Web.Live.RadioLiveEventHandling
 
   alias Phoenix.Socket.Broadcast
-  alias Open890.{ConnectionCommands, Extract, RadioConnection, RadioState, UserMarker}
+  alias Open890.{ConnectionCommands, Extract, KeyboardEntryState, RadioConnection, RadioState, UserMarker}
   alias Open890Web.Live.{BandButtonsComponent, RadioSocketState}
 
   alias Open890Web.Components.{
@@ -186,22 +186,21 @@ defmodule Open890Web.Live.Radio do
 
     case socket.assigns.keyboard_entry_timer do
       nil ->
-        Logger.debug("handle_info: :expire_keyboard_state: wanted to cancel a nil timer")
-        {:noreply, socket}
+        Logger.info("expire_keyboard_state: wanted to cancel a nil timer")
 
       timer ->
-        Logger.info(":expire_keyboard_state: canceling timer")
-
+        Logger.info("expire_keyboard_state: canceling timer")
         Process.cancel_timer(timer)
 
-        Logger.info(":expire_keyboard_state: transition to :normal")
-
-        socket = socket
-        |> assign(keyboard_entry_timer: nil)
-        |> assign(keyboard_entry_state: :normal)
-
-        {:noreply, socket}
+        Logger.info("expire_keyboard_state: transition to KeyboardEntryState.Normal")
     end
+
+    # Always transition to normal
+    socket = socket
+    |> assign(keyboard_entry_state: KeyboardEntryState.Normal)
+    |> assign(keyboard_entry_timer: nil)
+
+    {:noreply, socket}
 
   end
 
@@ -296,22 +295,22 @@ defmodule Open890Web.Live.Radio do
     conn = socket.assigns.radio_connection
     radio_state = socket.assigns.radio_state
 
-    socket = case socket.assigns.keyboard_entry_state do
-      :normal ->
-        Logger.info("keyboard state: normal")
+    Logger.info("KeyboardEntryState: #{socket.assigns.keyboard_entry_state}")
 
+    socket = case socket.assigns.keyboard_entry_state do
+      KeyboardEntryState.Normal ->
         case key do
           "s" ->
             conn |> ConnectionCommands.toggle_split(radio_state)
             socket
 
           "m" ->
-            Logger.info("transition keyboard state to :markers")
+            Logger.info("transition keyboard state to PlaceMarker")
 
             timer = Process.send_after(self(), :expire_keyboard_state, 2000)
 
             socket
-            |> assign(:keyboard_entry_state, :markers)
+            |> assign(:keyboard_entry_state, KeyboardEntryState.PlaceMarker)
             |> assign(:keyboard_entry_timer, timer)
 
           "h" ->
@@ -319,11 +318,17 @@ defmodule Open890Web.Live.Radio do
             socket
 
           "c" ->
-            Logger.debug("Clear all markers")
-            RadioConnection.clear_user_markers(conn)
-            socket = assign(socket, :markers, [])
-            Logger.debug("markers: #{inspect(socket.assigns.markers)}")
+            Logger.info("transition keyboard state to ClearMarkers")
+            timer = Process.send_after(self(), :expire_keyboard_state, 2000)
+
             socket
+            |> assign(:keyboard_entry_state, KeyboardEntryState.ClearMarkers)
+            |> assign(:keyboard_entry_timer, timer)
+
+            #RadioConnection.clear_user_markers(conn)
+            #socket = assign(socket, :markers, [])
+            #Logger.debug("markers: #{inspect(socket.assigns.markers)}")
+            #socket
 
           "t" ->
             conn |> ConnectionCommands.cw_tune()
@@ -341,9 +346,7 @@ defmodule Open890Web.Live.Radio do
             socket
         end
 
-        :markers ->
-          Logger.info("keyboard state: :markers")
-
+        KeyboardEntryState.PlaceMarker ->
           socket = case key do
             marker_key when marker_key in ["r", "g", "b", "m"] ->
               freq = RadioState.effective_active_frequency(radio_state)
@@ -373,16 +376,52 @@ defmodule Open890Web.Live.Radio do
               end
 
               # Always transition to :normal after placing a marker
+              Logger.info("Transitioning to KeyboardEntryState.Normal")
               socket
-              |> assign(:keyboard_entry_state, :normal)
+              |> assign(:keyboard_entry_state, KeyboardEntryState.Normal)
               |> assign(:keyboard_entry_timer, nil)
 
             _ ->
               socket
           end
 
-      socket
+        KeyboardEntryState.ClearMarkers ->
+          key_to_colors = %{
+            "r" => "red",
+            "g" => "green",
+            "b" => "blue"
+          }
+
+          socket = case key do
+            marker_key when marker_key in ["r", "g", "b", "c"] ->
+              existing_markers = socket.assigns.markers
+              new_markers = Enum.reject(existing_markers, fn %UserMarker{color: color}  ->
+                if marker_key == "c" do
+                  true
+                else
+                  color == key_to_colors.fetch(marker_key)
+                end
+              end)
+
+              assign(socket, :markers, new_markers)
+              socket
+
+            _ ->
+              socket
+          end
+
+        socket
     end
+
+    Logger.info("Clear markers: canceling timer")
+
+    if !is_nil(socket.assigns.keyboard_entry_timer) do
+      Process.cancel_timer(socket.assigns.keyboard_entry_timer)
+    end
+
+    Logger.info("Clear markers: transitioning to KeyboardEntryState.Normal")
+    socket = assign(socket, :keyboard_entry_state, KeyboardEntryState.Normal)
+             |> assign(:keyboard_entry_timer, :nil)
 
     {:noreply, socket}
   end

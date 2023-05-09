@@ -1,5 +1,5 @@
 defmodule Open890Web.Live.RadioSocketState do
-  alias Open890.RadioState
+  alias Open890.{KeyboardEntryState, RadioState}
 
   @init_socket [
     {:active_tab, "txrx"},
@@ -10,7 +10,7 @@ defmodule Open890Web.Live.RadioSocketState do
     {:debug, false},
     {:display_band_selector, false},
     {:left_panel_open, true},
-    {:keyboard_entry_state, :normal},
+    {:keyboard_entry_state, KeyboardEntryState.Normal},
     {:keyboard_entry_timer, nil},
     {:markers, []},
     {:projected_active_receiver_location, ""},
