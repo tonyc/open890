@@ -302,17 +302,7 @@ defmodule Open890Web.Live.Radio do
     Logger.debug("live/radio.ex: window_keyup: #{inspect(params)}")
     Logger.info("KeyboardEntryState: #{socket.assigns.keyboard_entry_state}")
 
-    socket =
-      case socket.assigns.keyboard_entry_state do
-        KeyboardEntryState.Normal ->
-          handle_keyboard_normal_state(socket, key)
-
-        KeyboardEntryState.PlaceMarker ->
-          handle_keyboard_place_marker_state(socket, key)
-
-        KeyboardEntryState.ClearMarkers ->
-          handle_keyboard_clear_markers_state(socket, key)
-      end
+    socket = handle_keyboard_state(socket.assigns.keyboard_entry_state, key, socket)
 
     {:noreply, socket}
   end
@@ -490,7 +480,7 @@ defmodule Open890Web.Live.Radio do
     end
   end
 
-  defp handle_keyboard_normal_state(socket, key) do
+  defp handle_keyboard_state(KeyboardEntryState.Normal, key, socket) do
     radio_state = socket.assigns.radio_state
     conn = socket.assigns.radio_connection
 
@@ -536,7 +526,7 @@ defmodule Open890Web.Live.Radio do
     end
   end
 
-  defp handle_keyboard_place_marker_state(socket, key) do
+  defp handle_keyboard_state(KeyboardEntryState.PlaceMarker, key, socket) do
     radio_state = socket.assigns.radio_state
 
     case key do
@@ -572,7 +562,7 @@ defmodule Open890Web.Live.Radio do
     end
   end
 
-  defp handle_keyboard_clear_markers_state(socket, key) do
+  defp handle_keyboard_state(KeyboardEntryState.ClearMarkers, key, socket) do
     key_to_colors = %{
       "r" => :red,
       "g" => :green,
