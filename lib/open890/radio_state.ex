@@ -135,9 +135,7 @@ defmodule Open890.RadioState do
   def dispatch(%__MODULE__{} = state, "MV" <> _ = msg) do
     # FIXME: somehow we need to always query the operating mode, because the radio does not always send the mode
     # when switching between vfo/memory if it matches
-    vfo_memory_state =
-      Extract.vfo_memory_state(msg)
-      |> IO.inspect(label: "new vfo_memory_state")
+    vfo_memory_state = Extract.vfo_memory_state(msg)
 
     %{state | vfo_memory_state: vfo_memory_state}
   end

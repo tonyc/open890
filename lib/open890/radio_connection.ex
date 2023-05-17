@@ -46,10 +46,6 @@ defmodule Open890.RadioConnection do
   def first, do: all() |> Enum.at(0)
 
   def add_user_marker(%__MODULE__{id: id} = connection, %UserMarker{} = marker) do
-    Logger.debug(
-      "RadioConnection.add_user_marker: conn=#{inspect(id)}, marker=#{inspect(marker)}"
-    )
-
     # the problem here is that the old connection struct seemingly doesn't even
     # have a :user_markers key, despite it being in the struct. it's like it's completely
     # frozen in the previous state when coming from dets, keys and all
@@ -297,7 +293,6 @@ defmodule Open890.RadioConnection do
   end
 
   def broadcast_lock_state(%__MODULE__{id: id} = _connection, args) do
-    args |> IO.inspect(label: "broadcast_lock_state")
     Open890Web.Endpoint.broadcast("radio:band_scope:#{id}", "lock_state", args)
   end
 
