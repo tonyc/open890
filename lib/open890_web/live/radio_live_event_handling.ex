@@ -1,5 +1,5 @@
 defmodule Open890Web.Live.RadioLiveEventHandling do
-  alias Open890.ConnectionCommands
+  alias Open890.{ConnectionCommands, KeyboardEntryState, RadioConnection, UserMarker}
 
   @moduledoc """
   This module encapsulates any liveview-specific events, e.g. events
@@ -292,32 +292,35 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
             %{
               assigns: %{
                 radio_state: radio_state,
-                radio_connection: connection
+                radio_connection: connection,
+                keyboard_entry_state: keyboard_entry_state
               }
             } = socket
           ) do
+        Logger.debug("default scope_clicked")
+
         %{
           active_receiver: active_receiver,
-          band_scope_edges: {scope_low, scope_high}
+          band_scope_edges: {_, _} = band_scope_edges
         } = radio_state
 
-        new_frequency =
-          x
-          |> screen_to_frequency({scope_low, scope_high}, width)
-          |> to_string()
-          |> String.pad_leading(11, "0")
+        freq = x |> screen_to_frequency(band_scope_edges, width)
 
-        active_receiver
-        |> case do
-          :a ->
-            connection |> ConnectionCommands.cmd("FA#{new_frequency}")
+        socket =
+          case keyboard_entry_state do
+            KeyboardEntryState.PlaceMarker ->
+              marker = UserMarker.create(freq) |> UserMarker.white()
+              Logger.debug("marker: #{inspect(marker)}")
+              socket = assign(socket, :markers, socket.assigns.markers ++ [marker])
+              RadioConnection.add_user_marker(socket.assigns.radio_connection, marker)
 
-          :b ->
-            connection |> ConnectionCommands.cmd("FB#{new_frequency}")
+              send(self(), :expire_keyboard_state)
+              socket
 
-          vfo ->
-            Logger.debug("Unknown vfo: #{vfo}")
-        end
+            KeyboardEntryState.Normal ->
+              ConnectionCommands.set_active_frequency(conn, conn.radio_state, freq)
+              socket
+          end
 
         {:noreply, socket}
       end

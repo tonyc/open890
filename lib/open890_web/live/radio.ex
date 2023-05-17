@@ -439,9 +439,9 @@ defmodule Open890Web.Live.Radio do
   end
 
   def handle_event("power_level_changed", %{"value" => power_level} = _params, socket) do
-    Logger.info("power_level_changed: #{inspect power_level}")
+    Logger.info("power_level_changed: #{inspect(power_level)}")
 
-    power_level = (power_level / 255.0) * 100 |> round()
+    power_level = (power_level / 255.0 * 100) |> round()
 
     socket.assigns.radio_connection
     |> ConnectionCommands.set_power_level(power_level)
@@ -544,7 +544,6 @@ defmodule Open890Web.Live.Radio do
     case key do
       marker_key when marker_key in ["r", "g", "b", "m"] ->
         freq = RadioState.effective_active_frequency(radio_state)
-
         marker = UserMarker.create(freq)
 
         marker =
@@ -589,11 +588,7 @@ defmodule Open890Web.Live.Radio do
 
           new_markers =
             Enum.reject(existing_markers, fn %UserMarker{color: color} ->
-              if marker_key == "c" do
-                true
-              else
-                color == key_to_colors[marker_key]
-              end
+              marker_key == "c" || color == key_to_colors[marker_key]
             end)
 
           Logger.info("New markers: #{inspect(new_markers)}")

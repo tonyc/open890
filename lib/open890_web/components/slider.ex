@@ -26,7 +26,7 @@ defmodule Open890Web.Components.Slider do
 
   def style_attr(value, max_value) when is_integer(value) and is_integer(max_value) do
     width = value / 1
-    percentage = (width / max_value)
+    percentage = width / max_value
     width = (percentage * 255) |> round()
 
     "width: #{width}px;"

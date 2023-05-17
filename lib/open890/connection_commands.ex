@@ -1,8 +1,7 @@
 defmodule Open890.ConnectionCommands do
   require Logger
 
-  alias Open890.RadioConnection
-  alias Open890.RadioState
+  alias Open890.{RadioConnection, RadioState}
 
   def get_initial_state(%RadioConnection{} = conn) do
     Logger.debug("*** GET INITIAL STATE ***")
@@ -160,9 +159,10 @@ defmodule Open890.ConnectionCommands do
   end
 
   def set_power_level(conn, value) do
-    value = value
-            |> to_string()
-            |> String.pad_leading(3, "0")
+    value =
+      value
+      |> to_string()
+      |> String.pad_leading(3, "0")
 
     conn |> cmd("PC#{value}")
   end
@@ -345,6 +345,27 @@ defmodule Open890.ConnectionCommands do
       conn |> cmd("TB0")
     else
       conn |> cmd("TB1")
+    end
+  end
+
+  def set_active_frequency(
+        %RadioConnection{} = connection,
+        %RadioState{active_receiver: active_receiver} = _radio_state,
+        freq
+      ) do
+    new_frequency =
+      to_string(freq)
+      |> String.pad_leading(11, "0")
+
+    case active_receiver do
+      :a ->
+        connection |> cmd("FA#{new_frequency}")
+
+      :b ->
+        connection |> cmd("FB#{new_frequency}")
+
+      vfo ->
+        Logger.warn("set_active_frequency: unknown vfo: #{inspect(vfo)}")
     end
   end
 

@@ -523,14 +523,11 @@
          effective_inactive_frequency={RadioState.effective_inactive_frequency(@radio_state)}
          rx_banner_frequency={RadioState.rx_banner_frequency(@radio_state)}
          tx_banner_frequency={RadioState.tx_banner_frequency(@radio_state)}
-
          active_mode={RadioState.effective_active_mode(@radio_state)}
          filter_mode={RadioState.filter_mode(@radio_state)}
          band_scope_mode={@radio_state.band_scope_mode}
          band_scope_data={@band_scope_data}
-
          band_scope_edges={RadioState.effective_band_edges(@radio_state)}
-
          band_scope_span={@radio_state.band_scope_span}
          filter_state={@radio_state.filter_state}
          split_enabled={@radio_state.split_enabled}
@@ -539,6 +536,7 @@
          spectrum_scale={@spectrum_scale}
          lock_enabled={@radio_state.lock_enabled}
          markers={@markers}
+         keyboard_entry_state={@keyboard_entry_state}
        />
     </div>
   </div>

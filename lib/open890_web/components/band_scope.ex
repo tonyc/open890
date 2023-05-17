@@ -2,12 +2,12 @@ defmodule Open890Web.Components.BandScope do
   use Phoenix.Component
   require Logger
 
-  alias Open890.FilterState
+  alias Open890.{FilterState, KeyboardEntryState}
   alias Open890Web.RadioViewHelpers
 
   def bandscope(assigns) do
     ~H"""
-      <div id="bandScopeWrapper" class="hover-pointer" data-spectrum-scale={@spectrum_scale}>
+      <div id="bandScopeWrapper" class={bandscope_classes(assigns)} data-spectrum-scale={@spectrum_scale}>
         <svg id="bandScope" class="scope themed kenwood" viewbox="0 0 640 160">
           <defs>
             <filter id="blur" filterunits="userSpaceOnUse" x="0" y="0" width="640" height="150">
@@ -117,6 +117,16 @@ defmodule Open890Web.Components.BandScope do
       </div>
 
     """
+  end
+
+  def bandscope_classes(assigns) do
+    case assigns.keyboard_entry_state do
+      KeyboardEntryState.PlaceMarker ->
+        "hover-crosshair"
+
+      _ ->
+        "hover-pointer"
+    end
   end
 
   def auto_scroll_mode_vertical_grid(assigns) do

@@ -657,6 +657,9 @@ svg#bandScope {
   cursor: pointer !important;
 }
 
+.hover-crosshair:hover {
+  cursor: crosshair !important;
+}
 
 #emptyState .appear {
   display: none;
