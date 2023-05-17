@@ -1,5 +1,5 @@
 defmodule Open890Web.Live.RadioLiveEventHandling do
-  alias Open890.ConnectionCommands, as: Radio
+  alias Open890.ConnectionCommands
 
   @moduledoc """
   This module encapsulates any liveview-specific events, e.g. events
@@ -8,16 +8,15 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
 
   defmacro __using__(_) do
     quote location: :keep do
-      alias Open890.TCPClient, as: Radio
       alias Open890.Menu
 
       def handle_event("stop_voip", params, %{assigns: %{radio_connection: connection}} = socket) do
-        connection |> Radio.stop_voip()
+        connection |> ConnectionCommands.stop_voip()
         {:noreply, socket}
       end
 
       def handle_event("start_voip", params, %{assigns: %{radio_connection: connection}} = socket) do
-        connection |> Radio.start_voip()
+        connection |> ConnectionCommands.start_voip()
         {:noreply, socket}
       end
 
@@ -27,7 +26,7 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
             %{assigns: %{radio_connection: connection}} = socket
           ) do
         with {parsed_number, _extra} <- params["refLevel"] |> Float.parse() do
-          connection |> Radio.set_ref_level(parsed_number)
+          connection |> ConnectionCommands.set_ref_level(parsed_number)
         else
           other ->
             Logger.info("Unable to parse ref level. Result: #{inspect(other)}")
@@ -69,7 +68,7 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
             params,
             %{assigns: %{radio_connection: connection}} = socket
           ) do
-        connection |> Radio.set_notch_pos(params["value"])
+        connection |> ConnectionCommands.set_notch_pos(params["value"])
 
         {:noreply, socket}
       end
@@ -79,7 +78,7 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
             params,
             %{assigns: %{radio_connection: connection}} = socket
           ) do
-        connection |> Radio.set_audio_gain(params["value"])
+        connection |> ConnectionCommands.set_audio_gain(params["value"])
         {:noreply, socket}
       end
 
@@ -100,7 +99,7 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
             false -> max(notch_freq, 0)
           end
 
-        socket.assigns.radio_connection |> Radio.set_notch_pos(notch_freq)
+        socket.assigns.radio_connection |> ConnectionCommands.set_notch_pos(notch_freq)
 
         {:noreply, socket}
       end
@@ -122,7 +121,29 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
             false -> max(new_audio_gain, 0)
           end
 
-        socket.assigns.radio_connection |> Radio.set_audio_gain(new_audio_gain)
+        socket.assigns.radio_connection |> ConnectionCommands.set_audio_gain(new_audio_gain)
+
+        {:noreply, socket}
+      end
+
+      def handle_event("adjust_power_level", %{"is_up" => is_up} = params, socket) do
+        power_level = socket.assigns.radio_state.power_level
+
+        step =
+          case is_up do
+            true -> 5
+            false -> -5
+          end
+
+        new_power_level = power_level + step
+
+        new_power_level =
+          case is_up do
+            true -> min(new_power_level, 100)
+            false -> max(new_power_level, 0)
+          end
+
+        socket.assigns.radio_connection |> ConnectionCommands.set_power_level(new_power_level)
 
         {:noreply, socket}
       end
@@ -144,7 +165,7 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
             false -> max(new_rf_gain, 0)
           end
 
-        socket.assigns.radio_connection |> Radio.set_rf_gain(new_rf_gain)
+        socket.assigns.radio_connection |> ConnectionCommands.set_rf_gain(new_rf_gain)
 
         {:noreply, socket}
       end
@@ -153,9 +174,9 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
         radio_connection = socket.assigns.radio_connection
 
         if is_up do
-          radio_connection |> Radio.rit_xit_up()
+          radio_connection |> ConnectionCommands.rit_xit_up()
         else
-          radio_connection |> Radio.rit_xit_down()
+          radio_connection |> ConnectionCommands.rit_xit_down()
         end
 
         {:noreply, socket}
@@ -178,7 +199,7 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
             false -> max(new_squelch, 0)
           end
 
-        socket.assigns.radio_connection |> Radio.set_squelch(squelch)
+        socket.assigns.radio_connection |> ConnectionCommands.set_squelch(squelch)
 
         {:noreply, socket}
       end
@@ -188,7 +209,7 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
             params,
             %{assigns: %{radio_connection: connection}} = socket
           ) do
-        connection |> Radio.set_squelch(params["value"])
+        connection |> ConnectionCommands.set_squelch(params["value"])
 
         {:noreply, socket}
       end
@@ -198,20 +219,20 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
             params,
             %{assigns: %{radio_connection: connection}} = socket
           ) do
-        connection |> Radio.set_rf_gain(params["value"])
+        connection |> ConnectionCommands.set_rf_gain(params["value"])
 
         {:noreply, socket}
       end
 
       @impl true
       def handle_event("mic_up", _params, %{assigns: %{radio_connection: connection}} = socket) do
-        connection |> Radio.ch_up()
+        connection |> ConnectionCommands.ch_up()
         {:noreply, socket}
       end
 
       @impl true
       def handle_event("mic_dn", _params, %{assigns: %{radio_connection: connection}} = socket) do
-        connection |> Radio.ch_down()
+        connection |> ConnectionCommands.ch_down()
         {:noreply, socket}
       end
 
@@ -221,7 +242,7 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
             %{"is_up" => true} = params,
             %{assigns: %{radio_connection: connection}} = socket
           ) do
-        connection |> Radio.freq_change(:up)
+        connection |> ConnectionCommands.freq_change(:up)
 
         {:noreply, socket}
       end
@@ -232,7 +253,7 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
             %{"is_up" => false} = params,
             %{assigns: %{radio_connection: connection}} = socket
           ) do
-        connection |> Radio.freq_change(:down)
+        connection |> ConnectionCommands.freq_change(:down)
 
         {:noreply, socket}
       end
@@ -243,7 +264,7 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
             %{"cmd" => cmd} = _params,
             %{assigns: %{radio_connection: connection}} = socket
           ) do
-        connection |> Radio.cmd(cmd)
+        connection |> ConnectionCommands.cmd(cmd)
         {:noreply, socket}
       end
 
@@ -289,10 +310,10 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
         active_receiver
         |> case do
           :a ->
-            connection |> Radio.cmd("FA#{new_frequency}")
+            connection |> ConnectionCommands.cmd("FA#{new_frequency}")
 
           :b ->
-            connection |> Radio.cmd("FB#{new_frequency}")
+            connection |> ConnectionCommands.cmd("FB#{new_frequency}")
 
           vfo ->
             Logger.debug("Unknown vfo: #{vfo}")
@@ -302,7 +323,7 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
       end
 
       def handle_event("cw_tune", _params, %{assigns: %{radio_connection: connection}} = socket) do
-        connection |> Radio.cw_tune()
+        connection |> ConnectionCommands.cw_tune()
         {:noreply, socket}
       end
 

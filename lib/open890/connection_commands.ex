@@ -159,6 +159,14 @@ defmodule Open890.ConnectionCommands do
     conn |> cmd("BP#{value}")
   end
 
+  def set_power_level(conn, value) do
+    value = value
+            |> to_string()
+            |> String.pad_leading(3, "0")
+
+    conn |> cmd("PC#{value}")
+  end
+
   def get_power_level(conn) do
     conn |> cmd("PC")
   end

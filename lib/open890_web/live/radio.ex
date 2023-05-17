@@ -437,6 +437,17 @@ defmodule Open890Web.Live.Radio do
     {:noreply, socket}
   end
 
+  def handle_event("power_level_changed", %{"value" => power_level} = _params, socket) do
+    Logger.info("power_level_changed: #{inspect power_level}")
+
+    power_level = (power_level / 255.0) * 100 |> round()
+
+    socket.assigns.radio_connection
+    |> ConnectionCommands.set_power_level(power_level)
+
+    {:noreply, socket}
+  end
+
   def handle_event(event, params, socket) do
     Logger.warn("Live.Radio: Unknown event: #{event}, params: #{inspect(params)}")
     {:noreply, socket}

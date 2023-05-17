@@ -368,6 +368,19 @@
                 <.xvtr_button value={@radio_state.transverter_state} fluid />
               </div>
             </div>
+            <div class="ui one column grid row">
+              <div class="center aligned column">
+                RF Power
+
+                <Slider.slider
+                   label=""
+                   value={@radio_state.power_level}
+                   max_value={100}
+                   click="power_level_changed"
+                   wheel="adjust_power_level" />
+              </div>
+            </div>
+
 
           </div>
 
@@ -417,6 +430,7 @@
 
             <div class="ui one column grid row">
               <div class="center aligned column">
+                Notch Freq
                 <Slider.slider
                   label=""
                   value={@radio_state.notch_state.frequency}

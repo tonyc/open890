@@ -1,1 +1,2 @@
-.\bin\open890.bat start
+call .\bin\open890.bat start
+@pause
