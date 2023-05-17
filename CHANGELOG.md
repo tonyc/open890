@@ -1,5 +1,8 @@
 # open890 Changelog
 
+## Unreleased
+* Added user-defined markers. Keyboard mm/mr/mg/mb to create, cc/cr/cg/cb to clear. See the wiki for more information. (#116)
+
 ## 1.0.5 - 2023-04-20
 * Fix crash related to turning Mic Gain all the way up to 100 (#115)
 * Added MHz button indicator (#112)
