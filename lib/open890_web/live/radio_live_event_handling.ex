@@ -313,10 +313,8 @@ defmodule Open890Web.Live.RadioLiveEventHandling do
           case keyboard_entry_state do
             KeyboardEntryState.PlaceMarker ->
               marker = UserMarker.create(freq) |> UserMarker.white()
-              Logger.debug("marker: #{inspect(marker)}")
               socket = assign(socket, :markers, socket.assigns.markers ++ [marker])
               RadioConnection.add_user_marker(radio_connection, marker)
-
               send(self(), :expire_keyboard_state)
               socket
 
