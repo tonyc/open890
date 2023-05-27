@@ -1,6 +1,7 @@
 # open890 Changelog
 
 ## Unreleased
+* Added FINE button
 * Added RF Power slider (#109)
 * Windows: Added a 'pause' call at the end of open890.bat to make it easier to see possible errors.
 * Added user-defined markers. Keyboard mm/mr/mg/mb to create, cc/cr/cg/cb to clear. See the wiki for more information. (#116)
