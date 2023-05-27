@@ -231,26 +231,24 @@ let Hooks = {
         if (me.locked) { return; }
 
         var isScrollUp = (event.deltaY < 0);
-        var stepSize = 5;
+        var stepSize = 0;
 
         if (event.shiftKey) {
-          stepSize = 0
-        } else if(event.altKey) {
-          stepSize = 3
+          stepSize = 5
         }
 
         if (isScrollUp) {
           if (event.shiftKey) {
-            this.pushEvent("step_tune_up", {stepSize: stepSize})
-          } else {
             this.pushEvent("multi_ch", {is_up: true})
+          } else {
+            this.pushEvent("step_tune_up", {stepSize: stepSize})
 
           }
         } else {
           if (event.shiftKey) {
-            this.pushEvent("step_tune_down", {stepSize: stepSize})
-          } else {
             this.pushEvent("multi_ch", {is_up: false})
+          } else {
+            this.pushEvent("step_tune_down", {stepSize: stepSize})
           }
         }
 
@@ -423,26 +421,24 @@ let Hooks = {
         if (me.locked) { return; }
 
         var isScrollUp = (event.deltaY < 0);
-        var stepSize = 5;
+        var stepSize = 0;
 
         if (event.shiftKey) {
-          stepSize = 0
-        } else if(event.altKey) {
-          stepSize = 3
+          stepSize = 5
         }
 
         if (isScrollUp) {
           if (event.shiftKey) {
-            this.pushEvent("step_tune_up", {stepSize: stepSize})
-          } else {
             this.pushEvent("multi_ch", {is_up: true})
+          } else {
+            this.pushEvent("step_tune_up", {stepSize: stepSize})
 
           }
         } else {
           if (event.shiftKey) {
-            this.pushEvent("step_tune_down", {stepSize: stepSize})
-          } else {
             this.pushEvent("multi_ch", {is_up: false})
+          } else {
+            this.pushEvent("step_tune_down", {stepSize: stepSize})
           }
         }
       });
