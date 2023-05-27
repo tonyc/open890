@@ -1,6 +1,8 @@
 # open890 Changelog
 
 ## Unreleased
+* UX CHANGE: Swapped the behavior of mousewheel vs/shift+mousewheel. Mousewheel will now increment or decrement by the current step size, determined by the FINE state. Shift + mousewheel will perform MULTI/CH up/down.
+* Added FINE button
 * Added RF Power slider (#109)
 * Windows: Added a 'pause' call at the end of open890.bat to make it easier to see possible errors.
 * Added user-defined markers. Keyboard mm/mr/mg/mb to create, cc/cr/cg/cb to clear. See the wiki for more information. (#116)

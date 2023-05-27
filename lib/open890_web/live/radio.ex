@@ -22,6 +22,7 @@ defmodule Open890Web.Live.Radio do
     AudioScope,
     BandScope,
     BusyTxIndicator,
+    FineButton,
     LockButton,
     Meter,
     MhzButton,
