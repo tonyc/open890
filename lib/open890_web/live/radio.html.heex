@@ -293,7 +293,7 @@
             <% end %>
 
             <%# shared filter buttons %>
-            <.filter_buttons />
+            <.filter_buttons active_if_filter={@radio_state.active_if_filter} />
 
             <%= if RadioState.effective_active_mode(@radio_state) in [:cw, :cw_r, :fsk, :fsk_r] do %>
               <%= if RadioState.effective_active_mode(@radio_state) in [:cw, :cw_r] do %>

@@ -380,10 +380,10 @@ defmodule Open890Web.Components.Buttons do
 
   def filter_buttons(assigns) do
     ~H"""
-      <div class="ui mini black buttons">
-        <.cmd_button cmd="FL00">FIL A</.cmd_button>
-        <.cmd_button cmd="FL01">FIL B</.cmd_button>
-        <.cmd_button cmd="FL02">FIL C</.cmd_button>
+      <div class="ui mini black buttons if-filter-button">
+        <.cmd_button cmd="FL00" classes={["if-filter-button", (if @active_if_filter == :a, do: "enabled", else: "")]}>FIL A</.cmd_button>
+        <.cmd_button cmd="FL01" classes={["if-filter-button", (if @active_if_filter == :b, do: "enabled", else: "")]}>FIL B</.cmd_button>
+        <.cmd_button cmd="FL02" classes={["if-filter-button", (if @active_if_filter == :c, do: "enabled", else: "")]}>FIL C</.cmd_button>
       </div>
     """
   end
@@ -437,7 +437,11 @@ defmodule Open890Web.Components.Buttons do
         _ -> ""
       end
 
-    assigned_classes = assigns[:classes] || ""
+    assigned_classes = case assigns[:classes] do
+      arr when is_list(arr) -> arr |> Enum.join(" ")
+      str when is_binary(str) -> str
+      _ -> ""
+    end
 
     size_class =
       if ~w(mini tiny small medium large big huge massive)
