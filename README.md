@@ -58,6 +58,12 @@ Platform/architecture-specific binary releases are available from [releases](htt
 
 ### Windows
 
+**REQUIRED**: Install the latest Microsoft Visual C++ Redistributable package from here: https://aka.ms/vs/17/release/vc_redist.x64.exe
+
+This solves the open890 window closing immediately upon startup, or resolves the error message "unable to load emulator DLL".
+
+Then, install open890:
+
   * Download the Windows release .zip file, and extract it somewhere useful.
   * Navigate to where you expanded open890
   * Double click the `open890.bat` file in the main folder.
@@ -108,7 +114,8 @@ Navigate to Settings -> Privacy & Security -> Allow applications downloaded from
 After changing the security setting:
 
 * Download an unzip the MacOS binary build to somewhere useful (i.e. your Desktop)
-* Run `open890.zsh` (Ventura). If you are on an earlier version of MacOS, `open890.sh` may also work.
+* Double-click the `open890.command` file, or you can start a terminal, `cd` to the open890 directory, and run `./open890.command`
+    * If you are on an earlier version of MacOS, `open890.sh` may also work.
 
 
 ### Linux (Ubuntu)
