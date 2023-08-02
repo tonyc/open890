@@ -183,6 +183,7 @@ The following people have graciously donated monetarily to open890, and opted-in
 * Philip Hartwell, VK6GX
 * Rick Lapp, KC2FD
 * Jeff Sloane, KE6L
+* Jack Wren, K4VR
 
 ## Legal mumbo-jumbo
 
