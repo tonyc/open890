@@ -5,14 +5,19 @@ defmodule Open890Web.Components.Slider do
     labeled = !is_nil(assigns[:label]) && assigns[:label] != ""
     max_value = Map.get(assigns, :max_value, 255)
 
+    assigns = assign(assigns, %{
+      labeled: labeled,
+      max_value: max_value
+    })
+
     ~H"""
       <div class={component_classes(assigns)}>
-        <%= if labeled do %>
+        <%= if @labeled do %>
           <span class="label"><%= @label %></span>
         <% end %>
         <div class={wrapper_class(assigns)} phx-hook="Slider" data-click-action={@click} data-wheel-action={@wheel} id={id_for(@label)}
           data-enabled={enabled_state(assigns)}>
-          <div class="indicator" style={style_attr(@value, max_value)}></div>
+          <div class="indicator" style={style_attr(@value, @max_value)}></div>
         </div>
       </div>
     """

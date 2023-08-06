@@ -20,7 +20,7 @@
       <div class="six wide column">
         <div class="ui padded raised blue segment appear">
           <%= form_for @conn, Routes.radio_connection_path(@conn, :create), [as: :radio_connection, class: "ui form"], fn f -> %>
-            <%= render "_form.html", f: f, radio_connection: %RadioConnection{} %>
+            <%= render "_form.html", f: f, radio_connection: %Open890.RadioConnection{} %>
             <%= submit "Create", class: "ui large fluid primary button" %>
           <% end %>
         </div>

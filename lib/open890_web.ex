@@ -46,7 +46,7 @@ defmodule Open890Web do
   def live_view do
     quote do
       use Phoenix.LiveView,
-        layout: {Open890Web.LayoutView, "live.html"}
+        layout: {Open890Web.LayoutView, :live}
 
       alias Open890Web.Components
       alias Open890Web.RadioViewHelpers
@@ -85,7 +85,7 @@ defmodule Open890Web do
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
 
-      import Phoenix.LiveView.Helpers
+      import Phoenix.Component
 
       # Import basic rendering functionality (render, render_layout, etc)
       import Phoenix.View
@@ -94,6 +94,8 @@ defmodule Open890Web do
       alias Open890Web.Router.Helpers, as: Routes
 
       import Open890Web.RadioViewHelpers
+
+      alias Open890.RadioConnection
 
       import Phoenix.LiveView
     end

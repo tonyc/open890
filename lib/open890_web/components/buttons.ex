@@ -19,8 +19,13 @@ defmodule Open890Web.Components.Buttons do
       |> AntennaState.toggle_ant()
       |> AntennaState.to_command()
 
+    assigns = assign(assigns, %{
+      cmd: cmd,
+      label: label
+    })
+
     ~H"""
-      <.cmd_button cmd={cmd} fluid={assigns[:fluid]}><%= label %></.cmd_button>
+      <.cmd_button cmd={@cmd} fluid={assigns[:fluid]}><%= @label %></.cmd_button>
     """
   end
 
@@ -79,8 +84,12 @@ defmodule Open890Web.Components.Buttons do
         _ -> "RX"
       end
 
+    assigns = assign(assigns, %{
+      cmd: cmd
+    })
+
     ~H"""
-      <.cmd_button cmd={cmd} fluid={assigns[:fluid]}>SEND</.cmd_button>
+      <.cmd_button cmd={@cmd} fluid={assigns[:fluid]}>SEND</.cmd_button>
     """
   end
 
@@ -92,8 +101,12 @@ defmodule Open890Web.Components.Buttons do
       |> TunerState.toggle_tuning()
       |> TunerState.to_command()
 
+    assigns = assign(assigns, %{
+      cmd: cmd
+    })
+
     ~H"""
-      <.cmd_button cmd={cmd} fluid={assigns[:fluid]}>TUNE</.cmd_button>
+      <.cmd_button cmd={@cmd} fluid={assigns[:fluid]}>TUNE</.cmd_button>
     """
   end
 
@@ -112,8 +125,13 @@ defmodule Open890Web.Components.Buttons do
       |> TunerState.toggle_tuner_state()
       |> TunerState.to_command()
 
+    assigns = assign(assigns, %{
+      cmd: cmd,
+      enabled: enabled
+    })
+
     ~H"""
-      <.cmd_button cmd={cmd} fluid={assigns[:fluid]}>ATU <%= enabled %></.cmd_button>
+      <.cmd_button cmd={@cmd} fluid={assigns[:fluid]}>ATU <%= @enabled %></.cmd_button>
     """
   end
 
@@ -132,8 +150,13 @@ defmodule Open890Web.Components.Buttons do
       |> AntennaState.toggle_rx_ant()
       |> AntennaState.to_command()
 
+    assigns = assign(assigns, %{
+      cmd: cmd,
+      enabled: enabled
+    })
+
     ~H"""
-      <.cmd_button cmd={cmd} fluid={assigns[:fluid]}>RX ANT <%= enabled %></.cmd_button>
+      <.cmd_button cmd={@cmd} fluid={assigns[:fluid]}>RX ANT <%= @enabled %></.cmd_button>
     """
   end
 
@@ -152,8 +175,13 @@ defmodule Open890Web.Components.Buttons do
       |> AntennaState.toggle_ant_out()
       |> AntennaState.to_command()
 
+    assigns = assign(assigns, %{
+      cmd: cmd,
+      enabled: enabled
+    })
+
     ~H"""
-      <.cmd_button cmd={cmd} fluid={assigns[:fluid]}>ANT OUT <%= enabled %></.cmd_button>
+      <.cmd_button cmd={@cmd} fluid={assigns[:fluid]}>ANT OUT <%= @enabled %></.cmd_button>
     """
   end
 
@@ -172,28 +200,40 @@ defmodule Open890Web.Components.Buttons do
       |> AntennaState.toggle_drv()
       |> AntennaState.to_command()
 
+    assigns = assign(assigns, %{
+      cmd: cmd,
+      enabled: enabled
+    })
+
     ~H"""
-      <.cmd_button cmd={cmd} fluid={assigns[:fluid]}>DRV <%= enabled %></.cmd_button>
+      <.cmd_button cmd={@cmd} fluid={assigns[:fluid]}>DRV <%= @enabled %></.cmd_button>
     """
   end
 
   def xvtr_button(assigns) do
     %TransverterState{} = xvtr_state = assigns.value
 
-    [next_command, label] =
+    [cmd, enabled] =
       if xvtr_state.enabled do
         ["XV0", "ON"]
       else
         ["XV1", "OFF"]
       end
 
+    assigns = assign(assigns, %{
+      cmd: cmd,
+      enabled: enabled
+    })
+
     ~H"""
-      <.cmd_button cmd={next_command} fluid={assigns[:fluid]}>XVTR <%= label %></.cmd_button>
+      <.cmd_button cmd={@cmd} fluid={assigns[:fluid]}>XVTR <%= @enabled %></.cmd_button>
     """
   end
 
   def agc_button(assigns) do
     values = %{slow: "GC3", med: "GC1", fast: "GC2"}
+
+    assigns = assign(assigns, :values, values)
 
     ~H"""
     <%= if @agc_off do %>
@@ -201,7 +241,7 @@ defmodule Open890Web.Components.Buttons do
         AGC <%= format_agc(@value) %>
       </div>
     <% else %>
-      <.cycle_button_2 value={@value} values={values} fluid={@fluid}>
+      <.cycle_button_2 value={@value} values={@values} fluid={@fluid}>
         AGC <%= format_agc(@value) %>
       </.cycle_button_2>
     <% end %>
@@ -243,9 +283,11 @@ defmodule Open890Web.Components.Buttons do
       :wide => "NW0"
     }
 
+    assigns = assign(assigns, :values, values)
+
     ~H"""
       <%= if @value.enabled do %>
-        <.cycle_button_2 value={@value.width} values={values} fluid={assigns[:fluid]}>
+        <.cycle_button_2 value={@value.width} values={@values} fluid={assigns[:fluid]}>
           NCH <%= format_notch_width(@value.width) %>
         </.cycle_button_2>
       <% else %>
@@ -305,9 +347,11 @@ defmodule Open890Web.Components.Buttons do
       :bc_2 => "BC0"
     }
 
+    assigns = assign(assigns, :values, values)
+
     ~H"""
       <%= if @active_mode not in [:cw, :cw_r] do %>
-        <.cycle_button_2 value={@value} values={values} fluid={assigns[:fluid]}>
+        <.cycle_button_2 value={@value} values={@values} fluid={assigns[:fluid]}>
           BC <%= format_bc(@value) %>
         </.cycle_button_2>
       <% else %>
@@ -337,9 +381,10 @@ defmodule Open890Web.Components.Buttons do
 
   def vfo_switch_button(assigns) do
     values = %{:a => "FR1", :b => "FR0"}
+    assigns = assign(assigns, :values, values)
 
     ~H"""
-      <.cycle_button_2 fluid={assigns[:fluid]} value={@value} values={values}>
+      <.cycle_button_2 fluid={assigns[:fluid]} value={@value} values={@values}>
         A / B
       </.cycle_button_2>
     """
@@ -359,19 +404,21 @@ defmodule Open890Web.Components.Buttons do
 
   def vfo_mem_button(assigns) do
     values = %{:vfo => "MV1", :memory => "MV0"}
+    assigns = assign(assigns, :values, values)
 
     ~H"""
       <%= if @value do %>
-        <.cycle_button_2 value={@value} values={values} fluid={assigns[:fluid]}>M/V</.cycle_button_2>
+        <.cycle_button_2 value={@value} values={@values} fluid={assigns[:fluid]}>M/V</.cycle_button_2>
       <% end %>
     """
   end
 
   def nb1_button(assigns) do
     values = %{true => "NB10", false => "NB11"}
+    assigns = assign(assigns, :values, values)
 
     ~H"""
-      <.cycle_button_2 value={@value.nb_1_enabled} values={values} fluid={assigns[:fluid]}>
+      <.cycle_button_2 value={@value.nb_1_enabled} values={@values} fluid={assigns[:fluid]}>
         NB1 <%= on_off(@value.nb_1_enabled) %>
       </.cycle_button_2>
     """
@@ -379,9 +426,10 @@ defmodule Open890Web.Components.Buttons do
 
   def apf_button(assigns) do
     values = %{true => "AP00", false => "AP01"}
+    assigns = assign(assigns, :values, values)
 
     ~H"""
-      <.cycle_button_2 value={@value} values={values} fluid={assigns[:fluid]}>
+      <.cycle_button_2 value={@value} values={@values} fluid={assigns[:fluid]}>
         APF <%= on_off(@value) %>
       </.cycle_button_2>
     """
@@ -389,9 +437,10 @@ defmodule Open890Web.Components.Buttons do
 
   def nb2_button(assigns) do
     values = %{true => "NB20", false => "NB21"}
+    assigns = assign(assigns, :values, values)
 
     ~H"""
-      <.cycle_button_2 value={@value.nb_2_enabled} values={values} fluid={assigns[:fluid]}>
+      <.cycle_button_2 value={@value.nb_2_enabled} values={@values} fluid={assigns[:fluid]}>
         NB2 <%= on_off(@value.nb_2_enabled) %>
       </.cycle_button_2>
     """
@@ -419,8 +468,13 @@ defmodule Open890Web.Components.Buttons do
           end
       end
 
+    assigns = assign(assigns, %{
+      cmd: cmd,
+      label: label
+    })
+
     ~H"""
-      <.cmd_button cmd={cmd} classes="ui mini black"><%= label %></.cmd_button>
+      <.cmd_button cmd={@cmd} classes="ui mini black"><%= @label %></.cmd_button>
     """
   end
 
@@ -455,10 +509,15 @@ defmodule Open890Web.Components.Buttons do
   def cycle_button_2(assigns) do
     cmd = (assigns[:values] || %{}) |> Map.get(assigns[:value])
 
-    extra = assigns_to_attributes(assigns, [:values, :value])
+    attrs = assigns_to_attributes(assigns, [:values, :value])
+
+    assigns = assign(assigns, %{
+      cmd: cmd,
+      attrs: attrs
+    })
 
     ~H"""
-      <.cmd_button cmd={cmd} {extra}>
+      <.cmd_button cmd={@cmd} {@attrs}>
         <%= render_slot(@inner_block) %>
       </.cmd_button>
     """
@@ -467,9 +526,14 @@ defmodule Open890Web.Components.Buttons do
   def cycle_label_button(assigns) do
     %{label: label, cmd: cmd} = assigns[:values] |> Map.get(assigns[:value])
 
+    assigns = assign(assigns, %{
+      cmd: cmd,
+      label: label
+    })
+
     ~H"""
-      <.cmd_button cmd={cmd} fluid={assigns[:fluid]}>
-        <%= render_slot(@inner_block) %> <%= label %>
+      <.cmd_button cmd={@cmd} fluid={assigns[:fluid]}>
+        <%= render_slot(@inner_block) %> <%= @label %>
       </.cmd_button>
     """
   end
@@ -508,8 +572,10 @@ defmodule Open890Web.Components.Buttons do
 
     classes = "ui #{size_class} #{color_class} button #{assigned_classes} #{fluid_class}"
 
+    assigns = assign(assigns, :classes, classes)
+
     ~H"""
-      <div class={classes} phx-click="cmd" phx-value-cmd={@cmd}>
+      <div class={@classes} phx-click="cmd" phx-value-cmd={@cmd}>
         <%= render_slot(@inner_block) %>
       </div>
     """
@@ -586,9 +652,11 @@ defmodule Open890Web.Components.Buttons do
       3 => "BS80"
     }
 
+    assigns = assign(assigns, :values, values)
+
     ~H"""
       <%= if @band_scope_att do %>
-        <.cycle_button_2 value={@band_scope_att} values={values} fluid>
+        <.cycle_button_2 value={@band_scope_att} values={@values} fluid>
           ATT: <%= format_band_scope_att(@band_scope_att) %>
         </.cycle_button_2>
       <% end %>
@@ -612,10 +680,11 @@ defmodule Open890Web.Components.Buttons do
       2 => "BSA3",
       3 => "BSA0"
     }
+    assigns = assign(assigns, :values, values)
 
     ~H"""
       <%= if @band_scope_avg do %>
-        <.cycle_button_2 value={@band_scope_avg} values={values} fluid>
+        <.cycle_button_2 value={@band_scope_avg} values={@values} fluid>
           Averaging: <%= @band_scope_avg %>
         </.cycle_button_2>
       <% end %>
@@ -635,9 +704,14 @@ defmodule Open890Web.Components.Buttons do
         "OFF"
       end
 
+    assigns = assign(assigns, %{
+      values: values,
+      label: label
+    })
+
     ~H"""
-      <.cycle_button_2 value={@band_scope_expand} values={values} fluid>
-        Expand: <%= label %>
+      <.cycle_button_2 value={@band_scope_expand} values={@values} fluid>
+        Expand: <%= @label %>
       </.cycle_button_2>
     """
   end

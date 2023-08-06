@@ -122,8 +122,10 @@ defmodule Open890Web.Components.BandScope do
   def auto_scroll_mode_vertical_grid(assigns) do
     values = 1..9 |> Enum.map(fn x -> x * 64 end)
 
+    assigns = assign(assigns, :values, values)
+
     ~H"""
-      <%= for value <- values do %>
+      <%= for value <- @values do %>
         <line class="bandscopeGrid vertical" x1={value} y1="0" x2={value} y2="640" />
       <% end %>
     """
@@ -172,11 +174,16 @@ defmodule Open890Web.Components.BandScope do
     x = project_to_bandscope_limits(marker.freq, assigns.band_scope_edges)
     classes = "marker user vertical #{marker.color}"
 
+    assigns = assign(assigns, %{
+      x: x,
+      classes: classes
+    })
+
     ~H"""
       <g class="user_marker_group" transform="translate(0 0)">
-        <line id="marker-#{marker.id}" phx-hook="Marker" class={classes} x1={x} y1="0" x2={x+2} y2={"640"} pointer-events="visibleStroke" phx-click="marker_clicked" phx-value-id={marker.id} />
+        <line id="marker-#{@marker.id}" phx-hook="Marker" class={@classes} x1={@x} y1="0" x2={@x+2} y2={"640"} pointer-events="visibleStroke" phx-click="marker_clicked" phx-value-id={@marker.id} />
 
-        <rect class="marker_delete" x={x-3} y="-2" height="4" width="6" pointer-events="visibleFill" phx-click="delete_user_marker" phx-value-id={marker.id}/>
+        <rect class="marker_delete" x={@x-3} y="-2" height="4" width="6" pointer-events="visibleFill" phx-click="delete_user_marker" phx-value-id={@marker.id}/>
       </g>
     """
   end
@@ -222,9 +229,11 @@ defmodule Open890Web.Components.BandScope do
   def band_scope_horizontal_grid(assigns) do
     offset = 140 / 8
 
+    assigns = assign(assigns, :offset, offset)
+
     ~H"""
       <%= for i <- (0..7) do %>
-        <line class="bandscopeGrid horizontal" x1="0" y1={i * offset} x2="640" y2={i * offset} />
+        <line class="bandscopeGrid horizontal" x1="0" y1={i * @offset} x2="640" y2={i * @offset} />
       <% end %>
     """
   end
@@ -258,8 +267,11 @@ defmodule Open890Web.Components.BandScope do
           ""
       end
 
+
+    assigns = assign(assigns, :points, points)
+
     ~H"""
-      <polygon id="passband" points={points} />
+      <polygon id="passband" points={@points} />
     """
   end
 
@@ -382,11 +394,18 @@ defmodule Open890Web.Components.BandScope do
         _ -> "R"
       end
 
+    assigns = assign(assigns, %{
+      loc: loc,
+      label: label,
+      label_translate: label_translate,
+      triangle_points: triangle_points,
+      tri_text_x: tri_text_x
+    })
     ~H"""
-      <line class={add_mode(mode, "carrier")} x1={loc} y1="0" x2={loc} y2="150" />
-      <g class={add_mode(mode, "triangleGroup")} transform={label_translate}>
-        <polygon class={add_mode(mode, "triangle")} points={triangle_points} />
-        <text class={add_mode(mode, "triangleText")} x={tri_text_x} y="7"><%= label %></text>
+      <line class={add_mode(@mode, "carrier")} x1={@loc} y1="0" x2={@loc} y2="150" />
+      <g class={add_mode(@mode, "triangleGroup")} transform={@label_translate}>
+        <polygon class={add_mode(@mode, "triangle")} points={@triangle_points} />
+        <text class={add_mode(@mode, "triangleText")} x={@tri_text_x} y="7"><%= @label %></text>
       </g>
     """
   end

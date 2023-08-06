@@ -1,7 +1,8 @@
 defmodule Open890Web.RadioViewHelpers do
   require Logger
 
-  alias Open890.{TransverterState}
+  alias Open890.RadioConnection
+  alias Open890.TransverterState
 
   def selected_theme?(theme, name) do
     if theme == name, do: "selected"
@@ -250,4 +251,11 @@ defmodule Open890Web.RadioViewHelpers do
       other -> other
     end
   end
+
+  def connection_to_uri(%RadioConnection{} = c) do
+    tcp_port = RadioConnection.tcp_port(c)
+
+    "#{c.type}://#{c.user_name}@#{c.ip_address}:#{tcp_port}"
+  end
+
 end
