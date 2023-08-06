@@ -8,7 +8,7 @@ defmodule Open890Web.Live.RadioSocketState do
     {:connection_state, :stopped},
     {:connection_state, nil},
     {:debug, false},
-    {:display_band_selector, false},
+    {:display_band_selector, true},
     {:left_panel_open, true},
     {:keyboard_entry_state, KeyboardEntryState.Normal},
     {:keyboard_entry_timer, nil},

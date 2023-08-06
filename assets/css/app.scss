@@ -1023,3 +1023,13 @@ svg#bandScope {
   }
 }
 
+
+#direct-frequency-entry-field {
+  font-family: "Bebas Neue";
+  font-size: 4rem;
+  padding: 1rem;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
