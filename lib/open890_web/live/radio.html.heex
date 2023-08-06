@@ -20,6 +20,15 @@
     <div class="ui active page top aligned page dimmer" _phx-click="dimmer_clicked">
       <div id="BandModal" class="ui active modal" phx-hook="BandModal">
         <div class="header">
+
+          <%!-- direct frequency entry form --%>
+          <form class="ui form" id="DirectFrequencyEntryForm" phx-submit="direct_frequency_entry">
+            <div class="ui huge input">
+            <input type="text" name="freq" value={@radio_state.active_frequency} />
+              <button class="ui button secondary" type="submit">Enter</button>
+            </div>
+          </form>
+
           <h1 class="ui huge header activeFrequency tip">
             <%= @radio_state.active_frequency |> format_raw_frequency() %>
             <div class="ui sub header activeMode tip"><%= RadioState.effective_active_mode(@radio_state) |> format_mode() %></div>
