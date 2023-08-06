@@ -1,7 +1,10 @@
-defmodule Open890Web.Live.BandIndicatorComponent do
-  use Open890Web, :live_component
+defmodule Open890Web.Components.BandIndicatorComponent do
+  use Open890Web, :component
 
-  def render(assigns) do
+  attr :vfo_memory_state, :atom, required: true
+  attr :active_receiver, :any, required: true
+  attr :inactive_frequency, :any, required: true
+  def band_indicator(assigns) do
     ~H"""
       <div class="bandIndicator">
 

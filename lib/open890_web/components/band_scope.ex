@@ -5,6 +5,23 @@ defmodule Open890Web.Components.BandScope do
   alias Open890.FilterState
   alias Open890Web.RadioViewHelpers
 
+  attr :active_mode, :any, required: true
+  attr :band_scope_data, :list, required: true
+  attr :band_scope_edges, :any, required: true
+  attr :band_scope_mode, :any, required: true
+  attr :band_scope_span, :any, required: true
+  attr :draw_interval, :any, required: true
+  attr :effective_active_frequency, :integer, required: true
+  attr :effective_inactive_frequency, :integer, required: true
+  attr :filter_mode, :any, required: true
+  attr :filter_state, FilterState, required: true
+  attr :lock_enabled, :boolean, required: true
+  attr :markers, :list, required: true
+  attr :rx_banner_frequency, :integer, required: true
+  attr :spectrum_scale, :float, required: true
+  attr :split_enabled, :boolean, required: true
+  attr :theme, :string, required: true
+  attr :tx_banner_frequency, :integer, required: true
   def bandscope(assigns) do
     ~H"""
       <div id="bandScopeWrapper" class="hover-pointer" data-spectrum-scale={@spectrum_scale}>

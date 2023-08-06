@@ -55,10 +55,21 @@ defmodule Open890Web do
     end
   end
 
+  # live_components encapsulate markup, state and events
+  # use this if you want to handle_event in the specific component
   def live_component do
     quote do
       use Phoenix.LiveComponent
 
+      unquote(view_helpers())
+    end
+  end
+
+  # components just encapsulate markup
+  # use this if you don't need any handle_event etc callbacks
+  def component do
+    quote do
+      use Phoenix.Component
       unquote(view_helpers())
     end
   end

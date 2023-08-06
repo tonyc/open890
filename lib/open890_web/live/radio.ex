@@ -29,7 +29,8 @@ defmodule Open890Web.Live.Radio do
     MhzButton,
     RitXit,
     Slider,
-    SplitButton
+    SplitButton,
+    VFODisplayComponent
   }
 
   import Open890Web.Components.Buttons
