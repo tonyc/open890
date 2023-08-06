@@ -18,23 +18,61 @@
 
   <%= if @display_band_selector do %>
     <div class="ui active page top aligned page dimmer" _phx-click="dimmer_clicked">
-      <div id="BandModal" class="ui active modal" phx-hook="BandModal">
+      <div id="BandModal" class="ui active modal">
+
         <div class="header">
-          <h1 class="ui huge header activeFrequency tip">
-            <%= @radio_state.active_frequency |> format_raw_frequency() %>
-            <div class="ui sub header activeMode tip"><%= RadioState.effective_active_mode(@radio_state) |> format_mode() %></div>
-          </h1>
-        </div>
-        <div class="content">
-          <%= live_component BandButtonsComponent %>
-        </div>
-        <div class="actions">
-          <div id="BandModalClose" class="ui icon button" phx-click="toggle_band_selector">
-            <i class="close icon"></i>
-            Close
+          <div class="ui grid">
+            <div class="row">
+              <div class="twelve wide column">
+                <h1 class="band-modal-header">Direct Frequency Entry</h1>
+              </div>
+              <div class="four wide right aligned column">
+                <div id="BandModalClose" class="ui icon button" phx-click="toggle_band_selector">
+                  <i class="close icon"></i>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+
+        <div class="content">
+          <div class="ui padded grid">
+
+            <div class="row">
+              <div class="column">
+                <form class="ui form" id="DirectFrequencyEntryForm" phx-hook="DirectFrequencyEntryForm" _phx-submit="direct_frequency_entry">
+
+                  <div class="ui grid">
+                    <div class="six wide column">
+                      <div class="">
+                        <input id="direct-frequency-entry-field" type="text" name="freq" value={format_raw_frequency(@radio_state.active_frequency)} />
+                      </div>
+                    </div>
+
+                    <div class="middle aligned column">
+                      <div class="ui input">
+                        <button id="direct-frequency-entry-submit" class="ui huge regular button" type="button">ENT</button>
+                      </div>
+                    </div>
+
+                  </div>
+
+                </form>
+              </div>
+            </div>
+
+            <div class="ui divider" />
+
+            <div class="row">
+              <div class="column">
+                <.band_buttons />
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+      </div> <!-- bandmodal -->
     </div>
   <% end %>
   <!-- top bar -->

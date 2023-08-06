@@ -57,19 +57,43 @@ let Hooks = {
     updated(){ this.prevAttrs.forEach(([name, val]) => this.el.setAttribute(name, val)) }
   },
 
-  BandModal: {
+  DirectFrequencyEntryForm: {
     mounted() {
-      this.el.addEventListener("click", event => {
-        console.log("bandmodal clicked")
-        // if (this.el == event.target) {
-        //   event.stopPropagation();
-        // }
+      this.freqInput = this.el.querySelector("#direct-frequency-entry-field")
+      this.entButton = this.el.querySelector("#direct-frequency-entry-submit")
+      this.freq = this.freqInput.value;
+
+      let me = this
+
+      if (this.freqInput) {
+        this.freqInput.addEventListener("click", event => {
+          me.freqInput.select()
+        })
+
+        this.freqInput.addEventListener("blur", event => {
+          this.freq = this.freqInput.value;
+        })
+      }
+
+      if (this.entButton) {
+        this.entButton.addEventListener("click", event => {
+          // me.freqInput.blur()
+          me.pushEvent("direct_frequency_entry", {freq: this.freq})
+        })
+      }
+
+      this.el.addEventListener("submit", event => {
+        event.preventDefault()
+
+        if (this.freqInput) {
+          // this allows the field to update - otherwise phoenix won't change a field with focus
+          this.freqInput.blur()
+          this.pushEvent("direct_frequency_entry", {freq: this.freq})
+        }
       })
 
-      // window.document.querySelector("#BandModalClose").addEventLister("click", event => {
-      //   event.preventDefault()
-      //   console.log("BandModalClose click")
-      // })
+
+      this.freqInput.select()
     }
 
   },

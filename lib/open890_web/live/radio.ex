@@ -9,13 +9,14 @@ defmodule Open890Web.Live.Radio do
   alias Open890.{
     ConnectionCommands,
     Extract,
+    FrequencyEntryParser,
     KeyboardEntryState,
     RadioConnection,
     RadioState,
     UserMarker
   }
 
-  alias Open890Web.Live.{BandButtonsComponent, RadioSocketState}
+  alias Open890Web.Live.RadioSocketState
 
   alias Open890Web.Components.{
     AtuIndicator,
@@ -214,6 +215,23 @@ defmodule Open890Web.Live.Radio do
     {:noreply, socket}
   end
 
+  def handle_event("direct_frequency_entry", %{"freq" => freq} = params, socket) do
+    Logger.warn("frequency entry: #{inspect params}")
+    conn = socket.assigns.radio_connection
+
+    parsed_freq = FrequencyEntryParser.parse(freq)
+
+    case socket.assigns.radio_state.active_receiver do
+      :a ->
+        conn |> ConnectionCommands.cmd("FA#{parsed_freq}")
+      :b ->
+        conn |> ConnectionCommands.cmd("FB#{parsed_freq}")
+    end
+
+
+    {:noreply, socket}
+  end
+
   def handle_event("toggle_panel", _params, socket) do
     new_state = !socket.assigns.left_panel_open
 
@@ -232,8 +250,7 @@ defmodule Open890Web.Live.Radio do
   end
 
   def handle_event("toggle_band_selector", _params, socket) do
-    new_state = !socket.assigns.display_band_selector
-    socket = assign(socket, :display_band_selector, new_state)
+    socket = assign(socket, :display_band_selector, !socket.assigns.display_band_selector)
     {:noreply, socket}
   end
 
@@ -532,6 +549,14 @@ defmodule Open890Web.Live.Radio do
       "\\" ->
         conn |> ConnectionCommands.toggle_vfo(radio_state)
         socket
+
+      "Enter" ->
+        if !socket.assigns.display_band_selector do
+          socket
+          |> assign(:display_band_selector, true)
+        else
+          socket
+        end
 
       _ ->
         socket

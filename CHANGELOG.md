@@ -1,6 +1,8 @@
 # open890 Changelog
 
 ## Unreleased
+* Added direct frequency entry. Type "Enter" on your keyboard, or click the main VFO to open the band select dialog. Type your frequency and hit "Enter" again, or click ENT.
+* Reworked the UI layout of the band select/direct frequency entry pop-up.
 * UX CHANGE: Swapped the behavior of mousewheel vs/shift+mousewheel. Mousewheel will now increment or decrement by the current step size, determined by the FINE state. Shift + mousewheel will perform MULTI/CH up/down.
 * Added FINE button
 * Added RF Power slider (#109)
