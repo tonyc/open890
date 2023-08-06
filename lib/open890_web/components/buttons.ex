@@ -31,36 +31,36 @@ defmodule Open890Web.Components.Buttons do
           <div class="four wide column left aligned">
 
             <div id="modeKeys" class="ui vertical big buttons">
-              <.cmd_button classes="regular" cmd="MK0">LSB/USB</.cmd_button>
-              <.cmd_button classes="regular" cmd="MK1">CW/CW-R</.cmd_button>
-              <.cmd_button classes="regular" cmd="MK2">FSK/PSK</.cmd_button>
-              <.cmd_button classes="regular" cmd="MK3">FM/AM</.cmd_button>
-              <.cmd_button classes="regular" cmd="MK4">FSK/FSK-R</.cmd_button>
-              <.cmd_button classes="regular" cmd="MK5">PSK/PSK-R</.cmd_button>
+              <.cmd_button tabindex="0" classes="regular" cmd="MK0">LSB/USB</.cmd_button>
+              <.cmd_button tabindex="0" classes="regular" cmd="MK1">CW/CW-R</.cmd_button>
+              <.cmd_button tabindex="0" classes="regular" cmd="MK2">FSK/PSK</.cmd_button>
+              <.cmd_button tabindex="0" classes="regular" cmd="MK3">FM/AM</.cmd_button>
+              <.cmd_button tabindex="0" classes="regular" cmd="MK4">FSK/FSK-R</.cmd_button>
+              <.cmd_button tabindex="0" classes="regular" cmd="MK5">PSK/PSK-R</.cmd_button>
             </div>
 
           </div>
           <div class="twelve wide column">
             <div class="ui equal width grid">
               <div class="row">
-                <div class="column"><.cmd_button cmd="BU000" classes="big regular" fluid>1.8</.cmd_button></div>
-                <div class="column"><.cmd_button cmd="BU001" classes="big regular" fluid>3.5</.cmd_button></div>
-                <div class="column"><.cmd_button cmd="BU002" classes="big regular" fluid>7</.cmd_button></div>
+                <div class="column"><.cmd_button cmd="BU000" classes="big regular" tabindex="0" fluid>1.8</.cmd_button></div>
+                <div class="column"><.cmd_button cmd="BU001" classes="big regular" tabindex="0" fluid>3.5</.cmd_button></div>
+                <div class="column"><.cmd_button cmd="BU002" classes="big regular" tabindex="0" fluid>7</.cmd_button></div>
               </div>
               <div class="row">
-                <div class="column"><.cmd_button cmd="BU003" classes="big regular" fluid>10</.cmd_button></div>
-                <div class="column"><.cmd_button cmd="BU004" classes="big regular" fluid>14</.cmd_button></div>
-                <div class="column"><.cmd_button cmd="BU005" classes="big regular" fluid>18</.cmd_button></div>
+                <div class="column"><.cmd_button cmd="BU003" classes="big regular" tabindex="0" fluid>10</.cmd_button></div>
+                <div class="column"><.cmd_button cmd="BU004" classes="big regular" tabindex="0" fluid>14</.cmd_button></div>
+                <div class="column"><.cmd_button cmd="BU005" classes="big regular" tabindex="0" fluid>18</.cmd_button></div>
               </div>
               <div class="row">
-                <div class="column"><.cmd_button cmd="BU006" classes="big regular" fluid>21</.cmd_button></div>
-                <div class="column"><.cmd_button cmd="BU007" classes="big regular" fluid>24</.cmd_button></div>
-                <div class="column"><.cmd_button cmd="BU008" classes="big regular" fluid>28</.cmd_button></div>
+                <div class="column"><.cmd_button cmd="BU006" classes="big regular" tabindex="0" fluid>21</.cmd_button></div>
+                <div class="column"><.cmd_button cmd="BU007" classes="big regular" tabindex="0" fluid>24</.cmd_button></div>
+                <div class="column"><.cmd_button cmd="BU008" classes="big regular" tabindex="0" fluid>28</.cmd_button></div>
               </div>
               <div class="row">
-                <div class="column"><.cmd_button cmd="BU010" classes="big regular" fluid>GEN</.cmd_button></div>
+                <div class="column"><.cmd_button cmd="BU010" classes="big regular" tabindex="0" fluid>GEN</.cmd_button></div>
                 <div class="column"></div>
-                <div class="column"><.cmd_button cmd="BU009" classes="big regular" fluid>50</.cmd_button></div>
+                <div class="column"><.cmd_button cmd="BU009" classes="big regular" tabindex="0" fluid>50</.cmd_button></div>
               </div>
             </div>
 
@@ -474,6 +474,7 @@ defmodule Open890Web.Components.Buttons do
     """
   end
 
+  # attr :tabindex, :number, required: false, default: 0
   def cmd_button(assigns) do
     fluid_class =
       assigns

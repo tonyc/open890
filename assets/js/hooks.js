@@ -91,6 +91,9 @@ let Hooks = {
           this.pushEvent("direct_frequency_entry", {freq: this.freq})
         }
       })
+
+
+      this.freqInput.select()
     }
 
   },
