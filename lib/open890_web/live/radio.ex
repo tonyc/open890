@@ -15,11 +15,12 @@ defmodule Open890Web.Live.Radio do
     UserMarker
   }
 
-  alias Open890Web.Live.{BandButtonsComponent, RadioSocketState}
+  alias Open890Web.Live.RadioSocketState
 
   alias Open890Web.Components.{
     AtuIndicator,
     AudioScope,
+    BandButtonsComponent,
     BandScope,
     BusyTxIndicator,
     FineButton,
