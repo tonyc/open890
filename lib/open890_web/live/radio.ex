@@ -551,8 +551,12 @@ defmodule Open890Web.Live.Radio do
         socket
 
       "Enter" ->
-        Logger.warn("FIXME: direct frequency entry mode")
-        socket
+        if !socket.assigns.display_band_selector do
+          socket
+          |> assign(:display_band_selector, true)
+        else
+          socket
+        end
 
       _ ->
         socket
