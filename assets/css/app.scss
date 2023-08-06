@@ -1027,9 +1027,16 @@ svg#bandScope {
 #direct-frequency-entry-field {
   font-family: "Bebas Neue";
   font-size: 4rem;
-  padding: 1rem;
+  padding: 0;
+  padding-left: 0.5rem;
 
   &:hover {
     cursor: pointer;
+    border: 1px solid $kenwood-grey;
+    background-color: #efefef;
+  }
+
+  &:focus {
+    cursor: text;
   }
 }

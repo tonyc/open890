@@ -19,14 +19,22 @@
   <%= if @display_band_selector do %>
     <div class="ui active page top aligned page dimmer" _phx-click="dimmer_clicked">
       <div id="BandModal" class="ui active modal">
-        <div class="header centered">
-          <div class="column">
-            <h1 class="band-modal-header left floated">Direct Frequency Entry</h1>
-            <span id="BandModalClose" class="ui icon button" phx-click="toggle_band_selector">
-              <i class="close icon"></i>
-            </span>
+
+        <div class="header">
+          <div class="ui grid">
+            <div class="row">
+              <div class="twelve wide column">
+                <h1 class="band-modal-header">Direct Frequency Entry</h1>
+              </div>
+              <div class="four wide right aligned column">
+                <div id="BandModalClose" class="ui icon button" phx-click="toggle_band_selector">
+                  <i class="close icon"></i>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+
         <div class="content">
           <div class="ui padded grid">
 
@@ -41,7 +49,7 @@
                       </div>
                     </div>
 
-                    <div class="column">
+                    <div class="middle aligned column">
                       <div class="ui input">
                         <button id="direct-frequency-entry-submit" class="ui big secondary button" type="button">ENT</button>
                       </div>
@@ -60,13 +68,6 @@
                 <.band_buttons />
               </div>
             </div>
-
-            <div class="ui divider" />
-
-            <div class="row">
-            </div>
-          
-
           </div>
 
 
