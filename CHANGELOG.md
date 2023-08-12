@@ -2,6 +2,7 @@
 
 ## Unreleased
 * Fixed the inability to use the RF power slider
+* Disabled a setting which caused excessive log statements in the browser console.
 
 ## 1.0.6 - 2023-08-10
 * [DEV] Upgraded to Phoenix 1.7.7, Phoenix LiveView 0.19.5
