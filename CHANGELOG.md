@@ -1,6 +1,9 @@
 # open890 Changelog
 
 ## Unreleased
+* Fixed the inability to use the RF power slider
+
+## 1.0.6 - 2023-08-10
 * [DEV] Upgraded to Phoenix 1.7.7, Phoenix LiveView 0.19.5
 * Added direct frequency entry. Type "Enter" on your keyboard, or click the main VFO to open the band select dialog. Type your frequency and hit "Enter" again, or click ENT.
 * Reworked the UI layout of the band select/direct frequency entry pop-up.
