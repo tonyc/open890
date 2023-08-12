@@ -1,6 +1,15 @@
 defmodule Open890Web.Components.Slider do
   use Phoenix.Component
 
+  attr :click, :string, required: false
+  attr :enabled, :boolean, default: true
+  attr :id, :string, required: true
+  attr :label, :string, required: true
+  attr :max_value, :integer, required: false
+  attr :padded_top_value, :integer, required: false
+  attr :value, :any, required: true
+  attr :wheel, :string, required: false
+
   def slider(assigns) do
     labeled = !is_nil(assigns[:label]) && assigns[:label] != ""
     max_value = Map.get(assigns, :max_value, 255)
@@ -15,7 +24,7 @@ defmodule Open890Web.Components.Slider do
         <%= if @labeled do %>
           <span class="label"><%= @label %></span>
         <% end %>
-        <div class={wrapper_class(assigns)} phx-hook="Slider" data-click-action={@click} data-wheel-action={@wheel} id={id_for(@label)}
+        <div class={wrapper_class(assigns)} phx-hook="Slider" data-click-action={@click} data-wheel-action={@wheel} id={@id || id_for(@label)}
           data-enabled={enabled_state(assigns)}>
           <div class="indicator" style={style_attr(@value, @max_value)}></div>
         </div>
