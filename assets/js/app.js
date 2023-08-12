@@ -23,6 +23,7 @@ let liveSocket = new LiveSocket("/live", Socket, {
     }
   }
 })
+liveSocket.disableDebug()
 liveSocket.connect()
 
 //let audioScopeChannel = socket.channel("radio:audio_scope", {})
