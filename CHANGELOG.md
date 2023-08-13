@@ -2,6 +2,7 @@
 
 ## Unreleased
 * Fixed the inability to use the RF power slider
+* Improved direct frequency entry when typing e.g. "14.2" or ".830"
 * Disabled a setting which caused excessive log statements in the browser console.
 
 ## 1.0.6 - 2023-08-10
