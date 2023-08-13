@@ -7,4 +7,7 @@ defmodule Open890.KeyboardEntryState do
 
   defmodule ClearMarkers do
   end
+
+  defmodule DirectFrequencyEntry do
+  end
 end

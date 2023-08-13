@@ -23,7 +23,8 @@ defmodule Open890.FrequencyEntryParser do
       ["" = _mhz | [khz] = _rest] ->
         pad_mhz_khz("0", khz)
 
-      [mhz | [khz]] ->
+      [mhz | rest] ->
+        khz = rest |> Enum.join()
         pad_mhz_khz(mhz, khz)
     end
   end

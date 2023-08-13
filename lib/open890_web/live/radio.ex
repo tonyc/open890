@@ -251,7 +251,12 @@ defmodule Open890Web.Live.Radio do
   end
 
   def handle_event("toggle_band_selector", _params, socket) do
-    socket = assign(socket, :display_band_selector, !socket.assigns.display_band_selector)
+    socket = if socket.assigns.display_band_selector do
+      close_modals(socket)
+    else
+      open_band_selector(socket)
+    end
+
     {:noreply, socket}
   end
 
@@ -319,8 +324,6 @@ defmodule Open890Web.Live.Radio do
 
   def handle_event("window_keyup", %{"key" => key} = params, socket) do
     Logger.debug("live/radio.ex: window_keyup: #{inspect(params)}")
-    Logger.info("KeyboardEntryState: #{socket.assigns.keyboard_entry_state}")
-
     socket = handle_keyboard_state(socket.assigns.keyboard_entry_state, key, socket)
 
     {:noreply, socket}
@@ -473,7 +476,18 @@ defmodule Open890Web.Live.Radio do
   end
 
   defp close_modals(socket) do
-    socket |> assign(display_band_selector: false, display_screen_id: 0)
+    socket
+    |> assign(%{
+      display_band_selector: false,
+      keyboard_entry_state: KeyboardEntryState.Normal,
+      display_screen_id: 0
+    })
+  end
+
+  defp open_band_selector(socket) do
+    socket
+    |> assign(:keyboard_entry_state, KeyboardEntryState.DirectFrequencyEntry)
+    |> assign(:display_band_selector, true)
   end
 
   def radio_classes(debug \\ false) do
@@ -508,6 +522,11 @@ defmodule Open890Web.Live.Radio do
     else
       "ui tabs hidden"
     end
+  end
+
+  defp handle_keyboard_state(KeyboardEntryState.DirectFrequencyEntry, _key, socket) do
+    # FIXME: handle ESC here to close the modal?
+    socket
   end
 
   defp handle_keyboard_state(KeyboardEntryState.Normal, key, socket) do
@@ -552,12 +571,7 @@ defmodule Open890Web.Live.Radio do
         socket
 
       "Enter" ->
-        if !socket.assigns.display_band_selector do
-          socket
-          |> assign(:display_band_selector, true)
-        else
-          socket
-        end
+        open_band_selector(socket)
 
       _ ->
         socket
