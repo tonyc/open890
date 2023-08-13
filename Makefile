@@ -48,3 +48,9 @@ build_docker:
 
 docker: build_docker
 		docker run -p 4000:4000 -it --rm open890:latest
+
+release:
+	export PHX_SECRET=$(mix phx.gen.secret); \
+	yarn install --cwd assets
+	mix assets.deploy
+	MIX_ENV=prod mix release
