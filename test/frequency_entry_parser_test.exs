@@ -40,5 +40,22 @@ defmodule Open890.FrequencyEntryParserTest do
     test "parses frequency over 10 mhz with too many digits" do
       assert Parser.parse("12345678912355") == "00012345678"
     end
+
+    test "parses frequency over 10 mhz with decimal point" do
+      assert Parser.parse("14.2") == "00014200000"
+      assert Parser.parse("14.234") == "00014234000"
+      assert Parser.parse("50.") == "00050000000"
+    end
+
+    test "parses frequency under 10 mhz with decimal point" do
+      assert Parser.parse("3.9")     == "00003900000"
+      assert Parser.parse("3.916")   == "00003916000"
+      assert Parser.parse("03.916")  == "00003916000"
+      assert Parser.parse("3.")      == "00003000000"
+    end
+
+    test "parses leading decimal as khz" do
+      assert Parser.parse(".830")    == "00000830000"
+    end
   end
 end
