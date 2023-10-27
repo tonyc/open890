@@ -81,6 +81,7 @@ defmodule Open890.RadioState do
             temp_meter: 0,
             transverter_state: %TransverterState{},
             tuner_state: %TunerState{},
+            tf_set_enabled: false,
             tx_state: :off,
             vd_meter: 0,
             vfo_a_frequency: nil,
@@ -131,6 +132,22 @@ defmodule Open890.RadioState do
   extract "SQ", :squelch
   extract "TB", :split_enabled
   extract "XT", :xit_enabled, as: :boolean
+
+  def swap_a_b(state) do
+    if state.active_receiver == :a do
+      state |> dispatch("FR1")
+    else
+      state |> dispatch("FR0")
+    end
+  end
+
+  def dispatch(%__MODULE__{} = state, "TS" <> _ = msg) do
+    tf_set_enabled = Extract.boolean(msg)
+
+    state = swap_a_b(state)
+
+    %{state | tf_set_enabled: tf_set_enabled}
+  end
 
   def dispatch(%__MODULE__{} = state, "MV" <> _ = msg) do
     # FIXME: somehow we need to always query the operating mode, because the radio does not always send the mode

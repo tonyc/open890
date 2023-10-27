@@ -49,6 +49,7 @@ defmodule Open890.ConnectionCommands do
     |> get_nb_states()
     |> get_squelch()
     |> get_split()
+    |> get_tf_set()
     |> get_apf_state()
     |> get_voip_available()
     |> get_voip_state()
@@ -91,6 +92,7 @@ defmodule Open890.ConnectionCommands do
   def stop_voip(conn), do: conn |> cmd("##VP0")
   def get_apf_state(conn), do: conn |> cmd("AP0")
   def get_split(conn), do: conn |> cmd("TB")
+  def get_tf_set(conn), do: conn |> cmd("TS")
 
   def get_squelch(conn) do
     conn
