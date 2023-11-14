@@ -1,5 +1,8 @@
 # open890 Changelog
 
+## Unreleased
+* Corrected A/B VFO tracking during TF SET
+
 ## 1.0.7 - 2023-08-13
 * Fixed the inability to use the RF power slider
 * Improved direct frequency entry when typing e.g. "14.2" or ".830"
