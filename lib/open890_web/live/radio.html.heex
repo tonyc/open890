@@ -204,11 +204,14 @@
             <%= @radio_state.cw_key_speed %>WPM
           <% else %>
 
+            <.proc_button enabled={@radio_state.proc_enabled} />
+
+
             <%= if @radio_state.proc_enabled do %>
-              PROC OUT: <%= @radio_state.proc_output %>
+              <span>PROC OUT: <%= @radio_state.proc_output %></span>
             <% else %>
               <%= if @radio_state.mic_gain do %>
-                MIC: <%= @radio_state.mic_gain %>
+                <span>MIC: <%= @radio_state.mic_gain %></span>
               <% end %>
             <% end %>
           <% end %>

@@ -5,6 +5,18 @@ defmodule Open890Web.Components.Buttons do
   import Open890Web.RadioViewHelpers
   alias Open890.{AntennaState, TransverterState, TunerState}
 
+  def proc_button(assigns) do
+    ~H"""
+      <span class="indicator">
+        <%= if @enabled do %>
+          <.cmd_button cmd="PR00" classes="mini proc_button enabled">PROC ON</.cmd_button>
+        <% else %>
+          <.cmd_button cmd="PR01" classes="mini inverted secondary proc_button">PROC OFF</.cmd_button>
+        <% end %>
+      </span>
+    """
+  end
+
   def ant_1_2_button(assigns) do
     %AntennaState{} = ant_state = assigns.value
 
