@@ -154,7 +154,11 @@ defmodule Open890.RadioState do
   def dispatch(%__MODULE__{} = state, "TS" <> _ = msg) do
     tf_set_enabled = Extract.boolean(msg)
 
-    state = swap_a_b(state)
+    state = if tf_set_enabled do
+      swap_a_b(state)
+    else
+      state
+    end
 
     %{state | tf_set_enabled: tf_set_enabled}
   end
