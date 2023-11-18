@@ -1,6 +1,7 @@
 # open890 Changelog
 
 ## Unreleased
+* Added PROC toggle, track speech processor input/output levels.
 * Corrected A/B VFO tracking during TF SET
 
 ## 1.0.7 - 2023-08-13
