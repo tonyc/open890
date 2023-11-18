@@ -2,7 +2,8 @@
 
 ## Unreleased
 * Added PROC toggle, track speech processor input/output levels.
-* Corrected A/B VFO tracking during TF SET
+* Corrected A/B VFO tracking during TF SET.
+* Fixed waterfall scrolling while in CENTER mode with RIT enabled.
 
 ## 1.0.7 - 2023-08-13
 * Fixed the inability to use the RF power slider
