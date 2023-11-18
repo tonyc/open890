@@ -56,6 +56,7 @@ defmodule Open890.ConnectionCommands do
     |> get_rit_xit()
     |> get_lock()
     |> get_mhz()
+    |> get_proc_enabled()
   end
 
   def get_busy_led_state(conn), do: conn |> cmd("BY")
@@ -93,6 +94,7 @@ defmodule Open890.ConnectionCommands do
   def get_apf_state(conn), do: conn |> cmd("AP0")
   def get_split(conn), do: conn |> cmd("TB")
   def get_tf_set(conn), do: conn |> cmd("TS")
+  def get_proc_enabled(conn), do: conn |> cmd("PR")
 
   def get_squelch(conn) do
     conn

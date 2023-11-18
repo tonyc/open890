@@ -66,6 +66,9 @@ defmodule Open890.RadioState do
             notch_state: %NotchState{},
             nr: nil,
             power_level: nil,
+            proc_enabled: false,
+            proc_input: 0,
+            proc_output: 0,
             projected_active_receiver_location: "",
             ref_level: 40,
             rf_att: 0,
@@ -117,6 +120,7 @@ defmodule Open890.RadioState do
   extract "NR", :nr
   extract "PA", :rf_pre
   extract "PC", :power_level
+  extract "PR", :proc_enabled, as: :boolean
   extract "RA", :rf_att
   extract "RF", :rit_xit_offset
   extract "RG", :rf_gain
@@ -133,12 +137,18 @@ defmodule Open890.RadioState do
   extract "TB", :split_enabled
   extract "XT", :xit_enabled, as: :boolean
 
-  def swap_a_b(state) do
+  defp swap_a_b(state) do
     if state.active_receiver == :a do
       state |> dispatch("FR1")
     else
       state |> dispatch("FR0")
     end
+  end
+
+  def dispatch(%__MODULE__{} = state, "PL" <> _ = msg) do
+    {proc_input, proc_output} = Extract.proc_levels(msg)
+
+    %{state | proc_input: proc_input, proc_output: proc_output}
   end
 
   def dispatch(%__MODULE__{} = state, "TS" <> _ = msg) do

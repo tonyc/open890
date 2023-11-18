@@ -430,6 +430,15 @@ defmodule Open890.Extract do
     str |> trim_to_integer(["RM1"])
   end
 
+  def proc_levels(str) when is_binary(str) do
+    levels = str |> String.trim_leading("PL")
+
+    proc_input = levels |> String.slice(0, 3)
+    proc_output = levels |> String.slice(3, 3)
+
+    {proc_input, proc_output}
+  end
+
   def swr_meter(str) when is_binary(str) do
     str |> trim_to_integer(["RM2"])
   end
