@@ -427,7 +427,15 @@ defmodule Open890.RadioState do
     state = %{state | vfo_a_frequency: frequency}
 
     previous_active_frequency = effective_active_frequency(state) || 0
+
+    # TC - possibly need to subtract the RIT offset if enabled?
     delta = frequency - previous_active_frequency
+
+    delta = if state.rit_enabled do
+      delta + state.rit_xit_offset
+    else
+      delta
+    end
 
     state =
       if state.active_receiver == :a do
@@ -458,7 +466,12 @@ defmodule Open890.RadioState do
 
     previous_active_frequency = effective_active_frequency(state) || 0
     delta = frequency - previous_active_frequency
-    # delta = (frequency + delta?) - previous_active_frequency
+
+    delta = if state.rit_enabled do
+      delta + state.rit_xit_offset
+    else
+      delta
+    end
 
     state =
       if state.active_receiver == :b do

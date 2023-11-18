@@ -481,7 +481,7 @@ let Hooks = {
       })
 
       this.handleEvent("freq_delta", (event) => {
-        //console.log("freq_delta", event)
+        // console.log("freq_delta", event)
         // interpolate delta event.bs.low ... event.bs.high to the scope size
         this.draw = false
 
