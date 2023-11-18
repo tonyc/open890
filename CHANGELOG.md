@@ -1,6 +1,6 @@
 # open890 Changelog
 
-## Unreleased
+## 1.0.8 - 2023-11-18
 * Added PROC toggle, track speech processor input/output levels.
 * Corrected A/B VFO tracking during TF SET.
 * Fixed waterfall scrolling while in CENTER mode with RIT enabled.
