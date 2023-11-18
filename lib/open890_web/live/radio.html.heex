@@ -203,8 +203,13 @@
           <%= if RadioState.effective_active_mode(@radio_state) in [:cw, :cw_r] && @radio_state.cw_key_speed do %>
             <%= @radio_state.cw_key_speed %>WPM
           <% else %>
-            <%= if @radio_state.mic_gain do %>
-              MIC: <%= @radio_state.mic_gain %>
+
+            <%= if @radio_state.proc_enabled do %>
+              PROC OUT: <%= @radio_state.proc_output %>
+            <% else %>
+              <%= if @radio_state.mic_gain do %>
+                MIC: <%= @radio_state.mic_gain %>
+              <% end %>
             <% end %>
           <% end %>
         </div>

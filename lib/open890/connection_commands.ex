@@ -56,6 +56,7 @@ defmodule Open890.ConnectionCommands do
     |> get_rit_xit()
     |> get_lock()
     |> get_mhz()
+    |> get_proc_levels()
     |> get_proc_enabled()
   end
 
@@ -95,6 +96,7 @@ defmodule Open890.ConnectionCommands do
   def get_split(conn), do: conn |> cmd("TB")
   def get_tf_set(conn), do: conn |> cmd("TS")
   def get_proc_enabled(conn), do: conn |> cmd("PR")
+  def get_proc_levels(conn), do: conn |> cmd("PL")
 
   def get_squelch(conn) do
     conn
