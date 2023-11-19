@@ -89,6 +89,8 @@ This is due to open890's client-server architecture, and it needs permission to 
 
 ### Mac OS
 
+Binary builds for Apple Silicon are available. Intel binaries are unfortunately not available as I do not have access to an Intel Mac anymore to test and support.
+
 [Homebrew](https://brew.sh/) and openSSL 1.1 are required to run binary releases on MacOS. 
 Once you have homebrew installed and working properly, run:
 
