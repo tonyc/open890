@@ -89,8 +89,14 @@ This is due to open890's client-server architecture, and it needs permission to 
 
 ### Mac OS
 
+[Homebrew](https://brew.sh/) and openSSL 1.1 are required to run binary releases on MacOS. 
+Once you have homebrew installed and working properly, run:
 
-MacOS users will need to enable the "Allow applications from any developer" security feature as described below:
+```
+brew install openssl@1.1
+```
+
+Users will need to enable the "Allow applications from any developer" security feature as described below:
 
 #### Mac OS 13 (Ventura) and later:
 
