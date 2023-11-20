@@ -49,7 +49,6 @@ defmodule Open890.ConnectionCommands do
     |> get_nb_states()
     |> get_squelch()
     |> get_split()
-    |> get_tf_set()
     |> get_apf_state()
     |> get_voip_available()
     |> get_voip_state()
