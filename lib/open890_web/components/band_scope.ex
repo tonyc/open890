@@ -109,6 +109,8 @@ defmodule Open890Web.Components.BandScope do
 
               <%= if @tf_set_enabled do %>
 
+                <.tf_set_line frequency={@effective_inactive_frequency} band_scope_edges={@band_scope_edges} />
+
                 <%= if @active_mode == :center do %>
                   <.passband_polygon
                     mode={@active_mode}
@@ -417,6 +419,17 @@ defmodule Open890Web.Components.BandScope do
   end
 
   def project_to_bandscope_limits(_, _), do: 0
+
+  def tf_set_line(%{frequency: frequency, band_scope_edges: band_scope_edges} = assigns) do
+    loc = project_to_bandscope_limits(frequency, band_scope_edges)
+
+    assigns = assign(assigns, loc: loc)
+
+    ~H"""
+      <line class="carrier tf-set" x1={@loc} y1={0} x2={@loc} y2={150} />
+    """
+
+  end
 
   def carrier_line(
         %{frequency: frequency, band_scope_edges: band_scope_edges, mode: mode} = assigns

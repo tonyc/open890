@@ -497,7 +497,12 @@ svg#bandScope {
     stroke: $kenwood-red;
     stroke-width: 0.5pt;
     stroke-dasharray: 0;
+  }
 
+  .carrier.tf-set {
+    stroke: rgba(180, 0, 180, 255);
+    stroke-width: 0.5pt;
+    stroke-dasharray: 0;
   }
 
   .triangle.rx {
