@@ -577,6 +577,7 @@
          effective_inactive_frequency={RadioState.effective_inactive_frequency(@radio_state)}
          rx_banner_frequency={RadioState.rx_banner_frequency(@radio_state)}
          tx_banner_frequency={RadioState.tx_banner_frequency(@radio_state)}
+         inactive_frequency={@radio_state.inactive_frequency}
 
          active_mode={RadioState.effective_active_mode(@radio_state)}
          filter_mode={RadioState.filter_mode(@radio_state)}
@@ -589,6 +590,9 @@
          filter_state={@radio_state.filter_state}
          split_enabled={@radio_state.split_enabled}
          tf_set_enabled={@radio_state.tf_set_enabled}
+         tf_set_marker_frequency={@radio_state.tf_set_marker_frequency}
+         xit_enabled={@radio_state.xit_enabled}
+         rit_xit_offset={@radio_state.rit_xit_offset}
          theme={@theme}
          draw_interval={@waterfall_draw_interval}
          spectrum_scale={@spectrum_scale}

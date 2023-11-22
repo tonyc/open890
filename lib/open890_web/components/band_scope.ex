@@ -15,14 +15,19 @@ defmodule Open890Web.Components.BandScope do
   attr :effective_inactive_frequency, :integer, required: true
   attr :filter_mode, :any, required: true
   attr :filter_state, FilterState, required: true
+  attr :inactive_frequency, :integer, required: true
   attr :lock_enabled, :boolean, required: true
   attr :markers, :list, required: true
   attr :rx_banner_frequency, :integer, required: true
   attr :spectrum_scale, :float, required: true
   attr :split_enabled, :boolean, required: true
   attr :tf_set_enabled, :boolean, required: true
+  attr :tf_set_marker_frequency, :integer, required: true
   attr :theme, :string, required: true
   attr :tx_banner_frequency, :integer, required: true
+  attr :xit_enabled, :boolean, required: true
+  attr :rit_xit_offset, :integer, required: true
+
   def bandscope(assigns) do
     ~H"""
       <div id="bandScopeWrapper" class="hover-pointer" data-spectrum-scale={@spectrum_scale}>
@@ -109,7 +114,10 @@ defmodule Open890Web.Components.BandScope do
 
               <%= if @tf_set_enabled do %>
 
-                <.tf_set_line frequency={@effective_inactive_frequency} band_scope_edges={@band_scope_edges} />
+                <.tf_set_line
+                  frequency={@tf_set_marker_frequency}
+                  band_scope_edges={@band_scope_edges}
+                />
 
                 <%= if @active_mode == :center do %>
                   <.passband_polygon

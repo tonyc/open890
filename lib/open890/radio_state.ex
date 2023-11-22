@@ -85,6 +85,7 @@ defmodule Open890.RadioState do
             transverter_state: %TransverterState{},
             tuner_state: %TunerState{},
             tf_set_enabled: false,
+            tf_set_marker_frequency: nil,
             tx_state: :off,
             vd_meter: 0,
             vfo_a_frequency: nil,
@@ -154,9 +155,26 @@ defmodule Open890.RadioState do
   def dispatch(%__MODULE__{} = state, "TS" <> _ = msg) do
     tf_set_enabled = Extract.boolean(msg)
 
-    state = swap_a_b(state)
+    # swap A/B if split is enabled
+    # otherwise, if XIT is enabled:
+    # if enabling:
+    #   effective_active_frequency = effective_inactive_frequency
+    # else:
+    #   subtract the offset from the active_frequency
 
-    %{state | tf_set_enabled: tf_set_enabled}
+    marker_frequency = if tf_set_enabled do
+      effective_active_frequency(state)
+    else
+      nil
+    end
+
+    state = if state.split_enabled do
+      swap_a_b(state)
+    else
+      state
+    end
+
+    %{state | tf_set_enabled: tf_set_enabled, tf_set_marker_frequency: marker_frequency}
   end
 
   def dispatch(%__MODULE__{} = state, "MV" <> _ = msg) do
@@ -809,7 +827,13 @@ defmodule Open890.RadioState do
   end
 
   def rx_banner_frequency(%__MODULE__{} = state) do
-    effective_active_frequency(state)
+    base_frequency = effective_active_frequency(state)
+
+    if state.tf_set_enabled && state.xit_enabled do
+      base_frequency + state.rit_xit_offset
+    else
+      base_frequency
+    end
   end
 
   def tx_banner_frequency(%__MODULE__{} = state) do
