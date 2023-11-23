@@ -1,5 +1,10 @@
 # open890 Changelog
 
+## Unreleased
+* Fixed PROC on/off state not correctly queried on startup
+* Further fixes to purple TF SET indicator (WIP)
+
+
 ## 1.0.8.1 - 2023-11-20
 * Fixed TF SET display
 * Added purple TF SET carrier indicator

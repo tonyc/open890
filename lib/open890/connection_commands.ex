@@ -94,7 +94,7 @@ defmodule Open890.ConnectionCommands do
   def get_apf_state(conn), do: conn |> cmd("AP0")
   def get_split(conn), do: conn |> cmd("TB")
   def get_tf_set(conn), do: conn |> cmd("TS")
-  def get_proc_enabled(conn), do: conn |> cmd("PR")
+  def get_proc_enabled(conn), do: conn |> cmd("PR0")
   def get_proc_levels(conn), do: conn |> cmd("PL")
 
   def get_squelch(conn) do
