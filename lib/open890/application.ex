@@ -59,7 +59,10 @@ defmodule Open890.Application do
   end
 
   def display_banner do
-    [host: host, port: port] = Application.get_env(:open890, Open890Web.Endpoint)[:url]
+    url_config = Application.get_env(:open890, Open890Web.Endpoint)[:url]
+
+    host = url_config[:host] || "localhost"
+    port = url_config[:port] || "4000"
 
     IO.puts("""
                            ___ ___  ___
