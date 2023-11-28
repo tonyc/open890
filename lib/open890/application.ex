@@ -59,6 +59,8 @@ defmodule Open890.Application do
   end
 
   def display_banner do
+    [host: host, port: port] = Application.get_env(:open890, Open890Web.Endpoint)[:url]
+
     IO.puts("""
                            ___ ___  ___
        ___  ___  ___ ___  ( _ ) _ \\/ _ \\
@@ -67,7 +69,10 @@ defmodule Open890.Application do
          /_/
 
       open890 is now running.
-      Access the web interface at http://localhost:4000
+      Access the web interface at http://#{host}:#{port}/
+
+      You can change the hostname and port by setting OPEN890_HOST
+      and OPEN890_PORT environment variables respectively.
     """)
   end
 end

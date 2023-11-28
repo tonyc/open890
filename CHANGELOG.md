@@ -1,6 +1,7 @@
 # open890 Changelog
 
 ## Unreleased
+* Updated startup message to explain how to control the server host and port through OPEN890_HOST and OPEN890_PORT
 * Fixed PROC on/off state not correctly queried on startup
 * Further fixes to purple TF SET indicator (WIP)
 
