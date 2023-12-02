@@ -32,6 +32,19 @@ defmodule Open890.RTP do
     end
   end
 
+  #def to_data(mod) do
+  #  << mod.version::size(2),
+  #   mod.padding::size(1),
+  #   mod.extension::size(1),
+  #   mod.csrc_count::size(4),
+  #   mod.marker::size(1),
+  #   mod.payload_type::size(7),
+  #   mod.sequence_number::size(16),
+  #   mod.timestamp::size(32),
+  #   mod.ssrc::size(32),
+  #   mod.payload::binary >>
+  #end
+
   def new(data) do
     with <<
            version::size(2),
