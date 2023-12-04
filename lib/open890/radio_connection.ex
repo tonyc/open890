@@ -233,6 +233,19 @@ defmodule Open890.RadioConnection do
     connection
   end
 
+  def send_mic_audio(%__MODULE__{} = connection, data) do
+    Logger.info("RadioConnection.send_mic_audio")
+    connection
+    |> get_connection_pid()
+    |> case do
+      {:ok, pid} ->
+        pid |> GenServer.cast({:send_audio, data})
+
+      _ ->
+        Logger.warn("Unable to send mic audio to #{connection.id} - pid not found. Is the connection up?")
+    end
+  end
+
   def cmd(%__MODULE__{} = connection, command) when is_binary(command) do
     connection
     |> get_connection_pid()

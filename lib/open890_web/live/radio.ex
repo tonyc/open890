@@ -470,6 +470,18 @@ defmodule Open890Web.Live.Radio do
     {:noreply, socket}
   end
 
+  def handle_event("mic_audio", params, socket) do
+    mic_data = params["data"]
+    |> String.split(" ")
+    |> Enum.map(&String.to_integer/1)
+
+    Logger.info("mic_audio, calling RadioConenction.send_mic_audio")
+    socket.assigns.radio_connection
+    |> RadioConnection.send_mic_audio(mic_data)
+
+    {:noreply, socket}
+  end
+
   def handle_event(event, params, socket) do
     Logger.warn("Live.Radio: Unknown event: #{event}, params: #{inspect(params)}")
     {:noreply, socket}

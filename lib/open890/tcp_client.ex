@@ -37,13 +37,17 @@ defmodule Open890.TCPClient do
       |> User.password(radio_password)
       |> User.is_admin(radio_user_is_admin)
 
+    {:ok, audio_tx_socket} = :gen_udp.open(9876)
+
     send(self(), :connect_socket)
 
     {:ok,
      %{
        connection: connection,
        kns_user: kns_user,
-       radio_state: %RadioState{}
+       radio_state: %RadioState{},
+       audio_tx_socket: audio_tx_socket,
+       audio_tx_seq_num: 1
      }}
   end
 
@@ -57,6 +61,49 @@ defmodule Open890.TCPClient do
   def handle_cast({:send_command, cmd}, state) do
     state.socket |> send_command(cmd)
     {:noreply, state}
+  end
+
+  @impl true
+  def handle_cast({:send_audio, data}, %{audio_tx_socket: tx_socket, audio_tx_seq_num: seq}= state) do
+
+    # here we have 320 values of 16-bit signed
+    data = data |> Enum.map(fn x ->
+      x + 32768
+    end)
+
+    Enum.min(data) |> IO.inspect(label: "min_value")
+    Enum.max(data) |> IO.inspect(label: "max_value")
+    IO.puts("==")
+
+    data = data
+    |> Enum.reduce([], fn sample, acc ->
+      case :binary.encode_unsigned(sample) do
+        << high::8, low::8>> ->
+          Logger.info("got two values: #{inspect {high, low}}")
+          acc ++ [high, low]
+        << 0 >> ->
+          Logger.info("Got a zero")
+          acc ++ [0, 0]
+        other ->
+          Logger.warn("Unknown encoding: #{inspect other}")
+          acc
+      end
+      # <<high::8, low::8>> = :binary.encode_unsigned(sample)
+      # acc ++ [high, low]
+    end)
+
+    Enum.count(data) |> IO.inspect(label: "data length")
+    data = :binary.list_to_bin(data)
+
+    # |> IO.inspect(label: "data")
+
+
+    packet = Open890.VOIP.make_packet(seq, data)
+    |> IO.inspect(label: "packet")
+
+    :gen_udp.send(tx_socket, {192,168,1,106}, 60001, packet)
+
+    {:noreply, %{state | audio_tx_seq_num: seq + 1}}
   end
 
   def handle_info({:tcp, _socket, _msg}, {:noreply, state}) do
