@@ -394,6 +394,15 @@ nav {
 
 }
 
+.proc_button {
+  width: 6rem;
+  text-align: center;
+  &.enabled {
+    color: black !important;
+    background-color: white !important;
+  }
+}
+
 .rit_button, .xit_button {
   width: 4rem;
 
@@ -488,7 +497,12 @@ svg#bandScope {
     stroke: $kenwood-red;
     stroke-width: 0.5pt;
     stroke-dasharray: 0;
+  }
 
+  .carrier.tf-set {
+    stroke: rgba(180, 0, 180, 255);
+    stroke-width: 0.5pt;
+    stroke-dasharray: 0;
   }
 
   .triangle.rx {

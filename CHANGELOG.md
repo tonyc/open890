@@ -1,6 +1,21 @@
 # open890 Changelog
 
 ## Unreleased
+* Updated startup message to explain how to control the server host and port through OPEN890_HOST and OPEN890_PORT
+* Fixed PROC on/off state not correctly queried on startup
+* Further fixes to purple TF SET indicator (WIP)
+
+
+## 1.0.8.1 - 2023-11-20
+* Fixed TF SET display
+* Added purple TF SET carrier indicator
+
+## 1.0.8 - 2023-11-18
+* Added PROC toggle, track speech processor input/output levels.
+* Corrected A/B VFO tracking during TF SET.
+* Fixed waterfall scrolling while in CENTER mode with RIT enabled.
+
+## 1.0.7 - 2023-08-13
 * Fixed the inability to use the RF power slider
 * Improved direct frequency entry when typing e.g. "14.2" or ".830"
 * Disabled a setting which caused excessive log statements in the browser console.

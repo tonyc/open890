@@ -66,6 +66,9 @@ defmodule Open890.RadioState do
             notch_state: %NotchState{},
             nr: nil,
             power_level: nil,
+            proc_enabled: false,
+            proc_input: 0,
+            proc_output: 0,
             projected_active_receiver_location: "",
             ref_level: 40,
             rf_att: 0,
@@ -81,6 +84,8 @@ defmodule Open890.RadioState do
             temp_meter: 0,
             transverter_state: %TransverterState{},
             tuner_state: %TunerState{},
+            tf_set_enabled: false,
+            tf_set_marker_frequency: nil,
             tx_state: :off,
             vd_meter: 0,
             vfo_a_frequency: nil,
@@ -116,6 +121,7 @@ defmodule Open890.RadioState do
   extract "NR", :nr
   extract "PA", :rf_pre
   extract "PC", :power_level
+  extract "PR", :proc_enabled, as: :boolean
   extract "RA", :rf_att
   extract "RF", :rit_xit_offset
   extract "RG", :rf_gain
@@ -131,6 +137,45 @@ defmodule Open890.RadioState do
   extract "SQ", :squelch
   extract "TB", :split_enabled
   extract "XT", :xit_enabled, as: :boolean
+
+  defp swap_a_b(state) do
+    if state.active_receiver == :a do
+      state |> dispatch("FR1")
+    else
+      state |> dispatch("FR0")
+    end
+  end
+
+  def dispatch(%__MODULE__{} = state, "PL" <> _ = msg) do
+    {proc_input, proc_output} = Extract.proc_levels(msg)
+
+    %{state | proc_input: proc_input, proc_output: proc_output}
+  end
+
+  def dispatch(%__MODULE__{} = state, "TS" <> _ = msg) do
+    tf_set_enabled = Extract.boolean(msg)
+
+    # swap A/B if split is enabled
+    # otherwise, if XIT is enabled:
+    # if enabling:
+    #   effective_active_frequency = effective_inactive_frequency
+    # else:
+    #   subtract the offset from the active_frequency
+
+    marker_frequency = if tf_set_enabled do
+      effective_active_frequency(state)
+    else
+      nil
+    end
+
+    state = if state.split_enabled do
+      swap_a_b(state)
+    else
+      state
+    end
+
+    %{state | tf_set_enabled: tf_set_enabled, tf_set_marker_frequency: marker_frequency}
+  end
 
   def dispatch(%__MODULE__{} = state, "MV" <> _ = msg) do
     # FIXME: somehow we need to always query the operating mode, because the radio does not always send the mode
@@ -396,7 +441,15 @@ defmodule Open890.RadioState do
     state = %{state | vfo_a_frequency: frequency}
 
     previous_active_frequency = effective_active_frequency(state) || 0
+
+    # TC - possibly need to subtract the RIT offset if enabled?
     delta = frequency - previous_active_frequency
+
+    delta = if state.rit_enabled do
+      delta + state.rit_xit_offset
+    else
+      delta
+    end
 
     state =
       if state.active_receiver == :a do
@@ -427,7 +480,12 @@ defmodule Open890.RadioState do
 
     previous_active_frequency = effective_active_frequency(state) || 0
     delta = frequency - previous_active_frequency
-    # delta = (frequency + delta?) - previous_active_frequency
+
+    delta = if state.rit_enabled do
+      delta + state.rit_xit_offset
+    else
+      delta
+    end
 
     state =
       if state.active_receiver == :b do
@@ -769,7 +827,13 @@ defmodule Open890.RadioState do
   end
 
   def rx_banner_frequency(%__MODULE__{} = state) do
-    effective_active_frequency(state)
+    base_frequency = effective_active_frequency(state)
+
+    if state.tf_set_enabled && state.xit_enabled do
+      base_frequency + state.rit_xit_offset
+    else
+      base_frequency
+    end
   end
 
   def tx_banner_frequency(%__MODULE__{} = state) do

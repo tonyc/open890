@@ -67,68 +67,68 @@ jobs:
             ./open890
           outPath: /tmp/open890-${{ steps.vars.outputs.TAG }}-ubuntu-x64.tar.gz
 
-  build-macos:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          ref: ${{ github.head_ref }}
-      - name: Set output
-        id: vars
-        run: |
-          echo "TAG=${GITHUB_REF##*/}" >> $GITHUB_OUTPUT
-          cat $GITHUB_OUTPUT
-      - name: Install asdf via homebrew
-        run: |
-          brew install asdf coreutils automake autoconf libyaml readline libxslt libtool
-          brew install openssl@1.1
-          mkdir -p ~/.asdf/installs/erlang
-      - name: Show openssl prefix
-        run: |
-          brew --prefix openssl@1.1
-      - name: Action-cache asdf erlang build
-        uses: actions/cache@v3
-        with:
-          path: ~/.asdf/installs/erlang
-          key: ${{ runner.os }}-${{ hashFiles('.tool-versions') }}
-      - name: Install OTP and Elixir via asdf
-        env:
-          KERL_CONFIGURE_OPTIONS: "--disable-dynamic-ssl-lib --without-javac --with-ssl=/usr/local/opt/openssl@1.1"
-        run: |
-          make install_tools
-          asdf reshim erlang
-      - name: Install Dependencies
-        if: steps.mix-cache.outputs.cache-hit != 'true'
-        run: |
-          export PATH=~/.asdf/shims:$PATH
-          mix local.rebar --force
-          mix local.hex --force
-          mix deps.get
-      - name: Compile
-        run: |
-          export PATH=~/.asdf/shims:$PATH
-          mix compile
-      - name: Test
-        run: |
-          export PATH=~/.asdf/shims:$PATH
-          mix test
-        env:
-          MIX_ENV: test
-      - name: Compile Web Assets
-        run: |
-          export PATH=~/.asdf/shims:$PATH
-          yarn install --cwd assets
-          mix assets.deploy
-        env:
-          MIX_ENV: prod
-          SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
-      - name: mix release
-        run: |
-          export PATH=~/.asdf/shims:$PATH
-          mix release
-        env:
-          MIX_ENV: prod
-          SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
+  # build-macos:
+  #   runs-on: macos-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         ref: ${{ github.head_ref }}
+  #     - name: Set output
+  #       id: vars
+  #       run: |
+  #         echo "TAG=${GITHUB_REF##*/}" >> $GITHUB_OUTPUT
+  #         cat $GITHUB_OUTPUT
+  #     - name: Install asdf via homebrew
+  #       run: |
+  #         brew install asdf coreutils automake autoconf libyaml readline libxslt libtool
+  #         brew install openssl@1.1
+  #         mkdir -p ~/.asdf/installs/erlang
+  #     - name: Show openssl prefix
+  #       run: |
+  #         brew --prefix openssl@1.1
+  #     - name: Action-cache asdf erlang build
+  #       uses: actions/cache@v3
+  #       with:
+  #         path: ~/.asdf/installs/erlang
+  #         key: ${{ runner.os }}-${{ hashFiles('.tool-versions') }}
+  #     - name: Install OTP and Elixir via asdf
+  #       env:
+  #         KERL_CONFIGURE_OPTIONS: "--disable-dynamic-ssl-lib --without-javac --with-ssl=/usr/local/opt/openssl@1.1"
+  #       run: |
+  #         make install_tools
+  #         asdf reshim erlang
+  #     - name: Install Dependencies
+  #       if: steps.mix-cache.outputs.cache-hit != 'true'
+  #       run: |
+  #         export PATH=~/.asdf/shims:$PATH
+  #         mix local.rebar --force
+  #         mix local.hex --force
+  #         mix deps.get
+  #     - name: Compile
+  #       run: |
+  #         export PATH=~/.asdf/shims:$PATH
+  #         mix compile
+  #     - name: Test
+  #       run: |
+  #         export PATH=~/.asdf/shims:$PATH
+  #         mix test
+  #       env:
+  #         MIX_ENV: test
+  #     - name: Compile Web Assets
+  #       run: |
+  #         export PATH=~/.asdf/shims:$PATH
+  #         yarn install --cwd assets
+  #         mix assets.deploy
+  #       env:
+  #         MIX_ENV: prod
+  #         SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
+  #     - name: mix release
+  #       run: |
+  #         export PATH=~/.asdf/shims:$PATH
+  #         mix release
+  #       env:
+  #         MIX_ENV: prod
+  #         SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
 
   build-windows:
     runs-on: windows-latest

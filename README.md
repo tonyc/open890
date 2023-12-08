@@ -89,8 +89,16 @@ This is due to open890's client-server architecture, and it needs permission to 
 
 ### Mac OS
 
+Binary builds for Apple Silicon are available. Intel binaries are unfortunately not available as I do not have access to an Intel Mac anymore to test and support.
 
-MacOS users will need to enable the "Allow applications from any developer" security feature as described below:
+[Homebrew](https://brew.sh/) and openSSL 1.1 are required to run binary releases on MacOS. 
+Once you have homebrew installed and working properly, run:
+
+```
+brew install openssl@1.1
+```
+
+Users will need to enable the "Allow applications from any developer" security feature as described below:
 
 #### Mac OS 13 (Ventura) and later:
 
@@ -146,11 +154,13 @@ If all else fails, install from source.
 Binary builds are not available for Raspberry Pi due to CPU architecture differences. You will need to install from source (see above)
 in order to get open890 running on a RPi.
 
-## Network Safety/Security
+## Network Settings & Security
 
-open890 runs a web server on port `4000` and binds to `0.0.0.0` (all interfaces) on the machine it runs on. If this is not acceptable, please do not run open890.
+By default, open890 runs a web server on port `4000` and binds to `0.0.0.0` (all interfaces) on the machine it runs on.
 
-Please note that the web interface **is not secured with a password**, and it assumes that you will run it on a trusted network. This is equivalent to running a computer with ARCP-890 left running. Again, if you are not OK with this, please do not run open890.
+If you would like to change the default host and port that open890 is accessed via, you can set the `OPEN890_HOST` and `OPEN890_PORT` environment variables accordingly. This is most useful if you are accessing open890 from a separate machine than the one it is running on.
+
+Please note that the web interface **is not secured with a password**, and it assumes that you will run it on a trusted network. This is equivalent to running a computer with ARCP-890 left running.
 
 If you wish to require a basic password, edit `config/config.toml` (you may need to copy `example.config.toml` first), and uncomment or add the following section:
 

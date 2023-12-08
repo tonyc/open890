@@ -15,13 +15,19 @@ defmodule Open890Web.Components.BandScope do
   attr :effective_inactive_frequency, :integer, required: true
   attr :filter_mode, :any, required: true
   attr :filter_state, FilterState, required: true
+  attr :inactive_frequency, :integer, required: true
   attr :lock_enabled, :boolean, required: true
   attr :markers, :list, required: true
   attr :rx_banner_frequency, :integer, required: true
   attr :spectrum_scale, :float, required: true
   attr :split_enabled, :boolean, required: true
+  attr :tf_set_enabled, :boolean, required: true
+  attr :tf_set_marker_frequency, :integer, required: true
   attr :theme, :string, required: true
   attr :tx_banner_frequency, :integer, required: true
+  attr :xit_enabled, :boolean, required: true
+  attr :rit_xit_offset, :integer, required: true
+
   def bandscope(assigns) do
     ~H"""
       <div id="bandScopeWrapper" class="hover-pointer" data-spectrum-scale={@spectrum_scale}>
@@ -105,15 +111,48 @@ defmodule Open890Web.Components.BandScope do
 
           <g transform="translate(0 20)">
             <%= if @band_scope_edges && @filter_state && @active_mode do %>
-              <.passband_polygon
-                mode={@active_mode}
-                active_frequency={@rx_banner_frequency}
-                filter_mode={@filter_mode}
-                filter_state={@filter_state}
-                scope_edges={@band_scope_edges} />
 
-              <.carrier_line mode="tx" label="T" frequency={@tx_banner_frequency} band_scope_edges={@band_scope_edges} piggyback={!@split_enabled}/>
-              <.carrier_line mode="rx" label="R" frequency={@rx_banner_frequency} band_scope_edges={@band_scope_edges} split_enabled={@split_enabled} />
+              <%= if @tf_set_enabled do %>
+
+                <.tf_set_line
+                  frequency={@tf_set_marker_frequency}
+                  band_scope_edges={@band_scope_edges}
+                />
+
+                <%= if @active_mode == :center do %>
+                  <.passband_polygon
+                    mode={@active_mode}
+                    active_frequency={@rx_banner_frequency}
+                    filter_mode={@filter_mode}
+                    filter_state={@filter_state}
+                    scope_edges={@band_scope_edges} />
+
+                  <.carrier_line mode="tx" label="T" frequency={@rx_banner_frequency} band_scope_edges={@band_scope_edges} piggyback={true}/>
+                  <.carrier_line mode="rx" label="R" frequency={@rx_banner_frequency} band_scope_edges={@band_scope_edges} split_enabled={@split_enabled} />
+                <% else %>
+                  <.passband_polygon
+                    mode={@active_mode}
+                    active_frequency={@rx_banner_frequency}
+                    filter_mode={@filter_mode}
+                    filter_state={@filter_state}
+                    scope_edges={@band_scope_edges} />
+
+                  <.carrier_line mode="tx" label="T" frequency={@rx_banner_frequency} band_scope_edges={@band_scope_edges} piggyback={true}/>
+                  <.carrier_line mode="rx" label="R" frequency={@rx_banner_frequency} band_scope_edges={@band_scope_edges} split_enabled={@split_enabled} />
+                <% end %>
+              <% else %>
+
+                <.passband_polygon
+                  mode={@active_mode}
+                  active_frequency={@rx_banner_frequency}
+                  filter_mode={@filter_mode}
+                  filter_state={@filter_state}
+                  scope_edges={@band_scope_edges} />
+
+                <.carrier_line mode="tx" label="T" frequency={@tx_banner_frequency} band_scope_edges={@band_scope_edges} piggyback={!@split_enabled}/>
+                <.carrier_line mode="rx" label="R" frequency={@rx_banner_frequency} band_scope_edges={@band_scope_edges} split_enabled={@split_enabled} />
+
+              <% end %>
             <% end %>
 
             <rect id="bandscopeBackground" x="0" y="0" height="150" width="1280" pointer-events="visibleFill" phx-hook="BandScope" data-locked={@lock_enabled} />
@@ -388,6 +427,17 @@ defmodule Open890Web.Components.BandScope do
   end
 
   def project_to_bandscope_limits(_, _), do: 0
+
+  def tf_set_line(%{frequency: frequency, band_scope_edges: band_scope_edges} = assigns) do
+    loc = project_to_bandscope_limits(frequency, band_scope_edges)
+
+    assigns = assign(assigns, loc: loc)
+
+    ~H"""
+      <line class="carrier tf-set" x1={@loc} y1={0} x2={@loc} y2={150} />
+    """
+
+  end
 
   def carrier_line(
         %{frequency: frequency, band_scope_edges: band_scope_edges, mode: mode} = assigns
