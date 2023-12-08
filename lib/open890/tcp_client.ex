@@ -66,28 +66,31 @@ defmodule Open890.TCPClient do
   @impl true
   def handle_cast({:send_audio, data}, %{audio_tx_socket: tx_socket, audio_tx_seq_num: seq}= state) do
 
-    # here we have 320 values of 16-bit signed
-    # data = data |> Enum.map(fn x ->
-    #   x + 32768
-    # end)
+    # here we have 640 values of 16-bit signed
+    # data, from -32768 to 32767
 
-    # data = data
-    # |> Enum.reduce([], fn sample, acc ->
-    #   case :binary.encode_unsigned(sample) do
-    #     << high::8, low::8>> ->
-    #       Logger.info("got two values: #{inspect {high, low}}")
-    #       acc ++ [high, low]
-    #       # acc ++ [high, low]
-    #     << 0 >> ->
-    #       Logger.info("Got a zero")
-    #       acc ++ [0, 0]
-    #     other ->
-    #       Logger.warn("Unknown encoding: #{inspect other}")
-    #       acc
-    #   end
-    #   # <<high::8, low::8>> = :binary.encode_unsigned(sample)
-    #   # acc ++ [high, low]
-    # end)
+    data = data |> Enum.map(fn x ->
+      x = x + 32768 # offset to zero
+      # x = div(x, 256)
+    end)
+
+    data = data
+    |> Enum.reduce([], fn sample, acc ->
+      case :binary.encode_unsigned(sample) do
+        << high::8, low::8>> ->
+          Logger.info("got two values: #{inspect {high, low}}")
+          acc ++ [high, low]
+          # acc ++ [high, low]
+        << 0 >> ->
+          Logger.info("Got a zero")
+          acc ++ [0, 0]
+        other ->
+          Logger.warn("Unknown encoding: #{inspect other}")
+          acc
+      end
+      # <<high::8, low::8>> = :binary.encode_unsigned(sample)
+      # acc ++ [high, low]
+    end)
 
     Enum.count(data) |> IO.inspect(label: "data length")
     data_bin = :binary.list_to_bin(data)

@@ -17,17 +17,7 @@ let Hooks = {
             case 'process':
               const inputData = e.data.inputFrame;
               console.log(inputData.join(" "))
-
-              // const shiftedData = e.data.inputFrame.map((x) => {
-                // return (((x + 32767) / 65536) * 255)
-                // x = x + 32768
-                // x = Math.floor(x / 256.0)
-                // return (((x + 32768) / 65535) * 256)
-              // })
-
-              const shiftedData = inputData
-
-              me.pushEvent("mic_audio", {data: shiftedData.join(" ")})
+              me.pushEvent("mic_audio", {data: inputData.join(" ")})
               break;
           }
         }
@@ -74,6 +64,7 @@ let Hooks = {
         })
 
       this.audioStreamChannel.on("audio_data", (data) => {
+        console.log("audio_data")
         if (this.player) {
           let buff = new Uint8Array(data.payload);
           this.player.feed(buff)
