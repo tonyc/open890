@@ -395,7 +395,13 @@
                 <.ant_1_2_button value={@radio_state.antenna_state} fluid />
               </div>
               <div class="column">
+                <.tx_tune_button value={@radio_state.tx_state} fluid />
+              </div>
+              <div class="column">
                 <.send_button value={@radio_state.tx_state} fluid />
+              </div>
+              <div class="column">
+                <.rx_button fluid />
               </div>
             </div>
 

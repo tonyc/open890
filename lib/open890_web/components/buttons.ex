@@ -93,6 +93,26 @@ defmodule Open890Web.Components.Buttons do
     """
   end
 
+  def tx_tune_button(assigns) do
+    cmd =
+      case assigns.value do
+        :off -> "TX2"
+        _ -> "RX"
+      end
+
+    assigns = assign(assigns, :cmd, cmd)
+
+    ~H"""
+      <.cmd_button cmd={@cmd} fluid={assigns[:fluid]}>TX TUNE</.cmd_button>
+    """
+  end
+
+  def rx_button(assigns) do
+    ~H"""
+      <.cmd_button cmd="RX" fluid={assigns[:fluid]}>RX</.cmd_button>
+    """
+  end
+
   def atu_tune_button(assigns) do
     %TunerState{} = tuner_state = assigns.value
 
