@@ -75,9 +75,9 @@ defmodule Open890.UDPAudioServer do
         payload = :binary.bin_to_list(payload)
         # Logger.info("payload: #{inspect payload}")
 
-        Open890Web.Endpoint.broadcast("radio:audio_stream", "audio_data", %{
-          payload: payload
-        })
+        # Open890Web.Endpoint.broadcast("radio:audio_stream", "audio_data", %{
+        #   payload: payload
+        # })
 
         seq_num = state.tx_seq_num
         # packet = Open890.VOIP.make_packet(seq_num, payload)

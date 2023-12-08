@@ -19,11 +19,10 @@ let Hooks = {
               console.log(inputData.join(" "))
 
               // const shiftedData = e.data.inputFrame.map((x) => {
-              //   // return (((x + 32767) / 65536) * 255)
-              //   x = x + 32768
-              //   x = Math.floor(x / 256.0)
-              //   return x
-              //   return (((x + 32767) / 65536) * 255)
+                // return (((x + 32767) / 65536) * 255)
+                // x = x + 32768
+                // x = Math.floor(x / 256.0)
+                // return (((x + 32768) / 65535) * 256)
               // })
 
               const shiftedData = inputData
@@ -39,7 +38,7 @@ let Hooks = {
         console.log("start clicked")
 
         WebVoiceProcessor.setOptions({
-          frameLength: 320,
+          frameLength: 640,
           outputSampleRate: 16000,
         })
 
