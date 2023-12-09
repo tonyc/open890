@@ -103,11 +103,14 @@ defmodule Open890.TCPClient do
     packet = Open890.VOIP.make_packet(seq, data_bin)
     |> IO.inspect(label: "packet")
 
-    # :gen_udp.send(tx_socket, {192,168,1,106}, 60001, packet)
 
-    Open890Web.Endpoint.broadcast("radio:audio_stream", "audio_data", %{
-      payload: data
-    })
+    # send packet to radio
+    :gen_udp.send(tx_socket, {192,168,1,106}, 60001, packet)
+
+    # loopback test
+    # Open890Web.Endpoint.broadcast("radio:audio_stream", "audio_data", %{
+    #   payload: data
+    # })
 
     {:noreply, %{state | audio_tx_seq_num: seq + 1}}
   end
