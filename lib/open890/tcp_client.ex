@@ -67,12 +67,12 @@ defmodule Open890.TCPClient do
   end
 
   @impl true
-  def handle_cast({:send_audio, data}, %{connection: connection, audio_tx_socket: audio_tx_socket, audio_tx_seq_num: seq}= state) do
+  def handle_cast({:send_audio, data}, %{connection: connection, audio_tx_socket: audio_tx_socket, audio_tx_seq_num: seq_num}= state) do
 
     # here we have 320 values of 16-bit signed
     # data, from -32768 to 32767
 
-    data_bin = data |> Enum.map(fn x ->
+    packet = data |> Enum.map(fn x ->
       x
       |> Kernel.*(0.02) # not so loud
       |> trunc() # convert to integer
@@ -87,8 +87,7 @@ defmodule Open890.TCPClient do
       end)
     end)
     |> :binary.list_to_bin()
-
-    packet = RTP.make_packet(seq, data_bin)
+    |> RTP.make_packet(seq_num)
 
     :gen_udp.send(audio_tx_socket, connection.ip_address, @audio_tx_socket_dst_port, packet)
 
@@ -97,7 +96,7 @@ defmodule Open890.TCPClient do
     #   payload: data
     # })
 
-    {:noreply, %{state | audio_tx_seq_num: seq + 1}}
+    {:noreply, %{state | audio_tx_seq_num: seq_num + 1}}
   end
 
   def handle_info({:tcp, _socket, _msg}, {:noreply, state}) do

@@ -36,7 +36,7 @@ defmodule Open890.RTP do
     end
   end
 
-  def make_packet(seq_num, payload) when is_binary(payload) do
+  def make_packet(payload, seq_num) when is_binary(payload) do
     <<
       2::size(2),
       0::size(1),
