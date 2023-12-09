@@ -70,7 +70,9 @@ defmodule Open890.TCPClient do
     # data, from -32768 to 32767
 
     data = data |> Enum.map(fn x ->
+      x = trunc(x / 500.0)
       x = x + 32768 # offset to zero
+      # x = div(x, 10)
       # x = div(x, 256)
     end)
 

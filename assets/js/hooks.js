@@ -28,7 +28,7 @@ let Hooks = {
         console.log("start clicked")
 
         WebVoiceProcessor.setOptions({
-          frameLength: 640,
+          frameLength: 320,
           outputSampleRate: 16000,
         })
 
