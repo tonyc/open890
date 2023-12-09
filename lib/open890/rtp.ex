@@ -1,4 +1,8 @@
 defmodule Open890.RTP do
+  @payload_type 96
+  @timestamp 0
+  @ssrc 0x38393000
+
   defstruct version: nil,
             padding: nil,
             extension: nil,
@@ -32,18 +36,19 @@ defmodule Open890.RTP do
     end
   end
 
-  #def to_data(mod) do
-  #  << mod.version::size(2),
-  #   mod.padding::size(1),
-  #   mod.extension::size(1),
-  #   mod.csrc_count::size(4),
-  #   mod.marker::size(1),
-  #   mod.payload_type::size(7),
-  #   mod.sequence_number::size(16),
-  #   mod.timestamp::size(32),
-  #   mod.ssrc::size(32),
-  #   mod.payload::binary >>
-  #end
+  def make_packet(seq_num, payload) when is_binary(payload) do
+    <<
+      2::size(2),
+      0::size(1),
+      0::size(1),
+      0::size(4),
+      @payload_type::size(8),
+      seq_num::size(16),
+      @timestamp::size(32),
+      @ssrc::size(32),
+      payload::binary
+    >>
+  end
 
   def new(data) do
     with <<

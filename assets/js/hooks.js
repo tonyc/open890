@@ -64,10 +64,8 @@ let Hooks = {
         })
 
       this.audioStreamChannel.on("audio_data", (data) => {
-        console.log("audio_data")
         if (this.player) {
-          let buff = new Uint8Array(data.payload);
-          this.player.feed(buff)
+          this.player.feed(new Uint8Array(data.payload))
         }
       })
     }
