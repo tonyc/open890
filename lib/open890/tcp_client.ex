@@ -79,7 +79,7 @@ defmodule Open890.TCPClient do
       |> Kernel.+(32768) # DC offset - make all values unsigned
       |> Enum.reduce([], fn sample, acc ->
         case :binary.encode_unsigned(sample) do
-          << high::8, low::8>> ->
+          << high::8, low::8 >> ->
             acc ++ [high, low]
           << 0 >> ->
             acc ++ [0, 0]
