@@ -475,7 +475,6 @@ defmodule Open890Web.Live.Radio do
     |> String.split(" ")
     |> Enum.map(&String.to_integer/1)
 
-    Logger.info("mic_audio, calling RadioConenction.send_mic_audio")
     socket.assigns.radio_connection
     |> RadioConnection.send_mic_audio(mic_data)
 

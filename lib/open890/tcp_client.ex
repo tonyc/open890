@@ -3,6 +3,8 @@ defmodule Open890.TCPClient do
   require Logger
   alias Open890.RTP
 
+  import Bitwise, [:>>>, :&&&]
+
   @socket_opts [
     :binary,
     active: true,
@@ -67,29 +69,31 @@ defmodule Open890.TCPClient do
   end
 
   @impl true
-  def handle_cast({:send_audio, data}, %{connection: connection, audio_tx_socket: audio_tx_socket, audio_tx_seq_num: seq_num}= state) do
+  def handle_cast({:send_audio, data}, %{connection: connection, audio_tx_socket: audio_tx_socket, audio_tx_seq_num: seq_num} = state) do
 
     # here we have 320 values of 16-bit signed
     # data, from -32768 to 32767
 
-    packet = data |> Enum.map(fn x ->
-      x
-      |> Kernel.*(0.02) # not so loud
-      |> trunc() # convert to integer
-      |> Kernel.+(32768) # DC offset - make all values unsigned
-      |> Enum.reduce([], fn sample, acc ->
-        case :binary.encode_unsigned(sample) do
-          << high::8, low::8 >> ->
-            acc ++ [high, low]
-          << 0 >> ->
-            acc ++ [0, 0]
-        end
-      end)
-    end)
-    |> :binary.list_to_bin()
-    |> RTP.make_packet(seq_num)
+    packet = make_tx_voip_packet(data, seq_num)
 
-    :gen_udp.send(audio_tx_socket, connection.ip_address, @audio_tx_socket_dst_port, packet)
+    # packet = data
+    # |> Enum.flat_map(fn sample ->
+    #   sample
+    #   |> attenuate()
+    #   |> signed_to_unsigned()
+    #   |> split_to_high_and_low_bytes()
+
+    #   # sample = trunc(sample * 0.02)     # volume fix
+    #   # sample = sample + 32768           # dc offset - make unsigned
+    #   # [ sample >>> 8, sample &&& 0xff ] # split into high and low bytes
+    # end)
+    # |> :binary.list_to_bin()
+    # |> RTP.make_packet(seq_num)
+
+    connection.ip_address |> IO.inspect(label: "connection IP address")
+    ip_address = String.to_charlist(connection.ip_address)
+
+    :gen_udp.send(audio_tx_socket, ip_address, @audio_tx_socket_dst_port, packet)
 
     # loopback test
     # Open890Web.Endpoint.broadcast("radio:audio_stream", "audio_data", %{
@@ -97,6 +101,38 @@ defmodule Open890.TCPClient do
     # })
 
     {:noreply, %{state | audio_tx_seq_num: seq_num + 1}}
+  end
+
+  defp make_tx_voip_packet(data, seq_num) do
+    data
+    |> Enum.flat_map(fn sample ->
+      sample
+      |> attenuate()
+      |> signed_to_unsigned()
+      |> split_to_high_and_low_bytes()
+
+      # sample = trunc(sample * 0.02)     # volume fix
+      # sample = sample + 32768           # dc offset - make unsigned
+      # [ sample >>> 8, sample &&& 0xff ] # split into high and low bytes
+    end)
+    |> :binary.list_to_bin()
+    |> RTP.make_packet(seq_num)
+  end
+
+  defp attenuate(sample) do
+    trunc(sample * sample_scale_factor())
+  end
+
+  defp sample_scale_factor do
+    0.02
+  end
+
+  defp signed_to_unsigned(val) do
+    val + 32768
+  end
+
+  defp split_to_high_and_low_bytes(val) do
+    [val >>> 8, val &&& 0xff]
   end
 
   def handle_info({:tcp, _socket, _msg}, {:noreply, state}) do
