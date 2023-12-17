@@ -16,7 +16,6 @@ let Hooks = {
           switch (e.data.command) {
             case 'process':
               const inputData = e.data.inputFrame;
-              console.log(inputData.join(" "))
               me.pushEvent("mic_audio", {data: inputData.join(" ")})
               break;
           }
@@ -25,8 +24,6 @@ let Hooks = {
 
       this.recButton = document.getElementById("rec-button")
       this.recButton.addEventListener("click", event => {
-        console.log("start clicked")
-
         WebVoiceProcessor.setOptions({
           frameLength: 320,
           outputSampleRate: 16000,
@@ -37,7 +34,6 @@ let Hooks = {
 
       this.stopButton = document.getElementById("stop-button")
       this.stopButton.addEventListener("click", event => {
-        console.log("stop clicked")
         WebVoiceProcessor.unsubscribe(this.engine)
       })
 
