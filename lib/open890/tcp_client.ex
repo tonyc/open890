@@ -124,7 +124,7 @@ defmodule Open890.TCPClient do
   end
 
   defp sample_scale_factor do
-    0.02
+    0.01
   end
 
   defp signed_to_unsigned(val) do

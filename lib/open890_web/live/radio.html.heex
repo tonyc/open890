@@ -143,22 +143,18 @@
 
         </div>
 
-        <div class="six wide column top-indicator">
+        <div class="three wide column top-indicator">
           <!-- audio stream status -->
 
           <%= if @radio_state.voip_available do %>
 
-          <div class="" id="audio-recorder" phx-hook="AudioRecorder">
-
-            <div class="ui button" id="rec-button">
-              REC <i class="icon small play"></i>
+            <div id="audio-recorder" phx-hook="AudioRecorder">
+              <VoipButtons.mic_button enabled={@voip_mic_enabled} />
             </div>
-
-            <div class="ui button" id="stop-button">
-              STOP <i class="icon small stop"></i>
-            </div>
-
-          </div>
+          <% end %>
+        </div>
+        <div class="three wide column top-indicator">
+          <%= if @radio_state.voip_available do %>
 
             <div phx-hook="AudioStream" id="AudioStreamPlayer">
               <%= if @connection_state == :up && @radio_state.voip_enabled do %>

@@ -8,7 +8,6 @@ function PCMPlayer(t){this.init(t)}PCMPlayer.prototype.init=function(t){this.opt
 let Hooks = {
   AudioRecorder: {
     mounted() {
-      console.log("audioRecorder mounted")
       let me = this;
 
       this.engine = {
@@ -22,22 +21,21 @@ let Hooks = {
         }
       }
 
-      this.recButton = document.getElementById("rec-button")
-      this.recButton.addEventListener("click", event => {
-        WebVoiceProcessor.setOptions({
-          frameLength: 320,
-          outputSampleRate: 16000,
-        })
-
-        WebVoiceProcessor.subscribe(this.engine)
+      this.handleEvent("toggle_mic", (event) => {
+        if (event.enabled) {
+          WebVoiceProcessor.setOptions({
+            frameLength: 320,
+            outputSampleRate: 16000,
+          })
+          WebVoiceProcessor.subscribe(this.engine).then(() => {
+            console.log("Success starting VOIP microphone")
+          }).catch((err) => {
+            window.alert(err.message)
+          })
+        } else {
+          WebVoiceProcessor.unsubscribe(this.engine)
+        }
       })
-
-      this.stopButton = document.getElementById("stop-button")
-      this.stopButton.addEventListener("click", event => {
-        WebVoiceProcessor.unsubscribe(this.engine)
-      })
-
-
     }
 
   },
