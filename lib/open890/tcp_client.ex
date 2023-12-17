@@ -1,6 +1,9 @@
 defmodule Open890.TCPClient do
   use GenServer
   require Logger
+  alias Open890.RTP
+
+  import Bitwise, [:>>>, :&&&]
 
   @socket_opts [
     :binary,
@@ -10,6 +13,8 @@ defmodule Open890.TCPClient do
     send_timeout_close: true
   ]
   @connect_timeout_ms 5000
+  @audio_tx_socket_dst_port 60001
+  @audio_tx_socket_src_port 60002
 
   @enable_audio_scope true
   @enable_band_scope true
@@ -37,13 +42,17 @@ defmodule Open890.TCPClient do
       |> User.password(radio_password)
       |> User.is_admin(radio_user_is_admin)
 
+
     send(self(), :connect_socket)
 
     {:ok,
      %{
        connection: connection,
        kns_user: kns_user,
-       radio_state: %RadioState{}
+       radio_state: %RadioState{},
+       socket: nil,
+       audio_tx_socket: nil,
+       audio_tx_seq_num: 1
      }}
   end
 
@@ -57,6 +66,73 @@ defmodule Open890.TCPClient do
   def handle_cast({:send_command, cmd}, state) do
     state.socket |> send_command(cmd)
     {:noreply, state}
+  end
+
+  @impl true
+  def handle_cast({:send_audio, data}, %{connection: connection, audio_tx_socket: audio_tx_socket, audio_tx_seq_num: seq_num} = state) do
+
+    # here we have 320 values of 16-bit signed
+    # data, from -32768 to 32767
+
+    packet = make_tx_voip_packet(data, seq_num)
+
+    # packet = data
+    # |> Enum.flat_map(fn sample ->
+    #   sample
+    #   |> attenuate()
+    #   |> signed_to_unsigned()
+    #   |> split_to_high_and_low_bytes()
+
+    #   # sample = trunc(sample * 0.02)     # volume fix
+    #   # sample = sample + 32768           # dc offset - make unsigned
+    #   # [ sample >>> 8, sample &&& 0xff ] # split into high and low bytes
+    # end)
+    # |> :binary.list_to_bin()
+    # |> RTP.make_packet(seq_num)
+
+    connection.ip_address |> IO.inspect(label: "connection IP address")
+    ip_address = String.to_charlist(connection.ip_address)
+
+    :gen_udp.send(audio_tx_socket, ip_address, @audio_tx_socket_dst_port, packet)
+
+    # loopback test
+    # Open890Web.Endpoint.broadcast("radio:audio_stream", "audio_data", %{
+    #   payload: data
+    # })
+
+    {:noreply, %{state | audio_tx_seq_num: seq_num + 1}}
+  end
+
+  defp make_tx_voip_packet(data, seq_num) do
+    data
+    |> Enum.flat_map(fn sample ->
+      sample
+      |> attenuate()
+      |> signed_to_unsigned()
+      |> split_to_high_and_low_bytes()
+
+      # sample = trunc(sample * 0.02)     # volume fix
+      # sample = sample + 32768           # dc offset - make unsigned
+      # [ sample >>> 8, sample &&& 0xff ] # split into high and low bytes
+    end)
+    |> :binary.list_to_bin()
+    |> RTP.make_packet(seq_num)
+  end
+
+  defp attenuate(sample) do
+    trunc(sample * sample_scale_factor())
+  end
+
+  defp sample_scale_factor do
+    0.01
+  end
+
+  defp signed_to_unsigned(val) do
+    val + 32768
+  end
+
+  defp split_to_high_and_low_bytes(val) do
+    [val >>> 8, val &&& 0xff]
   end
 
   def handle_info({:tcp, _socket, _msg}, {:noreply, state}) do
@@ -96,9 +172,18 @@ defmodule Open890.TCPClient do
     |> case do
       {:ok, socket} ->
         Logger.info("Established TCP socket with radio on port #{tcp_port}")
+
+        state = %{state | socket: socket}
         broadcast_connection_state(state.connection, :up)
         self() |> send(:login_radio)
-        {:noreply, state |> Map.put(:socket, socket)}
+
+        with {:ok, audio_tx_socket} <- :gen_udp.open(@audio_tx_socket_src_port) do
+          {:noreply, %{state | audio_tx_socket: audio_tx_socket}}
+        else
+          other ->
+            Logger.warn("Error opening audio TX UDP socket: #{inspect other}")
+            {:noreply, state}
+        end
 
       {:error, reason} ->
         broadcast_connection_state(state.connection, {:down, reason})

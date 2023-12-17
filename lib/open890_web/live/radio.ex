@@ -30,7 +30,8 @@ defmodule Open890Web.Live.Radio do
     RitXit,
     Slider,
     SplitButton,
-    VFODisplayComponent
+    VFODisplayComponent,
+    VoipButtons
   }
 
   import Open890Web.Components.Buttons
@@ -212,6 +213,22 @@ defmodule Open890Web.Live.Radio do
       socket
       |> assign(keyboard_entry_state: KeyboardEntryState.Normal)
       |> assign(keyboard_entry_timer: nil)
+
+    {:noreply, socket}
+  end
+
+  def handle_event("toggle_mic", _params, %{assigns: %{voip_mic_enabled: voip_mic_enabled}} = socket) do
+    enabled = !voip_mic_enabled
+    Logger.info("voip mic enabled: #{enabled}")
+    socket = socket |> assign(:voip_mic_enabled, enabled)
+    |> push_event("toggle_mic", %{enabled: enabled})
+
+    {:noreply, socket}
+  end
+
+  def handle_event("voip_mic_enabled", %{"state" => state} = _params, socket) do
+
+    socket = socket |> assign(:voip_mic_enabled, state)
 
     {:noreply, socket}
   end
@@ -466,6 +483,17 @@ defmodule Open890Web.Live.Radio do
 
     socket.assigns.radio_connection
     |> ConnectionCommands.set_power_level(power_level)
+
+    {:noreply, socket}
+  end
+
+  def handle_event("mic_audio", params, socket) do
+    mic_data = params["data"]
+    |> String.split(" ")
+    |> Enum.map(&String.to_integer/1)
+
+    socket.assigns.radio_connection
+    |> RadioConnection.send_mic_audio(mic_data)
 
     {:noreply, socket}
   end
