@@ -71,7 +71,8 @@ defmodule Open890.Application do
       \\___/ .__/\\__/_//_/\\___/___/\\___/
          /_/
 
-      open890 is now running.
+      open890 is now running.  Press ^C^C (ctrl-c, ctrl-c) to stop.
+
       Access the web interface at http://#{host}:#{port}/
 
       You can change the hostname and port by setting OPEN890_HOST
