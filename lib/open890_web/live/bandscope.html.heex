@@ -1,24 +1,26 @@
 <div id="Xradio" xclass={radio_classes(@debug)} phx-window-keydown="window_keydown" phx-window-keyup="window_keyup">
   <BandScope.bandscope
+      active_mode={RadioState.effective_active_mode(@radio_state)}
+      band_scope_data={@band_scope_data}
+      band_scope_edges={RadioState.effective_band_edges(@radio_state)}
+      band_scope_mode={@radio_state.band_scope_mode}
+      band_scope_span={@radio_state.band_scope_span}
+      draw_interval={@waterfall_draw_interval}
       effective_active_frequency={RadioState.effective_active_frequency(@radio_state)}
       effective_inactive_frequency={RadioState.effective_inactive_frequency(@radio_state)}
-      rx_banner_frequency={RadioState.rx_banner_frequency(@radio_state)}
-      tx_banner_frequency={RadioState.tx_banner_frequency(@radio_state)}
-
-      active_mode={@radio_state.active_mode}
       filter_mode={RadioState.filter_mode(@radio_state)}
-      band_scope_mode={@radio_state.band_scope_mode}
-      band_scope_data={@band_scope_data}
-
-      band_scope_edges={RadioState.effective_band_edges(@radio_state)}
-
-      band_scope_span={@radio_state.band_scope_span}
       filter_state={@radio_state.filter_state}
-      split_enabled={@radio_state.split_enabled}
-      theme={@theme}
-      draw_interval={@waterfall_draw_interval}
-      spectrum_scale={@spectrum_scale}
+      inactive_frequency={@radio_state.inactive_frequency}
       lock_enabled={@radio_state.lock_enabled}
       markers={@markers}
+      rit_xit_offset={@radio_state.rit_xit_offset}
+      rx_banner_frequency={RadioState.rx_banner_frequency(@radio_state)}
+      spectrum_scale={@spectrum_scale}
+      split_enabled={@radio_state.split_enabled}
+      tf_set_enabled={@radio_state.tf_set_enabled}
+      tf_set_marker_frequency={@radio_state.tf_set_marker_frequency}
+      theme={@theme}
+      tx_banner_frequency={RadioState.tx_banner_frequency(@radio_state)}
+      xit_enabled={@radio_state.xit_enabled}
     />
 </div>
