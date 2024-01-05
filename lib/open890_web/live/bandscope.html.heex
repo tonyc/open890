@@ -1,4 +1,6 @@
 <div id="Xradio" xclass={radio_classes(@debug)} phx-window-keydown="window_keydown" phx-window-keyup="window_keyup">
+  <%# When changing anything here, make sure the changes are reflected in radio.html.heex as well. %>
+
   <BandScope.bandscope
       active_mode={RadioState.effective_active_mode(@radio_state)}
       band_scope_data={@band_scope_data}

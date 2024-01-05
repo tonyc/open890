@@ -587,6 +587,8 @@
     <div class="bandscopePanel toggle" phx-click="toggle_panel"></div>
 
     <div class="bandscopePanel right">
+      <%# When changing anything here, make sure the changes are reflected in the pop-out bandscope as well %>
+
       <BandScope.bandscope
          active_mode={RadioState.effective_active_mode(@radio_state)}
          band_scope_data={@band_scope_data}
