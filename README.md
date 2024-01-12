@@ -190,11 +190,11 @@ The following people have graciously donated monetarily to open890, and opted-in
 
 * Guy Bujold, VE2CXA
 * Willi Föckeler, DK6DT
+* Mike Garcia, KJ5CDJ
 * Philip Hartwell, VK6GX
 * Rick Lapp, KC2FD
 * Jeff Sloane, KE6L
 * Jack Wren, K4VR
-* Mike Garcia, KJ5CDJ
 
 ## Legal mumbo-jumbo
 
