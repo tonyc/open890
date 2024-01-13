@@ -13,6 +13,10 @@ currently untested.
 
 ![open890 screenshot](docs/screenshot.png)
 
+## Getting Help
+
+I am primarily active on the [TS-890S groups.io discussion board](https://groups.io/g/TS-890)
+
 ## Installation from source
 
 See [Installing From Source](https://github.com/tonyc/open890/wiki/Installing-From-Source)
