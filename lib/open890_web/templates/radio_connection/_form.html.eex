@@ -1,35 +1,48 @@
-<div class="field">
+<div class="required field">
   <%= label @f, :name, "Connection Name", class: "" %>
   <div class="ui huge input">
     <%= text_input @f, :name, value: @radio_connection.name, required: true %>
   </div>
 </div>
 
-<div class="two fields">
-  <div class="field">
+<div class="three fields">
+  <div class="required field">
     <%= label @f, :ip_address, "IP Address" %>
     <div class="ui huge input">
       <%= text_input @f, :ip_address, value: @radio_connection.ip_address, required: true %>
     </div>
   </div>
 
-  <div class="field">
+  <div class="required field">
     <%= label @f, :tcp_port, "TCP Port" %>
     <div class="ui huge input">
       <%= text_input @f, :tcp_port, value: RadioConnection.tcp_port(@radio_connection), required: true %>
     </div>
   </div>
+
+  <div class="field">
+    <label for="radio_connection_mac_address">
+      MAC Address
+      <span data-inverted="" data-position="bottom center" data-tooltip="Enables wake-on-lan/remote power-on. Find in MENU -> MORE -> LAN. Format: XX:XX:XX:XX:XX">
+        <i class="question circle grey icon"></i>
+      </span>
+    </label>
+
+    <div class="ui huge input">
+      <%= text_input @f, :mac_address, value: RadioConnection.mac_address(@radio_connection), pattern: "^([0-9A-Fa-f]{2}[:\\-]){5}([0-9A-Fa-f]{2})$", placeholder: "XX:XX:XX:XX:XX" %>
+    </div>
+  </div>
 </div>
 
 <div class="two fields">
-  <div class="field">
+  <div class="required field">
     <%= label @f, :user_name, "KNS User" %>
     <div class="ui huge input">
       <%= text_input @f, :user_name, value: @radio_connection.user_name, required: true %>
     </div>
   </div>
 
-  <div class="field">
+  <div class="required field">
     <%= label @f, :user_pass, "KNS Password" %>
     <div class="ui huge input">
       <%= password_input @f, :password, value: @radio_connection.password, required: true %>

@@ -26,6 +26,10 @@ defmodule Open890.RadioConnection do
   alias Open890.RadioConnectionRepo, as: Repo
   alias Open890.{RadioState, UserMarker}
 
+  def mac_address(connection) do
+    connection |> Map.get(:mac_address, "")
+  end
+
   def tcp_port(%__MODULE__{} = connection) do
     connection
     |> Map.get(:tcp_port, @default_tcp_port)
