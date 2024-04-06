@@ -7,20 +7,12 @@ defmodule Open890.UDPAudioServer do
   @socket_opts [:binary, active: true]
 
   def start_link(args) do
-    Logger.info("UDP audio server: start_link: args: #{inspect(args)}")
-
-    config = args |> Keyword.get(:config)
-
-    GenServer.start_link(__MODULE__, name: __MODULE__, config: config)
+    GenServer.start_link(__MODULE__, args |> Keyword.merge(name: __MODULE__))
   end
 
   def init(args) do
-    Logger.info("UDP audio server: init: args: #{inspect(args)}")
-
-    port = args |> get_in([:config, :port])
-
+    port = args |> Keyword.fetch!(:port)
     {:ok, socket} = :gen_udp.open(port, @socket_opts)
-
     Logger.info("UDP Audio server listening on port #{port}")
 
     {:ok, %{socket: socket}}

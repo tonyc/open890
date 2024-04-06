@@ -28,7 +28,7 @@ defmodule Open890.Application do
       {Open890.RadioConnectionSupervisor,
        strategy: :one_for_one, name: Open890.RadioConnectionSupervisor},
       {Open890.CloudlogSupervisor, strategy: :one_for_one, name: Open890.CloudlogSupervisor},
-      {Open890.UDPAudioServer, [config: udp_config]}
+      {Open890.UDPAudioServer, udp_config}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
