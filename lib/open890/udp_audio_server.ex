@@ -4,13 +4,12 @@ defmodule Open890.UDPAudioServer do
 
   alias Open890.RTP
 
-  @port 60001
   @socket_opts [:binary, active: true]
 
   def start_link(args) do
     Logger.info("UDP audio server: start_link: args: #{inspect(args)}")
 
-    config = Application.get_env(:open890, __MODULE__)
+    config = args |> Keyword.get(:config)
 
     GenServer.start_link(__MODULE__, name: __MODULE__, config: config)
   end
