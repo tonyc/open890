@@ -18,8 +18,7 @@ defmodule Open890.UDPAudioServer do
   def init(args) do
     Logger.info("UDP audio server: init: args: #{inspect(args)}")
 
-    port = args |> get_in([:config, :port]) || 60001
-    port = Enum.min([port, 65535])
+    port = args |> get_in([:config, :port])
 
     {:ok, socket} = :gen_udp.open(port, @socket_opts)
 

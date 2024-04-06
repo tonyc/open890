@@ -18,6 +18,8 @@ if config_env() in [:dev, :prod] do
     secret_key_base: secret_key_base
 
   udp_port = System.get_env("OPEN890_UDP_PORT", "60001") |> String.to_integer()
+  udp_port = Enum.min([udp_port, 65535])
+
   config :open890, Open890.UDPAudioServer, port: udp_port
 
   Logger.info("Configured OPEN890_HOST: #{inspect(host)}, OPEN890_PORT: #{inspect(port)}, OPEN890_UDP_PORT: #{inspect(udp_port)}")
