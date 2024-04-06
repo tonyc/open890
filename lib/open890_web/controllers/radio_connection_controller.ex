@@ -2,6 +2,7 @@ defmodule Open890Web.RadioConnectionController do
   use Open890Web, :controller
 
   alias Open890.RadioConnection
+  alias Open890.ConnectionCommands
 
   plug :assign_bg_theme
 
@@ -81,6 +82,30 @@ defmodule Open890Web.RadioConnectionController do
 
       _ ->
         Logger.warn("Could not find connection id: #{inspect(id)}")
+    end
+
+    conn
+    |> redirect(to: Routes.radio_connection_path(conn, :index))
+  end
+
+  def power_off(conn, %{"id" => id} = _params) do
+    case RadioConnection.find(id) do
+      {:ok, conn} ->
+        conn |> ConnectionCommands.power_off()
+      _ ->
+        Logger.warn("Could not find connection: #{inspect(id)}")
+    end
+
+    conn
+    |> redirect(to: Routes.radio_connection_path(conn, :index))
+  end
+
+  def power_on(conn, %{"id" => id} = _params) do
+    case RadioConnection.find(id) do
+      {:ok, conn} ->
+        conn |> ConnectionCommands.power_on()
+      _ ->
+        Logger.warn("Could not find connection: #{inspect(id)}")
     end
 
     conn

@@ -66,7 +66,8 @@ defmodule Open890.MixProject do
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 0.5"},
       {:toml, "~> 0.6.2"},
-      {:uniq, "~> 0.5"}
+      {:uniq, "~> 0.5"},
+      {:wakeonlan, "~> 0.1.0"}
     ]
   end
 

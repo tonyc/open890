@@ -8,6 +8,7 @@ defmodule Open890.ConnectionCommands do
     Logger.debug("*** GET INITIAL STATE ***")
 
     conn
+    |> power_on()
     |> get_active_receiver()
     |> get_vfo_a_freq()
     |> get_vfo_b_freq()
@@ -59,6 +60,8 @@ defmodule Open890.ConnectionCommands do
     |> get_proc_enabled()
   end
 
+  def power_on(conn), do: conn |> cmd("PS1")
+  def power_off(conn), do: conn |> cmd("PS0")
   def get_busy_led_state(conn), do: conn |> cmd("BY")
   def get_fine(conn), do: conn |> cmd("FS")
 

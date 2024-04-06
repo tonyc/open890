@@ -111,6 +111,7 @@ defmodule Open890.RadioConnectionRepo do
   end
 
   def update(%RadioConnection{id: id} = conn) when not is_nil(id) do
+    conn |> IO.inspect(label: "ConnectionRepo.update, conn")
     table_name() |> :dets.insert({id, conn})
   end
 
