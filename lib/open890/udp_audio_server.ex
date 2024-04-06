@@ -8,19 +8,22 @@ defmodule Open890.UDPAudioServer do
   @socket_opts [:binary, active: true]
 
   def start_link(args) do
-    Logger.info("\n\n\n*** UDP audio server: start_link\n\n\n")
-    # GenServer.start_link(__MODULE__, args, name: via_tuple())
-    GenServer.start_link(__MODULE__, name: __MODULE__)
+    Logger.info("UDP audio server: start_link: args: #{inspect(args)}")
+
+    config = Application.get_env(:open890, __MODULE__)
+
+    GenServer.start_link(__MODULE__, name: __MODULE__, config: config)
   end
 
-  def via_tuple() do
-    {:via, Registry, {:radio_connection_registry, {:udp_server}}}
-  end
+  def init(args) do
+    Logger.info("UDP audio server: init: args: #{inspect(args)}")
 
-  def init(_args) do
-    Logger.info("\n\n\n*** UDP audio server: init\n\n\n")
-    {:ok, socket} = :gen_udp.open(@port, @socket_opts)
-    Logger.info("UDP Audio server listening on port #{@port}")
+    port = args |> get_in([:config, :port]) || 60001
+    port = Enum.min([port, 65535])
+
+    {:ok, socket} = :gen_udp.open(port, @socket_opts)
+
+    Logger.info("UDP Audio server listening on port #{port}")
 
     {:ok, %{socket: socket}}
   end
@@ -40,6 +43,5 @@ defmodule Open890.UDPAudioServer do
         Logger.warn("Error parsing packet: #{inspect(reason)}")
         {:noreply, state}
     end
-
   end
 end
