@@ -75,8 +75,8 @@ defmodule Open890.Application do
 
       Access the web interface at http://#{host}:#{port}/
 
-      You can change the hostname and port by setting OPEN890_HOST
-      and OPEN890_PORT environment variables respectively.
+      You can change the hostname, web, and UDP audio ports by setting OPEN890_HOST,
+      OPEN890_PORT, and OPEN890_UDP_PORT environment variables respectively.
     """)
   end
 end
