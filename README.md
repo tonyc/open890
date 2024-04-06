@@ -164,6 +164,8 @@ By default, open890 runs a web server on port `4000` and binds to `0.0.0.0` (all
 
 If you would like to change the default host and port that open890 is accessed via, you can set the `OPEN890_HOST` and `OPEN890_PORT` environment variables accordingly. This is most useful if you are accessing open890 from a separate machine than the one it is running on.
 
+You can change default UDP audio server port from 60001 to whatever you'd like by setting `OPEN890_UDP_PORT`. This is useful if your ISP filters port 60001 and would like to forward the port yourself.
+
 Please note that the web interface **is not secured with a password**, and it assumes that you will run it on a trusted network. This is equivalent to running a computer with ARCP-890 left running.
 
 If you wish to require a basic password, edit `config/config.toml` (you may need to copy `example.config.toml` first), and uncomment or add the following section:
