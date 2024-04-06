@@ -10,6 +10,7 @@ defmodule Open890.RadioConnection do
             name: nil,
             ip_address: nil,
             tcp_port: @default_tcp_port,
+            mac_address: nil,
             user_name: nil,
             password: nil,
             user_is_admin: false,
@@ -27,7 +28,7 @@ defmodule Open890.RadioConnection do
   alias Open890.{RadioState, UserMarker}
 
   def mac_address(connection) do
-    connection |> Map.get(:mac_address, "")
+    connection |> Map.get(:mac_address, nil)
   end
 
   def tcp_port(%__MODULE__{} = connection) do
@@ -113,6 +114,7 @@ defmodule Open890.RadioConnection do
         name: params["name"],
         ip_address: params["ip_address"],
         tcp_port: params["tcp_port"],
+        mac_address: params["mac_address"],
         user_name: params["user_name"],
         password: params["password"],
         user_is_admin: params["user_is_admin"],
