@@ -29,7 +29,7 @@
     </label>
 
     <div class="ui huge input">
-      <%= text_input @f, :mac_address, value: RadioConnection.mac_address(@radio_connection), pattern: "^([0-9A-Fa-f]{2}[:\\-]){5}([0-9A-Fa-f]{2})$", maxlength: 17, placeholder: "XX:XX:XX:XX:XX" %>
+      <%= text_input @f, :mac_address, value: RadioConnection.mac_address(@radio_connection), pattern: "^([0-9A-Fa-f]{2}[:\\-]){5}([0-9A-Fa-f]{2})$", maxlength: 17, placeholder: "XX-XX-XX-XX-XX" %>
     </div>
   </div>
 </div>
