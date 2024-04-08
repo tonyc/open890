@@ -1,6 +1,8 @@
 # open890 Changelog
 
 ## Unreleased
+* Added the ability to remote TX audio.
+* Added TX TUNE button
 * Added the ability to configure the UDP audio port from 60001 via OPEN890_UDP_PORT
 * Updated startup message to explain how to control the server host and port through OPEN890_HOST and OPEN890_PORT
 * Fixed PROC on/off state not correctly queried on startup
