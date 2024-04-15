@@ -62,6 +62,21 @@ defmodule Open890.ConnectionCommands do
 
   def power_on(conn), do: conn |> cmd("PS1")
   def power_off(conn), do: conn |> cmd("PS0")
+
+  def wake(%RadioConnection{mac_address: nil} = conn) do
+    Logger.info("Attempted to WOL connection without a MAC address")
+    conn
+  end
+
+  def wake(%RadioConnection{mac_address: mac_address} = conn) do
+    WOL.send(mac_address)
+    conn
+  end
+
+  def wake(conn) do
+    WOL.send(conn.mac_address)
+  end
+
   def get_busy_led_state(conn), do: conn |> cmd("BY")
   def get_fine(conn), do: conn |> cmd("FS")
 
@@ -168,9 +183,10 @@ defmodule Open890.ConnectionCommands do
   end
 
   def set_power_level(conn, value) do
-    value = value
-            |> to_string()
-            |> String.pad_leading(3, "0")
+    value =
+      value
+      |> to_string()
+      |> String.pad_leading(3, "0")
 
     conn |> cmd("PC#{value}")
   end

@@ -30,6 +30,7 @@ defmodule Open890Web.Router do
     post "/connections/:id/stop", RadioConnectionController, :stop
     post "/connections/:id/power_off", RadioConnectionController, :power_off
     post "/connections/:id/power_on", RadioConnectionController, :power_on
+    post "/connections/:id/wake", RadioConnectionController, :wake
 
     live "/connections/:id", Live.Radio, :show
     live "/connections/:id/bandscope", Live.Bandscope, :show
