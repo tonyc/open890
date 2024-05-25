@@ -114,18 +114,18 @@ defmodule Open890Web.RadioConnectionController do
     |> redirect(to: Routes.radio_connection_path(conn, :index))
   end
 
-  def power_on(conn, %{"id" => id} = _params) do
-    case RadioConnection.find(id) do
-      {:ok, conn} ->
-        conn |> ConnectionCommands.power_on()
+  # def power_on(conn, %{"id" => id} = _params) do
+  #   case RadioConnection.find(id) do
+  #     {:ok, conn} ->
+  #       conn |> ConnectionCommands.power_on()
 
-      _ ->
-        Logger.warn("Could not find connection: #{inspect(id)}")
-    end
+  #     _ ->
+  #       Logger.warn("Could not find connection: #{inspect(id)}")
+  #   end
 
-    conn
-    |> redirect(to: Routes.radio_connection_path(conn, :index))
-  end
+  #   conn
+  #   |> redirect(to: Routes.radio_connection_path(conn, :index))
+  # end
 
   def start(conn, %{"id" => id} = _params) do
     result = id |> RadioConnection.start()

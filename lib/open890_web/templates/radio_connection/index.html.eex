@@ -19,7 +19,8 @@
         <thead>
           <tr>
             <th>Name</th>
-            <th>Status</th>
+            <th>Connection</th>
+            <th>Radio Power</th>
             <th>UI</th>
             <th>Details</th>
             <th></th>
@@ -34,10 +35,18 @@
 
             <td>
               <%= if RadioConnection.process_exists?(connection) do %>
-                <div class="ui rounded center aligned green basic label">Running</div>
+                <div class="">Running</div>
               <% else %>
-                <div class="ui rounded center aligned basic basic label">Stopped</div>
+                <div class="">Stopped</div>
               <% end %>
+            </td>
+
+            <td>
+              <div class="">Turning On</div>
+              <div class="">Power On</div>
+              <div class="">Turning Off</div>
+              <div class="">Power Off</div>
+              <div class="">Unknown</div>
             </td>
 
             <td>
