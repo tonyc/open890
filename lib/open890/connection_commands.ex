@@ -69,6 +69,7 @@ defmodule Open890.ConnectionCommands do
   end
 
   def wake(%RadioConnection{mac_address: mac_address} = conn) do
+    Logger.info("Sending WOL packet to #{mac_address}")
     WOL.send(mac_address)
     conn
   end
