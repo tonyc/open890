@@ -55,12 +55,17 @@
 
 								<td class="">
 									<%= if @connection_states |> Map.get(connection.id) == :up do %>
-										<button class="ui button" phx-click="power_off" phx-value-id={connection.id}>Off</button>
-										<button class="ui primary button" phx-click="stop_connection" phx-value-id={connection.id}>Stop</button>
+											<button
+												id={"power-off-button-#{connection.id}"}
+												class="ui button"
+												disabled={Map.get(@power_states, connection.id) != :on}
+												phx-click="power_off"
+												phx-value-id={connection.id}>Off</button>
+										<button id={"stop-button-#{connection.id}"} class="ui primary button" phx-click="stop_connection" phx-value-id={connection.id}>Stop</button>
 									<% else %>
-										<.link class="ui button" href={~p"/connections/#{connection.id}/edit"}>Edit</.link>
-										<button class="ui button" phx-click="delete_connection" phx-value-id={connection.id} data-confirm="Are you sure?">Delete</button>
-										<button class="ui primary button" phx-click="start_connection" phx-value-id={connection.id}>Start</button>
+										<.link id={"edit-button-#{connection.id}"} class="ui button" href={~p"/connections/#{connection.id}/edit"}>Edit</.link>
+										<button id={"delete-button-#{connection.id}"} class="ui button" phx-click="delete_connection" phx-value-id={connection.id} data-confirm="Are you sure?">Delete</button>
+										<button id={"start-button-#{connection.id}"} class="ui primary button" phx-click="start_connection" phx-value-id={connection.id}>Start</button>
 									<% end %>
 								</td>
 							</tr>

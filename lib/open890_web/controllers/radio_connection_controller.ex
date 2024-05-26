@@ -81,6 +81,6 @@ defmodule Open890Web.RadioConnectionController do
   end
 
   defp connections_path do
-    ~p"/connections-live"
+    ~p"/connections"
   end
 end
