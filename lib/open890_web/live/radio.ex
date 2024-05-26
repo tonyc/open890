@@ -179,6 +179,11 @@ defmodule Open890Web.Live.Radio do
     {:noreply, socket}
   end
 
+  def handle_info(%Broadcast{event: "power_state", payload: payload}, socket) do
+    # ignore power state broadcasts for now
+    {:noreply, socket}
+  end
+
   def handle_info(%Broadcast{} = bc, socket) do
     Logger.warn("Unknown broadcast: #{inspect(bc)}")
 

@@ -143,12 +143,6 @@ defmodule Open890Web.Live.Connections do
     {:noreply, socket}
   end
 
-  # def handle_info(%Broadcast{event: "connection", payload: payload}, socket) do
-  #   Logger.warn("ConnectionsLive received broadcast connection: #{inspect(payload)}")
-
-  #   {:noreply, socket}
-  # end
-
   def handle_info(%Broadcast{event: event, payload: payload}, socket) do
     Logger.debug("ConnectionsLive: unhandled broadcast event: #{event}, payload: #{inspect payload}")
     {:noreply, socket}
