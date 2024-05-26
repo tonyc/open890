@@ -9,6 +9,7 @@ defmodule Open890.ConnectionCommands do
 
     conn
     |> power_on()
+    |> get_power_state()
     |> get_active_receiver()
     |> get_vfo_a_freq()
     |> get_vfo_b_freq()
@@ -190,6 +191,10 @@ defmodule Open890.ConnectionCommands do
       |> String.pad_leading(3, "0")
 
     conn |> cmd("PC#{value}")
+  end
+
+  def get_power_state(conn) do
+    conn |> cmd("PS")
   end
 
   def get_power_level(conn) do

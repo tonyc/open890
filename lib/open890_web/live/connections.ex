@@ -24,17 +24,22 @@ defmodule Open890Web.Live.Connections do
       Map.put(acc, conn.id, state)
     end)
 
+    power_states = connections
+    |> Enum.reduce(%{}, fn conn, acc ->
+      Map.put(acc, conn.id, :unknown)
+    end)
+
     socket = socket
     |> assign_theme()
     |> assign(:connections, connections)
     |> assign(:connection_states, connection_states)
+    |> assign(:power_states, power_states)
 
 
     if connected?(socket) do
       for c <- connections do
         Logger.info("Subscribing to connection:#{c.id}")
         Phoenix.PubSub.subscribe(Open890.PubSub, "connection:#{c.id}")
-        # RadioConnection.subscribe(Open890.PubSub, c.id)
       end
     end
 
@@ -67,7 +72,10 @@ defmodule Open890Web.Live.Connections do
       :ok ->
         Logger.info("stopped connection id #{id}")
         new_connection_states = assigns.connection_states |> Map.put(id, :stopped)
-        socket |> assign(:connection_states, new_connection_states)
+        new_power_states = assigns.power_states |> Map.put(id, :unknown)
+        socket
+        |> assign(:connection_states, new_connection_states)
+        |> assign(:power_states, new_power_states)
 
       {:error, reason} ->
         Logger.warn("Unable to stop connection #{id}: #{inspect(reason)}")
@@ -77,7 +85,7 @@ defmodule Open890Web.Live.Connections do
     {:noreply, socket}
   end
 
-  def handle_event(event, params, %{assigns: assigns} = socket) do
+  def handle_event(event, params, %{assigns: _assigns} = socket) do
     Logger.debug("ConnectionsLive: default handle_event: #{event}, params: #{inspect params}")
     {:noreply, socket}
   end
@@ -90,6 +98,18 @@ defmodule Open890Web.Live.Connections do
 
     socket = socket
     |> assign(:connection_states, new_connection_states)
+
+    {:noreply, socket}
+  end
+
+  def handle_info(%Broadcast{event: "power_state", payload: payload}, socket) do
+    Logger.info("ConnectionsLive received broadcast power_state: #{inspect(payload)}")
+
+    new_power_states = socket.assigns.power_states
+    |> Map.put(payload.id, payload.state)
+
+    socket = socket
+    |> assign(:power_states, new_power_states)
 
     {:noreply, socket}
   end

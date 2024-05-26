@@ -40,11 +40,7 @@
 								</td>
 
 								<td>
-									<div class="">Turning On</div>
-									<div class="">Power On</div>
-									<div class="">Turning Off</div>
-									<div class="">Power Off</div>
-									<div class="">Unknown</div>
+									<%= @power_states |> Map.get(connection.id, :unknown) %>
 								</td>
 
 								<td>
