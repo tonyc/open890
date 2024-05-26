@@ -24,15 +24,9 @@ defmodule Open890Web.Router do
 
     get "/", PageController, :index
 
-    live "/connections-live", Live.Connections, :index
+    live "/connections", Live.Connections, :index
 
-    resources "/connections", RadioConnectionController, except: [:show]
-
-    post "/connections/:id/start", RadioConnectionController, :start
-    post "/connections/:id/stop", RadioConnectionController, :stop
-    post "/connections/:id/power_off", RadioConnectionController, :power_off
-    post "/connections/:id/power_on", RadioConnectionController, :power_on
-    post "/connections/:id/wake", RadioConnectionController, :wake
+    resources "/connections", RadioConnectionController, except: [:index, :show]
 
     live "/connections/:id", Live.Radio, :show
     live "/connections/:id/bandscope", Live.Bandscope, :show

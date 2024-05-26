@@ -6,19 +6,9 @@ defmodule Open890Web.RadioConnectionController do
 
   plug :assign_bg_theme
 
-  def index(conn, _params) do
-    radio_connections = RadioConnection.all()
-
-    conn
-    |> assign(:radio_connections, radio_connections)
-    |> render("index.html")
-  end
-
   def new(conn, _params) do
-    radio_connection = %RadioConnection{}
-
     conn
-    |> assign(:radio_connection, radio_connection)
+    |> assign(:radio_connection, %RadioConnection{})
     |> render("new.html")
   end
 
@@ -73,21 +63,6 @@ defmodule Open890Web.RadioConnectionController do
     end
   end
 
-  def delete(conn, %{"id" => id} = _params) do
-    id
-    |> RadioConnection.find()
-    |> case do
-      {:ok, connection} ->
-        connection |> RadioConnection.delete_connection()
-
-      _ ->
-        Logger.warn("Could not find connection id: #{inspect(id)}")
-    end
-
-    conn
-    |> redirect(to: Routes.radio_connection_path(conn, :index))
-  end
-
   def wake(conn, %{"id" => id} = _params) do
     case RadioConnection.find(id) do
       {:ok, conn} ->
@@ -95,93 +70,6 @@ defmodule Open890Web.RadioConnectionController do
 
       _ ->
         Logger.warn("Could not find connection: #{inspect(id)}")
-    end
-
-    conn
-    |> redirect(to: Routes.radio_connection_path(conn, :index))
-  end
-
-  def power_off(conn, %{"id" => id} = _params) do
-    case RadioConnection.find(id) do
-      {:ok, conn} ->
-        conn |> ConnectionCommands.power_off()
-
-      _ ->
-        Logger.warn("Could not find connection: #{inspect(id)}")
-    end
-
-    conn
-    |> redirect(to: Routes.radio_connection_path(conn, :index))
-  end
-
-  # def power_on(conn, %{"id" => id} = _params) do
-  #   case RadioConnection.find(id) do
-  #     {:ok, conn} ->
-  #       conn |> ConnectionCommands.power_on()
-
-  #     _ ->
-  #       Logger.warn("Could not find connection: #{inspect(id)}")
-  #   end
-
-  #   conn
-  #   |> redirect(to: Routes.radio_connection_path(conn, :index))
-  # end
-
-  def start(conn, %{"id" => id} = _params) do
-    result = id |> RadioConnection.start()
-
-    conn =
-      result
-      |> case do
-        {:ok, _radio_connection} ->
-          Logger.debug("Successfully started connection: #{id}")
-
-          conn
-          |> redirect(to: Routes.radio_connection_path(conn, :index))
-
-        {:error, reason} ->
-          Logger.debug("Could not start connection #{id}: #{inspect(reason)}")
-
-          pretty_error =
-            case reason do
-              {:bad_return_value, result} ->
-                case result do
-                  {:error, :ehostunreach} ->
-                    "Host unreachable"
-
-                  {:error, :econnrefused} ->
-                    "Connection refused"
-
-                  {:error, err} ->
-                    "Other error: #{inspect(err)}"
-
-                  err ->
-                    "Unknown error: #{inspect(err)}"
-                end
-
-              other ->
-                Logger.warn("Unmatched error starting connection: #{inspect(other)}")
-                inspect(other)
-            end
-
-          conn
-          |> put_flash(:error, "Error starting connection to radio: #{pretty_error}")
-          |> redirect(to: connections_path())
-      end
-
-    conn
-  end
-
-  def stop(conn, %{"id" => id} = _params) do
-    result = id |> RadioConnection.stop()
-
-    result
-    |> case do
-      :ok ->
-        Logger.info("stopped connection id #{id}")
-
-      {:error, reason} ->
-        Logger.warn("Unable to stop connection #{id}: #{inspect(reason)}")
     end
 
     conn
