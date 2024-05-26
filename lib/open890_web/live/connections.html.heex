@@ -52,7 +52,15 @@
 								</td>
 
 								<td class="">
-									wake/off/stop/delete/edit/start buttons here
+									<%= if @connection_states |> Map.get(connection.id) == :up do %>
+										<button class="ui button" phx-click="stop_connection" phx-value-id={connection.id}>
+											Stop
+										</button>
+									<% else %>
+										<button class="ui button" phx-click="start_connection" phx-value-id={connection.id}>
+											Start
+										</button>
+									<% end %>
 								</td>
 							</tr>
 						<% end %>

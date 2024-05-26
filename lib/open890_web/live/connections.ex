@@ -41,6 +41,47 @@ defmodule Open890Web.Live.Connections do
     {:ok, socket}
   end
 
+  def handle_event("start_connection" = event, %{"id" => id} = params, %{assigns: assigns} = socket) do
+    Logger.debug("**** ConnectionsLive: handle_event: #{event}, params: #{inspect params}")
+
+    result = RadioConnection.start(id)
+
+    socket = case result do
+      {:ok, _conn} ->
+        new_connection_states = assigns.connection_states |> Map.put(id, :up)
+        socket |> assign(:connection_states, new_connection_states)
+      _ ->
+        Logger.warn("Could not start connection: #{inspect result}")
+        socket
+    end
+
+    {:noreply, socket}
+  end
+
+  def handle_event("stop_connection" = event, %{"id" => id} = params, %{assigns: assigns} = socket) do
+    Logger.debug("ConnectionsLive: handle_event: #{event}, params: #{inspect params}")
+
+    result = id |> RadioConnection.stop()
+
+    socket = case result do
+      :ok ->
+        Logger.info("stopped connection id #{id}")
+        new_connection_states = assigns.connection_states |> Map.put(id, :stopped)
+        socket |> assign(:connection_states, new_connection_states)
+
+      {:error, reason} ->
+        Logger.warn("Unable to stop connection #{id}: #{inspect(reason)}")
+        socket
+    end
+
+    {:noreply, socket}
+  end
+
+  def handle_event(event, params, %{assigns: assigns} = socket) do
+    Logger.debug("ConnectionsLive: default handle_event: #{event}, params: #{inspect params}")
+    {:noreply, socket}
+  end
+
   def handle_info(%Broadcast{event: "connection_state", payload: payload}, socket) do
     Logger.warn("ConnectionsLive received broadcast connection_state: #{inspect(payload)}")
 
