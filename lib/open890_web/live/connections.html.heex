@@ -8,10 +8,10 @@
 					<h2>Radio Connections</h2>
 				</div>
         <div class="eight wide column right floated ">
-          <a href="" class="ui basic tiny icon button right floated">
+          <.link href={~p"/connections/new"} class="ui basic tiny icon button right floated">
             <i class="ui icon plus"></i>
             Add new connection
-          </a>
+					</.link>
         </div>
 			</div>
 			<div class="row">
@@ -55,10 +55,12 @@
 
 								<td class="">
 									<%= if @connection_states |> Map.get(connection.id) == :up do %>
-										<button class="ui button" phx-click="stop_connection" phx-value-id={connection.id}>Stop</button>
+										<button class="ui button" phx-click="power_off" phx-value-id={connection.id}>Off</button>
+										<button class="ui primary button" phx-click="stop_connection" phx-value-id={connection.id}>Stop</button>
 									<% else %>
-										<.link href={~p"/connections/#{connection.id}/edit"} class="">Edit</.link>
-										<button class="ui button" phx-click="start_connection" phx-value-id={connection.id}>Start</button>
+										<.link class="ui button" href={~p"/connections/#{connection.id}/edit"}>Edit</.link>
+										<button class="ui button" phx-click="delete_connection" phx-value-id={connection.id} data-confirm="Are you sure?">Delete</button>
+										<button class="ui primary button" phx-click="start_connection" phx-value-id={connection.id}>Start</button>
 									<% end %>
 								</td>
 							</tr>

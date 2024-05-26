@@ -84,6 +84,40 @@ defmodule Open890Web.Live.Connections do
     {:noreply, socket}
   end
 
+  def handle_event("delete_connection" = _event, %{"id" => id} = _params, %{assigns: assigns} = socket) do
+    case RadioConnection.find(id) do
+      {:ok, connection} ->
+        RadioConnection.stop(id)
+        RadioConnection.delete_connection(connection)
+      _ ->
+        Logger.warn("Could not find connection id: #{inspect id}")
+    end
+
+    new_connections = assigns.connections
+    |> Enum.reject(fn x -> x.id == id end)
+
+    socket = socket
+    |> assign(%{
+      connections: new_connections,
+      power_states: Map.delete(assigns.power_states, id),
+      connection_states: Map.delete(assigns.connection_states, id)
+    })
+
+    {:noreply, socket}
+  end
+
+  def handle_event("power_off" = _event, %{"id" => id} = _params, %{assigns: _assigns} = socket) do
+    case RadioConnection.find(id) do
+      {:ok, conn} ->
+        RadioConnection.power_off(conn)
+
+      _ ->
+        Logger.warn("Could not find connection: #{inspect(id)}")
+    end
+
+    {:noreply, socket}
+  end
+
   def handle_event(event, params, %{assigns: _assigns} = socket) do
     Logger.debug("ConnectionsLive: default handle_event: #{event}, params: #{inspect params}")
     {:noreply, socket}
