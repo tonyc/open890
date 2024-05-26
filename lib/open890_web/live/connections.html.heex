@@ -1,0 +1,65 @@
+<%= if @connections == [] do %>
+	<p>Render empty state</p>
+<% else %>
+	<div class="ui grid container">
+		<div class="ui grid column">
+			<div class="row">
+				<div class="eight wide column left floated">
+					<h2>Radio Connections</h2>
+				</div>
+        <div class="eight wide column right floated ">
+          <a href="" class="ui basic tiny icon button right floated">
+            <i class="ui icon plus"></i>
+            Add new connection
+          </a>
+        </div>
+			</div>
+			<div class="row">
+				<table class="ui table">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Connection</th>
+							<th>Radio Power</th>
+							<th>UI</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						<%= for connection <- @connections do %>
+							<tr>
+								<td>
+									<h2><%= connection.name %></h2>
+									<span>
+										<%= connection_to_uri(connection) %>
+									</span>
+								</td>
+
+								<td>
+									<%= @connection_states |> Map.get(connection.id, :unknown) %>
+								</td>
+
+								<td>
+									<div class="">Turning On</div>
+									<div class="">Power On</div>
+									<div class="">Turning Off</div>
+									<div class="">Power Off</div>
+									<div class="">Unknown</div>
+								</td>
+
+								<td>
+									radio ui buttons here
+								</td>
+
+								<td class="">
+									wake/off/stop/delete/edit/start buttons here
+								</td>
+							</tr>
+						<% end %>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+<% end %>

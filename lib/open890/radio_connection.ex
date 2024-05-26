@@ -286,7 +286,7 @@ defmodule Open890.RadioConnection do
   end
 
   def broadcast_connection_state(%__MODULE__{id: id} = _connection, state) do
-    Open890Web.Endpoint.broadcast("connection:#{id}", "connection_state", state)
+    Open890Web.Endpoint.broadcast("connection:#{id}", "connection_state", %{id: id, state: state})
   end
 
   def broadcast_band_scope(%__MODULE__{id: id}, band_scope_data) do

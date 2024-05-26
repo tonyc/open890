@@ -162,10 +162,10 @@ defmodule Open890Web.Live.Radio do
   end
 
   # Connection state messages
-  def handle_info(%Broadcast{event: "connection_state", payload: payload}, socket) do
+  def handle_info(%Broadcast{event: "connection_state", payload: %{id: _id, state: connection_state}} = payload, socket) do
     Logger.debug("Bandscope LV: RX connection_state: #{inspect(payload)}")
 
-    {:noreply, assign(socket, :connection_state, payload)}
+    {:noreply, assign(socket, :connection_state, connection_state)}
   end
 
   def handle_info(%Broadcast{event: "freq_delta", payload: payload}, socket) do

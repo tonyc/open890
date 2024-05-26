@@ -24,6 +24,8 @@ defmodule Open890Web.Router do
 
     get "/", PageController, :index
 
+    live "/connections-live", Live.Connections, :index
+
     resources "/connections", RadioConnectionController, except: [:show]
 
     post "/connections/:id/start", RadioConnectionController, :start
