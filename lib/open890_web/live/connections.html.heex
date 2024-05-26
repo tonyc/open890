@@ -44,18 +44,21 @@
 								</td>
 
 								<td>
-									<.link href={~p"/connections/#{connection.id}?panel=true&panelTab=txrx"} class="ui tiny button">Radio</.link>
+									<.link href={~p"/connections/#{connection.id}?panel=true&panelTab=txrx"} class="">Radio</.link>
+									|
+									<.link href={~p"/connections/#{connection.id}/bandscope"} class="">Bandscope</.link>
+									|
+									<.link href={~p"/connections/#{connection.id}/audioscope"} class="">Audioscope</.link>
+									|
+									<.link href={~p"/connections/#{connection.id}/meter"} class="">Meters</.link>
 								</td>
 
 								<td class="">
 									<%= if @connection_states |> Map.get(connection.id) == :up do %>
-										<button class="ui button" phx-click="stop_connection" phx-value-id={connection.id}>
-											Stop
-										</button>
+										<button class="ui button" phx-click="stop_connection" phx-value-id={connection.id}>Stop</button>
 									<% else %>
-										<button class="ui button" phx-click="start_connection" phx-value-id={connection.id}>
-											Start
-										</button>
+										<.link href={~p"/connections/#{connection.id}/edit"} class="">Edit</.link>
+										<button class="ui button" phx-click="start_connection" phx-value-id={connection.id}>Start</button>
 									<% end %>
 								</td>
 							</tr>

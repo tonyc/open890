@@ -23,6 +23,9 @@ if config_env() in [:dev, :prod] do
   config :open890, Open890.UDPAudioServer, port: udp_port
 
   Logger.info("Configured OPEN890_HOST: #{inspect(host)}, OPEN890_PORT: #{inspect(port)}, OPEN890_UDP_PORT: #{inspect(udp_port)}")
+
+  config :open890, Open890.RadioConnectionRepo, database: :"db/radio_connections.dets"
 else
   config :open890, Open890.UDPAudioServer, port: 60001
+  config :open890, Open890.RadioConnectionRepo, database: :"db/radio_connections_test.dets"
 end

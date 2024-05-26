@@ -50,7 +50,7 @@ defmodule Open890.RadioConnection do
 
   def first, do: all() |> Enum.at(0)
 
-  def add_user_marker(%__MODULE__{id: id} = connection, %UserMarker{} = marker) do
+  def add_user_marker(%__MODULE__{id: _id} = _connection, %UserMarker{} = _marker) do
     # the problem here is that the old connection struct seemingly doesn't even
     # have a :user_markers key, despite it being in the struct. it's like it's completely
     # frozen in the previous state when coming from dets, keys and all
@@ -60,11 +60,11 @@ defmodule Open890.RadioConnection do
     :ok
   end
 
-  def delete_user_marker(%__MODULE__{} = connection, user_marker_id) do
+  def delete_user_marker(%__MODULE__{} = _connection, _user_marker_id) do
     :ok
   end
 
-  def clear_user_markers(%__MODULE__{} = connection) do
+  def clear_user_markers(%__MODULE__{} = _connection) do
     # repo().update(%{connection | user_markers: []})
     :ok
   end

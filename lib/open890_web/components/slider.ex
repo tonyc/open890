@@ -7,6 +7,7 @@ defmodule Open890Web.Components.Slider do
   attr :label, :string, required: true
   attr :max_value, :integer, required: false
   attr :padded_top_value, :integer, required: false
+  attr :padded_top, :boolean, default: false
   attr :value, :any, required: true
   attr :wheel, :string, required: false
 

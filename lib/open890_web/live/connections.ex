@@ -6,7 +6,6 @@ defmodule Open890Web.Live.Connections do
   alias Phoenix.Socket.Broadcast
 
   alias Open890.RadioConnection
-  alias Open890.ConnectionCommands
 
   def mount(_params, _session, socket) do
     Logger.info("Connections live mounted")
@@ -91,8 +90,6 @@ defmodule Open890Web.Live.Connections do
   end
 
   def handle_info(%Broadcast{event: "connection_state", payload: payload}, socket) do
-    Logger.warn("ConnectionsLive received broadcast connection_state: #{inspect(payload)}")
-
     new_connection_states = socket.assigns.connection_states
     |> Map.put(payload.id, payload.state)
 
@@ -103,8 +100,6 @@ defmodule Open890Web.Live.Connections do
   end
 
   def handle_info(%Broadcast{event: "power_state", payload: payload}, socket) do
-    Logger.info("ConnectionsLive received broadcast power_state: #{inspect(payload)}")
-
     new_power_states = socket.assigns.power_states
     |> Map.put(payload.id, payload.state)
 
@@ -121,7 +116,7 @@ defmodule Open890Web.Live.Connections do
   # end
 
   def handle_info(%Broadcast{event: event, payload: payload}, socket) do
-    Logger.warn("ConnectionsLive: unhandled broadcast event: #{event}, payload: #{inspect payload}")
+    Logger.debug("ConnectionsLive: unhandled broadcast event: #{event}, payload: #{inspect payload}")
     {:noreply, socket}
   end
 

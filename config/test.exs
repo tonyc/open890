@@ -14,5 +14,3 @@ config :open890, Open890Web.Endpoint,
 
 # Print only warnings and errors during test
 config :logger, level: :warn
-
-config :open890, Open890.RadioConnectionRepo, database: :"db/radio_connections_test.dets"

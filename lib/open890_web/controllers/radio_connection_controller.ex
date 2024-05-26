@@ -28,13 +28,13 @@ defmodule Open890Web.RadioConnectionController do
     |> case do
       {:ok, %RadioConnection{auto_start: true} = connection} ->
         Logger.info("Connection is auto_start, starting")
-        connection |> RadioConnection.start()
+        RadioConnection.start(connection)
 
       other ->
         Logger.info("Connection is not auto-start, create result: #{inspect(other)}")
     end
 
-    conn |> redirect(to: Routes.radio_connection_path(conn, :index))
+    conn |> redirect(to: connections_path())
   end
 
   def edit(conn, %{"id" => id} = _params) do
@@ -47,7 +47,7 @@ defmodule Open890Web.RadioConnectionController do
 
       _ ->
         conn
-        |> redirect(to: Routes.radio_connection_path(conn, :index))
+        |> redirect(to: connections_path())
     end
   end
 
@@ -60,7 +60,7 @@ defmodule Open890Web.RadioConnectionController do
         |> RadioConnection.update_connection(radio_params)
         |> case do
           :ok ->
-            conn |> redirect(to: Routes.radio_connection_path(conn, :index))
+            conn |> redirect(to: connections_path())
 
           {:error, reason} ->
             Logger.debug("Could not update connection: #{inspect(reason)}")
@@ -69,7 +69,7 @@ defmodule Open890Web.RadioConnectionController do
 
       _ ->
         Logger.warn("Could not find connection: #{id}")
-        conn |> redirect(to: Routes.radio_connection_path(conn, :index))
+        conn |> redirect(to: connections_path())
     end
   end
 
@@ -166,7 +166,7 @@ defmodule Open890Web.RadioConnectionController do
 
           conn
           |> put_flash(:error, "Error starting connection to radio: #{pretty_error}")
-          |> redirect(to: Routes.radio_connection_path(conn, :index))
+          |> redirect(to: connections_path())
       end
 
     conn
@@ -190,5 +190,9 @@ defmodule Open890Web.RadioConnectionController do
 
   defp assign_bg_theme(conn, _options) do
     conn |> assign(:bg_theme, "light")
+  end
+
+  defp connections_path do
+    ~p"/connections-live"
   end
 end

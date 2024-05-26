@@ -17,6 +17,8 @@ defmodule Open890Web do
   and import those modules here.
   """
 
+  def static_paths, do: ~w(assets fonts images favicon.ico robots.txt)
+
   def controller do
     quote do
       require Logger
@@ -25,6 +27,8 @@ defmodule Open890Web do
       import Plug.Conn
       import Open890Web.Gettext
       alias Open890Web.Router.Helpers, as: Routes
+
+      unquote(verified_routes())
     end
   end
 
@@ -109,6 +113,17 @@ defmodule Open890Web do
       alias Open890.RadioConnection
 
       import Phoenix.LiveView
+
+      unquote(verified_routes())
+    end
+  end
+
+  def verified_routes do
+    quote do
+      use Phoenix.VerifiedRoutes,
+        endpoint: Open890Web.Endpoint,
+        router: Open890Web.Router,
+        statics: Open890Web.static_paths()
     end
   end
 
