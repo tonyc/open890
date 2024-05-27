@@ -36,7 +36,7 @@
 								</td>
 
 								<td>
-									<%= @connection_states |> Map.get(connection.id, :unknown) %>
+									<%= @connection_states |> Map.get(connection.id, :unknown) |> pretty_connection_state() %>
 								</td>
 
 								<td>
@@ -54,7 +54,7 @@
 								</td>
 
 								<td class="">
-									<%= if @connection_states |> Map.get(connection.id) == :up do %>
+									<%= if @connection_states |> Map.get(connection.id) |> connection_up?() do %>
 											<button
 												id={"power-off-button-#{connection.id}"}
 												class="ui button"

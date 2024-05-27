@@ -133,9 +133,10 @@ defmodule Open890Web.Live.Connections do
     {:noreply, socket}
   end
 
-  def handle_info(%Broadcast{event: "power_state", payload: payload}, socket) do
-    new_power_states = socket.assigns.power_states
-    |> Map.put(payload.id, payload.state)
+  def handle_info(%Broadcast{event: "power_state", payload: %{id: connection_id, state: power_state} = payload}, socket) do
+    Logger.info("ConnectionsLive received power state: #{inspect payload}")
+
+    new_power_states = socket.assigns.power_states |> Map.put(connection_id, power_state)
 
     socket = socket
     |> assign(:power_states, new_power_states)
@@ -151,5 +152,21 @@ defmodule Open890Web.Live.Connections do
   defp assign_theme(conn) do
     conn |> assign(:bg_theme, "light")
   end
+
+  defp pretty_connection_state({type, _extra}) do
+    type
+  end
+
+  defp pretty_connection_state(state) when is_atom(state) do
+    state
+  end
+
+  defp pretty_connection_state(other) do
+    Logger.warn("*** Unknown connection state: #{inspect other}")
+    :unknown_other
+  end
+
+  defp connection_up?(:up), do: true
+  defp connection_up?(_), do: false
 
 end
