@@ -44,13 +44,15 @@
 								</td>
 
 								<td>
-									<.link href={~p"/connections/#{connection.id}?panel=true&panelTab=txrx"} class="">Radio</.link>
-									|
-									<.link href={~p"/connections/#{connection.id}/bandscope"} class="">Bandscope</.link>
-									|
-									<.link href={~p"/connections/#{connection.id}/audioscope"} class="">Audioscope</.link>
-									|
-									<.link href={~p"/connections/#{connection.id}/meter"} class="">Meters</.link>
+									<%= if @power_states |> Map.get(connection.id, :unknown) |> power_on?() do %>
+										<.link href={~p"/connections/#{connection.id}?panel=true&panelTab=txrx"} class="">Radio</.link>
+										|
+										<.link href={~p"/connections/#{connection.id}/bandscope"} class="">Bandscope</.link>
+										|
+										<.link href={~p"/connections/#{connection.id}/audioscope"} class="">Audioscope</.link>
+										|
+										<.link href={~p"/connections/#{connection.id}/meter"} class="">Meters</.link>
+									<% end %>
 								</td>
 
 								<td class="">

@@ -252,6 +252,10 @@ defmodule Open890.RadioConnection do
     end
   end
 
+  def query_power_state(connection) do
+    connection |> cmd("PS")
+  end
+
   def cmd(%__MODULE__{} = connection, command) when is_binary(command) do
     connection
     |> get_connection_pid()

@@ -12,28 +12,32 @@ defmodule Open890Web.Live.Connections do
 
     connections = RadioConnection.all()
 
+    power_states = connections
+    |> Enum.reduce(%{}, fn conn, acc ->
+      Map.put(acc, conn.id, :unknown)
+    end)
+
+    socket = socket |> assign(:power_states, power_states)
+
     connection_states = connections
     |> Enum.reduce(%{}, fn conn, acc ->
 
+
       state = case RadioConnection.process_exists?(conn) do
-        true -> :up
+        true ->
+          RadioConnection.query_power_state(conn)
+          :up
+
         false -> :stopped
       end
 
       Map.put(acc, conn.id, state)
     end)
 
-    power_states = connections
-    |> Enum.reduce(%{}, fn conn, acc ->
-      Map.put(acc, conn.id, :unknown)
-    end)
-
     socket = socket
     |> assign_theme()
     |> assign(:connections, connections)
     |> assign(:connection_states, connection_states)
-    |> assign(:power_states, power_states)
-
 
     if connected?(socket) do
       for c <- connections do
@@ -168,5 +172,8 @@ defmodule Open890Web.Live.Connections do
 
   defp connection_up?(:up), do: true
   defp connection_up?(_), do: false
+
+  defp power_on?(:on), do: true
+  defp power_on?(_), do: false
 
 end
