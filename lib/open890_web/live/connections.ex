@@ -138,8 +138,6 @@ defmodule Open890Web.Live.Connections do
   end
 
   def handle_info(%Broadcast{event: "power_state", payload: %{id: connection_id, state: power_state} = payload}, socket) do
-    Logger.info("ConnectionsLive received power state: #{inspect payload}")
-
     new_power_states = socket.assigns.power_states |> Map.put(connection_id, power_state)
 
     socket = socket

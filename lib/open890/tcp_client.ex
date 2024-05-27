@@ -278,7 +278,6 @@ defmodule Open890.TCPClient do
   end
 
   def handle_msg("PS" <> _level = msg, %{connection: connection} = state) do
-    Logger.info("TCP Client recieved PS result: #{inspect msg}")
     power_state = Extract.power_state(msg)
     RadioConnection.broadcast_power_state(connection, power_state)
 
