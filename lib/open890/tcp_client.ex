@@ -2,6 +2,7 @@ defmodule Open890.TCPClient do
   use GenServer
   require Logger
   alias Open890.RTP
+  alias Open890.Extract
 
   import Bitwise, [:>>>, :&&&]
 
@@ -276,9 +277,10 @@ defmodule Open890.TCPClient do
     {:stop, :shutdown, state}
   end
 
-  # power status respnose
-  def handle_msg("PS1", state) do
-    # TODO: Cancel the connection timer here
+  def handle_msg("PS" <> _level = msg, %{connection: connection} = state) do
+    power_state = Extract.power_state(msg)
+    RadioConnection.broadcast_power_state(connection, power_state)
+
     state
   end
 
@@ -293,10 +295,6 @@ defmodule Open890.TCPClient do
   # # filter scope LAN/high cycle respnose
   # def handle_msg("DD11", state), do: state
 
-  def handle_msg("PS0", state) do
-    {:noreply, state}
-    # {:stop, :normal, state}
-  end
 
   def handle_msg("BSD", %{connection: connection} = state) do
     RadioConnection.broadcast_band_scope_cleared(connection)

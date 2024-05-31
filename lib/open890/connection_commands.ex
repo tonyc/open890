@@ -8,6 +8,8 @@ defmodule Open890.ConnectionCommands do
     Logger.debug("*** GET INITIAL STATE ***")
 
     conn
+    |> power_on()
+    |> get_power_state()
     |> get_active_receiver()
     |> get_vfo_a_freq()
     |> get_vfo_b_freq()
@@ -57,6 +59,24 @@ defmodule Open890.ConnectionCommands do
     |> get_mhz()
     |> get_proc_levels()
     |> get_proc_enabled()
+  end
+
+  def power_on(conn), do: conn |> cmd("PS1")
+  def power_off(conn), do: conn |> cmd("PS0")
+
+  def wake(%RadioConnection{mac_address: nil} = conn) do
+    Logger.info("Attempted to WOL connection without a MAC address")
+    conn
+  end
+
+  def wake(%RadioConnection{mac_address: mac_address} = conn) do
+    Logger.info("Sending WOL packet to #{mac_address}")
+    WOL.send(mac_address)
+    conn
+  end
+
+  def wake(conn) do
+    WOL.send(conn.mac_address)
   end
 
   def get_busy_led_state(conn), do: conn |> cmd("BY")
@@ -165,11 +185,16 @@ defmodule Open890.ConnectionCommands do
   end
 
   def set_power_level(conn, value) do
-    value = value
-            |> to_string()
-            |> String.pad_leading(3, "0")
+    value =
+      value
+      |> to_string()
+      |> String.pad_leading(3, "0")
 
     conn |> cmd("PC#{value}")
+  end
+
+  def get_power_state(conn) do
+    conn |> cmd("PS")
   end
 
   def get_power_level(conn) do

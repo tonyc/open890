@@ -52,7 +52,7 @@ defmodule Open890.RadioState do
             comp_meter: 0,
             cw_delay: nil,
             cw_key_speed: nil,
-            data_speed: nil,
+            data_speed: 1,
             display_screen_id: 0,
             filter_high_freq: nil,
             filter_low_freq: nil,

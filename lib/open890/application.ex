@@ -54,6 +54,7 @@ defmodule Open890.Application do
     |> Enum.filter(fn conn ->
       Map.get(conn, :auto_start, "false") == "true"
     end)
+    |> IO.inspect(label: "auto-start connections")
     |> Enum.each(fn conn ->
       Logger.info("Auto-starting connection id #{conn.id}, \"#{conn.name}\"")
       conn |> RadioConnection.start()

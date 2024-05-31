@@ -368,6 +368,18 @@ defmodule Open890.Extract do
     end
   end
 
+  def power_state(str) when is_binary(str) do
+    str
+    |> trim_to_integer(["PS"])
+    |> case do
+      0 -> :off
+      1 -> :on
+      2 -> :source_off
+      3 -> :on_activating
+      _ -> :on
+    end
+  end
+
   def power_level(str) when is_binary(str) do
     str |> trim_to_integer(["PC"])
   end

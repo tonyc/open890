@@ -10,6 +10,9 @@ defmodule Open890.MixProject do
       version: version(),
       elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
+      elixirc_options: [
+        warnings_as_errors: false,
+      ],
       compilers: [:gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
@@ -66,7 +69,8 @@ defmodule Open890.MixProject do
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 0.5"},
       {:toml, "~> 0.6.2"},
-      {:uniq, "~> 0.5"}
+      {:uniq, "~> 0.5"},
+      {:wakeonlan, "~> 0.1.0"}
     ]
   end
 

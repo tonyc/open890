@@ -10,6 +10,7 @@ defmodule Open890.RadioConnection do
             name: nil,
             ip_address: nil,
             tcp_port: @default_tcp_port,
+            mac_address: nil,
             user_name: nil,
             password: nil,
             user_is_admin: false,
@@ -24,7 +25,21 @@ defmodule Open890.RadioConnection do
 
   alias Open890.{CloudlogSupervisor, RadioConnectionSupervisor}
   alias Open890.RadioConnectionRepo, as: Repo
-  alias Open890.{RadioState, UserMarker}
+  alias Open890.{ConnectionCommands, RadioState, UserMarker}
+
+  def mac_address(connection) do
+    connection |> Map.get(:mac_address, nil)
+  end
+
+  def wake(%__MODULE__{mac_address: mac}) when is_binary(mac) do
+    Logger.info("Sending WOL packet to #{inspect mac}")
+    WOL.send(mac)
+  end
+
+  def wake(_) do
+    Logger.info("No MAC address associated with connection, not sending WOL")
+    :ok
+  end
 
   def tcp_port(%__MODULE__{} = connection) do
     connection
@@ -45,7 +60,7 @@ defmodule Open890.RadioConnection do
 
   def first, do: all() |> Enum.at(0)
 
-  def add_user_marker(%__MODULE__{id: id} = connection, %UserMarker{} = marker) do
+  def add_user_marker(%__MODULE__{id: _id} = _connection, %UserMarker{} = _marker) do
     # the problem here is that the old connection struct seemingly doesn't even
     # have a :user_markers key, despite it being in the struct. it's like it's completely
     # frozen in the previous state when coming from dets, keys and all
@@ -55,11 +70,11 @@ defmodule Open890.RadioConnection do
     :ok
   end
 
-  def delete_user_marker(%__MODULE__{} = connection, user_marker_id) do
+  def delete_user_marker(%__MODULE__{} = _connection, _user_marker_id) do
     :ok
   end
 
-  def clear_user_markers(%__MODULE__{} = connection) do
+  def clear_user_markers(%__MODULE__{} = _connection) do
     # repo().update(%{connection | user_markers: []})
     :ok
   end
@@ -109,6 +124,7 @@ defmodule Open890.RadioConnection do
         name: params["name"],
         ip_address: params["ip_address"],
         tcp_port: params["tcp_port"],
+        mac_address: params["mac_address"],
         user_name: params["user_name"],
         password: params["password"],
         user_is_admin: params["user_is_admin"],
@@ -246,6 +262,10 @@ defmodule Open890.RadioConnection do
     end
   end
 
+  def query_power_state(connection) do
+    connection |> cmd("PS")
+  end
+
   def cmd(%__MODULE__{} = connection, command) when is_binary(command) do
     connection
     |> get_connection_pid()
@@ -275,12 +295,20 @@ defmodule Open890.RadioConnection do
     end
   end
 
+  def power_off(%{id: _id} = conn) do
+    ConnectionCommands.power_off(conn)
+  end
+
   def broadcast_freq_delta(%__MODULE__{id: id} = _connection, args) do
     Open890Web.Endpoint.broadcast("connection:#{id}", "freq_delta", args)
   end
 
   def broadcast_connection_state(%__MODULE__{id: id} = _connection, state) do
-    Open890Web.Endpoint.broadcast("connection:#{id}", "connection_state", state)
+    Open890Web.Endpoint.broadcast("connection:#{id}", "connection_state", %{id: id, state: state})
+  end
+
+  def broadcast_power_state(%__MODULE__{id: id} = _connection, power_state) do
+    Open890Web.Endpoint.broadcast("connection:#{id}", "power_state", %{id: id, state: power_state})
   end
 
   def broadcast_band_scope(%__MODULE__{id: id}, band_scope_data) do

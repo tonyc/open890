@@ -1,0 +1,103 @@
+<%= if @connections == [] do %>
+	<p>Render empty state</p>
+<% else %>
+	<div class="ui grid container">
+		<div class="ui grid column">
+			<div class="row">
+				<div class="eight wide column left floated">
+					<h2>Radio Connections</h2>
+				</div>
+        <div class="eight wide column right floated ">
+          <.link href={~p"/connections/new"} class="ui basic tiny icon button right floated">
+            <i class="ui icon plus"></i>
+            Add new connection
+					</.link>
+        </div>
+			</div>
+			<div class="row">
+				<table class="ui single line celled table">
+					<thead>
+						<tr>
+							<th class="three wide">Name</th>
+							<th class="center aligned">Connection</th>
+							<th class="center aligned">Radio Power</th>
+							<th class="five wide center aligned">UI</th>
+							<th class="four wide center aligned">Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						<%= for connection <- @connections do %>
+							<tr>
+								<td>
+									<h2><%= connection.name %></h2>
+									<span>
+										<%= connection_to_uri(connection) %>
+									</span>
+								</td>
+
+								<td class="center aligned">
+									<%= @connection_states |> Map.get(connection.id, :unknown) |> pretty_connection_state() %>
+								</td>
+
+								<td class="center aligned">
+									<%= @power_states |> Map.get(connection.id, :unknown) %>
+								</td>
+
+								<td class="center aligned">
+									<%= if @power_states |> Map.get(connection.id, :unknown) |> power_on?() do %>
+										<.link href={~p"/connections/#{connection.id}?panel=true&panelTab=txrx"} class="">Radio</.link>
+										|
+										<.link href={~p"/connections/#{connection.id}/bandscope"} class="">Bandscope</.link>
+										|
+										<.link href={~p"/connections/#{connection.id}/audioscope"} class="">Audioscope</.link>
+										|
+										<.link href={~p"/connections/#{connection.id}/meter"} class="">Meters</.link>
+									<% end %>
+								</td>
+
+								<td class="right aligned">
+									<%= if @power_states |> Map.get(connection.id) != :on do %>
+										<button
+											id={"wake-button-#{connection.id}"}
+											class="ui tiny button"
+											disabled={Map.get(@power_states, connection.id) == :on}
+											phx-click="wake"
+											phx-value-id={connection.id}>Wake</button>
+									<% end %>
+
+									<%= if @connection_states |> Map.get(connection.id) |> connection_up?() do %>
+										<button
+											id={"power-off-button-#{connection.id}"}
+											class="ui tiny button"
+											disabled={Map.get(@power_states, connection.id) != :on}
+											phx-click="power_off"
+											phx-value-id={connection.id}>Off</button>
+
+										<button
+											id={"stop-button-#{connection.id}"}
+											class="ui tiny primary button"
+											phx-click="stop_connection"
+											phx-value-id={connection.id}>Stop</button>
+									<% else %>
+										<.link id={"edit-button-#{connection.id}"} class="ui tiny button" href={~p"/connections/#{connection.id}/edit"}>Edit</.link>
+
+										<button
+											id={"delete-button-#{connection.id}"}
+											class="ui tiny button"
+											phx-click="delete_connection"
+											phx-value-id={connection.id}
+											data-confirm="Are you sure?">Delete</button>
+
+
+										<button id={"start-button-#{connection.id}"} class="ui tiny primary button" phx-click="start_connection" phx-value-id={connection.id}>Start</button>
+									<% end %>
+								</td>
+							</tr>
+						<% end %>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+<% end %>
