@@ -1,14 +1,16 @@
 # open890 Changelog
 
 ## Unreleased
-* Added the ability to remote TX audio.
-* Added TX TUNE button
 * Added the ability to remotely wake the radio from the connections listing.
 * Reworked the connections screen to be a LiveView.
 * Added the ability to configure the UDP audio port from 60001 via OPEN890_UDP_PORT
 * Updated startup message to explain how to control the server host and port through OPEN890_HOST and OPEN890_PORT
 * Fixed PROC on/off state not correctly queried on startup
 * Further fixes to purple TF SET indicator (WIP)
+
+## 1.1.0 - 2023-12-22
+* Added the ability to remote TX audio.
+* Added TX TUNE button
 
 ## 1.0.8.1 - 2023-11-20
 * Fixed TF SET display
