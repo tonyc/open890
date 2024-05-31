@@ -31,6 +31,16 @@ defmodule Open890.RadioConnection do
     connection |> Map.get(:mac_address, nil)
   end
 
+  def wake(%__MODULE__{mac_address: mac}) when is_binary(mac) do
+    Logger.info("Sending WOL packet to #{inspect mac}")
+    WOL.send(mac)
+  end
+
+  def wake(_) do
+    Logger.info("No MAC address associated with connection, not sending WOL")
+    :ok
+  end
+
   def tcp_port(%__MODULE__{} = connection) do
     connection
     |> Map.get(:tcp_port, @default_tcp_port)

@@ -122,6 +122,18 @@ defmodule Open890Web.Live.Connections do
     {:noreply, socket}
   end
 
+  def handle_event("wake" = _event, %{"id" => id} = _params, %{assigns: _assigns} = socket) do
+    case RadioConnection.find(id) do
+      {:ok, conn} ->
+        RadioConnection.wake(conn)
+
+      _ ->
+        Logger.warn("Could not find connection: #{inspect(id)}")
+    end
+
+    {:noreply, socket}
+  end
+
   def handle_event(event, params, %{assigns: _assigns} = socket) do
     Logger.debug("ConnectionsLive: default handle_event: #{event}, params: #{inspect params}")
     {:noreply, socket}
@@ -137,7 +149,7 @@ defmodule Open890Web.Live.Connections do
     {:noreply, socket}
   end
 
-  def handle_info(%Broadcast{event: "power_state", payload: %{id: connection_id, state: power_state} = payload}, socket) do
+  def handle_info(%Broadcast{event: "power_state", payload: %{id: connection_id, state: power_state} = _payload}, socket) do
     new_power_states = socket.assigns.power_states |> Map.put(connection_id, power_state)
 
     socket = socket
