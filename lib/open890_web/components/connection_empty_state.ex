@@ -1,6 +1,5 @@
 defmodule Open890Web.Components.ConnectionEmptyState do
   use Phoenix.Component
-  alias Open890.RadioConnection
   alias Open890Web.Components.ConnectionForm
 
   def empty_state(assigns) do
