@@ -7,12 +7,8 @@
   <div class="ui row">
     <div class="six wide left aligned column">
       <div class="appear">
-        <p>
-          It looks like you don't have any radio connections yet.  Let's get started by setting one up!
-        </p>
-        <p>
-          Enter a connection name, the IP address of your radio, and the information that has been entered into the KNS menu (MENU ▶ KNS).
-        </p>
+        <p>It looks like you don't have any radio connections yet.  Let's get started by setting one up!</p>
+        <p>Enter a connection name, the IP address of your radio, and the information that has been entered into the KNS menu (MENU ▶ KNS).</p>
       </div>
     </div>
   </div>

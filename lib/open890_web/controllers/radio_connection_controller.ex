@@ -8,7 +8,7 @@ defmodule Open890Web.RadioConnectionController do
 
   def new(conn, _params) do
     conn
-    |> assign(:radio_connection, %RadioConnection{})
+    |> assign_changeset(%RadioConnection{tcp_port: 60_000})
     |> render("new.html")
   end
 
@@ -31,7 +31,9 @@ defmodule Open890Web.RadioConnectionController do
     RadioConnection.find(id)
     |> case do
       {:ok, radio_connection} ->
+
         conn
+        |> assign_changeset(radio_connection)
         |> assign(:radio_connection, radio_connection)
         |> render("edit.html")
 
@@ -54,7 +56,9 @@ defmodule Open890Web.RadioConnectionController do
 
           {:error, reason} ->
             Logger.debug("Could not update connection: #{inspect(reason)}")
-            conn |> render("edit.html")
+            conn
+            |> assign_changeset(radio_params) # bug - doesn't use the updated params
+            |> render("edit.html")
         end
 
       _ ->
@@ -82,5 +86,17 @@ defmodule Open890Web.RadioConnectionController do
 
   defp connections_path do
     ~p"/connections"
+  end
+
+  # Assigns a changeset based off a RadioConnection
+  defp assign_changeset(conn, %RadioConnection{} = radio_connection) do
+    # Convenient way to turn a sruct into a map with string keys
+    # and yeah, not actually a changeset...
+    changeset = radio_connection
+    |> Map.from_struct()
+    |> Jason.encode!()
+    |> Jason.decode!()
+
+    conn |> assign(:changeset, changeset)
   end
 end

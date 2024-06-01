@@ -6,11 +6,13 @@
   </div>
   <div class="ui grid row">
     <div class="six wide column">
-      <%= form_for @conn, Routes.radio_connection_path(@conn, :create), [as: :radio_connection, class: "ui form"], fn f -> %>
-        <%= render "_form.html", f: f, radio_connection: @radio_connection %>
+
+      <.form :let={f} for={to_form(@changeset)} as={:radio_connection} action={~p"/connections"} method="post" class="ui form">
+        <ConnectionForm.form_fields f={f} />
         <%= link "Cancel", to: ~p"/connections", class: "ui large left floated button" %>
         <%= submit "Create", class: "ui large right floated primary button" %>
-      <% end %>
+      </.form>
+
     </div>
   </div>
 </div>
