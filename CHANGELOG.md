@@ -1,6 +1,6 @@
 # open890 Changelog
 
-## Unreleased
+## 1.2.0 - 2024-06-01
 * Added the ability to remotely wake the radio from the connections listing.
 * Reworked the connections screen to be a LiveView.
 * Added the ability to configure the UDP audio port from 60001 via OPEN890_UDP_PORT
