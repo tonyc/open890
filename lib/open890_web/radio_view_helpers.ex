@@ -143,8 +143,8 @@ defmodule Open890Web.RadioViewHelpers do
     freq - amount
   end
 
-  def offset_frequency(mode, freq, _amount) do
-    Logger.debug("offset_frequency: Unknown mode: #{inspect(mode)}")
+  def offset_frequency(mode, freq, amount) do
+    Logger.warn("offset_frequency: Unhandled mode/freq/amount combination: #{inspect({mode, freq, amount})}")
 
     freq
   end
