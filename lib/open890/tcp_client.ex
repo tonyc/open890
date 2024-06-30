@@ -370,6 +370,13 @@ defmodule Open890.TCPClient do
 
         radio_state = radio_state |> RadioState.dispatch(msg)
 
+        if msg |> String.starts_with?("MV") do
+          # re-retrieve the operating mode when toggling between M/V
+          # This fixes an issue where the audio scope filter edges disappear
+          # When toggling M/V
+          ConnectionCommands.get_active_mode(connection)
+        end
+
         # lock state
         if msg |> String.starts_with?("LK") do
           lock_state = msg |> String.ends_with?("1")
